@@ -1,0 +1,1 @@
+"""K-aption FastAPI application."""
