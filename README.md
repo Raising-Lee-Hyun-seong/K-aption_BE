@@ -42,7 +42,8 @@ make model           # 원본 다운로드 → FP16 → MLX 4bit
 make api             # 기본 주소: http://localhost:8000
 ```
 
-- Swagger UI: http://localhost:8000/docs
+- Swagger UI: http://localhost:8000/swagger
+- ReDoc: http://localhost:8000/redoc
 - OpenAPI JSON: http://localhost:8000/openapi.json
 - 상태 확인: http://localhost:8000/health
 
@@ -104,6 +105,8 @@ curl -X POST 'http://localhost:8000/api/v1/transcriptions?language=en' \
 ```
 
 응답에는 인식 언어와 확률, `start`, `end`, `text`를 가진 구간 목록, 처리 시간이 포함됩니다. 지원 확장자는 MP4, MOV, MKV, WEBM, WAV, MP3, M4A입니다. 업로드 파일은 임시 파일로 처리한 뒤 요청 종료 시 삭제합니다. STT 요청도 한 번에 하나씩 실행됩니다.
+
+Apple Silicon에서 faster-whisper의 mel 계산 중 허위 overflow 경고가 발생하지 않도록 API 환경은 NumPy 1.26 계열을 사용합니다. `make setup-api`가 해당 버전을 설치합니다. 디코딩 결과가 비어 있거나 `NaN`·`inf`를 포함하면 추론 전에 HTTP 422로 거부합니다.
 
 ## 프론트엔드 연결
 

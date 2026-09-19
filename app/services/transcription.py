@@ -35,11 +35,20 @@ class TranscriptionService:
         return self._model
 
     def transcribe(self, media_path: Path, language: str = "en") -> dict:
+        import numpy as np
+        from faster_whisper.audio import decode_audio
+
+        audio = decode_audio(str(media_path))
+        if audio.size == 0:
+            raise ValueError("The uploaded media does not contain decodable audio")
+        if not np.isfinite(audio).all():
+            raise ValueError("The uploaded media contains invalid audio samples")
+
         model = self._get_model()
         start = perf_counter()
         with self._inference_lock:
             raw_segments, info = model.transcribe(
-                str(media_path),
+                audio,
                 language=language,
                 task="transcribe",
                 beam_size=5,

@@ -1,6 +1,7 @@
 fastapi>=0.115,<1
 faster-whisper>=1.2.1,<2
 mlx-lm==0.29.1
+numpy>=1.26,<2
 python-multipart>=0.0.9,<1
 sentencepiece==0.2.2
 torch==2.8.0
