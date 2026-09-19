@@ -160,10 +160,57 @@ cython_debug/
 #.idea/
 
 
-pretrained
-KoreanLM-LoRA
+# Local environments (including STT / KoreanLM / MLX)
+.venv*/
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.template
 
-train.sh
+# Downloaded weights and generated model checkpoints
+/models/
+/pretrained/
+/KoreanLM-LoRA/
+/checkpoints/
+*.safetensors
+*.gguf
+*.pt
+*.pth
+/pytorch_model*.bin
 
+# Local media inputs, generated subtitles, and future API runtime storage
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.wav
+*.mp3
+*.m4a
+*.flac
+/outputs/
+/uploads/
+/tmp/
+/logs/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
 
+# Process logs and private local credentials
+nohup.out
+.secrets/
+credentials.json
+service-account*.json
+*.key
+*.pem
+
+# OS and editor temporary files
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
