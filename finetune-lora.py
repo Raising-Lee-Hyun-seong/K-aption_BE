@@ -1,3 +1,4 @@
+"""8bit 기반 모델에 LoRA를 적용하고 프롬프트 데이터로 미세 조정한 어댑터를 저장한다."""
 import os
 import sys
 from typing import List
@@ -58,6 +59,7 @@ def train(
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
     prompt_template_name: str = "korean",  # The prompt template to use, will default to korean.
 ):
+    """분산·학습 옵션을 적용해 LoRA 모델을 학습하고 어댑터 가중치를 출력 경로에 저장한다."""
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
             f"Training KoreanLM-LoRA model with params:\n"
@@ -132,6 +134,7 @@ def train(
     def tokenize(prompt, add_eos_token=True):
         # there's probably a way to do this with the tokenizer settings
         # but again, gotta move fast
+        """프롬프트를 길이 제한으로 토큰화하고 선택적으로 EOS 토큰과 학습 라벨을 추가한다."""
         result = tokenizer(
             prompt,
             truncation=True,
@@ -152,6 +155,7 @@ def train(
         return result
 
     def generate_and_tokenize_prompt(data_point):
+        """데이터 예제를 프롬프트로 변환하고 설정에 따라 입력 영역의 학습 라벨을 마스킹한다."""
         full_prompt = prompter.generate_prompt(
             data_point["instruction"],
             data_point["input"],

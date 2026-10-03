@@ -1,12 +1,15 @@
+"""FastAPI 서버의 모델 생명주기, CORS, 상태 조회 및 STT·한국어 번역 엔드포인트를 구성한다."""
 import os
 import shutil
 import tempfile
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Literal
 
 from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 
 from app.schemas import (
     HealthResponse,
@@ -47,6 +50,7 @@ OPENAPI_TAGS = [
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """서버 시작 시 번역·STT 서비스를 준비하고 종료 시 애플리케이션 참조를 해제한다."""
     app.state.translator = TranslationService(MODEL_DIR, TEMPLATE_PATH)
     app.state.transcriber = TranscriptionService(
         model_name=os.getenv("KAPTION_STT_MODEL", "small"),
@@ -87,6 +91,28 @@ app.add_middleware(
 )
 
 
+def openapi_schema() -> dict:
+    """OpenAPI를 생성하고 자막 예시의 명시적 null 값을 보존해 Swagger에 제공한다."""
+    if app.openapi_schema is None:
+        schema = get_openapi(
+            title=app.title,
+            version=app.version,
+            summary=app.summary,
+            description=app.description,
+            routes=app.routes,
+            tags=app.openapi_tags,
+            license_info=app.license_info,
+        )
+        schema["components"]["schemas"]["TranscriptionResponse"]["examples"] = (
+            TranscriptionResponse.model_config["json_schema_extra"]["examples"]
+        )
+        app.openapi_schema = schema
+    return app.openapi_schema
+
+
+app.openapi = openapi_schema
+
+
 @app.get(
     "/health",
     response_model=HealthResponse,
@@ -94,6 +120,7 @@ app.add_middleware(
     summary="서버 및 모델 상태 확인",
 )
 def health(request: Request) -> HealthResponse:
+    """서버 상태와 번역·STT 모델의 로딩 여부를 반환한다."""
     translator = getattr(request.app.state, "translator", None)
     transcriber = getattr(request.app.state, "transcriber", None)
     return HealthResponse(
@@ -109,9 +136,10 @@ def health(request: Request) -> HealthResponse:
     tags=["Translation"],
     summary="영어 강의 문장 번역",
     description="대상 영어 문장과 선택적 주변 문맥을 받아 한국어 번역을 반환합니다.",
-    responses={422: {"description": "요청 형식 또는 모델 토큰 제한 오류"}},
+    responses={422: {"description": "요청 형식, 모델 토큰 제한 또는 번역 생성 검증 오류"}},
 )
 async def translate(body: TranslationRequest, request: Request) -> TranslationResponse:
+    """요청 문장을 문맥과 함께 번역하고 입력·생성 검증 오류를 HTTP 422로 반환한다."""
     try:
         result = await run_in_threadpool(
             request.app.state.translator.translate,
@@ -129,25 +157,43 @@ async def translate(body: TranslationRequest, request: Request) -> TranslationRe
     response_model=TranscriptionResponse,
     tags=["Transcription"],
     summary="영상·음성 영어 STT",
-    description="업로드한 미디어를 구간별 영어 원문과 타임스탬프로 변환합니다.",
-    responses={415: {"description": "지원하지 않는 미디어 확장자"}},
+    description=(
+        "업로드한 미디어를 구간별 영어 원문과 타임스탬프로 변환하고, "
+        "각 영어 원문을 한국어로 번역합니다. 번역 검증에 실패한 구간은 "
+        "translation=null, translation_error=translation_failed로 반환하며 처리를 계속합니다. "
+        "음성이 없으면 segments=[]를 반환합니다. 모든 시각의 단위는 초입니다."
+    ),
+    responses={
+        415: {"description": "지원하지 않는 미디어 확장자", "content": {
+            "application/json": {"example": {"detail": "Unsupported media file extension"}}
+        }},
+        422: {"description": "요청 형식 또는 오디오 디코딩·검증 오류", "content": {
+            "application/json": {"examples": {
+                "audio": {"summary": "오디오 디코딩 실패", "value": {
+                    "detail": "The uploaded media does not contain decodable audio"}},
+                "validation": {"summary": "필수 업로드 파일 누락", "value": {
+                    "detail": [{"type": "missing", "loc": ["body", "file"],
+                                "msg": "Field required", "input": None}]}},
+            }}
+        }},
+        500: {"description": "예기치 않은 추론 또는 서버 오류. 전체 요청 실패"},
+    },
 )
 async def transcribe(
     request: Request,
     file: UploadFile = File(description="인식할 영상 또는 음성 파일"),
-    language: str = Query(
+    language: Literal["en"] = Query(
         default="en",
-        min_length=2,
-        max_length=3,
-        description="인식할 ISO 언어 코드",
+        description="인식 언어. 현재 영어(en)만 지원하며 생략 시 en",
     ),
 ) -> TranscriptionResponse:
-    suffix = Path(file.filename or "upload").suffix.lower()
-    if suffix not in ALLOWED_SUFFIXES:
-        raise HTTPException(status_code=415, detail="Unsupported media file extension")
-
+    """STT 후 구간별 번역 검증 실패를 결과에 기록하고 업로드·임시 파일을 정리한다."""
     temp_path = None
     try:
+        suffix = Path(file.filename or "upload").suffix.lower()
+        if suffix not in ALLOWED_SUFFIXES:
+            raise HTTPException(status_code=415, detail="Unsupported media file extension")
+
         with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
             temp_path = Path(temp_file.name)
             await run_in_threadpool(shutil.copyfileobj, file.file, temp_file)
@@ -159,8 +205,32 @@ async def transcribe(
             )
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
-        return TranscriptionResponse(**result)
+        previous_translation = ""
+        translated_segments = []
+        for segment in result["segments"]:
+            try:
+                translated = await run_in_threadpool(
+                    request.app.state.translator.translate,
+                    segment["text"],
+                    previous_translation,
+                    128,
+                )
+            except ValueError:
+                translated_segments.append({
+                    **segment, "translation": None,
+                    "translation_error": "translation_failed",
+                })
+                previous_translation = ""
+            else:
+                translated_segments.append({
+                    **segment, "translation": translated["translation"],
+                    "translation_error": None,
+                })
+                previous_translation = translated["translation"]
+        return TranscriptionResponse(segments=translated_segments)
     finally:
-        await file.close()
-        if temp_path is not None:
-            temp_path.unlink(missing_ok=True)
+        try:
+            await file.close()
+        finally:
+            if temp_path is not None:
+                temp_path.unlink(missing_ok=True)

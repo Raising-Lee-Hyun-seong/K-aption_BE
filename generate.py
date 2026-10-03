@@ -1,3 +1,4 @@
+"""KoreanLM과 LoRA 가중치를 로드하고 일반·스트리밍 응답을 제공하는 Gradio UI를 실행한다."""
 import os
 import sys
 
@@ -34,6 +35,7 @@ def main(
     server_name: str = "0.0.0.0",
     share_gradio: bool = True,
 ):
+    """장치에 맞춰 모델·LoRA를 로드하고 모델을 Hub에 업로드한 뒤 Gradio 추론 UI를 실행한다."""
     base_model = base_model or os.environ.get("BASE_MODEL", "")
     assert (
         base_model
@@ -111,6 +113,7 @@ def main(
         stream_output=False,
         **kwargs,
     ):
+        """명령과 입력으로 응답을 생성해 전체 결과 또는 스트리밍 중간 결과를 순차 반환한다."""
         prompt = prompter.generate_prompt(instruction, input)
         inputs = tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(device)
@@ -132,6 +135,7 @@ def main(
 
         if stream_output:
             def generate_with_callback(callback=None, **kwargs):
+                """토큰 생성 과정에 콜백을 연결하고 그래디언트 계산 없이 추론한다."""
                 kwargs.setdefault(
                     "stopping_criteria", transformers.StoppingCriteriaList()
                 )
@@ -142,6 +146,7 @@ def main(
                     koreanlm.generate(**kwargs)
 
             def generate_with_streaming(**kwargs):
+                """콜백 기반 생성 함수를 중간 결과를 순회할 수 있는 이터레이터로 감싼다."""
                 return Iteratorize(
                     generate_with_callback, kwargs, callback=None
                 )

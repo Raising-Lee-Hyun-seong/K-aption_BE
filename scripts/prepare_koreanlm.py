@@ -1,4 +1,4 @@
-"""Download pinned KoreanLM and convert legacy shards to FP16 safetensors."""
+"""고정 리비전의 KoreanLM을 다운로드하고 MLX 변환에 사용할 FP16 safetensors를 준비한다."""
 import gc
 import json
 import shutil
@@ -17,10 +17,12 @@ CACHE = ROOT / '.cache/huggingface'
 
 
 def download(name):
+    """고정된 모델 리비전의 파일을 Hugging Face 캐시에 다운로드하고 경로를 반환한다."""
     return hf_hub_download(MODEL, name, revision=REVISION, cache_dir=str(CACHE))
 
 
 def main():
+    """원본 가중치를 FP16 safetensors로 변환하고 토크나이저·설정·가중치 인덱스를 저장한다."""
     DEST.mkdir(parents=True, exist_ok=True)
     for name in ['config.json', 'tokenizer.model', 'tokenizer_config.json',
                  'special_tokens_map.json', 'generation_config.json']:

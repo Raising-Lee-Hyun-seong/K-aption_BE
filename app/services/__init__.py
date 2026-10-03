@@ -1,1 +1,1 @@
-"""Reusable inference services."""
+"""API에서 재사용하는 STT·번역 추론 서비스 패키지를 정의한다."""
