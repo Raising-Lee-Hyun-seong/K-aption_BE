@@ -1,0 +1,317 @@
+{
+  "source": {
+    "title": "Rocket Sled - Integrate the Rocket Equation",
+    "publisher": "Massachusetts Institute of Technology, MIT OpenCourseWare",
+    "course": "8.01SC Classical Mechanics, Fall 2016",
+    "instructor": "Prof. Anna Frebel",
+    "page_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/resources/rocket-sled-integrate-the-rocket-equation/",
+    "caption_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/99c06ede3b5d5192b4cb4119435b6b9f_7Kq8BINVDiw.vtt",
+    "transcript_pdf_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/5fb03318c1359e623617218715101f57_7Kq8BINVDiw.pdf",
+    "retrieved_on": "2026-10-04",
+    "language": "en",
+    "format": "WEBVTT",
+    "license": {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "notice": "MIT OCW 페이지의 license metadata에 명시된 라이선스. 원본 자막의 출처를 표시하고 파생 기준 번역에도 동일한 라이선스를 적용한다."
+    },
+    "sha256": "16f5205352d8258e11365fa85832e350b352efd89dd15ad2a7dd5d39dcb5f454",
+    "transformations": [
+      "VTT의 줄바꿈을 공백으로 병합했다.",
+      "VTT의 명시된 시작·종료 시각을 초 단위로 변환했다.",
+      "cue 순서 index는 0부터 시작한다. 단어·수식 표기는 보정하지 않았다."
+    ],
+    "known_uncertainties": [
+      {
+        "source_cue_indices": [
+          0
+        ],
+        "text": "arrived",
+        "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+      },
+      {
+        "source_cue_indices": [
+          19,
+          20
+        ],
+        "text": "2vr prime of equal vr of t",
+        "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          25
+        ],
+        "text": "m of vr",
+        "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          28
+        ],
+        "text": "lm",
+        "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          31
+        ],
+        "text": "the r of t",
+        "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+      }
+    ]
+  },
+  "segments": [
+    {
+      "start": 3.94,
+      "end": 8.189,
+      "text": "We just arrived this relation here-- the relation",
+      "source_cue_index": 0
+    },
+    {
+      "start": 8.189,
+      "end": 11.34,
+      "text": "between the differential of the speed of the rocket sled",
+      "source_cue_index": 1
+    },
+    {
+      "start": 11.34,
+      "end": 14.41,
+      "text": "and the differential of the mass of the rocket.",
+      "source_cue_index": 2
+    },
+    {
+      "start": 14.41,
+      "end": 17.83,
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "source_cue_index": 3
+    },
+    {
+      "start": 17.83,
+      "end": 22.95,
+      "text": "So we have to apply a technique called separation of variables",
+      "source_cue_index": 4
+    },
+    {
+      "start": 22.95,
+      "end": 25.464,
+      "text": "and then we want to integrate.",
+      "source_cue_index": 5
+    },
+    {
+      "start": 25.464,
+      "end": 27.11,
+      "text": "What we're going to do is, first we're",
+      "source_cue_index": 6
+    },
+    {
+      "start": 27.11,
+      "end": 33.3,
+      "text": "going to divide-- multiply by dt so that falls away,",
+      "source_cue_index": 7
+    },
+    {
+      "start": 33.3,
+      "end": 42.61,
+      "text": "and we are left with m r d v r equals d m r u.",
+      "source_cue_index": 8
+    },
+    {
+      "start": 42.61,
+      "end": 47.1,
+      "text": "And we're going to shuffle the m onto the other side.",
+      "source_cue_index": 9
+    },
+    {
+      "start": 47.1,
+      "end": 49.31,
+      "text": "And we're left with d v r equals--",
+      "source_cue_index": 10
+    },
+    {
+      "start": 49.31,
+      "end": 53.22,
+      "text": "u is a constant-- so that goes up front,",
+      "source_cue_index": 11
+    },
+    {
+      "start": 53.22,
+      "end": 58.51,
+      "text": "and then we have d m r over m r.",
+      "source_cue_index": 12
+    },
+    {
+      "start": 58.51,
+      "end": 61.716,
+      "text": "That's an equation that we can integrate now.",
+      "source_cue_index": 13
+    },
+    {
+      "start": 61.716,
+      "end": 65.83,
+      "text": "And we can do that.",
+      "source_cue_index": 14
+    },
+    {
+      "start": 65.83,
+      "end": 68.32,
+      "text": "And the tricky bit is that we need",
+      "source_cue_index": 15
+    },
+    {
+      "start": 68.32,
+      "end": 70.93,
+      "text": "to take care of the integration limits here.",
+      "source_cue_index": 16
+    },
+    {
+      "start": 70.93,
+      "end": 76.39,
+      "text": "We have v r, and actually these now are all primes.",
+      "source_cue_index": 17
+    },
+    {
+      "start": 76.39,
+      "end": 80.695,
+      "text": "So we have v r going from v0.",
+      "source_cue_index": 18
+    },
+    {
+      "start": 80.695,
+      "end": 84.132,
+      "text": "That is our initial condition here 2vr",
+      "source_cue_index": 19
+    },
+    {
+      "start": 84.132,
+      "end": 94.07,
+      "text": "prime of equal vr of t.",
+      "source_cue_index": 20
+    },
+    {
+      "start": 94.07,
+      "end": 99.27000000000001,
+      "text": "And for the mass, we have m r prime equals m0.",
+      "source_cue_index": 21
+    },
+    {
+      "start": 99.27000000000001,
+      "end": 105.515,
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass",
+      "source_cue_index": 22
+    },
+    {
+      "start": 105.515,
+      "end": 108.65,
+      "text": "of this is the dry mass and the fuel mass,",
+      "source_cue_index": 23
+    },
+    {
+      "start": 108.65,
+      "end": 116.4,
+      "text": "so that's 2m0, so this is the initial mass.",
+      "source_cue_index": 24
+    },
+    {
+      "start": 116.4,
+      "end": 124.93,
+      "text": "And then we go to m r prime equals m of vr.",
+      "source_cue_index": 25
+    },
+    {
+      "start": 124.93,
+      "end": 127.4,
+      "text": "All right, so let's do that.",
+      "source_cue_index": 26
+    },
+    {
+      "start": 127.4,
+      "end": 136.93,
+      "text": "We're going to get vr minus v0 equals u 1 over m,",
+      "source_cue_index": 27
+    },
+    {
+      "start": 136.93,
+      "end": 141.014,
+      "text": "integrated gives us lm, so lm.",
+      "source_cue_index": 28
+    },
+    {
+      "start": 141.014,
+      "end": 148.85,
+      "text": "And then we can immediately do this here over 2m0.",
+      "source_cue_index": 29
+    },
+    {
+      "start": 152.75,
+      "end": 156.81,
+      "text": "And well, we ultimately want this,",
+      "source_cue_index": 30
+    },
+    {
+      "start": 156.81,
+      "end": 158.98,
+      "text": "so this is the r of t, of course.",
+      "source_cue_index": 31
+    },
+    {
+      "start": 158.98,
+      "end": 171.61,
+      "text": "And then we got v0 plus u l n m r over 2 m0",
+      "source_cue_index": 32
+    },
+    {
+      "start": 171.61,
+      "end": 174.09,
+      "text": "And that is our equation.",
+      "source_cue_index": 33
+    },
+    {
+      "start": 176.85,
+      "end": 179.53,
+      "text": "So what does this equation tell us?",
+      "source_cue_index": 34
+    },
+    {
+      "start": 179.53,
+      "end": 185.19,
+      "text": "M r, the mass of the rocket is less later",
+      "source_cue_index": 35
+    },
+    {
+      "start": 185.19,
+      "end": 190.6,
+      "text": "on than it was before, which means this term here",
+      "source_cue_index": 36
+    },
+    {
+      "start": 190.6,
+      "end": 194.68,
+      "text": "is going to be less than 0, which",
+      "source_cue_index": 37
+    },
+    {
+      "start": 194.68,
+      "end": 198.13,
+      "text": "means the velocity is our initial velocity",
+      "source_cue_index": 38
+    },
+    {
+      "start": 198.13,
+      "end": 200.9,
+      "text": "minus something.",
+      "source_cue_index": 39
+    },
+    {
+      "start": 200.9,
+      "end": 205.48,
+      "text": "Which means we have a decrease in velocity,",
+      "source_cue_index": 40
+    },
+    {
+      "start": 205.48,
+      "end": 209.75,
+      "text": "which means my sled will eventually come to a stop.",
+      "source_cue_index": 41
+    }
+  ]
+}

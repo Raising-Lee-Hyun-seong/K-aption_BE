@@ -1,0 +1,229 @@
+{
+  "source": {
+    "title": "Rocket Sled - Integrate the Rocket Equation",
+    "publisher": "Massachusetts Institute of Technology, MIT OpenCourseWare",
+    "course": "8.01SC Classical Mechanics, Fall 2016",
+    "instructor": "Prof. Anna Frebel",
+    "page_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/resources/rocket-sled-integrate-the-rocket-equation/",
+    "caption_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/99c06ede3b5d5192b4cb4119435b6b9f_7Kq8BINVDiw.vtt",
+    "transcript_pdf_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/5fb03318c1359e623617218715101f57_7Kq8BINVDiw.pdf",
+    "retrieved_on": "2026-10-04",
+    "language": "en",
+    "format": "WEBVTT",
+    "license": {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "notice": "MIT OCW 페이지의 license metadata에 명시된 라이선스. 원본 자막의 출처를 표시하고 파생 기준 번역에도 동일한 라이선스를 적용한다."
+    },
+    "sha256": "16f5205352d8258e11365fa85832e350b352efd89dd15ad2a7dd5d39dcb5f454",
+    "transformations": [
+      "VTT의 줄바꿈을 공백으로 병합했다.",
+      "VTT의 명시된 시작·종료 시각을 초 단위로 변환했다.",
+      "cue 순서 index는 0부터 시작한다. 단어·수식 표기는 보정하지 않았다."
+    ],
+    "known_uncertainties": [
+      {
+        "source_cue_indices": [
+          0
+        ],
+        "text": "arrived",
+        "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+      },
+      {
+        "source_cue_indices": [
+          19,
+          20
+        ],
+        "text": "2vr prime of equal vr of t",
+        "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          25
+        ],
+        "text": "m of vr",
+        "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          28
+        ],
+        "text": "lm",
+        "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          31
+        ],
+        "text": "the r of t",
+        "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+      }
+    ]
+  },
+  "reference_translation_author": "Codex가 작성한 프로젝트 평가용 한국어 기준 번역",
+  "reference_translation_status": "수동 작성 기준이며 독립 전문가 검수 전이다. 의미·수식·단위·부정·비교 관계의 검토 항목으로 사용하며 문구 일치율을 정확도로 사용하지 않는다.",
+  "input_policy": "공식 자막 cue를 완전한 문장 또는 자기완결 발화로 묶었다. 영어 입력의 단어와 수식 표기는 보정하지 않았다.",
+  "cases": [
+    {
+      "id": "rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다."
+    },
+    {
+      "id": "move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다."
+    },
+    {
+      "id": "integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다."
+    },
+    {
+      "id": "sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": ""
+    }
+  ]
+}

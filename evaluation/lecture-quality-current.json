@@ -1,0 +1,2455 @@
+{
+  "source": {
+    "title": "Rocket Sled - Integrate the Rocket Equation",
+    "publisher": "Massachusetts Institute of Technology, MIT OpenCourseWare",
+    "course": "8.01SC Classical Mechanics, Fall 2016",
+    "instructor": "Prof. Anna Frebel",
+    "page_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/resources/rocket-sled-integrate-the-rocket-equation/",
+    "caption_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/99c06ede3b5d5192b4cb4119435b6b9f_7Kq8BINVDiw.vtt",
+    "transcript_pdf_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/5fb03318c1359e623617218715101f57_7Kq8BINVDiw.pdf",
+    "retrieved_on": "2026-10-04",
+    "language": "en",
+    "format": "WEBVTT",
+    "license": {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "notice": "MIT OCW 페이지의 license metadata에 명시된 라이선스. 원본 자막의 출처를 표시하고 파생 기준 번역에도 동일한 라이선스를 적용한다."
+    },
+    "sha256": "16f5205352d8258e11365fa85832e350b352efd89dd15ad2a7dd5d39dcb5f454",
+    "transformations": [
+      "VTT의 줄바꿈을 공백으로 병합했다.",
+      "VTT의 명시된 시작·종료 시각을 초 단위로 변환했다.",
+      "cue 순서 index는 0부터 시작한다. 단어·수식 표기는 보정하지 않았다."
+    ],
+    "known_uncertainties": [
+      {
+        "source_cue_indices": [
+          0
+        ],
+        "text": "arrived",
+        "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+      },
+      {
+        "source_cue_indices": [
+          19,
+          20
+        ],
+        "text": "2vr prime of equal vr of t",
+        "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          25
+        ],
+        "text": "m of vr",
+        "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          28
+        ],
+        "text": "lm",
+        "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          31
+        ],
+        "text": "the r of t",
+        "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+      }
+    ]
+  },
+  "stt_source": "evaluation/lecture.json",
+  "stt_reexecuted": false,
+  "stt_comparison": {
+    "reference_words": 369,
+    "hypothesis_words": 348,
+    "substitutions": 30,
+    "deletions": 24,
+    "insertions": 3,
+    "word_errors": 57,
+    "word_error_rate": 0.15447154471544716,
+    "sequence_match_ratio": 0.8842398884239888,
+    "differences": [
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          2,
+          3
+        ],
+        "stt_word_range": [
+          2,
+          3
+        ],
+        "reference": "arrived",
+        "stt": "derived"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          16,
+          18
+        ],
+        "stt_word_range": [
+          16,
+          18
+        ],
+        "reference": "rocket sled",
+        "stt": "rocket's lead"
+      },
+      {
+        "operation": "delete",
+        "reference_word_range": [
+          47,
+          48
+        ],
+        "stt_word_range": [
+          47,
+          47
+        ],
+        "reference": "of",
+        "stt": ""
+      },
+      {
+        "operation": "delete",
+        "reference_word_range": [
+          65,
+          66
+        ],
+        "stt_word_range": [
+          64,
+          64
+        ],
+        "reference": "divide",
+        "stt": ""
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          74,
+          76
+        ],
+        "stt_word_range": [
+          72,
+          73
+        ],
+        "reference": "we are",
+        "stt": "we're"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          78,
+          83
+        ],
+        "stt_word_range": [
+          75,
+          77
+        ],
+        "reference": "m r d v r",
+        "stt": "mr dvr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          84,
+          88
+        ],
+        "stt_word_range": [
+          78,
+          79
+        ],
+        "reference": "d m r u",
+        "stt": "dmru"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          103,
+          106
+        ],
+        "stt_word_range": [
+          94,
+          95
+        ],
+        "reference": "d v r",
+        "stt": "dvr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          120,
+          123
+        ],
+        "stt_word_range": [
+          109,
+          110
+        ],
+        "reference": "d m r",
+        "stt": "dmr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          124,
+          126
+        ],
+        "stt_word_range": [
+          111,
+          112
+        ],
+        "reference": "m r",
+        "stt": "mr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          157,
+          159
+        ],
+        "stt_word_range": [
+          143,
+          144
+        ],
+        "reference": "v r",
+        "stt": "vr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          169,
+          171
+        ],
+        "stt_word_range": [
+          154,
+          155
+        ],
+        "reference": "v r",
+        "stt": "vr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          180,
+          181
+        ],
+        "stt_word_range": [
+          164,
+          166
+        ],
+        "reference": "2vr",
+        "stt": "2 vr"
+      },
+      {
+        "operation": "delete",
+        "reference_word_range": [
+          182,
+          185
+        ],
+        "stt_word_range": [
+          167,
+          167
+        ],
+        "reference": "of equal vr",
+        "stt": ""
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          193,
+          195
+        ],
+        "stt_word_range": [
+          175,
+          176
+        ],
+        "reference": "m r",
+        "stt": "mr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          203,
+          204
+        ],
+        "stt_word_range": [
+          184,
+          186
+        ],
+        "reference": "2m0",
+        "stt": "2 m0"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          220,
+          221
+        ],
+        "stt_word_range": [
+          202,
+          204
+        ],
+        "reference": "2m0",
+        "stt": "2 m0"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          232,
+          234
+        ],
+        "stt_word_range": [
+          215,
+          216
+        ],
+        "reference": "m r",
+        "stt": "mr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          253,
+          255
+        ],
+        "stt_word_range": [
+          235,
+          236
+        ],
+        "reference": "u 1",
+        "stt": "u1"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          260,
+          261
+        ],
+        "stt_word_range": [
+          241,
+          243
+        ],
+        "reference": "lm",
+        "stt": "an ln"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          262,
+          263
+        ],
+        "stt_word_range": [
+          244,
+          245
+        ],
+        "reference": "lm",
+        "stt": "ln"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          272,
+          273
+        ],
+        "stt_word_range": [
+          254,
+          256
+        ],
+        "reference": "2m0",
+        "stt": "2 m0"
+      },
+      {
+        "operation": "delete",
+        "reference_word_range": [
+          274,
+          275
+        ],
+        "stt_word_range": [
+          257,
+          257
+        ],
+        "reference": "well",
+        "stt": ""
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          282,
+          284
+        ],
+        "stt_word_range": [
+          264,
+          266
+        ],
+        "reference": "the r",
+        "stt": "a vr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          295,
+          299
+        ],
+        "stt_word_range": [
+          277,
+          279
+        ],
+        "reference": "l n m r",
+        "stt": "ln mr"
+      },
+      {
+        "operation": "replace",
+        "reference_word_range": [
+          314,
+          316
+        ],
+        "stt_word_range": [
+          294,
+          295
+        ],
+        "reference": "m r",
+        "stt": "mr"
+      }
+    ],
+    "official_caption_uncertainties": [
+      {
+        "source_cue_indices": [
+          0
+        ],
+        "text": "arrived",
+        "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+      },
+      {
+        "source_cue_indices": [
+          19,
+          20
+        ],
+        "text": "2vr prime of equal vr of t",
+        "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          25
+        ],
+        "text": "m of vr",
+        "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          28
+        ],
+        "text": "lm",
+        "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          31
+        ],
+        "text": "the r of t",
+        "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+      }
+    ],
+    "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+  },
+  "manual_reference_cases": [
+    {
+      "id": "rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다."
+    },
+    {
+      "id": "move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다."
+    },
+    {
+      "id": "integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": ""
+    },
+    {
+      "id": "mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다."
+    },
+    {
+      "id": "sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": ""
+    }
+  ],
+  "baseline_summary": {
+    "case_count": 45,
+    "model_load_seconds": 3.449517708,
+    "stt_seconds": 21.302898292000002,
+    "translation_seconds": 221.711488875,
+    "valid_outputs": 44,
+    "term_passes": null,
+    "forbidden_term_cases": 0,
+    "context_copies": 0
+  },
+  "settings": {
+    "cases_only": false,
+    "context_mode": "previous_source",
+    "input_source": "stt",
+    "max_tokens": 128,
+    "model": "models/koreanlm-4bit"
+  },
+  "model_load_seconds": 4.762250125,
+  "stt_results": [
+    {
+      "start": 3.6,
+      "end": 7.28,
+      "text": "We just derived this relation here.",
+      "source_indices": [
+        0
+      ],
+      "id": "stt-0",
+      "baseline": {
+        "source_indices": [
+          0
+        ],
+        "translations": [
+          "우리는 이곳에서 이 관계를 찾았습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.7851018749999987,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "우리는 이곳에서 이것을 계산했습니다.",
+      "prompt_tokens": 247,
+      "generated_tokens": 31,
+      "elapsed_seconds": 3.280170332999999,
+      "context": "",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.2800759169999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 247,
+          "max_tokens": 128,
+          "raw_output_tokens": 31,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.2813898330000004,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 7.28,
+      "end": 14.44,
+      "text": "The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.",
+      "source_indices": [
+        1,
+        2,
+        3
+      ],
+      "id": "stt-1",
+      "baseline": {
+        "source_indices": [
+          1,
+          2,
+          3
+        ],
+        "translations": [
+          "속력의 차이는 어떻게 되나요?",
+          "",
+          "발사기"
+        ],
+        "error_count": 1,
+        "translation_seconds": 11.17378004099999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "We just derived this relation here.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.0571459169999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 318,
+          "max_tokens": 128,
+          "raw_output_tokens": 39,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.207286667,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 335,
+          "max_tokens": 128,
+          "raw_output_tokens": 39,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_term",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 6.264916792000001,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 14.44,
+      "end": 17.76,
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "source_indices": [
+        4
+      ],
+      "id": "stt-2",
+      "baseline": {
+        "source_indices": [
+          4
+        ],
+        "translations": [
+          "우리는 로켓의 속력을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.418470583999998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "속력 계산 방법을 설명하는 문서를 참고하여 속력 계산 방법을 설명하는 문서를 작성하세요.",
+      "prompt_tokens": 315,
+      "generated_tokens": 74,
+      "elapsed_seconds": 4.553787207999999,
+      "context": "The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.5537488339999985,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 315,
+          "max_tokens": 128,
+          "raw_output_tokens": 74,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 4.553921750000001,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 17.76,
+      "end": 23.0,
+      "text": "So we have to apply a technique called separation variables.",
+      "source_indices": [
+        5,
+        6
+      ],
+      "id": "stt-3",
+      "baseline": {
+        "source_indices": [
+          5,
+          6
+        ],
+        "translations": [
+          "우리는 로켓의 속력을 원하는 것입니다. 로켓의 속력을 원하는 것으로 번역됩니다.",
+          "로켓의 속력을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.642212416,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "우리는 배추 속도를 얻기 위해 분리 변수 기술을 적용해야 합니다.",
+      "prompt_tokens": 287,
+      "generated_tokens": 55,
+      "elapsed_seconds": 3.649167124999998,
+      "context": "And we want to ultimately get the speed of the rocket.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.6491201249999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 287,
+          "max_tokens": 128,
+          "raw_output_tokens": 55,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.6493509589999995,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 23.0,
+      "end": 25.96,
+      "text": "And then we want to integrate.",
+      "source_indices": [
+        7
+      ],
+      "id": "stt-4",
+      "baseline": {
+        "source_indices": [
+          7
+        ],
+        "translations": [
+          "그리고 우리는 통합을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.4113965830000055,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 적분을 실행하고 싶습니다.",
+      "prompt_tokens": 294,
+      "generated_tokens": 31,
+      "elapsed_seconds": 2.7073902919999995,
+      "context": "So we have to apply a technique called separation variables.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.7073437499999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 294,
+          "max_tokens": 128,
+          "raw_output_tokens": 31,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.707544875,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 25.96,
+      "end": 33.32,
+      "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away.",
+      "source_indices": [
+        8,
+        9
+      ],
+      "id": "stt-5",
+      "baseline": {
+        "source_indices": [
+          8,
+          9
+        ],
+        "translations": [
+          "우리는 통합을 원하는 것입니다.",
+          "더 이상 존재하지 않게 만들어주세요."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.742702667000003,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "And then we want to integrate.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.042389707999998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 309,
+          "max_tokens": 128,
+          "raw_output_tokens": 56,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.947002625,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 326,
+          "max_tokens": 128,
+          "raw_output_tokens": 74,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 8.989617209000002,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 33.32,
+      "end": 42.32,
+      "text": "And we're left with mR dvR equals dmRu.",
+      "source_indices": [
+        10
+      ],
+      "id": "stt-6",
+      "baseline": {
+        "source_indices": [
+          10
+        ],
+        "translations": [
+          "더 이상 존재하지 않게 만들어주세요.\" 라는 영어 원문은 한국어로 \"더 이상 존재하지 않게 만들어주세요.\"로 번역됩니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.858288375000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "What we're going to do is, first, we're going to multiply by dt, so that falls away.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.9517324589999987,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 328,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.9868620829999983,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 327,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 3.9388531250000014,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 42.32,
+      "end": 47.0,
+      "text": "And we're going to shuffle the m onto the other side.",
+      "source_indices": [
+        11
+      ],
+      "id": "stt-7",
+      "baseline": {
+        "source_indices": [
+          11
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.1943685830000064,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "우리는 다른 쪽에서 m을 순회합니다.",
+      "prompt_tokens": 308,
+      "generated_tokens": 62,
+      "elapsed_seconds": 4.079621666999998,
+      "context": "And we're left with mR dvR equals dmRu.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.079584583999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 308,
+          "max_tokens": 128,
+          "raw_output_tokens": 62,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 4.079762291999998,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 47.0,
+      "end": 51.16,
+      "text": "And we're left with dvR equals u is a constant.",
+      "source_indices": [
+        12
+      ],
+      "id": "stt-8",
+      "baseline": {
+        "source_indices": [
+          12
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것"
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.638294375000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "dvR = u는 상수입니다.",
+      "prompt_tokens": 309,
+      "generated_tokens": 16,
+      "elapsed_seconds": 2.0568248749999967,
+      "context": "And we're going to shuffle the m onto the other side.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.056787415999999,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 309,
+          "max_tokens": 128,
+          "raw_output_tokens": 16,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.056959874999997,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 51.16,
+      "end": 53.24,
+      "text": "So that goes up front.",
+      "source_indices": [
+        13
+      ],
+      "id": "stt-9",
+      "baseline": {
+        "source_indices": [
+          13
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.8221906659999973,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것은 앞쪽으로 올라가는 것입니다.",
+      "prompt_tokens": 293,
+      "generated_tokens": 34,
+      "elapsed_seconds": 6.349494374999999,
+      "context": "And we're left with dvR equals u is a constant.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.491859667,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 283,
+          "max_tokens": 128,
+          "raw_output_tokens": 51,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.857559665999993,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 293,
+          "max_tokens": 128,
+          "raw_output_tokens": 34,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 6.350368834000001,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 53.24,
+      "end": 58.56,
+      "text": "And then we have dmR over mR.",
+      "source_indices": [
+        14
+      ],
+      "id": "stt-10",
+      "baseline": {
+        "source_indices": [
+          14
+        ],
+        "translations": [
+          "그리고 우리는 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터"
+        ],
+        "error_count": 0,
+        "translation_seconds": 9.431052459,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "우리는 dmR 위에 mR 위에 있습니다.",
+      "prompt_tokens": 299,
+      "generated_tokens": 73,
+      "elapsed_seconds": 4.638146084000006,
+      "context": "So that goes up front.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.6381001669999975,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 299,
+          "max_tokens": 128,
+          "raw_output_tokens": 73,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 4.638517084,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 58.56,
+      "end": 61.68,
+      "text": "That's an equation that we can integrate now.",
+      "source_indices": [
+        15
+      ],
+      "id": "stt-11",
+      "baseline": {
+        "source_indices": [
+          15
+        ],
+        "translations": [
+          "그것은 지금 설계 된 수식입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.9713318339999972,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "적분 할 수 있는 방정식이 있습니다.",
+      "prompt_tokens": 298,
+      "generated_tokens": 33,
+      "elapsed_seconds": 2.829529291,
+      "context": "And then we have dmR over mR.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.829487916000005,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 298,
+          "max_tokens": 128,
+          "raw_output_tokens": 33,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.8297156250000057,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 61.68,
+      "end": 65.76,
+      "text": "And we can do that.",
+      "source_indices": [
+        16
+      ],
+      "id": "stt-12",
+      "baseline": {
+        "source_indices": [
+          16
+        ],
+        "translations": [
+          "그러면 우리는 그것을 할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 5.024093500000006,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것은 지금 처리할 수 있습니다.",
+      "prompt_tokens": 280,
+      "generated_tokens": 31,
+      "elapsed_seconds": 2.604899874999994,
+      "context": "That's an equation that we can integrate now.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.6048403329999985,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 280,
+          "max_tokens": 128,
+          "raw_output_tokens": 31,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.6050804999999997,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 65.76,
+      "end": 70.96,
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "source_indices": [
+        17,
+        18
+      ],
+      "id": "stt-13",
+      "baseline": {
+        "source_indices": [
+          17,
+          18
+        ],
+        "translations": [
+          "그 배치는 어렵습니다. 우리는 그것을 체계적으로 관리해야 합니다.",
+          "적분 구간은 어렵습니다. 우리는 그것을 체계적으로 관리해야 합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.645774040999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "적분 구간에서 적분을 수행하는 것은 어렵습니다.",
+      "prompt_tokens": 305,
+      "generated_tokens": 45,
+      "elapsed_seconds": 3.4956703330000067,
+      "context": "And we can do that.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.495598582999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 305,
+          "max_tokens": 128,
+          "raw_output_tokens": 45,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.495872042000002,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 70.96,
+      "end": 76.4,
+      "text": "We have vR, and actually these now are all primes.",
+      "source_indices": [
+        19
+      ],
+      "id": "stt-14",
+      "baseline": {
+        "source_indices": [
+          19
+        ],
+        "translations": [
+          "우리는 그것을 체계적으로 관리해야 합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.261706832999991,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "And the tricky bit is that we need to take care of the integration limits here.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.7483979999999946,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 309,
+          "max_tokens": 128,
+          "raw_output_tokens": 27,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.8187297079999922,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 316,
+          "max_tokens": 128,
+          "raw_output_tokens": 26,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 5.567642499999991,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 76.4,
+      "end": 80.84,
+      "text": "So we have vR going from v0.",
+      "source_indices": [
+        20
+      ],
+      "id": "stt-15",
+      "baseline": {
+        "source_indices": [
+          20
+        ],
+        "translations": [
+          "우리는 0.0에서 시작하여 가속화된 움직임을 보이는 가상현실 기술을 개발하고 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 7.198555083000002,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "We have vR, and actually these now are all primes.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.417493124999993,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 305,
+          "max_tokens": 128,
+          "raw_output_tokens": 61,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.382256417000008,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 315,
+          "max_tokens": 128,
+          "raw_output_tokens": 20,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 6.8004018749999915,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 80.84,
+      "end": 83.48,
+      "text": "That is our initial condition here.",
+      "source_indices": [
+        21
+      ],
+      "id": "stt-16",
+      "baseline": {
+        "source_indices": [
+          21
+        ],
+        "translations": [
+          "첫째 조건은 이곳입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.496033291999993,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "초기 조건이 있습니다.",
+      "prompt_tokens": 297,
+      "generated_tokens": 21,
+      "elapsed_seconds": 2.484866249999996,
+      "context": "So we have vR going from v0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.4846888750000033,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 297,
+          "max_tokens": 128,
+          "raw_output_tokens": 21,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.4863615419999974,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 83.48,
+      "end": 94.12,
+      "text": "2 vR prime of t.",
+      "source_indices": [
+        22
+      ],
+      "id": "stt-17",
+      "baseline": {
+        "source_indices": [
+          22
+        ],
+        "translations": [
+          "2 번째 숫자 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인"
+        ],
+        "error_count": 0,
+        "translation_seconds": 9.11010487499999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "That is our initial condition here.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 6.942373415999995,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 294,
+          "max_tokens": 128,
+          "raw_output_tokens": 121,
+          "finish_reason": null,
+          "rejection_reason": "repetition",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.8168456669999955,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 311,
+          "max_tokens": 128,
+          "raw_output_tokens": 55,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 10.759725416999999,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 94.12,
+      "end": 99.32,
+      "text": "And for the mass, we have mR prime equals m0.",
+      "source_indices": [
+        23
+      ],
+      "id": "stt-18",
+      "baseline": {
+        "source_indices": [
+          23
+        ],
+        "translations": [
+          "질량에 대한 정보를 제공하지 않았습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.0165171669999893,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "2 vR prime of t.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.3102688749999913,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 316,
+          "max_tokens": 128,
+          "raw_output_tokens": 44,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.6230383750000072,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 332,
+          "max_tokens": 128,
+          "raw_output_tokens": 23,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 5.933762666999996,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 99.32,
+      "end": 100.8,
+      "text": "Actually, not quite m0.",
+      "source_indices": [
+        24
+      ],
+      "id": "stt-19",
+      "baseline": {
+        "source_indices": [
+          24
+        ],
+        "translations": [
+          "실제로 적어도 0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "error_count": 0,
+        "translation_seconds": 7.29099633300001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "And for the mass, we have mR prime equals m0.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.528463166999998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 300,
+          "max_tokens": 128,
+          "raw_output_tokens": 21,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.9953587090000013,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 310,
+          "max_tokens": 128,
+          "raw_output_tokens": 41,
+          "finish_reason": null,
+          "rejection_reason": "repetition",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 6.525586832999991,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 100.8,
+      "end": 108.68,
+      "text": "It's 2 m0, because the initial mass of this is the dry mass and the fuel mass.",
+      "source_indices": [
+        25,
+        26
+      ],
+      "id": "stt-20",
+      "baseline": {
+        "source_indices": [
+          25,
+          26
+        ],
+        "translations": [
+          "이 것은 2kg입니다. 이것은 처음적인 질량이 청정 질량입니다.",
+          "and the fuel mass.\" 는 한국어로 \"배출물 질량\"으로 번역됩니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.154161248999998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "이 것은 2 m0입니다. 초기 질량은 건조 질량과 연료 질량입니다.",
+      "prompt_tokens": 351,
+      "generated_tokens": 118,
+      "elapsed_seconds": 8.753528916999997,
+      "context": "Actually, not quite m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 8.753366542000009,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 351,
+          "max_tokens": 128,
+          "raw_output_tokens": 118,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 8.754429791999996,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 108.68,
+      "end": 111.6,
+      "text": "So that's 2 m0.",
+      "source_indices": [
+        27
+      ],
+      "id": "stt-21",
+      "baseline": {
+        "source_indices": [
+          27
+        ],
+        "translations": [
+          "배출물 질량이 2 미터입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.5305734169999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "이것은 2 m0입니다.",
+      "prompt_tokens": 310,
+      "generated_tokens": 62,
+      "elapsed_seconds": 4.754866458000009,
+      "context": "It's 2 m0, because the initial mass of this is the dry mass and the fuel mass.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.754256749999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 310,
+          "max_tokens": 128,
+          "raw_output_tokens": 62,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 4.755789291999989,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 111.6,
+      "end": 116.4,
+      "text": "So this is the initial mass.",
+      "source_indices": [
+        28
+      ],
+      "id": "stt-22",
+      "baseline": {
+        "source_indices": [
+          28
+        ],
+        "translations": [
+          "이것은 초기 질량입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.271580499999999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "초기 질량은 무엇인가요?",
+      "prompt_tokens": 292,
+      "generated_tokens": 22,
+      "elapsed_seconds": 2.617152166000011,
+      "context": "So that's 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.6169964169999957,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 292,
+          "max_tokens": 128,
+          "raw_output_tokens": 22,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.617847334000004,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 116.4,
+      "end": 124.92,
+      "text": "And then we go to mR prime equals m of vR.",
+      "source_indices": [
+        29
+      ],
+      "id": "stt-23",
+      "baseline": {
+        "source_indices": [
+          29
+        ],
+        "translations": [
+          "그러면 우리는 mR 프리미엄이 mR 변수를 가리킵니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 5.013867792000013,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "So this is the initial mass.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.8057304579999993,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 304,
+          "max_tokens": 128,
+          "raw_output_tokens": 9,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.3296702089999997,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 321,
+          "max_tokens": 128,
+          "raw_output_tokens": 43,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 5.136135917000004,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 124.92,
+      "end": 127.4,
+      "text": "All right, so let's do that.",
+      "source_indices": [
+        30
+      ],
+      "id": "stt-24",
+      "baseline": {
+        "source_indices": [
+          30
+        ],
+        "translations": [
+          "좋아요, 그럴게 해봅시다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.959064624999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "좋아요, 그럴게 해봐.",
+      "prompt_tokens": 287,
+      "generated_tokens": 57,
+      "elapsed_seconds": 3.7777571249999937,
+      "context": "And then we go to mR prime equals m of vR.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.777699999999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 287,
+          "max_tokens": 128,
+          "raw_output_tokens": 57,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.777922083000007,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 127.4,
+      "end": 136.96,
+      "text": "We're going to get vR minus v0 equals u1 over m.",
+      "source_indices": [
+        31
+      ],
+      "id": "stt-25",
+      "baseline": {
+        "source_indices": [
+          31
+        ],
+        "translations": [
+          "우리는 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해"
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.7096149589999925,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "우리는 분수 곱셈을 통해 vR와 v0를 곱하고, u1을 m로 나누어 계산합니다.",
+      "prompt_tokens": 310,
+      "generated_tokens": 57,
+      "elapsed_seconds": 3.9390875830000027,
+      "context": "All right, so let's do that.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.939053084000008,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 310,
+          "max_tokens": 128,
+          "raw_output_tokens": 57,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.9392127080000137,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 136.96,
+      "end": 139.56,
+      "text": "Integrated gives us an ln.",
+      "source_indices": [
+        32
+      ],
+      "id": "stt-26",
+      "baseline": {
+        "source_indices": [
+          32
+        ],
+        "translations": [
+          "ln\"은 \"logarithmic\"의 줄임말로, 최적화된 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 �"
+        ],
+        "error_count": 0,
+        "translation_seconds": 8.891169500000018,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "ln은 직관적인 척도입니다.",
+      "prompt_tokens": 310,
+      "generated_tokens": 25,
+      "elapsed_seconds": 3.885322166999998,
+      "context": "We're going to get vR minus v0 equals u1 over m.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.4277855830000021,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 303,
+          "max_tokens": 128,
+          "raw_output_tokens": 2,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.4574792920000164,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 310,
+          "max_tokens": 128,
+          "raw_output_tokens": 25,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.885450834000011,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 139.56,
+      "end": 141.32,
+      "text": "So ln.",
+      "source_indices": [
+        33
+      ],
+      "id": "stt-27",
+      "baseline": {
+        "source_indices": [
+          33
+        ],
+        "translations": [
+          "ln은 logarithmic의 줄임말로, 최적화된 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 최�"
+        ],
+        "error_count": 0,
+        "translation_seconds": 8.18607554099998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "Integrated gives us an ln.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.4680469999999843,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 290,
+          "max_tokens": 128,
+          "raw_output_tokens": 3,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.168427916999974,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 306,
+          "max_tokens": 128,
+          "raw_output_tokens": 58,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 5.6367921249999995,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 141.32,
+      "end": 152.81,
+      "text": "And then we can immediately do this here over 2 m0.",
+      "source_indices": [
+        34
+      ],
+      "id": "stt-28",
+      "baseline": {
+        "source_indices": [
+          34
+        ],
+        "translations": [
+          "이제 우리는 이곳에서 즉각적으로 이 일을 수행할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.988525417000005,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "So ln.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.8675331670000048,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 296,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.8582122919999904,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 316,
+          "max_tokens": 128,
+          "raw_output_tokens": 47,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 5.72609908299998,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 152.81,
+      "end": 156.89,
+      "text": "And we ultimately want this.",
+      "source_indices": [
+        35
+      ],
+      "id": "stt-29",
+      "baseline": {
+        "source_indices": [
+          35
+        ],
+        "translations": [
+          "우리는 이곳에서 즉각적으로 이 일을 수행할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.7137844169999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "우리 궁극적으로 이것을 원하고 있습니다.",
+      "prompt_tokens": 283,
+      "generated_tokens": 37,
+      "elapsed_seconds": 3.289393166000025,
+      "context": "And then we can immediately do this here over 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.2892936670000097,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 283,
+          "max_tokens": 128,
+          "raw_output_tokens": 37,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.2916435419999743,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 156.89,
+      "end": 159.01,
+      "text": "So this is a vR of t, of course.",
+      "source_indices": [
+        36
+      ],
+      "id": "stt-30",
+      "baseline": {
+        "source_indices": [
+          36
+        ],
+        "translations": [
+          "이것은 테스트 입니다. 물론 이것은 가능한 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.826570707999991,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "And we ultimately want this.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 5.0800047500000005,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 298,
+          "max_tokens": 128,
+          "raw_output_tokens": 69,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.2844617499999913,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 316,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 7.366133415999997,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 159.01,
+      "end": 171.65,
+      "text": "And then we got v0 plus u ln mR over 2 m0.",
+      "source_indices": [
+        37
+      ],
+      "id": "stt-31",
+      "baseline": {
+        "source_indices": [
+          37
+        ],
+        "translations": [
+          "그러면 우리는 0.5로 나누어 받아들였습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.197667749999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "So this is a vR of t, of course.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.9051874580000003,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 319,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.738890791000017,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 331,
+          "max_tokens": 128,
+          "raw_output_tokens": 47,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 5.645999582999991,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 171.65,
+      "end": 176.78,
+      "text": "And that is our equation.",
+      "source_indices": [
+        38
+      ],
+      "id": "stt-32",
+      "baseline": {
+        "source_indices": [
+          38
+        ],
+        "translations": [
+          "그것은 우리의 방정식입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.699453417000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것은 우리 방정식입니다.",
+      "prompt_tokens": 287,
+      "generated_tokens": 19,
+      "elapsed_seconds": 2.1027742079999996,
+      "context": "And then we got v0 plus u ln mR over 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.1026706659999945,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 287,
+          "max_tokens": 128,
+          "raw_output_tokens": 19,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.103454541000019,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 176.78,
+      "end": 179.58,
+      "text": "So what does this equation tell us?",
+      "source_indices": [
+        39
+      ],
+      "id": "stt-33",
+      "baseline": {
+        "source_indices": [
+          39
+        ],
+        "translations": [
+          "이 방정식은 무엇을 알려주는지 설명합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.337206500000008,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "이 수식은 무엇을 알려주는지 설명하세요.",
+      "prompt_tokens": 277,
+      "generated_tokens": 31,
+      "elapsed_seconds": 2.6929934590000073,
+      "context": "And that is our equation.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.6928824590000033,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 277,
+          "max_tokens": 128,
+          "raw_output_tokens": 31,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.693350707999997,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 179.58,
+      "end": 194.46,
+      "text": "mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,",
+      "source_indices": [
+        40,
+        41
+      ],
+      "id": "stt-34",
+      "baseline": {
+        "source_indices": [
+          40,
+          41
+        ],
+        "translations": [
+          "설명 없이 번역문만 답하세요. 용어: mass=질량. 이전 문맥(번역하거나 반복하지 마세요): 이 방정식은 무엇을 알려주는지 설명합니다. \"설명 없이 번역문만 답하세요.",
+          "이 방정식은 무엇을 알려주는지 설명합니다.\" 라는 문장은 어떤 방정식이 양수가 아닌지 설명하지 않습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 11.349506625000004,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "So what does this equation tell us?",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.021306917000004,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 332,
+          "max_tokens": 128,
+          "raw_output_tokens": 53,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_symbol",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.87383354100001,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 348,
+          "max_tokens": 128,
+          "raw_output_tokens": 70,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_number",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 8.895801292000016,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 194.46,
+      "end": 209.9,
+      "text": "which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "source_indices": [
+        42,
+        43,
+        44
+      ],
+      "id": "stt-35",
+      "baseline": {
+        "source_indices": [
+          42,
+          43,
+          44
+        ],
+        "translations": [
+          "속도\"는 \"속도\"입니다.",
+          "속도가 감소하고 있습니다.",
+          "속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 �"
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.749694876000007,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "속도가 저하되어 있으므로 추적 계수가 없어질 것입니다.",
+      "prompt_tokens": 339,
+      "generated_tokens": 57,
+      "elapsed_seconds": 4.391595582999997,
+      "context": "mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.391485417000013,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 339,
+          "max_tokens": 128,
+          "raw_output_tokens": 57,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 4.393441332999998,
+      "semantic_review": "pending_manual_review"
+    }
+  ],
+  "summary": {
+    "stt": {
+      "group_count": 36,
+      "validated_outputs": 22,
+      "failed_outputs": 14,
+      "translation_seconds": 176.134855212,
+      "attempt_count": 52,
+      "rejection_reasons": {
+        "invalid_format": 5,
+        "missing_math_prime": 5,
+        "missing_math_symbol": 9,
+        "missing_number": 1,
+        "missing_term": 1,
+        "prompt_leak": 7,
+        "repetition": 2
+      },
+      "semantic_accuracy": null,
+      "interpretation": "검증 통과는 의미 정확성의 판정이 아니다. 기준 번역·수식·부정·비교 관계를 수동 확인해야 한다."
+    }
+  },
+  "comparison_limits": [
+    "공식과 STT는 구간 경계가 다를 수 있으므로 그룹별 시간으로 직접 성능 우열을 판정하지 않는다.",
+    "both에서는 공식을 먼저 실행해 이후 STT에 워밍업 효과가 있을 수 있다. stt 단독 실행과 조건이 다르다.",
+    "이전 저장 결과와 실행 조건·문맥·출력 검증이 달라 정확도 개선율로 해석하지 않는다."
+  ]
+}

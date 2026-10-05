@@ -1,0 +1,131 @@
+[
+  {
+    "id": "net_force",
+    "text": "The net force acting on the object is zero.",
+    "reference": "물체에 작용하는 알짜힘은 0이다.",
+    "required_terms": [
+      "알짜힘"
+    ],
+    "forbidden_terms": [
+      "중력"
+    ],
+    "context": ""
+  },
+  {
+    "id": "velocity",
+    "text": "The velocity is constant.",
+    "reference": "속도는 일정하다.",
+    "required_terms": [
+      "속도"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "mass",
+    "text": "The mass of the object is two kilograms.",
+    "reference": "물체의 질량은 2킬로그램이다.",
+    "required_terms": [
+      "질량"
+    ],
+    "forbidden_terms": [],
+    "context": "속도는 일정합니다."
+  },
+  {
+    "id": "acceleration",
+    "text": "Acceleration is the rate of change of velocity.",
+    "reference": "가속도는 속도의 변화율이다.",
+    "required_terms": [
+      "가속도",
+      "속도"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "speed",
+    "text": "Speed is the magnitude of velocity.",
+    "reference": "속력은 속도의 크기이다.",
+    "required_terms": [
+      "속력",
+      "속도"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "displacement",
+    "text": "Displacement differs from distance traveled.",
+    "reference": "변위는 이동한 거리와 다르다.",
+    "required_terms": [
+      "변위",
+      "거리"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "momentum",
+    "text": "Momentum is the product of mass and velocity.",
+    "reference": "운동량은 질량과 속도의 곱이다.",
+    "required_terms": [
+      "운동량",
+      "질량",
+      "속도"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "impulse",
+    "text": "Impulse is the change in momentum.",
+    "reference": "충격량은 운동량의 변화이다.",
+    "required_terms": [
+      "충격량",
+      "운동량"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "energy",
+    "text": "Kinetic energy increases with speed.",
+    "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+    "required_terms": [
+      "운동 에너지",
+      "속력"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "limits",
+    "text": "We need to take care of the integration limits here.",
+    "reference": "여기서 적분 구간에 주의해야 한다.",
+    "required_terms": [
+      "적분"
+    ],
+    "forbidden_terms": [],
+    "context": "속도는 일정합니다."
+  },
+  {
+    "id": "gravity",
+    "text": "Gravity pulls the object downward.",
+    "reference": "중력은 물체를 아래로 당긴다.",
+    "required_terms": [
+      "중력"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  },
+  {
+    "id": "friction",
+    "text": "Friction opposes the motion.",
+    "reference": "마찰은 운동을 방해한다.",
+    "required_terms": [
+      "마찰"
+    ],
+    "forbidden_terms": [],
+    "context": ""
+  }
+]

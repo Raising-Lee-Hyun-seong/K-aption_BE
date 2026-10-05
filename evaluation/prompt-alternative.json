@@ -1,0 +1,251 @@
+{
+  "summary": {
+    "case_count": 12,
+    "model_load_seconds": 3.5463346249999996,
+    "stt_seconds": null,
+    "translation_seconds": 33.555222333,
+    "valid_outputs": 12,
+    "term_passes": 12,
+    "forbidden_term_cases": 0,
+    "context_copies": 0
+  },
+  "results": [
+    {
+      "id": "net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "translation": "알짜힘이 작용하는 것이 아니라면 힘이 작용하는 것입니다.",
+      "prompt_tokens": 243,
+      "generated_tokens": 51,
+      "elapsed_seconds": 3.766614167,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 3.7670574579999996
+    },
+    {
+      "id": "velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "속도는 일정합니다.",
+      "prompt_tokens": 226,
+      "generated_tokens": 14,
+      "elapsed_seconds": 1.526890999999999,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 1.5270238750000003
+    },
+    {
+      "id": "mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "translation": "질량이 2kg인 것이 아닙니다.",
+      "prompt_tokens": 281,
+      "generated_tokens": 26,
+      "elapsed_seconds": 5.508447084,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 5.508552666
+    },
+    {
+      "id": "acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "가속도는 속도의 변화으로 묘사됩니다.",
+      "prompt_tokens": 240,
+      "generated_tokens": 34,
+      "elapsed_seconds": 2.352470417000001,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.3526035420000007
+    },
+    {
+      "id": "speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "속도는 속력의 크기입니다.",
+      "prompt_tokens": 237,
+      "generated_tokens": 26,
+      "elapsed_seconds": 2.0949504579999996,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.0950615
+    },
+    {
+      "id": "displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "변위는 거리를 넘어 이동하는 것과 달리 움직이는 것입니다.",
+      "prompt_tokens": 240,
+      "generated_tokens": 52,
+      "elapsed_seconds": 3.071007957999999,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 3.0711355000000005
+    },
+    {
+      "id": "momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "운동량은 질량과 속도의 곱입니다.",
+      "prompt_tokens": 251,
+      "generated_tokens": 34,
+      "elapsed_seconds": 2.349300124999999,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.349406834
+    },
+    {
+      "id": "impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "운동량이 충격량으로 변경됩니다.",
+      "prompt_tokens": 245,
+      "generated_tokens": 35,
+      "elapsed_seconds": 2.397516416000002,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.397625833000003
+    },
+    {
+      "id": "energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "운동 에너지가 속력에 따라 증가합니다.",
+      "prompt_tokens": 246,
+      "generated_tokens": 35,
+      "elapsed_seconds": 2.5519939580000006,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.5523013750000025
+    },
+    {
+      "id": "limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "translation": "적분 구간에 대한 관심이 있습니다.",
+      "prompt_tokens": 285,
+      "generated_tokens": 35,
+      "elapsed_seconds": 2.633338375000001,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.633821749999999
+    },
+    {
+      "id": "gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "중력은 물체를 아래쪽으로 끌어당긴다.",
+      "prompt_tokens": 231,
+      "generated_tokens": 40,
+      "elapsed_seconds": 3.1387947910000022,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 3.1392036250000004
+    },
+    {
+      "id": "friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "translation": "마찰이 움직임을 막는다.",
+      "prompt_tokens": 229,
+      "generated_tokens": 25,
+      "elapsed_seconds": 2.1607850420000005,
+      "error": null,
+      "term_pass": true,
+      "forbidden_matches": [],
+      "context_copied": false,
+      "total_seconds": 2.161428375
+    }
+  ]
+}

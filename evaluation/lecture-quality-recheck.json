@@ -1,0 +1,182 @@
+{
+  "method": "최초 전체 실행에서 새 검증 규칙에 걸리는 기존 수락 출력만 재생성한 부분 평가다. 전체 실행 시간으로 사용하지 않는다.",
+  "source": "evaluation/lecture-quality.json",
+  "results": [
+    {
+      "category": "official_results",
+      "id": "official-2",
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "context": "And we want to ultimately get the speed of the rocket.",
+      "previous_translation": "변수 분리\"와 \"적분\"이라는 용어를 사용하여 원문을 한국어로 번역합니다.",
+      "revalidation_reason": "prompt_leak",
+      "translation": "변수 분리 기술을 적용하고 적분을 취합니다.",
+      "prompt_tokens": 332,
+      "generated_tokens": 40,
+      "elapsed_seconds": 8.447813584,
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.722432792,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 321,
+          "max_tokens": 128,
+          "raw_output_tokens": 48,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.7250953750000004,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 332,
+          "max_tokens": 128,
+          "raw_output_tokens": 40,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 8.450833041
+    },
+    {
+      "category": "official_results",
+      "id": "official-4",
+      "text": "And we're going to shuffle the m onto the other side.",
+      "context": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "previous_translation": "우리는 먼저 분수를 곱하여 빼놓고, 그 결과로 반응 방정식을 얻습니다. (참고만 하세요.)",
+      "revalidation_reason": "prompt_leak",
+      "translation": "우리는 다른 쪽에서 m을 순회할 것입니다.",
+      "prompt_tokens": 302,
+      "generated_tokens": 88,
+      "elapsed_seconds": 13.342736875,
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 7.099242957999998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 319,
+          "max_tokens": 128,
+          "raw_output_tokens": 101,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 6.243259375000001,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 302,
+          "max_tokens": 128,
+          "raw_output_tokens": 88,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 13.344596625
+    },
+    {
+      "category": "official_results",
+      "id": "official-5",
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "context": "And we're going to shuffle the m onto the other side.",
+      "previous_translation": "우리는 다음과 같이 숫자를 옮겨줄 것입니다. (참고만 하세요.)",
+      "revalidation_reason": "prompt_leak",
+      "translation": "우리는 데이터 버스 및 데이터 마스크를 사용하여 데이터 마스크를 생성합니다.",
+      "prompt_tokens": 320,
+      "generated_tokens": 60,
+      "elapsed_seconds": 10.443499166999999,
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 5.741031959000001,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 311,
+          "max_tokens": 128,
+          "raw_output_tokens": 78,
+          "finish_reason": null,
+          "rejection_reason": "prompt_leak",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.702011459000005,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 320,
+          "max_tokens": 128,
+          "raw_output_tokens": 60,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 10.444989417000002
+    },
+    {
+      "category": "official_results",
+      "id": "official-17",
+      "text": "And then we can immediately do this here over 2m0.",
+      "context": "We're going to get vr minus v0 equals u 1 over m, integrated gives us lm, so lm.",
+      "previous_translation": "2m0\"을 \"2m\"으로 변경하면 됩니다.",
+      "revalidation_reason": "invented_unit",
+      "translation": "그리고 이곳에서 2m0 이상으로 즉각적으로 이루어질 수 있습니다.",
+      "prompt_tokens": 316,
+      "generated_tokens": 57,
+      "elapsed_seconds": 7.816552625,
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.1261909589999988,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 319,
+          "max_tokens": 128,
+          "raw_output_tokens": 29,
+          "finish_reason": "stop",
+          "rejection_reason": "invented_unit",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.690198958000003,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 316,
+          "max_tokens": 128,
+          "raw_output_tokens": 57,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 7.817334959
+    }
+  ]
+}
