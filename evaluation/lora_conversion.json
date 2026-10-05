@@ -1,0 +1,60 @@
+{
+  "repository": "quantumaikr/KoreanLM-LoRA",
+  "revision": "1447f2ae33e32cb8af610758b90adda0c05670a2",
+  "source_sha256": {
+    "adapter_model.bin": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+    "adapter_config.json": "6fa154dd2066678e519479b1f82c1530981a45ecbe7b73a94b7903a182322e2d"
+  },
+  "tensor_count": 128,
+  "mlx_config": {
+    "fine_tune_type": "lora",
+    "num_layers": 32,
+    "lora_parameters": {
+      "rank": 4,
+      "scale": 4.0,
+      "dropout": 0.0,
+      "keys": [
+        "self_attn.q_proj",
+        "self_attn.v_proj"
+      ]
+    }
+  },
+  "numerical_check": {
+    "projection_pairs_checked": 64,
+    "max_abs_difference": 0.0,
+    "rtol": 1e-05,
+    "atol": 1e-06,
+    "backend": "CPU PyTorch; actual MLX runtime not executed"
+  },
+  "mlx_cpu_check": {
+    "projection_pairs_checked": 64,
+    "max_abs_difference": 0.0,
+    "rtol": 1e-05,
+    "atol": 1e-06,
+    "backend": "MLX CPU vs PEFT-style PyTorch CPU"
+  },
+  "adapter_signal": {
+    "matrices": {
+      "A": {
+        "tensor_count": 64,
+        "zero_tensor_count": 0,
+        "nonzero_elements": 1048576
+      },
+      "B": {
+        "tensor_count": 64,
+        "zero_tensor_count": 64,
+        "nonzero_elements": 0
+      }
+    },
+    "all_b_zero": true,
+    "delta_identically_zero": true,
+    "interpretation": "모든 B가 0이므로 scale * B @ A = 0이다. 이 어댑터는 학습된 변화를 추가하지 않는다."
+  },
+  "weights_bytes": 8402400,
+  "output_sha256": "e23b174ba405dda35ac3b9b567c94c8e4dc3ca584bc6f8319660aee2739eca58",
+  "configured_base_name": "decapoda-research/llama-7b-hf",
+  "base_config": "models/koreanlm-4bit/config.json",
+  "base_model_loaded": false,
+  "translation_quality_tested": false,
+  "limitation": "구조·변환 수치만 검증했다. 기반 모델 리비전·전체 모델 추론 호환성은 미검증이다."
+}

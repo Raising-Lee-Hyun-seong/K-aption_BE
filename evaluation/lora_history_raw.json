@@ -1,0 +1,513 @@
+{
+  "refs": {
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/refs",
+    "data": {
+      "tags": [],
+      "branches": [
+        {
+          "name": "main",
+          "ref": "refs/heads/main",
+          "targetCommit": "1447f2ae33e32cb8af610758b90adda0c05670a2"
+        }
+      ],
+      "converts": []
+    },
+    "next_page": null
+  },
+  "commits": {
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/commits/main",
+    "data": [
+      {
+        "id": "1447f2ae33e32cb8af610758b90adda0c05670a2",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-04T06:24:46.000Z"
+      },
+      {
+        "id": "217a147d4ec7beceff9fce9ca489037fe97358c7",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T22:49:27.000Z"
+      },
+      {
+        "id": "653ee1ee10885e1bd925a8409b35b824eb270f10",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T12:46:33.000Z"
+      },
+      {
+        "id": "11710234535df87d0814d89f8c15ff31e2b8f853",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T12:32:06.000Z"
+      },
+      {
+        "id": "a2ce4591cb00dfaed5d7bb0932f34e44231b0a73",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T08:50:53.000Z"
+      },
+      {
+        "id": "666ce662c56c6cfcef363c96538af2c52e94ae6d",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T08:47:46.000Z"
+      },
+      {
+        "id": "d83e3e6bd7aa5b1d3f5ac9d4a064448e1169c10b",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T08:45:52.000Z"
+      },
+      {
+        "id": "6632107f2a0284e3f77142b5604e1867fdad8eef",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T08:43:15.000Z"
+      },
+      {
+        "id": "5c8519f5d51eaecddb235ded2b52f62fb00f39bf",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-03T08:22:36.000Z"
+      },
+      {
+        "id": "ad086febbeb577926a37d695fa06fded7c3f9252",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T15:00:37.000Z"
+      },
+      {
+        "id": "c9dfe1ca8fbf3379929231bcaf6eb2459d68dd1c",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:57:59.000Z"
+      },
+      {
+        "id": "79b27a31229dbe8c9614fb2877209463339e9c66",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:53:29.000Z"
+      },
+      {
+        "id": "609bd0650f58166e03b9b4610a924cca7019e0d8",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:42:39.000Z"
+      },
+      {
+        "id": "7eeffc19ce8e5ed07ef4598fc1c96e96e6fa7d46",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:40:07.000Z"
+      },
+      {
+        "id": "5238c1b4454960aa795d044fea2779939f7eb4d0",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:23:02.000Z"
+      },
+      {
+        "id": "0a1a026b1b9115b6e6d3b0915e41204973703d65",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:19:42.000Z"
+      },
+      {
+        "id": "b9dce9d7403a2575d42a2bb81f79acb735b7a660",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:12:37.000Z"
+      },
+      {
+        "id": "8e500fa75d0c8b8f951457503f3c5c6c576b1343",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:09:51.000Z"
+      },
+      {
+        "id": "faf9c8aa471de1d1fdcf46e234775daf421d96ff",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:07:39.000Z"
+      },
+      {
+        "id": "0945b783d95690469ef7639eed51539ab75d16b3",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:04:31.000Z"
+      },
+      {
+        "id": "d813bcd7b1ccec6cc249b6a7c610c3e7573c8da9",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T14:00:17.000Z"
+      },
+      {
+        "id": "48570512a4e5c99728f12e6543de15963c2bdf16",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T13:56:28.000Z"
+      },
+      {
+        "id": "8b41e1884473f4797e7c24a66666bfc667db9ca4",
+        "title": "Upload model",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T13:26:20.000Z"
+      },
+      {
+        "id": "ef2cd2537ed1859455a49420923bd809617c1e27",
+        "title": "initial commit",
+        "message": "",
+        "authors": [
+          {
+            "user": "quantumaikr",
+            "avatar": "https://cdn-avatars.huggingface.co/v1/production/uploads/64510a76103a50b1f706c687/gAvFTpr5Tqtz2NME5HDC1.png"
+          }
+        ],
+        "date": "2023-05-02T13:26:16.000Z"
+      }
+    ],
+    "next_page": null
+  },
+  "model": {
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA?blobs=true",
+    "data": {
+      "_id": "64510f7841f3c769b909fcf5",
+      "id": "quantumaikr/KoreanLM-LoRA",
+      "private": false,
+      "tags": [
+        "region:us"
+      ],
+      "downloads": 0,
+      "likes": 1,
+      "modelId": "quantumaikr/KoreanLM-LoRA",
+      "author": "quantumaikr",
+      "sha": "1447f2ae33e32cb8af610758b90adda0c05670a2",
+      "lastModified": "2023-05-04T06:24:46.000Z",
+      "gated": false,
+      "disabled": false,
+      "config": {},
+      "siblings": [
+        {
+          "rfilename": ".gitattributes",
+          "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+          "size": 1477
+        },
+        {
+          "rfilename": "adapter_config.json",
+          "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+          "size": 350
+        },
+        {
+          "rfilename": "adapter_model.bin",
+          "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+          "size": 8434381,
+          "lfs": {
+            "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+            "size": 8434381,
+            "pointerSize": 132
+          }
+        }
+      ],
+      "spaces": [],
+      "createdAt": "2023-05-02T13:26:16.000Z",
+      "usedStorage": 8434381
+    },
+    "next_page": null
+  },
+  "author_models": {
+    "url": "https://huggingface.co/api/models?author=quantumaikr&search=KoreanLM&limit=100",
+    "data": [
+      {
+        "_id": "64510f7841f3c769b909fcf5",
+        "id": "quantumaikr/KoreanLM-LoRA",
+        "likes": 1,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 0,
+        "tags": [
+          "region:us"
+        ],
+        "createdAt": "2023-05-02T13:26:16.000Z",
+        "modelId": "quantumaikr/KoreanLM-LoRA"
+      },
+      {
+        "_id": "64520f332f2507dfa874c865",
+        "id": "quantumaikr/KoreanLM",
+        "likes": 33,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 33,
+        "tags": [
+          "transformers",
+          "pytorch",
+          "llama",
+          "text-generation",
+          "vicuna",
+          "ko",
+          "en",
+          "text-generation-inference",
+          "endpoints_compatible",
+          "region:us",
+          "deploy:azure"
+        ],
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "createdAt": "2023-05-03T07:37:23.000Z",
+        "modelId": "quantumaikr/KoreanLM"
+      },
+      {
+        "_id": "64542e1fc4cbe32fbe290be3",
+        "id": "quantumaikr/KoreanLM-hf",
+        "likes": 1,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 63,
+        "tags": [
+          "transformers",
+          "pytorch",
+          "llama",
+          "text-generation",
+          "text-generation-inference",
+          "endpoints_compatible",
+          "region:us"
+        ],
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "createdAt": "2023-05-04T22:13:51.000Z",
+        "modelId": "quantumaikr/KoreanLM-hf"
+      },
+      {
+        "_id": "64e3275b3e2e103504901c47",
+        "id": "quantumaikr/KoreanLM-1.5b",
+        "likes": 3,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 137,
+        "tags": [
+          "transformers",
+          "safetensors",
+          "llama",
+          "text-generation",
+          "text-generation-inference",
+          "endpoints_compatible",
+          "region:us"
+        ],
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "createdAt": "2023-08-21T08:59:07.000Z",
+        "modelId": "quantumaikr/KoreanLM-1.5b"
+      },
+      {
+        "_id": "64e3281a222b232f03e1dd48",
+        "id": "quantumaikr/KoreanLM-3B",
+        "likes": 4,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 449,
+        "tags": [
+          "transformers",
+          "pytorch",
+          "safetensors",
+          "llama",
+          "text-generation",
+          "korean",
+          "foundation",
+          "ko",
+          "en",
+          "text-generation-inference",
+          "endpoints_compatible",
+          "region:us"
+        ],
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "createdAt": "2023-08-21T09:02:18.000Z",
+        "modelId": "quantumaikr/KoreanLM-3B"
+      },
+      {
+        "_id": "64f40fd52a5c9fb86a578b2d",
+        "id": "quantumaikr/KoreanLM-llama-2-7B-finetuned",
+        "likes": 1,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 19,
+        "tags": [
+          "transformers",
+          "safetensors",
+          "llama",
+          "text-generation",
+          "text-generation-inference",
+          "endpoints_compatible",
+          "region:us"
+        ],
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "createdAt": "2023-09-03T04:47:17.000Z",
+        "modelId": "quantumaikr/KoreanLM-llama-2-7B-finetuned"
+      },
+      {
+        "_id": "64f418ff8ccd3c15fe24eaa0",
+        "id": "quantumaikr/KoreanLM-7B-GPTQ-4bit",
+        "likes": 0,
+        "trendingScore": 0,
+        "private": false,
+        "downloads": 20,
+        "tags": [
+          "transformers",
+          "safetensors",
+          "llama",
+          "text-generation",
+          "text-generation-inference",
+          "endpoints_compatible",
+          "4-bit",
+          "gptq",
+          "region:us"
+        ],
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "createdAt": "2023-09-03T05:26:23.000Z",
+        "modelId": "quantumaikr/KoreanLM-7B-GPTQ-4bit"
+      }
+    ],
+    "next_page": null
+  }
+}

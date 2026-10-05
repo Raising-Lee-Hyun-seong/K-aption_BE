@@ -1,0 +1,80 @@
+{
+  "checked_on": "2026-10-05",
+  "repository": "quantumaikr/KoreanLM-LoRA",
+  "revision": "1447f2ae33e32cb8af610758b90adda0c05670a2",
+  "public": true,
+  "gated": false,
+  "weight_file": {
+    "rfilename": "adapter_model.bin",
+    "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+    "size": 8434381,
+    "lfs": {
+      "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+      "size": 8434381,
+      "pointerSize": 132
+    }
+  },
+  "download_check": {
+    "method": "unauthenticated HEAD with redirects",
+    "http_status": 200,
+    "weights_downloaded": false
+  },
+  "peft_adapter_config": {
+    "base_model_name_or_path": "decapoda-research/llama-7b-hf",
+    "bias": "none",
+    "fan_in_fan_out": false,
+    "inference_mode": true,
+    "init_lora_weights": true,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "modules_to_save": null,
+    "peft_type": "LORA",
+    "r": 4,
+    "target_modules": [
+      "q_proj",
+      "v_proj"
+    ],
+    "task_type": "CAUSAL_LM"
+  },
+  "local_base_config": {
+    "model_type": "llama",
+    "hidden_size": 4096,
+    "num_hidden_layers": 32,
+    "num_attention_heads": 32,
+    "quantization": {
+      "group_size": 64,
+      "bits": 4,
+      "mode": "affine"
+    }
+  },
+  "mlx_conversion_candidate": {
+    "num_layers": 32,
+    "fine_tune_type": "lora",
+    "lora_parameters": {
+      "rank": 4,
+      "scale": 4.0,
+      "dropout": 0.0,
+      "keys": [
+        "self_attn.q_proj",
+        "self_attn.v_proj"
+      ]
+    }
+  },
+  "conversion_mapping": {
+    "lora_A.weight": "lora_a = A.T",
+    "lora_B.weight": "lora_b = B.T",
+    "prefix": "actual tensor keys must be inspected; expected base_model.model.model.layers -> model.layers"
+  },
+  "unverified": [
+    "actual tensor keys, shapes and checksums",
+    "base revision compatibility despite different configured base name",
+    "MLX model loading and translation quality"
+  ],
+  "sources": [
+    "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA?blobs=true",
+    "https://huggingface.co/quantumaikr/KoreanLM-LoRA/blob/1447f2ae33e32cb8af610758b90adda0c05670a2/adapter_config.json",
+    "https://github.com/quantumaikr/KoreanLM/blob/main/generate.py",
+    "installed mlx-lm 0.29.1: tuner/utils.py, tuner/lora.py, utils.py"
+  ],
+  "scale_derivation": "PEFT alpha/r = 16/4 = 4. MLX scale is a direct multiplier, so candidate scale is 4, not alpha 16."
+}

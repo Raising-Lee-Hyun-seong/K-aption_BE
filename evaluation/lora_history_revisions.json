@@ -1,0 +1,659 @@
+[
+  {
+    "revision": "1447f2ae33e32cb8af610758b90adda0c05670a2",
+    "date": "2023-05-04T06:24:46.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/1447f2ae33e32cb8af610758b90adda0c05670a2?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "1447f2ae33e32cb8af610758b90adda0c05670a2"
+  },
+  {
+    "revision": "217a147d4ec7beceff9fce9ca489037fe97358c7",
+    "date": "2023-05-03T22:49:27.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/217a147d4ec7beceff9fce9ca489037fe97358c7?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "217a147d4ec7beceff9fce9ca489037fe97358c7"
+  },
+  {
+    "revision": "653ee1ee10885e1bd925a8409b35b824eb270f10",
+    "date": "2023-05-03T12:46:33.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/653ee1ee10885e1bd925a8409b35b824eb270f10?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "653ee1ee10885e1bd925a8409b35b824eb270f10"
+  },
+  {
+    "revision": "11710234535df87d0814d89f8c15ff31e2b8f853",
+    "date": "2023-05-03T12:32:06.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/11710234535df87d0814d89f8c15ff31e2b8f853?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "11710234535df87d0814d89f8c15ff31e2b8f853"
+  },
+  {
+    "revision": "a2ce4591cb00dfaed5d7bb0932f34e44231b0a73",
+    "date": "2023-05-03T08:50:53.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/a2ce4591cb00dfaed5d7bb0932f34e44231b0a73?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "a2ce4591cb00dfaed5d7bb0932f34e44231b0a73"
+  },
+  {
+    "revision": "666ce662c56c6cfcef363c96538af2c52e94ae6d",
+    "date": "2023-05-03T08:47:46.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/666ce662c56c6cfcef363c96538af2c52e94ae6d?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "666ce662c56c6cfcef363c96538af2c52e94ae6d"
+  },
+  {
+    "revision": "d83e3e6bd7aa5b1d3f5ac9d4a064448e1169c10b",
+    "date": "2023-05-03T08:45:52.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/d83e3e6bd7aa5b1d3f5ac9d4a064448e1169c10b?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "d83e3e6bd7aa5b1d3f5ac9d4a064448e1169c10b"
+  },
+  {
+    "revision": "6632107f2a0284e3f77142b5604e1867fdad8eef",
+    "date": "2023-05-03T08:43:15.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/6632107f2a0284e3f77142b5604e1867fdad8eef?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "6632107f2a0284e3f77142b5604e1867fdad8eef"
+  },
+  {
+    "revision": "5c8519f5d51eaecddb235ded2b52f62fb00f39bf",
+    "date": "2023-05-03T08:22:36.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/5c8519f5d51eaecddb235ded2b52f62fb00f39bf?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "5c8519f5d51eaecddb235ded2b52f62fb00f39bf"
+  },
+  {
+    "revision": "ad086febbeb577926a37d695fa06fded7c3f9252",
+    "date": "2023-05-02T15:00:37.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/ad086febbeb577926a37d695fa06fded7c3f9252?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "ad086febbeb577926a37d695fa06fded7c3f9252"
+  },
+  {
+    "revision": "c9dfe1ca8fbf3379929231bcaf6eb2459d68dd1c",
+    "date": "2023-05-02T14:57:59.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/c9dfe1ca8fbf3379929231bcaf6eb2459d68dd1c?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "c9dfe1ca8fbf3379929231bcaf6eb2459d68dd1c"
+  },
+  {
+    "revision": "79b27a31229dbe8c9614fb2877209463339e9c66",
+    "date": "2023-05-02T14:53:29.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/79b27a31229dbe8c9614fb2877209463339e9c66?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "79b27a31229dbe8c9614fb2877209463339e9c66"
+  },
+  {
+    "revision": "609bd0650f58166e03b9b4610a924cca7019e0d8",
+    "date": "2023-05-02T14:42:39.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/609bd0650f58166e03b9b4610a924cca7019e0d8?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "609bd0650f58166e03b9b4610a924cca7019e0d8"
+  },
+  {
+    "revision": "7eeffc19ce8e5ed07ef4598fc1c96e96e6fa7d46",
+    "date": "2023-05-02T14:40:07.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/7eeffc19ce8e5ed07ef4598fc1c96e96e6fa7d46?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "7eeffc19ce8e5ed07ef4598fc1c96e96e6fa7d46"
+  },
+  {
+    "revision": "5238c1b4454960aa795d044fea2779939f7eb4d0",
+    "date": "2023-05-02T14:23:02.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/5238c1b4454960aa795d044fea2779939f7eb4d0?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "5238c1b4454960aa795d044fea2779939f7eb4d0"
+  },
+  {
+    "revision": "0a1a026b1b9115b6e6d3b0915e41204973703d65",
+    "date": "2023-05-02T14:19:42.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/0a1a026b1b9115b6e6d3b0915e41204973703d65?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "0a1a026b1b9115b6e6d3b0915e41204973703d65"
+  },
+  {
+    "revision": "b9dce9d7403a2575d42a2bb81f79acb735b7a660",
+    "date": "2023-05-02T14:12:37.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/b9dce9d7403a2575d42a2bb81f79acb735b7a660?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "b9dce9d7403a2575d42a2bb81f79acb735b7a660"
+  },
+  {
+    "revision": "8e500fa75d0c8b8f951457503f3c5c6c576b1343",
+    "date": "2023-05-02T14:09:51.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/8e500fa75d0c8b8f951457503f3c5c6c576b1343?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "8e500fa75d0c8b8f951457503f3c5c6c576b1343"
+  },
+  {
+    "revision": "faf9c8aa471de1d1fdcf46e234775daf421d96ff",
+    "date": "2023-05-02T14:07:39.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/faf9c8aa471de1d1fdcf46e234775daf421d96ff?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "faf9c8aa471de1d1fdcf46e234775daf421d96ff"
+  },
+  {
+    "revision": "0945b783d95690469ef7639eed51539ab75d16b3",
+    "date": "2023-05-02T14:04:31.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/0945b783d95690469ef7639eed51539ab75d16b3?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "0945b783d95690469ef7639eed51539ab75d16b3"
+  },
+  {
+    "revision": "d813bcd7b1ccec6cc249b6a7c610c3e7573c8da9",
+    "date": "2023-05-02T14:00:17.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/d813bcd7b1ccec6cc249b6a7c610c3e7573c8da9?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "d813bcd7b1ccec6cc249b6a7c610c3e7573c8da9"
+  },
+  {
+    "revision": "48570512a4e5c99728f12e6543de15963c2bdf16",
+    "date": "2023-05-02T13:56:28.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/48570512a4e5c99728f12e6543de15963c2bdf16?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "48570512a4e5c99728f12e6543de15963c2bdf16"
+  },
+  {
+    "revision": "8b41e1884473f4797e7c24a66666bfc667db9ca4",
+    "date": "2023-05-02T13:26:20.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/8b41e1884473f4797e7c24a66666bfc667db9ca4?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      },
+      {
+        "rfilename": "adapter_config.json",
+        "blobId": "8a2e08b0622982b3b6657a211f92ca8c70bc8dce",
+        "size": 350
+      },
+      {
+        "rfilename": "adapter_model.bin",
+        "blobId": "3a1c595e01e9114862e8f473a11b9182e31caaf0",
+        "size": 8434381,
+        "lfs": {
+          "sha256": "f7f1707df4e86b215ad34347ea3dc9a508c7b46d6f15abf296cd556245aa98fb",
+          "size": 8434381,
+          "pointerSize": 132
+        }
+      }
+    ],
+    "resolved_sha": "8b41e1884473f4797e7c24a66666bfc667db9ca4"
+  },
+  {
+    "revision": "ef2cd2537ed1859455a49420923bd809617c1e27",
+    "date": "2023-05-02T13:26:16.000Z",
+    "url": "https://huggingface.co/api/models/quantumaikr/KoreanLM-LoRA/revision/ef2cd2537ed1859455a49420923bd809617c1e27?blobs=true",
+    "files": [
+      {
+        "rfilename": ".gitattributes",
+        "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+        "size": 1477
+      }
+    ],
+    "resolved_sha": "ef2cd2537ed1859455a49420923bd809617c1e27"
+  }
+]
