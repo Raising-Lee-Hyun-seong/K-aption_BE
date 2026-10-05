@@ -1,0 +1,1355 @@
+{
+  "repository": "mlx-community/translategemma-4b-it-4bit",
+  "revision": "5788ec08c047f3f2e17808101b8d9566ac930d58",
+  "source_verification": {
+    "repository": "mlx-community/translategemma-4b-it-4bit",
+    "revision": "5788ec08c047f3f2e17808101b8d9566ac930d58",
+    "files": [
+      {
+        "name": "README.md",
+        "bytes": 1209,
+        "sha256": "ad0e6bbffb1b7840a42eda394d64df67a2e25ad7f5e07ef4fceebb09ea8ad231"
+      },
+      {
+        "name": "added_tokens.json",
+        "bytes": 35,
+        "sha256": "50b2f405ba56a26d4913fd772089992252d7f942123cc0a034d96424221ba946"
+      },
+      {
+        "name": "chat_template.jinja",
+        "bytes": 16982,
+        "sha256": "5e85514635b80a62b64c9982810bfdfbdd482be9a59ed12c25ded2bf3aabddaf"
+      },
+      {
+        "name": "config.json",
+        "bytes": 2815,
+        "sha256": "033e1d370b223272e880fc9ba20c570f8464be7ada7b6177d2c8e5be9a10f90c"
+      },
+      {
+        "name": "generation_config.json",
+        "bytes": 128,
+        "sha256": "1bf6761ba6159ba03953656905638ce2811ef05127fe3e1745ba14a2daa03763"
+      },
+      {
+        "name": "model.safetensors",
+        "bytes": 2183295977,
+        "sha256": "113acb0c29997a3015af84bec2c8f967cb7b15f8959d1c26b9628b921e324c40"
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "bytes": 79768,
+        "sha256": "3a5bbc82ff34d68405c524e03aca88d2e455dacf87e3957441c10a389e48c518"
+      },
+      {
+        "name": "special_tokens_map.json",
+        "bytes": 662,
+        "sha256": "2f7b0adf4fb469770bb1490e3e35df87b1dc578246c5e7e6fc76ecf33213a397"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 33384568,
+        "sha256": "4667f2089529e8e7657cfb6d1c19910ae71ff5f28aa7ab2ff2763330affad795"
+      },
+      {
+        "name": "tokenizer.model",
+        "bytes": 4689074,
+        "sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c"
+      },
+      {
+        "name": "tokenizer_config.json",
+        "bytes": 1155413,
+        "sha256": "120c4a25aed6436edaac2e3966c9aa026bc13b5f7d3d9a81fc7afe2569b9e28b"
+      }
+    ],
+    "elapsed_seconds": 0.848800958
+  },
+  "script_sha256": "4df3a224c9c52103ed3e03956b9df1d747a6388fc78470ee3b899c59b9ae9b18",
+  "input_sha256": {
+    "evaluation/mit_rocket_cases.json": "73d5716de9d76b16e9ec80cface4a7b27b821ee2baf5f5f27473e99133ec1faf",
+    "evaluation/physics_cases.json": "f56d18cf7b2ade7b4d77889b712c856068139b9f570ed3f855977d9c6936db84"
+  },
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "versions": {
+    "mlx-lm": "0.29.1",
+    "mlx": "0.29.3",
+    "transformers": "4.57.6"
+  },
+  "settings": {
+    "max_tokens": 256,
+    "temperature": 0,
+    "context": false,
+    "glossary": false,
+    "retries": 0,
+    "repeats": 2
+  },
+  "stop_tokens": {
+    "before": [
+      1
+    ],
+    "after": [
+      1,
+      106
+    ],
+    "added": [
+      "<end_of_turn>"
+    ]
+  },
+  "tokenizer_options": {
+    "local_files_only": true,
+    "fix_mistral_regex": false
+  },
+  "model_config_overrides": {
+    "text_config": {
+      "_sliding_window_pattern": 6,
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "attn_logit_softcapping": null,
+      "dtype": "bfloat16",
+      "final_logit_softcapping": null,
+      "head_dim": 256,
+      "hidden_activation": "gelu_pytorch_tanh",
+      "hidden_size": 2560,
+      "initializer_range": 0.02,
+      "intermediate_size": 10240,
+      "layer_types": [
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention"
+      ],
+      "max_position_embeddings": 131072,
+      "model_type": "gemma3_text",
+      "num_attention_heads": 8,
+      "num_hidden_layers": 34,
+      "num_key_value_heads": 4,
+      "query_pre_attn_scalar": 256,
+      "rms_norm_eps": 1e-06,
+      "rope_local_base_freq": 10000,
+      "rope_parameters": {
+        "full_attention": {
+          "factor": 8.0,
+          "rope_type": "linear"
+        },
+        "sliding_attention": {
+          "rope_type": "default"
+        }
+      },
+      "rope_scaling": {
+        "type": "linear",
+        "factor": 8.0
+      },
+      "rope_theta": 1000000,
+      "sliding_window": 1024,
+      "use_bidirectional_attention": false,
+      "use_cache": true,
+      "vocab_size": 262208
+    }
+  },
+  "model_load_seconds": 1.5149639999999995,
+  "load_peak_gb": 2.183199752,
+  "peak_scope": "MLX process allocations since load; excludes OS and other applications",
+  "results": [
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "우리는 궁극적으로 로켓의 속도를 알아내고 싶습니다.",
+      "elapsed_seconds": 0.7925940420000002,
+      "prompt_tokens": 87,
+      "generated_tokens": 17,
+      "finish_reason": "stop",
+      "prompt_tps": 357.0438610161699,
+      "generation_tps": 42.911359015360965,
+      "mlx_process_peak_gb": 2.311691692,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd we want to ultimately get the speed of the rocket.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "따라서, 변수 분리라는 기법을 적용하고, 그 다음에는 적분해야 합니다.",
+      "elapsed_seconds": 0.985277,
+      "prompt_tokens": 93,
+      "generated_tokens": 23,
+      "finish_reason": "stop",
+      "prompt_tps": 378.1087875820169,
+      "generation_tps": 41.26164963924561,
+      "mlx_process_peak_gb": 2.3199459,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nSo we have to apply a technique called separation of variables and then we want to integrate.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "우리는 먼저, dt로 나누거나 곱하여 값을 줄이고, 그 결과로 m r d v r이 d m r u와 같아지는 것을 보여드릴 것입니다.",
+      "elapsed_seconds": 1.3663940419999987,
+      "prompt_tokens": 116,
+      "generated_tokens": 37,
+      "finish_reason": "stop",
+      "prompt_tps": 378.74304651437956,
+      "generation_tps": 41.002606051392654,
+      "mlx_process_peak_gb": 2.353279856,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고 우리는 ‘m’을 다른 쪽으로 재배치할 것입니다.",
+      "elapsed_seconds": 0.8041666250000006,
+      "prompt_tokens": 89,
+      "generated_tokens": 16,
+      "finish_reason": "stop",
+      "prompt_tps": 364.1490483003475,
+      "generation_tps": 42.1860596756407,
+      "mlx_process_peak_gb": 2.353279856,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd we're going to shuffle the m onto the other side.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고, d v r은— u는 상수가 되므로, 이것이 먼저 나오고, 그 다음으로 d m r을 m r로 나눕니다.",
+      "elapsed_seconds": 1.2938124579999997,
+      "prompt_tokens": 108,
+      "generated_tokens": 34,
+      "finish_reason": "stop",
+      "prompt_tps": 352.84739170944493,
+      "generation_tps": 41.54999611067597,
+      "mlx_process_peak_gb": 2.353279856,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "이제 이 방정식은 풀 수 있습니다.",
+      "elapsed_seconds": 0.5867347919999997,
+      "prompt_tokens": 86,
+      "generated_tokens": 9,
+      "finish_reason": "stop",
+      "prompt_tps": 353.46702612564434,
+      "generation_tps": 45.01214382628317,
+      "mlx_process_peak_gb": 2.353279856,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThat's an equation that we can integrate now.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고 가장 어려운 부분은, 여기에서 통합의 한계를 관리해야 한다는 것입니다.",
+      "elapsed_seconds": 0.8064219999999995,
+      "prompt_tokens": 92,
+      "generated_tokens": 18,
+      "finish_reason": "stop",
+      "prompt_tps": 374.2662149810439,
+      "generation_tps": 43.25326210155448,
+      "mlx_process_peak_gb": 2.353279856,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd the tricky bit is that we need to take care of the integration limits here.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "실제로, 정확히는 2m0입니다. 초기 무게가 건조 무게와 연료 무게를 모두 포함하기 때문입니다. 따라서, 이것은 초기 무게를 나타냅니다.",
+      "elapsed_seconds": 1.472006459000001,
+      "prompt_tokens": 120,
+      "generated_tokens": 40,
+      "finish_reason": "stop",
+      "prompt_tps": 389.2084914057653,
+      "generation_tps": 40.22630984015072,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "로켓의 질량은 이후 이전보다 줄어들 것이므로, 이 단계에서 이 값은 0보다 작아질 것이고, 이는 초기 속도에서 어떤 값만큼 감소했다는 의미입니다.",
+      "elapsed_seconds": 1.6383949589999993,
+      "prompt_tokens": 117,
+      "generated_tokens": 45,
+      "finish_reason": "stop",
+      "prompt_tps": 376.43899355347935,
+      "generation_tps": 39.230268720941865,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": [
+        "missing_math_symbol"
+      ]
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "따라서 속도가 줄어들고, 결국 제 스키는 멈출 것입니다.",
+      "elapsed_seconds": 0.8752079170000009,
+      "prompt_tokens": 95,
+      "generated_tokens": 20,
+      "finish_reason": "stop",
+      "prompt_tps": 386.34690698800074,
+      "generation_tps": 41.596703264929694,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "그 물체에 작용하는 전체 힘은 0입니다.",
+      "elapsed_seconds": 0.7754098340000013,
+      "prompt_tokens": 85,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 344.31943079088626,
+      "generation_tps": 43.03224314463613,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThe net force acting on the object is zero.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "속도는 일정합니다.",
+      "elapsed_seconds": 0.5500173339999996,
+      "prompt_tokens": 80,
+      "generated_tokens": 6,
+      "finish_reason": "stop",
+      "prompt_tps": 330.6016230894938,
+      "generation_tps": 47.26158499602203,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThe velocity is constant.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "그 물체의 질량은 2킬로그램입니다.",
+      "elapsed_seconds": 0.7353954999999992,
+      "prompt_tokens": 84,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 345.3394768458803,
+      "generation_tps": 43.482463949349196,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThe mass of the object is two kilograms.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "가속도는 속도의 변화율입니다.",
+      "elapsed_seconds": 0.6229993329999992,
+      "prompt_tokens": 84,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 344.87932093655775,
+      "generation_tps": 45.27978093641965,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAcceleration is the rate of change of velocity.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "속도는 속도의 크기입니다.",
+      "elapsed_seconds": 0.6069070829999994,
+      "prompt_tokens": 82,
+      "generated_tokens": 9,
+      "finish_reason": "stop",
+      "prompt_tps": 335.2060354320907,
+      "generation_tps": 43.78920995332258,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nSpeed is the magnitude of velocity.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "이동과 거리는 다른 개념입니다.",
+      "elapsed_seconds": 0.607061667,
+      "prompt_tokens": 82,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 336.7870558408699,
+      "generation_tps": 46.27442670231014,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nDisplacement differs from distance traveled.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "동력은 질량과 속도의 산물입니다.",
+      "elapsed_seconds": 0.6826635830000001,
+      "prompt_tokens": 85,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 349.5616176540445,
+      "generation_tps": 43.68318717426158,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nMomentum is the product of mass and velocity.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "충동은 운동량의 변화입니다.",
+      "elapsed_seconds": 0.6199023749999988,
+      "prompt_tokens": 83,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 340.1849645492037,
+      "generation_tps": 43.98976138303832,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nImpulse is the change in momentum.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "운동 에너지는 속도가 증가할수록 증가합니다.",
+      "elapsed_seconds": 0.690810041999999,
+      "prompt_tokens": 82,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 338.2649307603482,
+      "generation_tps": 44.18882275544371,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nKinetic energy increases with speed.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "여기에서 통합의 한계를 관리해야 합니다.",
+      "elapsed_seconds": 0.6477685419999979,
+      "prompt_tokens": 86,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 352.9479969130011,
+      "generation_tps": 44.86312928124758,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nWe need to take care of the integration limits here.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "중력은 물체를 아래로 끌어당깁니다.",
+      "elapsed_seconds": 0.7070584589999989,
+      "prompt_tokens": 81,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 335.47468898141653,
+      "generation_tps": 44.43227846343657,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nGravity pulls the object downward.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "마찰은 움직임을 저항합니다.",
+      "elapsed_seconds": 0.6628940000000014,
+      "prompt_tokens": 81,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 331.09277944405335,
+      "generation_tps": 40.123567266155916,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nFriction opposes the motion.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "우리는 궁극적으로 로켓의 속도를 알아내고 싶습니다.",
+      "elapsed_seconds": 0.832647583,
+      "prompt_tokens": 87,
+      "generated_tokens": 17,
+      "finish_reason": "stop",
+      "prompt_tps": 349.4074719976586,
+      "generation_tps": 39.12826821737353,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd we want to ultimately get the speed of the rocket.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "따라서, 변수 분리라는 기법을 적용하고, 그 다음에는 적분해야 합니다.",
+      "elapsed_seconds": 1.0331119580000028,
+      "prompt_tokens": 93,
+      "generated_tokens": 23,
+      "finish_reason": "stop",
+      "prompt_tps": 366.8053640575189,
+      "generation_tps": 39.19144357681469,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nSo we have to apply a technique called separation of variables and then we want to integrate.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "우리는 먼저, dt로 나누거나 곱하여 값을 줄이고, 그 결과로 m r d v r이 d m r u와 같아지는 것을 보여드릴 것입니다.",
+      "elapsed_seconds": 1.3596785839999974,
+      "prompt_tokens": 116,
+      "generated_tokens": 37,
+      "finish_reason": "stop",
+      "prompt_tps": 372.6131481823729,
+      "generation_tps": 41.57946334117116,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고 우리는 ‘m’을 다른 쪽으로 재배치할 것입니다.",
+      "elapsed_seconds": 0.7731111249999998,
+      "prompt_tokens": 89,
+      "generated_tokens": 16,
+      "finish_reason": "stop",
+      "prompt_tps": 363.13604747580143,
+      "generation_tps": 44.29517891964719,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd we're going to shuffle the m onto the other side.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고, d v r은— u는 상수가 되므로, 이것이 먼저 나오고, 그 다음으로 d m r을 m r로 나눕니다.",
+      "elapsed_seconds": 1.3274281670000008,
+      "prompt_tokens": 108,
+      "generated_tokens": 34,
+      "finish_reason": "stop",
+      "prompt_tps": 348.68591723088286,
+      "generation_tps": 41.92474662116591,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "이제 이 방정식은 풀 수 있습니다.",
+      "elapsed_seconds": 0.6172349170000011,
+      "prompt_tokens": 86,
+      "generated_tokens": 9,
+      "finish_reason": "stop",
+      "prompt_tps": 349.1075594991813,
+      "generation_tps": 44.268935494862994,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThat's an equation that we can integrate now.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고 가장 어려운 부분은, 여기에서 통합의 한계를 관리해야 한다는 것입니다.",
+      "elapsed_seconds": 0.8307746250000001,
+      "prompt_tokens": 92,
+      "generated_tokens": 18,
+      "finish_reason": "stop",
+      "prompt_tps": 376.57402570424637,
+      "generation_tps": 43.483674482005185,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAnd the tricky bit is that we need to take care of the integration limits here.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "실제로, 정확히는 2m0입니다. 초기 무게가 건조 무게와 연료 무게를 모두 포함하기 때문입니다. 따라서, 이것은 초기 무게를 나타냅니다.",
+      "elapsed_seconds": 1.4305203750000004,
+      "prompt_tokens": 120,
+      "generated_tokens": 40,
+      "finish_reason": "stop",
+      "prompt_tps": 387.8430066582731,
+      "generation_tps": 41.08950182365822,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "로켓의 질량은 이후 이전보다 줄어들 것이므로, 이 단계에서 이 값은 0보다 작아질 것이고, 이는 초기 속도에서 어떤 값만큼 감소했다는 의미입니다.",
+      "elapsed_seconds": 1.5353221660000003,
+      "prompt_tokens": 117,
+      "generated_tokens": 45,
+      "finish_reason": "stop",
+      "prompt_tps": 381.94395284575484,
+      "generation_tps": 41.43840532124379,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": [
+        "missing_math_symbol"
+      ]
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "따라서 속도가 줄어들고, 결국 제 스키는 멈출 것입니다.",
+      "elapsed_seconds": 0.8731297080000004,
+      "prompt_tokens": 95,
+      "generated_tokens": 20,
+      "finish_reason": "stop",
+      "prompt_tps": 388.12870998444606,
+      "generation_tps": 42.838232806633386,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "그 물체에 작용하는 전체 힘은 0입니다.",
+      "elapsed_seconds": 0.7666715000000011,
+      "prompt_tokens": 85,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 347.70668643681125,
+      "generation_tps": 42.96153435298339,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThe net force acting on the object is zero.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "속도는 일정합니다.",
+      "elapsed_seconds": 0.5079042499999957,
+      "prompt_tokens": 80,
+      "generated_tokens": 6,
+      "finish_reason": "stop",
+      "prompt_tps": 333.9259363877007,
+      "generation_tps": 49.368850106915794,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThe velocity is constant.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "그 물체의 질량은 2킬로그램입니다.",
+      "elapsed_seconds": 0.7442190830000044,
+      "prompt_tokens": 84,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 340.3323739444712,
+      "generation_tps": 43.23662132932208,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nThe mass of the object is two kilograms.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "가속도는 속도의 변화율입니다.",
+      "elapsed_seconds": 0.6084598750000012,
+      "prompt_tokens": 84,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 345.5416716180596,
+      "generation_tps": 45.05402540821776,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nAcceleration is the rate of change of velocity.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "속도는 속도의 크기입니다.",
+      "elapsed_seconds": 0.580722166000001,
+      "prompt_tokens": 82,
+      "generated_tokens": 9,
+      "finish_reason": "stop",
+      "prompt_tps": 338.46331167908687,
+      "generation_tps": 45.85042029908555,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nSpeed is the magnitude of velocity.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "이동과 거리는 다른 개념입니다.",
+      "elapsed_seconds": 0.628067791999996,
+      "prompt_tokens": 82,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 336.967953234013,
+      "generation_tps": 44.27568030966486,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nDisplacement differs from distance traveled.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "동력은 질량과 속도의 산물입니다.",
+      "elapsed_seconds": 0.6853976670000037,
+      "prompt_tokens": 85,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 348.5538602852603,
+      "generation_tps": 44.1587024635129,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nMomentum is the product of mass and velocity.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "충동은 운동량의 변화입니다.",
+      "elapsed_seconds": 0.6395560829999951,
+      "prompt_tokens": 83,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 334.48702340666375,
+      "generation_tps": 45.832551086267564,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nImpulse is the change in momentum.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "운동 에너지는 속도가 증가할수록 증가합니다.",
+      "elapsed_seconds": 0.7064226670000053,
+      "prompt_tokens": 82,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 338.5630549102658,
+      "generation_tps": 42.34892674349445,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nKinetic energy increases with speed.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "여기에서 통합의 한계를 관리해야 합니다.",
+      "elapsed_seconds": 0.6469524999999976,
+      "prompt_tokens": 86,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 352.9799873686529,
+      "generation_tps": 43.84152026960157,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nWe need to take care of the integration limits here.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "중력은 물체를 아래로 끌어당깁니다.",
+      "elapsed_seconds": 0.7121482910000054,
+      "prompt_tokens": 81,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 335.0163423867013,
+      "generation_tps": 44.42600990689208,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nGravity pulls the object downward.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "마찰은 움직임을 저항합니다.",
+      "elapsed_seconds": 0.608037834000001,
+      "prompt_tokens": 81,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 333.24150952676996,
+      "generation_tps": 45.36994947166791,
+      "mlx_process_peak_gb": 2.35915672,
+      "prompt": "<bos><start_of_turn>user\nYou are a professional English (en) to Korean (ko) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Korean grammar, vocabulary, and cultural sensitivities.\nProduce only the Korean translation, without any additional explanations or commentary. Please translate the following English text into Korean:\n\n\nFriction opposes the motion.<end_of_turn>\n<start_of_turn>model\n",
+      "error": null,
+      "validation_problems": []
+    }
+  ],
+  "complete": true,
+  "semantic_review": "pending",
+  "warmup": {
+    "translation": "안녕하세요, 강의에 오신 여러분 환영합니다.",
+    "elapsed_seconds": 0.9528230410000003,
+    "prompt_tokens": 82,
+    "generated_tokens": 12,
+    "finish_reason": "stop",
+    "prompt_tps": 159.18915752397882,
+    "generation_tps": 41.64489824211409,
+    "mlx_process_peak_gb": 2.306011152
+  },
+  "mlx_process_peak_gb": 2.35915672
+}

@@ -1,0 +1,102 @@
+{
+  "checked_on": "2026-10-05",
+  "hardware": {
+    "cpu": "Apple M4",
+    "physical_memory_bytes": 17179869184
+  },
+  "models": {
+    "translategemma": {
+      "counts": {
+        "pass": 8,
+        "partial": 5,
+        "fail": 9
+      },
+      "by_suite": {
+        "official": {
+          "pass": 2,
+          "partial": 3,
+          "fail": 5
+        },
+        "physics": {
+          "pass": 6,
+          "partial": 2,
+          "fail": 4
+        }
+      },
+      "model_load_seconds": 1.5149639999999995,
+      "mlx_process_peak_gb": 2.35915672,
+      "runs": [
+        {
+          "repeat": 1,
+          "translation_seconds": 18.529898045999992,
+          "median_case_seconds": 0.721226979499999,
+          "generated_tokens": 394,
+          "normal_stops": 22,
+          "generation_errors": 0,
+          "automatic_problem_free": 21
+        },
+        {
+          "repeat": 2,
+          "translation_seconds": 18.44751891600001,
+          "median_case_seconds": 0.7281836870000049,
+          "generated_tokens": 394,
+          "normal_stops": 22,
+          "generation_errors": 0,
+          "automatic_problem_free": 21
+        }
+      ],
+      "repeated_output_matches": 22,
+      "input_count": 22,
+      "raw_sha256": "ba59e27e3e5b4f1c577942f8a1a31397d1207d581c10a6835e1c4bad78c099cb",
+      "source_file": "candidate-translategemma.json"
+    },
+    "qwen": {
+      "counts": {
+        "pass": 15,
+        "partial": 3,
+        "fail": 4
+      },
+      "by_suite": {
+        "official": {
+          "pass": 7,
+          "partial": 2,
+          "fail": 1
+        },
+        "physics": {
+          "pass": 8,
+          "partial": 1,
+          "fail": 3
+        }
+      },
+      "model_load_seconds": 0.7134434999999999,
+      "mlx_process_peak_gb": 2.465381924,
+      "runs": [
+        {
+          "repeat": 1,
+          "translation_seconds": 18.78470258599999,
+          "median_case_seconds": 0.6347367290000001,
+          "generated_tokens": 508,
+          "normal_stops": 22,
+          "generation_errors": 0,
+          "automatic_problem_free": 21
+        },
+        {
+          "repeat": 2,
+          "translation_seconds": 18.923088418000006,
+          "median_case_seconds": 0.6393325834999999,
+          "generated_tokens": 508,
+          "normal_stops": 22,
+          "generation_errors": 0,
+          "automatic_problem_free": 21
+        }
+      ],
+      "repeated_output_matches": 22,
+      "input_count": 22,
+      "raw_sha256": "90bd00109188c34aa5774a36732a675ff1ac5fbcc2ee1ee95459a7a52139483b",
+      "source_file": "candidate-qwen.json"
+    }
+  },
+  "api_changed": false,
+  "experts_reviewed": false,
+  "comparison_limit": "기존 KoreanLM 평가는 입력·문맥·용어집·출력 상한·재시도 조건이 달라 속도 개선율·전체 강의 정확도를 직접 비교하지 않는다."
+}

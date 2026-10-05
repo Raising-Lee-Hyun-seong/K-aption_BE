@@ -1,0 +1,1279 @@
+{
+  "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "source_verification": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "files": [
+      {
+        "name": "README.md",
+        "bytes": 969,
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657"
+      },
+      {
+        "name": "added_tokens.json",
+        "bytes": 707,
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+      },
+      {
+        "name": "chat_template.jinja",
+        "bytes": 4040,
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541"
+      },
+      {
+        "name": "config.json",
+        "bytes": 938,
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849"
+      },
+      {
+        "name": "generation_config.json",
+        "bytes": 238,
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48"
+      },
+      {
+        "name": "merges.txt",
+        "bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      {
+        "name": "model.safetensors",
+        "bytes": 2263022417,
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "bytes": 63964,
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777"
+      },
+      {
+        "name": "special_tokens_map.json",
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "name": "tokenizer_config.json",
+        "bytes": 5440,
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9"
+      },
+      {
+        "name": "vocab.json",
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    ],
+    "elapsed_seconds": 0.853894917
+  },
+  "script_sha256": "9736992f0ed45b4387ce273e4071c10b6838c25039fdbbb761aaed2d422c93d3",
+  "input_sha256": {
+    "evaluation/mit_rocket_cases.json": "73d5716de9d76b16e9ec80cface4a7b27b821ee2baf5f5f27473e99133ec1faf",
+    "evaluation/physics_cases.json": "f56d18cf7b2ade7b4d77889b712c856068139b9f570ed3f855977d9c6936db84"
+  },
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "versions": {
+    "mlx-lm": "0.29.1",
+    "mlx": "0.29.3",
+    "transformers": "4.57.6"
+  },
+  "settings": {
+    "max_tokens": 256,
+    "temperature": 0,
+    "context": false,
+    "glossary": false,
+    "retries": 0,
+    "repeats": 2
+  },
+  "stop_tokens": {
+    "before": [
+      151645
+    ],
+    "after": [
+      151645
+    ],
+    "added": []
+  },
+  "tokenizer_options": {
+    "local_files_only": true
+  },
+  "model_load_seconds": 0.7134434999999999,
+  "load_peak_gb": 2.264693768,
+  "peak_scope": "MLX process allocations since load; excludes OS and other applications",
+  "results": [
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고 우리는 궤도의 속도를 최종적으로 얻고자 한다.",
+      "elapsed_seconds": 0.7942176249999999,
+      "prompt_tokens": 42,
+      "generated_tokens": 22,
+      "finish_reason": "stop",
+      "prompt_tps": 223.0884605501917,
+      "generation_tps": 41.376486004051884,
+      "mlx_process_peak_gb": 2.396519848,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "따라서 우리는 변수 분리 기법을 적용해야 하며, 그 후 적분을 수행한다.",
+      "elapsed_seconds": 0.8795984589999994,
+      "prompt_tokens": 48,
+      "generated_tokens": 24,
+      "finish_reason": "stop",
+      "prompt_tps": 252.94643068872602,
+      "generation_tps": 40.15657161047881,
+      "mlx_process_peak_gb": 2.409266624,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nSo we have to apply a technique called separation of variables and then we want to integrate.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "우리가 할 일은, 먼저 나누기-- dt를 곱하여 그 항이 사라지고, 그 결과로는 m r d v r = d m r u가 남는다.",
+      "elapsed_seconds": 1.48005225,
+      "prompt_tokens": 69,
+      "generated_tokens": 44,
+      "finish_reason": "stop",
+      "prompt_tps": 265.4914930696348,
+      "generation_tps": 39.07072791929956,
+      "mlx_process_peak_gb": 2.4569933,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기려고 한다.",
+      "elapsed_seconds": 0.7345857500000008,
+      "prompt_tokens": 43,
+      "generated_tokens": 19,
+      "finish_reason": "stop",
+      "prompt_tps": 226.97326532053157,
+      "generation_tps": 41.64867745205643,
+      "mlx_process_peak_gb": 2.4569933,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고 우리는 dvr가 등가된다-- u는 상수이므로-- 그는 앞부분으로 옮겨지고, 그 다음에 dmr over mr가 남는다.",
+      "elapsed_seconds": 1.3618085840000003,
+      "prompt_tokens": 62,
+      "generated_tokens": 42,
+      "finish_reason": "stop",
+      "prompt_tps": 322.64856419489377,
+      "generation_tps": 39.34150437270429,
+      "mlx_process_peak_gb": 2.4569933,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "elapsed_seconds": 0.6174597080000002,
+      "prompt_tokens": 40,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 214.34456296823478,
+      "generation_tps": 43.039898505262684,
+      "mlx_process_peak_gb": 2.4569933,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "그리고 어려운 점은 여기에서 적분 한계를 올바르게 처리해야 한다는 점이다.",
+      "elapsed_seconds": 1.016729250000001,
+      "prompt_tokens": 47,
+      "generated_tokens": 30,
+      "finish_reason": "stop",
+      "prompt_tps": 244.8478311884445,
+      "generation_tps": 40.57401410217485,
+      "mlx_process_peak_gb": 2.4569933,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "실제로는 정확히 m0가 아니고, 2m0입니다. 이 이유는 초기 질량이 건조 질량과 연료 질량의 합이기 때문입니다. 따라서 이는 초기 질량 2m0입니다.",
+      "elapsed_seconds": 1.8038925419999998,
+      "prompt_tokens": 73,
+      "generated_tokens": 56,
+      "finish_reason": "stop",
+      "prompt_tps": 280.66119456025007,
+      "generation_tps": 38.985014699874164,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "아니, 로켓의 질량은 이전보다 나중에 작아지므로 여기서 나타나는 항은 0보다 작아지며, 이는 속도가 초기 속도에서 어떤 값 빼기로 줄어들게 된다는 뜻입니다.",
+      "elapsed_seconds": 2.0039159170000005,
+      "prompt_tokens": 72,
+      "generated_tokens": 65,
+      "finish_reason": "stop",
+      "prompt_tps": 273.904074608427,
+      "generation_tps": 39.6265069549851,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": [
+        "missing_math_symbol"
+      ]
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "translation": "즉, 속도가 감소한다는 뜻이고, 그로 인해 내 슬레드는 결국 정지하게 된다.",
+      "elapsed_seconds": 1.0358553329999989,
+      "prompt_tokens": 50,
+      "generated_tokens": 31,
+      "finish_reason": "stop",
+      "prompt_tps": 263.7468720412223,
+      "generation_tps": 40.4337168286598,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "물체에 작용하는 합력은 0이다.",
+      "elapsed_seconds": 0.6313930419999991,
+      "prompt_tokens": 40,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 213.16261452175084,
+      "generation_tps": 42.05425208790613,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThe net force acting on the object is zero.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "속도는 일정하다.",
+      "elapsed_seconds": 0.44488554199999797,
+      "prompt_tokens": 35,
+      "generated_tokens": 8,
+      "finish_reason": "stop",
+      "prompt_tps": 185.8820382600662,
+      "generation_tps": 45.20911671902742,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThe velocity is constant.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "물체의 질량은 두 킬로그램이다.",
+      "elapsed_seconds": 0.6108771670000017,
+      "prompt_tokens": 39,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 201.79006726889426,
+      "generation_tps": 42.268255398349076,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThe mass of the object is two kilograms.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "가속도는 속도의 변화율이다.",
+      "elapsed_seconds": 0.5863595000000004,
+      "prompt_tokens": 39,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 207.5441864766021,
+      "generation_tps": 42.788328973762326,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAcceleration is the rate of change of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "속도는 속도의 크다.",
+      "elapsed_seconds": 0.524662499999998,
+      "prompt_tokens": 37,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 197.49220448895755,
+      "generation_tps": 43.30298084374922,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nSpeed is the magnitude of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "이동 거리는 이동한 거리와 다름.",
+      "elapsed_seconds": 0.5874150839999999,
+      "prompt_tokens": 37,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 197.6149573073452,
+      "generation_tps": 42.86138530330168,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nDisplacement differs from distance traveled.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "운동량은 질량과 속도의 곱이다.",
+      "elapsed_seconds": 0.633594875,
+      "prompt_tokens": 40,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 212.47789731872595,
+      "generation_tps": 40.72809164133407,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nMomentum is the product of mass and velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "운동량의 변화는 운동량이다.",
+      "elapsed_seconds": 0.5338999999999992,
+      "prompt_tokens": 38,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 201.01517104872767,
+      "generation_tps": 41.09734253412125,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nImpulse is the change in momentum.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "운동 에너지는 속도에 따라 증가한다.",
+      "elapsed_seconds": 0.6156985000000006,
+      "prompt_tokens": 37,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 197.5110490349902,
+      "generation_tps": 42.54355130167313,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nKinetic energy increases with speed.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "여기서 적분 한계를 잘 관리해야 한다.",
+      "elapsed_seconds": 0.6358785830000002,
+      "prompt_tokens": 41,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 216.33158355378822,
+      "generation_tps": 41.527846343712895,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nWe need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "중력은 물체를 아래로 끌어당긴다.",
+      "elapsed_seconds": 0.6820154999999986,
+      "prompt_tokens": 36,
+      "generated_tokens": 17,
+      "finish_reason": "stop",
+      "prompt_tps": 188.63203784168306,
+      "generation_tps": 41.86007282268826,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nGravity pulls the object downward.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "translation": "마찰력은 운동을 반대한다.",
+      "elapsed_seconds": 0.5699068749999974,
+      "prompt_tokens": 36,
+      "generated_tokens": 12,
+      "finish_reason": "stop",
+      "prompt_tps": 190.00427916026356,
+      "generation_tps": 41.84054230419448,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nFriction opposes the motion.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고 우리는 궤도의 속도를 최종적으로 얻고자 한다.",
+      "elapsed_seconds": 0.8269484170000005,
+      "prompt_tokens": 42,
+      "generated_tokens": 22,
+      "finish_reason": "stop",
+      "prompt_tps": 221.68214118852907,
+      "generation_tps": 40.58098752106594,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "따라서 우리는 변수 분리 기법을 적용해야 하며, 그 후 적분을 수행한다.",
+      "elapsed_seconds": 0.895267166,
+      "prompt_tokens": 48,
+      "generated_tokens": 24,
+      "finish_reason": "stop",
+      "prompt_tps": 253.78569208928346,
+      "generation_tps": 39.53993095863459,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nSo we have to apply a technique called separation of variables and then we want to integrate.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "우리가 할 일은, 먼저 나누기-- dt를 곱하여 그 항이 사라지고, 그 결과로는 m r d v r = d m r u가 남는다.",
+      "elapsed_seconds": 1.465107249999999,
+      "prompt_tokens": 69,
+      "generated_tokens": 44,
+      "finish_reason": "stop",
+      "prompt_tps": 265.4613183905548,
+      "generation_tps": 39.60652123748564,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기려고 한다.",
+      "elapsed_seconds": 0.7721026249999987,
+      "prompt_tokens": 43,
+      "generated_tokens": 19,
+      "finish_reason": "stop",
+      "prompt_tps": 226.4938064531184,
+      "generation_tps": 37.94593963407346,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고 우리는 dvr가 등가된다-- u는 상수이므로-- 그는 앞부분으로 옮겨지고, 그 다음에 dmr over mr가 남는다.",
+      "elapsed_seconds": 1.3671574590000013,
+      "prompt_tokens": 62,
+      "generated_tokens": 42,
+      "finish_reason": "stop",
+      "prompt_tps": 318.9731123672814,
+      "generation_tps": 38.96532829184822,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "elapsed_seconds": 0.6295152910000006,
+      "prompt_tokens": 40,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 211.43693125216495,
+      "generation_tps": 42.476598049262215,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "그리고 어려운 점은 여기에서 적분 한계를 올바르게 처리해야 한다는 점이다.",
+      "elapsed_seconds": 1.0368220000000008,
+      "prompt_tokens": 47,
+      "generated_tokens": 30,
+      "finish_reason": "stop",
+      "prompt_tps": 243.61409323701434,
+      "generation_tps": 39.97040191738012,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "실제로는 정확히 m0가 아니고, 2m0입니다. 이 이유는 초기 질량이 건조 질량과 연료 질량의 합이기 때문입니다. 따라서 이는 초기 질량 2m0입니다.",
+      "elapsed_seconds": 1.765783458999998,
+      "prompt_tokens": 73,
+      "generated_tokens": 56,
+      "finish_reason": "stop",
+      "prompt_tps": 281.28049376763806,
+      "generation_tps": 39.57126188435218,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "아니, 로켓의 질량은 이전보다 나중에 작아지므로 여기서 나타나는 항은 0보다 작아지며, 이는 속도가 초기 속도에서 어떤 값 빼기로 줄어들게 된다는 뜻입니다.",
+      "elapsed_seconds": 2.0382619579999997,
+      "prompt_tokens": 72,
+      "generated_tokens": 65,
+      "finish_reason": "stop",
+      "prompt_tps": 273.5569242494973,
+      "generation_tps": 38.93100451945426,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": [
+        "missing_math_symbol"
+      ]
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "translation": "즉, 속도가 감소한다는 뜻이고, 그로 인해 내 슬레드는 결국 정지하게 된다.",
+      "elapsed_seconds": 1.052957125000006,
+      "prompt_tokens": 50,
+      "generated_tokens": 31,
+      "finish_reason": "stop",
+      "prompt_tps": 262.8386260411494,
+      "generation_tps": 40.787195021692995,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "물체에 작용하는 합력은 0이다.",
+      "elapsed_seconds": 0.6436304169999971,
+      "prompt_tokens": 40,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 211.8547285644392,
+      "generation_tps": 41.64590155741779,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThe net force acting on the object is zero.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "속도는 일정하다.",
+      "elapsed_seconds": 0.4540116249999997,
+      "prompt_tokens": 35,
+      "generated_tokens": 8,
+      "finish_reason": "stop",
+      "prompt_tps": 186.2814366556612,
+      "generation_tps": 41.84877422324767,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThe velocity is constant.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "물체의 질량은 두 킬로그램이다.",
+      "elapsed_seconds": 0.6020906669999988,
+      "prompt_tokens": 39,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 201.07579883239242,
+      "generation_tps": 42.403693851194284,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nThe mass of the object is two kilograms.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "가속도는 속도의 변화율이다.",
+      "elapsed_seconds": 0.5672892089999948,
+      "prompt_tokens": 39,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 208.16005232139707,
+      "generation_tps": 42.498329693051566,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nAcceleration is the rate of change of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "속도는 속도의 크다.",
+      "elapsed_seconds": 0.5417995419999997,
+      "prompt_tokens": 37,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 195.74246903995942,
+      "generation_tps": 43.30365556666088,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nSpeed is the magnitude of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "이동 거리는 이동한 거리와 다름.",
+      "elapsed_seconds": 0.5981068749999991,
+      "prompt_tokens": 37,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 198.37989785826562,
+      "generation_tps": 41.72638954867943,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nDisplacement differs from distance traveled.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "운동량은 질량과 속도의 곱이다.",
+      "elapsed_seconds": 0.6262080410000053,
+      "prompt_tokens": 40,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 213.99500589155,
+      "generation_tps": 42.56936374160278,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nMomentum is the product of mass and velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "운동량의 변화는 운동량이다.",
+      "elapsed_seconds": 0.5461789579999987,
+      "prompt_tokens": 38,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 199.39250874473896,
+      "generation_tps": 40.01414449080726,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nImpulse is the change in momentum.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "운동 에너지는 속도에 따라 증가한다.",
+      "elapsed_seconds": 0.6350347500000026,
+      "prompt_tokens": 37,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 194.4343176570691,
+      "generation_tps": 41.48295570993145,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nKinetic energy increases with speed.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "여기서 적분 한계를 잘 관리해야 한다.",
+      "elapsed_seconds": 0.6294880840000019,
+      "prompt_tokens": 41,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 215.52021520482512,
+      "generation_tps": 42.016836146243804,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nWe need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "중력은 물체를 아래로 끌어당긴다.",
+      "elapsed_seconds": 0.6781197500000005,
+      "prompt_tokens": 36,
+      "generated_tokens": 17,
+      "finish_reason": "stop",
+      "prompt_tps": 192.22019925887713,
+      "generation_tps": 41.321184094990066,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nGravity pulls the object downward.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "translation": "마찰력은 운동을 반대한다.",
+      "elapsed_seconds": 0.5512077500000032,
+      "prompt_tokens": 36,
+      "generated_tokens": 12,
+      "finish_reason": "stop",
+      "prompt_tps": 191.71672754329526,
+      "generation_tps": 43.25866951862407,
+      "mlx_process_peak_gb": 2.465381924,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\n\nFriction opposes the motion.<|im_end|>\n<|im_start|>assistant\n",
+      "error": null,
+      "validation_problems": []
+    }
+  ],
+  "complete": true,
+  "semantic_review": "pending",
+  "warmup": {
+    "translation": "안녕하세요, 강의에 오신 것을 환영합니다.",
+    "elapsed_seconds": 1.056394417,
+    "prompt_tokens": 37,
+    "generated_tokens": 16,
+    "finish_reason": "stop",
+    "prompt_tps": 62.1803193195682,
+    "generation_tps": 41.327112562826976,
+    "mlx_process_peak_gb": 2.38510018
+  },
+  "mlx_process_peak_gb": 2.465381924
+}

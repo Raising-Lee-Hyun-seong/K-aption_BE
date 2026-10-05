@@ -1,0 +1,199 @@
+{
+  "checked_on": "2026-10-05",
+  "status": "benchmarked_22_cases_not_adopted",
+  "selected": [
+    {
+      "repository": "mlx-community/translategemma-4b-it-4bit",
+      "revision": "5788ec08c047f3f2e17808101b8d9566ac930d58",
+      "template_sha256": "5e85514635b80a62b64c9982810bfdfbdd482be9a59ed12c25ded2bf3aabddaf",
+      "rendered_cases": 22,
+      "source_appears_once": true,
+      "korean_target_rendered": true,
+      "mlx_architecture_module_present": true,
+      "model_type": "gemma3",
+      "weights_bytes": 2183295977,
+      "repository_bytes": 2222628201,
+      "weights_downloaded": true,
+      "model_loaded": true,
+      "quality_tested": true,
+      "evaluation_order": 1,
+      "original_repository": "google/translategemma-4b-it",
+      "license": "gemma",
+      "local_directory": "models/translategemma-4b-it-4bit",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "bytes": 1570,
+          "sha256": null
+        },
+        {
+          "name": "README.md",
+          "bytes": 1209,
+          "sha256": null
+        },
+        {
+          "name": "added_tokens.json",
+          "bytes": 35,
+          "sha256": null
+        },
+        {
+          "name": "chat_template.jinja",
+          "bytes": 16982,
+          "sha256": null
+        },
+        {
+          "name": "config.json",
+          "bytes": 2815,
+          "sha256": null
+        },
+        {
+          "name": "generation_config.json",
+          "bytes": 128,
+          "sha256": null
+        },
+        {
+          "name": "model.safetensors",
+          "bytes": 2183295977,
+          "sha256": "113acb0c29997a3015af84bec2c8f967cb7b15f8959d1c26b9628b921e324c40"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "bytes": 79768,
+          "sha256": null
+        },
+        {
+          "name": "special_tokens_map.json",
+          "bytes": 662,
+          "sha256": null
+        },
+        {
+          "name": "tokenizer.json",
+          "bytes": 33384568,
+          "sha256": "4667f2089529e8e7657cfb6d1c19910ae71ff5f28aa7ab2ff2763330affad795"
+        },
+        {
+          "name": "tokenizer.model",
+          "bytes": 4689074,
+          "sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "bytes": 1155413,
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "template_sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "rendered_cases": 22,
+      "source_appears_once": true,
+      "korean_target_rendered": true,
+      "mlx_architecture_module_present": true,
+      "model_type": "qwen3",
+      "weights_bytes": 2263022417,
+      "repository_bytes": 2278972236,
+      "weights_downloaded": true,
+      "model_loaded": true,
+      "quality_tested": true,
+      "evaluation_order": 2,
+      "original_repository": "Qwen/Qwen3-4B-Instruct-2507",
+      "license": "apache-2.0",
+      "local_directory": "models/qwen3-4b-instruct-2507-4bit",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "bytes": 1570,
+          "sha256": null
+        },
+        {
+          "name": "README.md",
+          "bytes": 969,
+          "sha256": null
+        },
+        {
+          "name": "added_tokens.json",
+          "bytes": 707,
+          "sha256": null
+        },
+        {
+          "name": "chat_template.jinja",
+          "bytes": 4040,
+          "sha256": null
+        },
+        {
+          "name": "config.json",
+          "bytes": 938,
+          "sha256": null
+        },
+        {
+          "name": "generation_config.json",
+          "bytes": 238,
+          "sha256": null
+        },
+        {
+          "name": "merges.txt",
+          "bytes": 1671853,
+          "sha256": null
+        },
+        {
+          "name": "model.safetensors",
+          "bytes": 2263022417,
+          "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "bytes": 63964,
+          "sha256": null
+        },
+        {
+          "name": "special_tokens_map.json",
+          "bytes": 613,
+          "sha256": null
+        },
+        {
+          "name": "tokenizer.json",
+          "bytes": 11422654,
+          "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "bytes": 5440,
+          "sha256": null
+        },
+        {
+          "name": "vocab.json",
+          "bytes": 2776833,
+          "sha256": null
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "repository": "tencent/HY-MT1.5-1.8B",
+      "revision": "dbad03788f49709801014c95d481a514c272ca52",
+      "reason": "공식 라이선스가 South Korea를 Territory에서 제외한다. 한국에서의 실행 후보에서 제외."
+    },
+    {
+      "repository": "facebook/nllb-200-distilled-600M",
+      "reason": "CC-BY-NC-4.0이며 공식 모델 카드가 연구 목적·비프로덕션 배포를 명시해 제품 적용 후보에서 제외."
+    }
+  ],
+  "evaluation": {
+    "cases": [
+      "evaluation/mit_rocket_cases.json",
+      "evaluation/physics_cases.json"
+    ],
+    "case_count": 22,
+    "temperature": 0,
+    "max_tokens": 256,
+    "retry": false,
+    "context": false,
+    "retain_raw_output": true,
+    "semantic_review": "manual_before_api_adoption"
+  },
+  "api_changed": false,
+  "comparison_report": "evaluation/candidate-comparison.md"
+}

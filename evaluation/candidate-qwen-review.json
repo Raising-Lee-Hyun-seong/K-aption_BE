@@ -1,0 +1,281 @@
+{
+  "reviewer": "Codex 단일 평가자의 원문·출력 대조. 독립 전문가 검수 전.",
+  "rubric": [
+    "핵심 대상·행위·부정·수치·수식 연산 관계를 보존하면 pass.",
+    "핵심 흐름은 있으나 표기·용어·관계가 불명확하거나 일부가 누락되면 partial.",
+    "핵심 대상을 바꾸거나 물리 정의·행위·관계가 잘못되면 fail.",
+    "합력/알짜힘 같은 동의어와 sled 음역은 의미 보존 시 허용한다.",
+    "speed/velocity, mass/weight, integration/general solving은 물리학 기준에서 구분한다.",
+    "partial을 완전 의미 보존 통과율에 포함하지 않는다."
+  ],
+  "repeat_review": "두 회차 원시 문자열이 22개 모두 같음을 확인해 문장별 판정은 한 번만 집계했다.",
+  "summary": {
+    "counts": {
+      "pass": 15,
+      "partial": 3,
+      "fail": 4
+    },
+    "by_suite": {
+      "official": {
+        "pass": 7,
+        "partial": 2,
+        "fail": 1
+      },
+      "physics": {
+        "pass": 8,
+        "partial": 1,
+        "fail": 3
+      }
+    },
+    "model_load_seconds": 0.7134434999999999,
+    "mlx_process_peak_gb": 2.465381924,
+    "runs": [
+      {
+        "repeat": 1,
+        "translation_seconds": 18.78470258599999,
+        "median_case_seconds": 0.6347367290000001,
+        "generated_tokens": 508,
+        "normal_stops": 22,
+        "generation_errors": 0,
+        "automatic_problem_free": 21
+      },
+      {
+        "repeat": 2,
+        "translation_seconds": 18.923088418000006,
+        "median_case_seconds": 0.6393325834999999,
+        "generated_tokens": 508,
+        "normal_stops": 22,
+        "generation_errors": 0,
+        "automatic_problem_free": 21
+      }
+    ],
+    "repeated_output_matches": 22,
+    "input_count": 22,
+    "raw_sha256": "90bd00109188c34aa5774a36732a675ff1ac5fbcc2ee1ee95459a7a52139483b",
+    "source_file": "candidate-qwen.json"
+  },
+  "rows": [
+    {
+      "id": "official:rocket-speed",
+      "suite": "official",
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "translation": "그리고 우리는 궤도의 속도를 최종적으로 얻고자 한다.",
+      "verdict": "fail",
+      "reason": "rocket을 궤도로 바꿔 구하려는 물체를 잘못 지정했다. speed도 속력으로 구분하지 못했다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:separation-integrate",
+      "suite": "official",
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "translation": "따라서 우리는 변수 분리 기법을 적용해야 하며, 그 후 적분을 수행한다.",
+      "verdict": "pass",
+      "reason": "변수 분리와 이후 적분한다는 순서를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:multiply-dt",
+      "suite": "official",
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "translation": "우리가 할 일은, 먼저 나누기-- dt를 곱하여 그 항이 사라지고, 그 결과로는 m r d v r = d m r u가 남는다.",
+      "verdict": "pass",
+      "reason": "나누기-- 곱하기라는 발화 정정과 dt 곱하기·소거·m r d v r = d m r u를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:move-m",
+      "suite": "official",
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference": "그리고 m을 반대쪽으로 옮깁니다.",
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기려고 한다.",
+      "verdict": "pass",
+      "reason": "m을 반대편으로 옮기는 행위를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:constant-u",
+      "suite": "official",
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "translation": "그리고 우리는 dvr가 등가된다-- u는 상수이므로-- 그는 앞부분으로 옮겨지고, 그 다음에 dmr over mr가 남는다.",
+      "verdict": "partial",
+      "reason": "u 상수·앞으로 이동·dmr over mr는 남아 있다. 그는으로 상수를 의인화하고 나눗셈 설명을 영어로 남기며 완결된 등식 관계가 불명확하다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:integrable-equation",
+      "suite": "official",
+      "text": "That's an equation that we can integrate now.",
+      "reference": "이제 이 방정식을 적분할 수 있습니다.",
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "verdict": "pass",
+      "reason": "이제 방정식을 적분할 수 있다는 의미를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:integration-limits",
+      "suite": "official",
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "translation": "그리고 어려운 점은 여기에서 적분 한계를 올바르게 처리해야 한다는 점이다.",
+      "verdict": "pass",
+      "reason": "적분 한계를 처리해야 한다는 의미를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:initial-mass",
+      "suite": "official",
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "translation": "실제로는 정확히 m0가 아니고, 2m0입니다. 이 이유는 초기 질량이 건조 질량과 연료 질량의 합이기 때문입니다. 따라서 이는 초기 질량 2m0입니다.",
+      "verdict": "pass",
+      "reason": "m0가 아닌 2m0 정정·건조 질량과 연료 질량의 합·초기 질량을 보존하며 단위를 만들지 않는다.",
+      "validation_problems": []
+    },
+    {
+      "id": "official:mass-less-negative",
+      "suite": "official",
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "translation": "아니, 로켓의 질량은 이전보다 나중에 작아지므로 여기서 나타나는 항은 0보다 작아지며, 이는 속도가 초기 속도에서 어떤 값 빼기로 줄어들게 된다는 뜻입니다.",
+      "verdict": "partial",
+      "reason": "질량 감소·항이 0보다 작음·초기 속도에서 뺀다는 의미는 유지한다. M r를 누락하고 원문에 없는 아니를 추가했다.",
+      "validation_problems": [
+        "missing_math_symbol"
+      ]
+    },
+    {
+      "id": "official:sled-stops",
+      "suite": "official",
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "translation": "즉, 속도가 감소한다는 뜻이고, 그로 인해 내 슬레드는 결국 정지하게 된다.",
+      "verdict": "pass",
+      "reason": "속도 감소로 sled가 정지한다는 인과와 대상을 유지한다. 슬레드는 음역이므로 의미 통과로 처리하되 썰매 표기가 권장된다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:net_force",
+      "suite": "physics",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "translation": "물체에 작용하는 합력은 0이다.",
+      "verdict": "pass",
+      "reason": "합력은 알짜힘의 동의 표현이며 물체에 작용하는 합력이 0이라는 의미를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:velocity",
+      "suite": "physics",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "translation": "속도는 일정하다.",
+      "verdict": "pass",
+      "reason": "속도가 일정하다는 의미를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:mass",
+      "suite": "physics",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "translation": "물체의 질량은 두 킬로그램이다.",
+      "verdict": "pass",
+      "reason": "질량과 두 킬로그램을 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:acceleration",
+      "suite": "physics",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "translation": "가속도는 속도의 변화율이다.",
+      "verdict": "pass",
+      "reason": "가속도가 속도의 변화율이라는 정의를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:speed",
+      "suite": "physics",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "translation": "속도는 속도의 크다.",
+      "verdict": "fail",
+      "reason": "속력/속도 구분을 잃었고 크다라는 불완전한 문장으로 크기 관계를 제대로 설명하지 못했다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:displacement",
+      "suite": "physics",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "translation": "이동 거리는 이동한 거리와 다름.",
+      "verdict": "fail",
+      "reason": "변위를 이동 거리로 바꿔 서로 다른 개념의 구분을 자기 비교로 바꿨다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:momentum",
+      "suite": "physics",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "translation": "운동량은 질량과 속도의 곱이다.",
+      "verdict": "pass",
+      "reason": "운동량이 질량과 속도의 곱이라는 관계를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:impulse",
+      "suite": "physics",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "translation": "운동량의 변화는 운동량이다.",
+      "verdict": "fail",
+      "reason": "충격량을 운동량으로 바꿔 정의의 주체를 잃었다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:energy",
+      "suite": "physics",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "translation": "운동 에너지는 속도에 따라 증가한다.",
+      "verdict": "partial",
+      "reason": "증가 관계는 유지하지만 speed를 속도로 옮겨 속력과 속도의 엄밀한 구분을 충족하지 않는다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:limits",
+      "suite": "physics",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "translation": "여기서 적분 한계를 잘 관리해야 한다.",
+      "verdict": "pass",
+      "reason": "적분 한계를 처리해야 한다는 의미를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:gravity",
+      "suite": "physics",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "translation": "중력은 물체를 아래로 끌어당긴다.",
+      "verdict": "pass",
+      "reason": "중력이 물체를 아래로 당기는 행위를 보존한다.",
+      "validation_problems": []
+    },
+    {
+      "id": "physics:friction",
+      "suite": "physics",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "translation": "마찰력은 운동을 반대한다.",
+      "verdict": "pass",
+      "reason": "마찰력이 운동에 반대한다는 의미를 보존한다.",
+      "validation_problems": []
+    }
+  ]
+}
