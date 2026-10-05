@@ -26,7 +26,8 @@ class TranslationRequest(BaseModel):
     )
 
     text: str = Field(min_length=1, max_length=8_000)
-    context: str = Field(default="", max_length=16_000)
+    context: str = Field(default="", max_length=16_000,
+                         description="앞 영어 원문 문맥. 마지막 256자만 사용")
     max_tokens: int = Field(default=128, ge=1, le=1_024)
 
 
@@ -47,15 +48,15 @@ class TranslationResponse(BaseModel):
 
     translation: str
     prompt_tokens: int
-    generated_tokens: int
+    generated_tokens: int = Field(description="성공한 마지막 시도에서 MLX가 실제 생성한 토큰 수")
     elapsed_seconds: float
 
 
 class TranscriptionSegment(BaseModel):
-    """자막 구간의 시각·원문과 번역 결과 또는 구간별 실패 코드를 표현한다."""
+    """문장으로 묶은 자막의 시각·원문과 번역 결과 또는 실패 코드를 표현한다."""
     start: float = Field(ge=0, description="영상 시작 기준 구간 시작 시각(초)")
     end: float = Field(gt=0, description="영상 시작 기준 구간 종료 시각(초)")
-    text: str = Field(min_length=1, description="STT로 인식한 영어 원문")
+    text: str = Field(min_length=1, description="인접한 STT 조각을 문장 단위로 묶은 영어 원문")
     translation: Optional[str] = Field(description="한국어 번역문. 번역 검증 실패 시 null")
     translation_error: Optional[Literal["translation_failed"]] = Field(
         description="성공 시 null, 번역 검증 실패 시 translation_failed"

@@ -1,0 +1,114 @@
+[
+  {
+    "en": "net force",
+    "ko": "알짜힘"
+  },
+  {
+    "en": "force",
+    "ko": "힘"
+  },
+  {
+    "en": "mass",
+    "ko": "질량"
+  },
+  {
+    "en": "acceleration",
+    "ko": "가속도"
+  },
+  {
+    "en": "velocity",
+    "ko": "속도"
+  },
+  {
+    "en": "speed",
+    "ko": "속력"
+  },
+  {
+    "en": "displacement",
+    "ko": "변위"
+  },
+  {
+    "en": "distance",
+    "ko": "거리"
+  },
+  {
+    "en": "momentum",
+    "ko": "운동량"
+  },
+  {
+    "en": "impulse",
+    "ko": "충격량"
+  },
+  {
+    "en": "kinetic energy",
+    "ko": "운동 에너지"
+  },
+  {
+    "en": "potential energy",
+    "ko": "위치 에너지"
+  },
+  {
+    "en": "work",
+    "ko": "일"
+  },
+  {
+    "en": "power",
+    "ko": "일률"
+  },
+  {
+    "en": "gravity",
+    "ko": "중력"
+  },
+  {
+    "en": "friction",
+    "ko": "마찰"
+  },
+  {
+    "en": "torque",
+    "ko": "돌림힘"
+  },
+  {
+    "en": "angular velocity",
+    "ko": "각속도"
+  },
+  {
+    "en": "centripetal force",
+    "ko": "구심력"
+  },
+  {
+    "en": "integration limits",
+    "ko": "적분 구간"
+  },
+  {
+    "en": "integrate",
+    "ko": "적분"
+  },
+  {
+    "en": "integration",
+    "ko": "적분"
+  },
+  {
+    "en": "separation of variables",
+    "ko": "변수 분리"
+  },
+  {
+    "en": "dry mass",
+    "ko": "건조 질량"
+  },
+  {
+    "en": "fuel mass",
+    "ko": "연료 질량"
+  },
+  {
+    "en": "natural logarithm",
+    "ko": "자연로그"
+  },
+  {
+    "en": "initial condition",
+    "ko": "초기 조건"
+  },
+  {
+    "en": "rocket sled",
+    "ko": "로켓 썰매"
+  }
+]
