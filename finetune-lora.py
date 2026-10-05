@@ -59,7 +59,36 @@ def train(
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
     prompt_template_name: str = "korean",  # The prompt template to use, will default to korean.
 ):
-    """분산·학습 옵션을 적용해 LoRA 모델을 학습하고 어댑터 가중치를 출력 경로에 저장한다."""
+    """분산·학습 옵션을 적용해 LoRA 모델을 학습하고 어댑터 가중치를 출력 경로에 저장한다.
+
+    :param base_model: 기반 모델의 저장소 이름 또는 로컬 경로.
+    :param data_path: 학습 데이터 JSON 경로 또는 데이터셋 이름.
+    :param output_dir: 학습한 LoRA 어댑터를 저장할 디렉터리.
+    :param batch_size: 그래디언트 누적을 포함한 목표 배치 크기.
+    :param micro_batch_size: 장치별 한 학습 단계의 배치 크기.
+    :param num_epochs: 학습 데이터 전체를 반복할 횟수.
+    :param learning_rate: 최적화에 사용할 학습률.
+    :param cutoff_len: 입력 토큰을 자를 최대 길이.
+    :param val_set_size: 검증용으로 분리할 데이터 개수. 0이면 분리하지 않는다.
+    :param cache_dir: 모델·토크나이저 다운로드 캐시 경로. None이면 라이브러리 기본값.
+    :param lora_r: LoRA 저차원 행렬의 rank.
+    :param lora_alpha: LoRA 업데이트 배율 계산에 사용할 alpha.
+    :param lora_dropout: LoRA 학습 경로의 dropout 확률.
+    :param lora_target_modules: LoRA를 적용할 선형층 이름 목록.
+    :param train_on_inputs: 거짓이면 입력 프롬프트 영역의 라벨을 -100으로 마스킹한다.
+    :param add_eos_token: 길이 제한 안에서 마지막 EOS 토큰을 추가할지 여부.
+    :param group_by_length: Trainer가 입력 길이를 기준으로 학습 예제를 묶을지 여부.
+    :param wandb_project: Weights & Biases 프로젝트 이름. 빈 값이면 기존 환경 설정을 따른다.
+    :param wandb_run_name: Weights & Biases 실행 이름.
+    :param wandb_watch: Weights & Biases 모델 감시 설정.
+    :param wandb_log_model: Weights & Biases 모델 기록 설정.
+    :param resume_from_checkpoint: 이어서 학습할 체크포인트 또는 어댑터 경로.
+    :param prompt_template_name: 학습 프롬프트 템플릿 이름.
+    :return: None.
+    :raises AssertionError: 기반 모델 이름이 비어 있을 때.
+
+    모델·데이터를 로드하고 학습을 실행해 output_dir에 어댑터를 저장한다. 옵션에 따라 외부 실험 로그를 기록한다.
+    """
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
             f"Training KoreanLM-LoRA model with params:\n"
@@ -134,7 +163,12 @@ def train(
     def tokenize(prompt, add_eos_token=True):
         # there's probably a way to do this with the tokenizer settings
         # but again, gotta move fast
-        """프롬프트를 길이 제한으로 토큰화하고 선택적으로 EOS 토큰과 학습 라벨을 추가한다."""
+        """프롬프트를 길이 제한으로 토큰화하고 선택적으로 EOS 토큰과 학습 라벨을 추가한다.
+
+        :param prompt: 토큰화하거나 모델에 전달할 프롬프트 문자열.
+        :param add_eos_token: 길이 제한 안에서 마지막 EOS 토큰을 추가할지 여부.
+        :return: input_ids·attention_mask·labels를 담은 토큰화 사전.
+        """
         result = tokenizer(
             prompt,
             truncation=True,
@@ -155,7 +189,11 @@ def train(
         return result
 
     def generate_and_tokenize_prompt(data_point):
-        """데이터 예제를 프롬프트로 변환하고 설정에 따라 입력 영역의 학습 라벨을 마스킹한다."""
+        """데이터 예제를 프롬프트로 변환하고 설정에 따라 입력 영역의 학습 라벨을 마스킹한다.
+
+        :param data_point: instruction·input·output을 포함하는 학습 예제 사전.
+        :return: 프롬프트 토큰과 설정에 따라 입력 영역을 마스킹한 학습 라벨 사전.
+        """
         full_prompt = prompter.generate_prompt(
             data_point["instruction"],
             data_point["input"],

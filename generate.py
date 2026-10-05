@@ -31,26 +31,39 @@ def main(
     load_8bit: bool = False,
     base_model: str = "",
     lora_weights: str = "quantumaikr/KoreanLM-LoRA",
-    prompt_template: str = "",  
+    prompt_template: str = "",
     server_name: str = "0.0.0.0",
     share_gradio: bool = True,
 ):
-    """장치에 맞춰 모델·LoRA를 로드하고 모델을 Hub에 업로드한 뒤 Gradio 추론 UI를 실행한다."""
+    """장치에 맞춰 모델·LoRA를 로드하고 모델을 Hub에 업로드한 뒤 Gradio 추론 UI를 실행한다.
+
+    :param cache_dir: 모델·토크나이저 다운로드 캐시 경로. None이면 라이브러리 기본값.
+    :param load_8bit: CUDA 경로에서 기반 모델을 8bit로 로드할지 여부.
+    :param base_model: 기반 모델의 저장소 이름 또는 로컬 경로.
+    :param lora_weights: 로드할 PEFT LoRA 저장소 이름 또는 로컬 경로.
+    :param prompt_template: 추론 프롬프트 템플릿 이름.
+    :param server_name: 서버 주소 인자. 현재 launch 호출은 0.0.0.0으로 고정되어 이 값을 사용하지 않는다.
+    :param share_gradio: Gradio 공개 공유 링크를 만들지 여부.
+    :return: None.
+    :raises AssertionError: 인자·환경 설정 모두에 기반 모델 이름이 없을 때.
+
+    모델·어댑터를 로드하고 KoreanLM-LoRA 이름으로 Hub에 업로드한 뒤 Gradio 서버를 실행한다.
+    """
     base_model = base_model or os.environ.get("BASE_MODEL", "")
     assert (
         base_model
     ), "Please specify a --base_model, e.g. --base_model='quantumaikr/KoreanLM'"
 
     prompter = Prompter(prompt_template)
-    
-    
+
+
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         base_model,
         cache_dir=cache_dir,
         padding_side="right",
         use_fast=False,
     )
-    
+
     if device == "cuda":
         koreanlm = transformers.AutoModelForCausalLM.from_pretrained(
             base_model,
@@ -113,7 +126,20 @@ def main(
         stream_output=False,
         **kwargs,
     ):
-        """명령과 입력으로 응답을 생성해 전체 결과 또는 스트리밍 중간 결과를 순차 반환한다."""
+        """명령과 입력으로 응답을 생성해 전체 결과 또는 스트리밍 중간 결과를 순차 반환한다.
+
+        :param instruction: 모델이 수행할 작업 지시문.
+        :param input: 프롬프트에 추가할 선택적 입력 원문.
+        :param temperature: 생성 설정에 전달할 샘플링 온도.
+        :param top_p: 생성 설정의 누적 확률 후보 범위.
+        :param top_k: 생성 설정의 최대 후보 토큰 수.
+        :param num_beams: 생성에 사용할 빔 수.
+        :param max_new_tokens: 생성할 최대 새 토큰 수.
+        :param stream_output: 참이면 중간 응답을, 거짓이면 최종 응답을 한 번 제공한다.
+        :param kwargs: GenerationConfig에 전달할 추가 생성 설정.
+        :return: 아래 값을 순차 제공하는 생성기.
+        :yield: 응답 구분자 뒤의 생성 문자열. 스트리밍이면 중간 결과를 반복 제공한다.
+        """
         prompt = prompter.generate_prompt(instruction, input)
         inputs = tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(device)
@@ -135,7 +161,12 @@ def main(
 
         if stream_output:
             def generate_with_callback(callback=None, **kwargs):
-                """토큰 생성 과정에 콜백을 연결하고 그래디언트 계산 없이 추론한다."""
+                """토큰 생성 과정에 콜백을 연결하고 그래디언트 계산 없이 추론한다.
+
+                :param callback: 생성 중인 첫 시퀀스의 토큰을 전달받는 콜백.
+                :param kwargs: koreanlm.generate에 전달할 토큰·종료 조건 등의 생성 인자.
+                :return: None.
+                """
                 kwargs.setdefault(
                     "stopping_criteria", transformers.StoppingCriteriaList()
                 )
@@ -146,7 +177,11 @@ def main(
                     koreanlm.generate(**kwargs)
 
             def generate_with_streaming(**kwargs):
-                """콜백 기반 생성 함수를 중간 결과를 순회할 수 있는 이터레이터로 감싼다."""
+                """콜백 기반 생성 함수를 중간 결과를 순회할 수 있는 이터레이터로 감싼다.
+
+                :param kwargs: 콜백 기반 생성 함수에 전달할 생성 인자.
+                :return: 중간 토큰 결과를 순회하는 Iteratorize 객체.
+                """
                 return Iteratorize(
                     generate_with_callback, kwargs, callback=None
                 )

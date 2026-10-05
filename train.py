@@ -61,7 +61,15 @@ def smart_tokenizer_and_embedding_resize(
     tokenizer: transformers.PreTrainedTokenizer,
     model: transformers.PreTrainedModel,
 ):
-    """특수 토큰을 추가하고 새 토큰의 임베딩을 기존 임베딩 평균으로 초기화한다."""
+    """특수 토큰을 추가하고 새 토큰의 임베딩을 기존 임베딩 평균으로 초기화한다.
+
+    :param special_tokens_dict: 토크나이저에 추가할 특수 토큰 이름·문자열 매핑.
+    :param tokenizer: 토큰화·패딩·특수 토큰 처리에 사용할 토크나이저.
+    :param model: 토큰 임베딩 크기를 변경할 언어 모델.
+    :return: None.
+
+    전달된 토크나이저와 모델 임베딩을 직접 수정한다.
+    """
     num_new_tokens = tokenizer.add_special_tokens(special_tokens_dict)
     model.resize_token_embeddings(len(tokenizer))
 
@@ -79,7 +87,12 @@ def smart_tokenizer_and_embedding_resize(
 
 
 def _tokenize_fn(strings: Sequence[str], tokenizer: transformers.PreTrainedTokenizer) -> Dict:
-    """문자열 목록을 토큰화하고 패딩을 제외한 토큰 길이를 반환한다."""
+    """문자열 목록을 토큰화하고 패딩을 제외한 토큰 길이를 반환한다.
+
+    :param strings: 토큰화할 문자열 목록.
+    :param tokenizer: 토큰화·패딩·특수 토큰 처리에 사용할 토크나이저.
+    :return: input_ids·labels 텐서 목록과 각각의 패딩 제외 길이 목록을 담은 사전.
+    """
     tokenized_list = [
         tokenizer(
             text,
@@ -108,7 +121,13 @@ def preprocess(
     targets: Sequence[str],
     tokenizer: transformers.PreTrainedTokenizer,
 ) -> Dict:
-    """입력과 정답을 토큰화하고 입력 영역의 라벨을 마스킹해 정답만 학습하도록 구성한다."""
+    """입력과 정답을 토큰화하고 입력 영역의 라벨을 마스킹해 정답만 학습하도록 구성한다.
+
+    :param sources: 학습 입력 프롬프트 문자열 목록.
+    :param targets: 각 입력에 대응하는 정답 문자열 목록.
+    :param tokenizer: 토큰화·패딩·특수 토큰 처리에 사용할 토크나이저.
+    :return: 입력 토큰 목록과 입력 영역을 -100으로 마스킹한 라벨 목록 사전.
+    """
     examples = [s + t for s, t in zip(sources, targets)]
     examples_tokenized, sources_tokenized = [_tokenize_fn(
         strings, tokenizer) for strings in (examples, sources)]
@@ -123,7 +142,12 @@ class SupervisedDataset(Dataset):
     """프롬프트와 정답을 토큰화한 지도 학습 데이터셋을 제공한다."""
 
     def __init__(self, data_path: str, tokenizer: transformers.PreTrainedTokenizer):
-        """JSON 데이터를 읽어 프롬프트·정답 쌍을 구성하고 토큰과 라벨을 저장한다."""
+        """JSON 데이터를 읽어 프롬프트·정답 쌍을 구성하고 토큰과 라벨을 저장한다.
+
+        :param data_path: instruction·input·output 예제 목록을 담은 학습 JSON 경로.
+        :param tokenizer: 토큰화·패딩·특수 토큰 처리에 사용할 토크나이저.
+        :return: None.
+        """
         super(SupervisedDataset, self).__init__()
         logging.warning("데이터 로드 중...")
         list_data_dict = utils.jload(data_path)
@@ -145,11 +169,18 @@ class SupervisedDataset(Dataset):
         self.labels = data_dict["labels"]
 
     def __len__(self):
-        """학습 데이터셋의 예제 수를 반환한다."""
+        """학습 데이터셋의 예제 수를 반환한다.
+
+        :return: 데이터셋의 학습 예제 수.
+        """
         return len(self.input_ids)
 
     def __getitem__(self, i) -> Dict[str, torch.Tensor]:
-        """지정한 인덱스의 입력 토큰과 학습 라벨을 반환한다."""
+        """지정한 인덱스의 입력 토큰과 학습 라벨을 반환한다.
+
+        :param i: 가져올 학습 예제의 인덱스.
+        :return: input_ids와 labels 토큰 텐서를 담은 사전.
+        """
         return dict(input_ids=self.input_ids[i], labels=self.labels[i])
 
 
@@ -160,7 +191,11 @@ class DataCollatorForSupervisedDataset(object):
     tokenizer: transformers.PreTrainedTokenizer
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
-        """입력과 라벨을 패딩하고 어텐션 마스크가 포함된 배치를 반환한다."""
+        """입력과 라벨을 패딩하고 어텐션 마스크가 포함된 배치를 반환한다.
+
+        :param instances: 입력 토큰과 라벨을 가진 학습 예제 목록.
+        :return: 패딩한 input_ids·labels와 attention_mask 배치 텐서 사전.
+        """
         input_ids, labels = tuple(
             [instance[key] for instance in instances] for key in ("input_ids", "labels"))
         input_ids = torch.nn.utils.rnn.pad_sequence(
@@ -176,7 +211,12 @@ class DataCollatorForSupervisedDataset(object):
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer, data_args) -> Dict:
-    """Trainer에 전달할 학습 데이터셋과 배치 구성기를 생성한다."""
+    """Trainer에 전달할 학습 데이터셋과 배치 구성기를 생성한다.
+
+    :param tokenizer: 토큰화·패딩·특수 토큰 처리에 사용할 토크나이저.
+    :param data_args: 학습 데이터 경로 data_path를 제공하는 설정 객체.
+    :return: train_dataset·eval_dataset(None)·data_collator를 담은 Trainer 인자 사전.
+    """
     train_dataset = SupervisedDataset(
         tokenizer=tokenizer, data_path=data_args.data_path)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
@@ -184,7 +224,12 @@ def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer, dat
 
 
 def train():
-    """실행 인자로 모델과 데이터를 준비하고 토크나이저를 Hub에 업로드한 뒤 학습 결과를 저장한다."""
+    """실행 인자로 모델과 데이터를 준비하고 토크나이저를 Hub에 업로드한 뒤 학습 결과를 저장한다.
+
+    :return: None.
+
+    CLI 설정을 읽고 토크나이저를 Hub에 업로드하며 학습 상태·모델을 출력 디렉터리에 저장한다.
+    """
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()

@@ -17,12 +17,21 @@ CACHE = ROOT / '.cache/huggingface'
 
 
 def download(name):
-    """고정된 모델 리비전의 파일을 Hugging Face 캐시에 다운로드하고 경로를 반환한다."""
+    """고정된 모델 리비전의 파일을 Hugging Face 캐시에 다운로드하고 경로를 반환한다.
+
+    :param name: 고정 모델 리비전에서 다운로드할 파일 이름.
+    :return: 다운로드한 파일의 로컬 캐시 경로 문자열.
+    """
     return hf_hub_download(MODEL, name, revision=REVISION, cache_dir=str(CACHE))
 
 
 def main():
-    """원본 가중치를 FP16 safetensors로 변환하고 토크나이저·설정·가중치 인덱스를 저장한다."""
+    """원본 가중치를 FP16 safetensors로 변환하고 토크나이저·설정·가중치 인덱스를 저장한다.
+
+    :return: None.
+
+    고정 모델을 캐시에 내려받고 models/koreanlm-fp16에 FP16 가중치·토크나이저·설정을 저장한다.
+    """
     DEST.mkdir(parents=True, exist_ok=True)
     for name in ['config.json', 'tokenizer.model', 'tokenizer_config.json',
                  'special_tokens_map.json', 'generation_config.json']:
