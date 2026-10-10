@@ -1,0 +1,201 @@
+{
+  "evaluated_on": "2026-10-10",
+  "hardware": "Apple M4, 16GiB physical memory",
+  "settings": {
+    "temperature": 0,
+    "max_tokens": 256,
+    "context": false,
+    "retries": 0,
+    "early_stopping_rules": false,
+    "output_cleaning": false,
+    "repeats": 2,
+    "prompt_plus_output_limit": 2048
+  },
+  "input_sha256": {
+    "evaluation/mit_rocket_cases.json": "73d5716de9d76b16e9ec80cface4a7b27b821ee2baf5f5f27473e99133ec1faf",
+    "evaluation/physics_cases.json": "f56d18cf7b2ade7b4d77889b712c856068139b9f570ed3f855977d9c6936db84"
+  },
+  "versions": {
+    "mlx-lm": "0.29.1",
+    "mlx": "0.29.3",
+    "transformers": "4.57.6"
+  },
+  "conditions": {
+    "koreanlm-current": {
+      "counts": {
+        "pass": 11,
+        "fail": 10,
+        "partial": 1
+      },
+      "by_suite": {
+        "official": {
+          "pass": 2,
+          "fail": 7,
+          "partial": 1
+        },
+        "physics": {
+          "fail": 3,
+          "pass": 9
+        }
+      },
+      "model_load_seconds": 1.7996105409999998,
+      "mlx_process_peak_gb": 4.43778058,
+      "runs": [
+        {
+          "repeat": 1,
+          "translation_seconds": 73.91518303899998,
+          "normal_stops": 22,
+          "generated_tokens": 1087,
+          "basic_diagnostic_problem_free": 17,
+          "raw_term_and_format_problem_free": 17
+        },
+        {
+          "repeat": 2,
+          "translation_seconds": 74.35878004299992,
+          "normal_stops": 22,
+          "generated_tokens": 1087,
+          "basic_diagnostic_problem_free": 17,
+          "raw_term_and_format_problem_free": 17
+        }
+      ],
+      "repeated_output_matches": 22,
+      "raw_sha256": "73f879cb5e5c205c11a476014e7e7e40523d831e7aeb0e955d255164f67c6c6a"
+    },
+    "koreanlm-simple": {
+      "counts": {
+        "partial": 4,
+        "fail": 16,
+        "pass": 2
+      },
+      "by_suite": {
+        "official": {
+          "partial": 1,
+          "fail": 9
+        },
+        "physics": {
+          "fail": 7,
+          "pass": 2,
+          "partial": 3
+        }
+      },
+      "model_load_seconds": 1.0638144999999999,
+      "mlx_process_peak_gb": 4.262454324,
+      "runs": [
+        {
+          "repeat": 1,
+          "translation_seconds": 76.01764708099998,
+          "normal_stops": 21,
+          "generated_tokens": 1283,
+          "basic_diagnostic_problem_free": 16,
+          "raw_term_and_format_problem_free": 3
+        },
+        {
+          "repeat": 2,
+          "translation_seconds": 77.45940350199996,
+          "normal_stops": 21,
+          "generated_tokens": 1283,
+          "basic_diagnostic_problem_free": 16,
+          "raw_term_and_format_problem_free": 3
+        }
+      ],
+      "repeated_output_matches": 22,
+      "raw_sha256": "aa2dde45319819d3d8284728c93894bdf9a4a7c6c64c89daf18bcb9806aec2ab"
+    },
+    "qwen-base": {
+      "counts": {
+        "fail": 4,
+        "pass": 15,
+        "partial": 3
+      },
+      "by_suite": {
+        "official": {
+          "fail": 1,
+          "pass": 7,
+          "partial": 2
+        },
+        "physics": {
+          "pass": 8,
+          "fail": 3,
+          "partial": 1
+        }
+      },
+      "model_load_seconds": 0.5200916250000001,
+      "mlx_process_peak_gb": 2.465381924,
+      "runs": [
+        {
+          "repeat": 1,
+          "translation_seconds": 19.027164540999998,
+          "normal_stops": 22,
+          "generated_tokens": 508,
+          "basic_diagnostic_problem_free": 21,
+          "raw_term_and_format_problem_free": 13
+        },
+        {
+          "repeat": 2,
+          "translation_seconds": 19.187413128000014,
+          "normal_stops": 22,
+          "generated_tokens": 508,
+          "basic_diagnostic_problem_free": 21,
+          "raw_term_and_format_problem_free": 13
+        }
+      ],
+      "repeated_output_matches": 22,
+      "raw_sha256": "52b4cdf1c278be55830636a5619a7ab88d1ca16f8bf1427c0b1e1b6ad03154f4"
+    },
+    "qwen-glossary": {
+      "counts": {
+        "fail": 1,
+        "pass": 19,
+        "partial": 2
+      },
+      "by_suite": {
+        "official": {
+          "fail": 1,
+          "pass": 8,
+          "partial": 1
+        },
+        "physics": {
+          "pass": 11,
+          "partial": 1
+        }
+      },
+      "model_load_seconds": 0.5121506669999998,
+      "mlx_process_peak_gb": 2.584657668,
+      "runs": [
+        {
+          "repeat": 1,
+          "translation_seconds": 20.549680168999988,
+          "normal_stops": 22,
+          "generated_tokens": 482,
+          "basic_diagnostic_problem_free": 22,
+          "raw_term_and_format_problem_free": 22
+        },
+        {
+          "repeat": 2,
+          "translation_seconds": 20.43612275,
+          "normal_stops": 22,
+          "generated_tokens": 482,
+          "basic_diagnostic_problem_free": 22,
+          "raw_term_and_format_problem_free": 22
+        }
+      ],
+      "repeated_output_matches": 22,
+      "raw_sha256": "e7b130675eecb1d4f5a8d04fa12177b7203d45aac72bd2ba8ad7d3e8f8104afd"
+    }
+  },
+  "api_changed": false,
+  "independent_expert_review": false,
+  "preferred_next_candidate": "qwen-glossary",
+  "adoption_status": "not_adopted_remaining_semantic_errors",
+  "remaining_cases": [
+    "official:rocket-speed",
+    "official:constant-u",
+    "physics:speed"
+  ],
+  "limitations": [
+    "22 selected cases, not full lecture accuracy",
+    "No context, retries, output cleaning or rule-based early stopping",
+    "Glossary and preservation instructions changed together",
+    "Raw validator diagnostics are not actual API outcomes"
+  ]
+}

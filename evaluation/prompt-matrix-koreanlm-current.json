@@ -1,0 +1,1325 @@
+{
+  "evaluated_on": "2026-10-10",
+  "variant": "koreanlm-current",
+  "model_directory": "models/koreanlm-4bit",
+  "source_verification": {
+    "original_source": {
+      "model": "quantumaikr/KoreanLM",
+      "revision": "f4351abcdd6a933afbaffad0badf60c273e71920"
+    },
+    "files": [
+      {
+        "name": "model.safetensors",
+        "bytes": 3790825707,
+        "sha256": "62f67af9551e3488d2fb3d2c05b862f541ae04bcbb177e264d5a7778b5192a0d"
+      },
+      {
+        "name": "config.json",
+        "bytes": 782,
+        "sha256": "f359bea20bbbb0760a2d5506eb8670c8a616e2a6eb5919c03c3c9b7b76eb8938"
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "bytes": 52421,
+        "sha256": "89696c01b74519b31fb8c90361a8d736df341ec8e51e230405801ae75021f22b"
+      },
+      {
+        "name": "source.json",
+        "bytes": 95,
+        "sha256": "224683de5aa09831cb3f462d56cfe027b128182ee95ddbca427c28625e41c3ce"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 3619013,
+        "sha256": "1a75511f846a980e08bc5874db204a56c740113450f1e37744e9bcafee84d785"
+      },
+      {
+        "name": "tokenizer_config.json",
+        "bytes": 989,
+        "sha256": "2513ba3be88e470ac7d21dca44ebc1dc3eb461be030b01067b1325293551b86a"
+      },
+      {
+        "name": "special_tokens_map.json",
+        "bytes": 549,
+        "sha256": "39c182e1857b6bed683bedfca4bad3cc635769c6ba9797c14b942423f7b4e955"
+      },
+      {
+        "name": "generation_config.json",
+        "bytes": 131,
+        "sha256": "82af9be25419447e2b99a569b52606d83212d749cc9bd356cd6a78a99e34a2c6"
+      }
+    ],
+    "verification_scope": "local fingerprints, not upstream LFS verification"
+  },
+  "model_load_seconds": 1.7996105409999998,
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "versions": {
+    "mlx-lm": "0.29.1",
+    "mlx": "0.29.3",
+    "transformers": "4.57.6"
+  },
+  "settings": {
+    "temperature": 0,
+    "max_tokens": 256,
+    "context": false,
+    "retries": 0,
+    "early_stopping_rules": false,
+    "output_cleaning": false,
+    "repeats": 2,
+    "prompt_plus_output_limit": 2048
+  },
+  "eos_token_ids": [
+    2
+  ],
+  "input_sha256": {
+    "evaluation/mit_rocket_cases.json": "73d5716de9d76b16e9ec80cface4a7b27b821ee2baf5f5f27473e99133ec1faf",
+    "evaluation/physics_cases.json": "f56d18cf7b2ade7b4d77889b712c856068139b9f570ed3f855977d9c6936db84"
+  },
+  "implementation_sha256": {
+    "scripts/evaluate_prompt_matrix.py": "3510c8ab3c04d6c7d046e83b61acf11efd164f3ea6ba305661420e11bfdcbf48",
+    "scripts/evaluate_candidates.py": "4df3a224c9c52103ed3e03956b9df1d747a6388fc78470ee3b899c59b9ae9b18",
+    "app/services/translation.py": "338d7c5580333df2b8f7c4e1f4f8c650fdb23e0b1a0947aaf35698cc1142a7d2",
+    "app/services/translation_validation.py": "ca5323b40cf1e0a051a7fe466689437e1dd2782f26e04fe234e2659c99bcce5e",
+    "templates/korean.json": "74ab31be94a48ce42c683437dd3bc0a903a73c57c27ad4f53bdaf80f7879f099",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02"
+  },
+  "limits": [
+    "Raw validator diagnostics are not semantic accuracy or the actual API retry outcome.",
+    "Qwen glossary changes terminology and preservation instructions together.",
+    "Current KoreanLM prompt uses no preceding context; this is not the 36-group API run."
+  ],
+  "results": [
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: speed=속력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nAnd we want to ultimately get the speed of the rocket.\n\n### Response:\n",
+      "translation": "우리는 로켓의 속력을 원하는 것입니다.",
+      "elapsed_seconds": 2.565168957999999,
+      "prompt_tokens": 266,
+      "generated_tokens": 32,
+      "finish_reason": "stop",
+      "prompt_tps": 227.5531667195204,
+      "generation_tps": 23.757502709374286,
+      "mlx_process_peak_gb": 4.388776052,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: separation of variables=변수 분리; integrate=적분. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nSo we have to apply a technique called separation of variables and then we want to integrate.\n\n### Response:\n",
+      "translation": "\"변수 분리\"와 \"적분\"이라는 용어를 사용하여 원문을 한국어로 번역합니다.",
+      "elapsed_seconds": 3.4458795830000017,
+      "prompt_tokens": 285,
+      "generated_tokens": 53,
+      "finish_reason": "stop",
+      "prompt_tps": 246.51266575848996,
+      "generation_tps": 23.517265089456806,
+      "mlx_process_peak_gb": 4.410550384,
+      "validation_problems": [
+        "prompt_leak"
+      ],
+      "raw_validator_rejection_reason": "prompt_leak",
+      "error": null
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: dt, mR, dvR, dmR, u.\n\n### Input:\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.\n\n### Response:\n",
+      "translation": "\"우리는 먼저 곱하기 위해 dt를 사용하여 빼놓고, 그 결과로 dmr u가 남습니다.\"",
+      "elapsed_seconds": 3.803676624999998,
+      "prompt_tokens": 307,
+      "generated_tokens": 58,
+      "finish_reason": "stop",
+      "prompt_tps": 242.25420297726055,
+      "generation_tps": 23.152861551816656,
+      "mlx_process_peak_gb": 4.415842416,
+      "validation_problems": [
+        "missing_math_symbol"
+      ],
+      "raw_validator_rejection_reason": "missing_math_symbol",
+      "error": null
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: m.\n\n### Input:\nAnd we're going to shuffle the m onto the other side.\n\n### Response:\n",
+      "translation": "입력된 영어 원문 \"And we're going to shuffle the m onto the other side.\"를 한국어로 번역하면 \"우리는 다른 쪽에서 m을 순회할 것입니다.\" 입니다.",
+      "elapsed_seconds": 4.9785185,
+      "prompt_tokens": 269,
+      "generated_tokens": 87,
+      "finish_reason": "stop",
+      "prompt_tps": 233.8608652554347,
+      "generation_tps": 22.92696431049065,
+      "mlx_process_peak_gb": 4.415842416,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: dvR, u, dmR, mR.\n\n### Input:\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.\n\n### Response:\n",
+      "translation": "\"d v r은 u가 일정한 것으로 생각되므로 초기 단계에서 출력됩니다. 그 다음에는 d m r이 더 높은 수준에서 출력됩니다.\"",
+      "elapsed_seconds": 5.535124792000001,
+      "prompt_tokens": 297,
+      "generated_tokens": 99,
+      "finish_reason": "stop",
+      "prompt_tps": 236.62823881167216,
+      "generation_tps": 23.392690315928327,
+      "mlx_process_peak_gb": 4.415842416,
+      "validation_problems": [
+        "missing_math_symbol"
+      ],
+      "raw_validator_rejection_reason": "missing_math_symbol",
+      "error": null
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: integrate=적분. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThat's an equation that we can integrate now.\n\n### Response:\n",
+      "translation": "적분 가능한 방정식이 있습니다.",
+      "elapsed_seconds": 2.3653702080000016,
+      "prompt_tokens": 264,
+      "generated_tokens": 28,
+      "finish_reason": "stop",
+      "prompt_tps": 225.06324309100071,
+      "generation_tps": 24.156822648561842,
+      "mlx_process_peak_gb": 4.415842416,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: integration limits=적분 구간. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nAnd the tricky bit is that we need to take care of the integration limits here.\n\n### Response:\n",
+      "translation": "적분 구간에서 작업하는 것이 어렵습니다.",
+      "elapsed_seconds": 2.836974749999996,
+      "prompt_tokens": 276,
+      "generated_tokens": 39,
+      "finish_reason": "stop",
+      "prompt_tps": 232.9857939115394,
+      "generation_tps": 24.08872061098882,
+      "mlx_process_peak_gb": 4.415842416,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: fuel mass=연료 질량; dry mass=건조 질량; mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: m0.\n\n### Input:\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.\n\n### Response:\n",
+      "translation": "실제로 이것은 2m0입니다. 이것은 건조 질량과 연료 질량이 더해진 초기 질량입니다.",
+      "elapsed_seconds": 4.8758346669999995,
+      "prompt_tokens": 344,
+      "generated_tokens": 78,
+      "finish_reason": "stop",
+      "prompt_tps": 239.14527121982462,
+      "generation_tps": 22.913229911679398,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도; mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: mR.\n\n### Input:\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.\n\n### Response:\n",
+      "translation": "M r, 로켓의 질량이 저하되어 있으므로, 이 용어는 초기 속도에서 더 적게 생긴다는 것을 의미하며, 이것은 이 용어가 음수인 것을 의미하므로, 이것은 초기 속도에서 더 적게 생긴다는 것을 의미합니다.",
+      "elapsed_seconds": 8.888894332999996,
+      "prompt_tokens": 318,
+      "generated_tokens": 170,
+      "finish_reason": "stop",
+      "prompt_tps": 246.92572291855691,
+      "generation_tps": 22.51133793367189,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "missing_number"
+      ],
+      "raw_validator_rejection_reason": "missing_number",
+      "error": null
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.\n\n### Response:\n",
+      "translation": "속도가 감소하면 저는 스노우를 멈추게 됩니다.",
+      "elapsed_seconds": 2.9991705000000053,
+      "prompt_tokens": 273,
+      "generated_tokens": 42,
+      "finish_reason": "stop",
+      "prompt_tps": 232.887885489965,
+      "generation_tps": 23.475948625690123,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: net force=알짜힘. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThe net force acting on the object is zero.\n\n### Response:\n",
+      "translation": "알짜힘이 작용하는 것이 아니라면 작용하는 알짜힘이 없습니다.",
+      "elapsed_seconds": 3.6145804589999955,
+      "prompt_tokens": 267,
+      "generated_tokens": 56,
+      "finish_reason": "stop",
+      "prompt_tps": 227.16214003265154,
+      "generation_tps": 23.3623115259754,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "missing_number"
+      ],
+      "raw_validator_rejection_reason": "missing_number",
+      "error": null
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThe velocity is constant.\n\n### Response:\n",
+      "translation": "속도는 일정합니다.",
+      "elapsed_seconds": 1.6270305409999963,
+      "prompt_tokens": 256,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 237.6668542006677,
+      "generation_tps": 25.164975773871486,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThe mass of the object is two kilograms.\n\n### Response:\n",
+      "translation": "질량이 2kg인 것입니다.",
+      "elapsed_seconds": 2.153855374999999,
+      "prompt_tokens": 264,
+      "generated_tokens": 22,
+      "finish_reason": "stop",
+      "prompt_tps": 220.23735916205678,
+      "generation_tps": 24.280197916192723,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: acceleration=가속도; velocity=속도. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nAcceleration is the rate of change of velocity.\n\n### Response:\n",
+      "translation": "가속도는 속도의 변화율입니다.",
+      "elapsed_seconds": 2.365407249999997,
+      "prompt_tokens": 270,
+      "generated_tokens": 27,
+      "finish_reason": "stop",
+      "prompt_tps": 219.685294095465,
+      "generation_tps": 24.480775224548694,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도; speed=속력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nSpeed is the magnitude of velocity.\n\n### Response:\n",
+      "translation": "속도는 속력의 크기입니다.",
+      "elapsed_seconds": 2.265662249999991,
+      "prompt_tokens": 267,
+      "generated_tokens": 25,
+      "finish_reason": "stop",
+      "prompt_tps": 220.75050624829458,
+      "generation_tps": 24.42920252211979,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: displacement=변위; distance=거리. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nDisplacement differs from distance traveled.\n\n### Response:\n",
+      "translation": "변위는 거리를 넘어 이동하는 것과 달리 움직이는 것입니다.",
+      "elapsed_seconds": 3.4245410830000083,
+      "prompt_tokens": 270,
+      "generated_tokens": 51,
+      "finish_reason": "stop",
+      "prompt_tps": 220.62773288559472,
+      "generation_tps": 23.708779020162005,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도; momentum=운동량; mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nMomentum is the product of mass and velocity.\n\n### Response:\n",
+      "translation": "운동량은 질량과 속도의 곱입니다.",
+      "elapsed_seconds": 2.670738082999989,
+      "prompt_tokens": 281,
+      "generated_tokens": 33,
+      "finish_reason": "stop",
+      "prompt_tps": 232.13361953475484,
+      "generation_tps": 23.408971695678176,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: momentum=운동량; impulse=충격량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nImpulse is the change in momentum.\n\n### Response:\n",
+      "translation": "충격량은 운동량의 변화입니다.",
+      "elapsed_seconds": 2.5235987909999977,
+      "prompt_tokens": 275,
+      "generated_tokens": 31,
+      "finish_reason": "stop",
+      "prompt_tps": 228.10444452610034,
+      "generation_tps": 24.123733736850628,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: kinetic energy=운동 에너지; speed=속력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nKinetic energy increases with speed.\n\n### Response:\n",
+      "translation": "운동 에너지는 속력이 증가함에 따라 증가합니다.",
+      "elapsed_seconds": 3.0995666250000085,
+      "prompt_tokens": 276,
+      "generated_tokens": 43,
+      "finish_reason": "stop",
+      "prompt_tps": 228.69018496974127,
+      "generation_tps": 23.318263972123095,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: integration limits=적분 구간. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nWe need to take care of the integration limits here.\n\n### Response:\n",
+      "translation": "적분 구간에 대한 관심이 있어야 합니다.",
+      "elapsed_seconds": 2.791359208000003,
+      "prompt_tokens": 270,
+      "generated_tokens": 37,
+      "finish_reason": "stop",
+      "prompt_tps": 223.98346504286786,
+      "generation_tps": 23.80665841621817,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: gravity=중력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nGravity pulls the object downward.\n\n### Response:\n",
+      "translation": "중력은 물체를 아래쪽으로 끌어당긴다.",
+      "elapsed_seconds": 2.888868333000005,
+      "prompt_tokens": 261,
+      "generated_tokens": 39,
+      "finish_reason": "stop",
+      "prompt_tps": 216.19527646007182,
+      "generation_tps": 23.62053429951414,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: friction=마찰. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nFriction opposes the motion.\n\n### Response:\n",
+      "translation": "마찰이 움직임을 막는다.",
+      "elapsed_seconds": 2.1953621250000026,
+      "prompt_tokens": 259,
+      "generated_tokens": 24,
+      "finish_reason": "stop",
+      "prompt_tps": 213.79185115916343,
+      "generation_tps": 25.2018896603682,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: speed=속력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nAnd we want to ultimately get the speed of the rocket.\n\n### Response:\n",
+      "translation": "우리는 로켓의 속력을 원하는 것입니다.",
+      "elapsed_seconds": 2.5704287080000086,
+      "prompt_tokens": 266,
+      "generated_tokens": 32,
+      "finish_reason": "stop",
+      "prompt_tps": 215.83313183701154,
+      "generation_tps": 24.51501292994933,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: separation of variables=변수 분리; integrate=적분. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nSo we have to apply a technique called separation of variables and then we want to integrate.\n\n### Response:\n",
+      "translation": "\"변수 분리\"와 \"적분\"이라는 용어를 사용하여 원문을 한국어로 번역합니다.",
+      "elapsed_seconds": 3.468584957999994,
+      "prompt_tokens": 285,
+      "generated_tokens": 53,
+      "finish_reason": "stop",
+      "prompt_tps": 228.34929074766393,
+      "generation_tps": 24.256877580189762,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "prompt_leak"
+      ],
+      "raw_validator_rejection_reason": "prompt_leak",
+      "error": null
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: dt, mR, dvR, dmR, u.\n\n### Input:\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.\n\n### Response:\n",
+      "translation": "\"우리는 먼저 곱하기 위해 dt를 사용하여 빼놓고, 그 결과로 dmr u가 남습니다.\"",
+      "elapsed_seconds": 3.865521208000004,
+      "prompt_tokens": 307,
+      "generated_tokens": 58,
+      "finish_reason": "stop",
+      "prompt_tps": 225.93715617465756,
+      "generation_tps": 23.431616846201273,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "missing_math_symbol"
+      ],
+      "raw_validator_rejection_reason": "missing_math_symbol",
+      "error": null
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: m.\n\n### Input:\nAnd we're going to shuffle the m onto the other side.\n\n### Response:\n",
+      "translation": "입력된 영어 원문 \"And we're going to shuffle the m onto the other side.\"를 한국어로 번역하면 \"우리는 다른 쪽에서 m을 순회할 것입니다.\" 입니다.",
+      "elapsed_seconds": 5.0692296250000055,
+      "prompt_tokens": 269,
+      "generated_tokens": 87,
+      "finish_reason": "stop",
+      "prompt_tps": 220.28357950292076,
+      "generation_tps": 22.80960125395046,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: dvR, u, dmR, mR.\n\n### Input:\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.\n\n### Response:\n",
+      "translation": "\"d v r은 u가 일정한 것으로 생각되므로 초기 단계에서 출력됩니다. 그 다음에는 d m r이 더 높은 수준에서 출력됩니다.\"",
+      "elapsed_seconds": 5.6212620000000015,
+      "prompt_tokens": 297,
+      "generated_tokens": 99,
+      "finish_reason": "stop",
+      "prompt_tps": 218.79343523926127,
+      "generation_tps": 23.486125938695153,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "missing_math_symbol"
+      ],
+      "raw_validator_rejection_reason": "missing_math_symbol",
+      "error": null
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: integrate=적분. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThat's an equation that we can integrate now.\n\n### Response:\n",
+      "translation": "적분 가능한 방정식이 있습니다.",
+      "elapsed_seconds": 2.4342035419999917,
+      "prompt_tokens": 264,
+      "generated_tokens": 28,
+      "finish_reason": "stop",
+      "prompt_tps": 214.84036252276695,
+      "generation_tps": 24.310742522592115,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: integration limits=적분 구간. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nAnd the tricky bit is that we need to take care of the integration limits here.\n\n### Response:\n",
+      "translation": "적분 구간에서 작업하는 것이 어렵습니다.",
+      "elapsed_seconds": 2.926598791999993,
+      "prompt_tokens": 276,
+      "generated_tokens": 39,
+      "finish_reason": "stop",
+      "prompt_tps": 225.00006120246022,
+      "generation_tps": 23.482791516841708,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: fuel mass=연료 질량; dry mass=건조 질량; mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: m0.\n\n### Input:\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.\n\n### Response:\n",
+      "translation": "실제로 이것은 2m0입니다. 이것은 건조 질량과 연료 질량이 더해진 초기 질량입니다.",
+      "elapsed_seconds": 4.910664457999999,
+      "prompt_tokens": 344,
+      "generated_tokens": 78,
+      "finish_reason": "stop",
+      "prompt_tps": 232.3171634057058,
+      "generation_tps": 22.94939719440671,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도; mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요. 그대로 쓸 기호: mR.\n\n### Input:\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.\n\n### Response:\n",
+      "translation": "M r, 로켓의 질량이 저하되어 있으므로, 이 용어는 초기 속도에서 더 적게 생긴다는 것을 의미하며, 이것은 이 용어가 음수인 것을 의미하므로, 이것은 초기 속도에서 더 적게 생긴다는 것을 의미합니다.",
+      "elapsed_seconds": 8.763196749999992,
+      "prompt_tokens": 318,
+      "generated_tokens": 170,
+      "finish_reason": "stop",
+      "prompt_tps": 236.55877661995262,
+      "generation_tps": 23.012920214865563,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "missing_number"
+      ],
+      "raw_validator_rejection_reason": "missing_number",
+      "error": null
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.\n\n### Response:\n",
+      "translation": "속도가 감소하면 저는 스노우를 멈추게 됩니다.",
+      "elapsed_seconds": 3.0129062919999967,
+      "prompt_tokens": 273,
+      "generated_tokens": 42,
+      "finish_reason": "stop",
+      "prompt_tps": 220.14761986554072,
+      "generation_tps": 24.166783034521735,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: net force=알짜힘. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThe net force acting on the object is zero.\n\n### Response:\n",
+      "translation": "알짜힘이 작용하는 것이 아니라면 작용하는 알짜힘이 없습니다.",
+      "elapsed_seconds": 3.676012541999995,
+      "prompt_tokens": 267,
+      "generated_tokens": 56,
+      "finish_reason": "stop",
+      "prompt_tps": 220.0833623517095,
+      "generation_tps": 23.034387372201444,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [
+        "missing_number"
+      ],
+      "raw_validator_rejection_reason": "missing_number",
+      "error": null
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThe velocity is constant.\n\n### Response:\n",
+      "translation": "속도는 일정합니다.",
+      "elapsed_seconds": 1.66183054199999,
+      "prompt_tokens": 256,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 233.25742975597518,
+      "generation_tps": 24.593141193125213,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nThe mass of the object is two kilograms.\n\n### Response:\n",
+      "translation": "질량이 2kg인 것입니다.",
+      "elapsed_seconds": 2.147489082999982,
+      "prompt_tokens": 264,
+      "generated_tokens": 22,
+      "finish_reason": "stop",
+      "prompt_tps": 213.86789505688878,
+      "generation_tps": 25.088795576765758,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: acceleration=가속도; velocity=속도. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nAcceleration is the rate of change of velocity.\n\n### Response:\n",
+      "translation": "가속도는 속도의 변화율입니다.",
+      "elapsed_seconds": 2.3759095839999986,
+      "prompt_tokens": 270,
+      "generated_tokens": 27,
+      "finish_reason": "stop",
+      "prompt_tps": 218.31586553459243,
+      "generation_tps": 24.383294553359033,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도; speed=속력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nSpeed is the magnitude of velocity.\n\n### Response:\n",
+      "translation": "속도는 속력의 크기입니다.",
+      "elapsed_seconds": 2.288648375000008,
+      "prompt_tokens": 267,
+      "generated_tokens": 25,
+      "finish_reason": "stop",
+      "prompt_tps": 222.22945878283213,
+      "generation_tps": 24.08091380456186,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: displacement=변위; distance=거리. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nDisplacement differs from distance traveled.\n\n### Response:\n",
+      "translation": "변위는 거리를 넘어 이동하는 것과 달리 움직이는 것입니다.",
+      "elapsed_seconds": 3.4141814169999805,
+      "prompt_tokens": 270,
+      "generated_tokens": 51,
+      "finish_reason": "stop",
+      "prompt_tps": 222.45793150582094,
+      "generation_tps": 23.529835138902122,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: velocity=속도; momentum=운동량; mass=질량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nMomentum is the product of mass and velocity.\n\n### Response:\n",
+      "translation": "운동량은 질량과 속도의 곱입니다.",
+      "elapsed_seconds": 2.6257581669999865,
+      "prompt_tokens": 281,
+      "generated_tokens": 33,
+      "finish_reason": "stop",
+      "prompt_tps": 232.1064079850392,
+      "generation_tps": 23.87333387216181,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: momentum=운동량; impulse=충격량. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nImpulse is the change in momentum.\n\n### Response:\n",
+      "translation": "충격량은 운동량의 변화입니다.",
+      "elapsed_seconds": 2.5942884170000013,
+      "prompt_tokens": 275,
+      "generated_tokens": 31,
+      "finish_reason": "stop",
+      "prompt_tps": 223.3379494959381,
+      "generation_tps": 23.583779760970454,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: kinetic energy=운동 에너지; speed=속력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nKinetic energy increases with speed.\n\n### Response:\n",
+      "translation": "운동 에너지는 속력이 증가함에 따라 증가합니다.",
+      "elapsed_seconds": 3.015955708000007,
+      "prompt_tokens": 276,
+      "generated_tokens": 43,
+      "finish_reason": "stop",
+      "prompt_tps": 225.43636946162331,
+      "generation_tps": 24.46663157116159,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: integration limits=적분 구간. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nWe need to take care of the integration limits here.\n\n### Response:\n",
+      "translation": "적분 구간에 대한 관심이 있어야 합니다.",
+      "elapsed_seconds": 2.8225705829999868,
+      "prompt_tokens": 270,
+      "generated_tokens": 37,
+      "finish_reason": "stop",
+      "prompt_tps": 216.34573484964986,
+      "generation_tps": 24.241937148247835,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: gravity=중력. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nGravity pulls the object downward.\n\n### Response:\n",
+      "translation": "중력은 물체를 아래쪽으로 끌어당긴다.",
+      "elapsed_seconds": 2.8659487920000117,
+      "prompt_tokens": 261,
+      "generated_tokens": 39,
+      "finish_reason": "stop",
+      "prompt_tps": 212.92152189940484,
+      "generation_tps": 24.252135136523396,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "아래는 작업을 설명하는 명령어와 추가 컨텍스트를 제공하는 입력이 짝을 이루는 예제입니다. 요청을 적절히 완료하는 응답을 작성하세요.\n\n### Instruction:\n다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요. 용어: friction=마찰. 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n### Input:\nFriction opposes the motion.\n\n### Response:\n",
+      "translation": "마찰이 움직임을 막는다.",
+      "elapsed_seconds": 2.227590499999991,
+      "prompt_tokens": 259,
+      "generated_tokens": 24,
+      "finish_reason": "stop",
+      "prompt_tps": 208.58541733345928,
+      "generation_tps": 25.128984564873594,
+      "mlx_process_peak_gb": 4.43778058,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    }
+  ],
+  "complete": true,
+  "semantic_review": "pending",
+  "warmup": {
+    "translation": "숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요.\n\n입력: Hello, welcome to the lecture.\n\n출력: 안녕하세요, 강의에 오신 것을 환영합니다.",
+    "elapsed_seconds": 6.2611078330000005,
+    "prompt_tokens": 247,
+    "generated_tokens": 102,
+    "finish_reason": "stop",
+    "prompt_tps": 160.24745144156256,
+    "generation_tps": 21.77796169157299,
+    "mlx_process_peak_gb": 4.245152856
+  },
+  "mlx_process_peak_gb": 4.43778058
+}
