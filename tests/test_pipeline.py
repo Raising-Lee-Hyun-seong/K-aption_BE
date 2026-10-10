@@ -1,5 +1,6 @@
 """STT·번역 통합 흐름, 출력 재시도, 오디오 검증 및 업로드 자원 정리를 검증한다."""
 import io
+import json
 import sys
 import tempfile
 import unittest
@@ -173,6 +174,55 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
 
 class ServiceTests(unittest.TestCase):
     """번역 재시도·토큰 제한과 실제 오디오 디코딩 검증을 수행한다."""
+    def test_missing_weights_fail_before_mlx_loading(self):
+        """설정만 남은 모델 폴더는 MLX를 호출하지 않고 가중치 복구 방법을 안내한다.
+
+        :return: None.
+        :raises AssertionError: 가중치 누락을 감지하지 않거나 MLX 로딩을 호출할 때.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            model_path = Path(directory)
+            (model_path / 'config.json').write_text(json.dumps({'quantization': {'bits': 4}}))
+            mlx = SimpleNamespace(load=Mock())
+            with patch.dict(sys.modules, {'mlx_lm': mlx}):
+                with self.assertRaisesRegex(FileNotFoundError, 'weights missing.*make model'):
+                    TranslationService(model_path, model_path / 'template.json')
+            mlx.load.assert_not_called()
+
+    def test_empty_weights_fail_before_mlx_loading(self):
+        """빈 가중치 파일은 준비된 모델로 취급하지 않고 로딩 전에 거부한다.
+
+        :return: None.
+        :raises AssertionError: 빈 가중치 파일을 감지하지 않거나 MLX 로딩을 호출할 때.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            model_path = Path(directory)
+            (model_path / 'config.json').write_text(json.dumps({'quantization': {'bits': 4}}))
+            (model_path / 'model.safetensors').touch()
+            mlx = SimpleNamespace(load=Mock())
+            with patch.dict(sys.modules, {'mlx_lm': mlx}):
+                with self.assertRaisesRegex(FileNotFoundError, 'weights missing or empty.*model.safetensors'):
+                    TranslationService(model_path, model_path / 'template.json')
+            mlx.load.assert_not_called()
+
+    def test_incomplete_weight_shards_fail_before_mlx_loading(self):
+        """일부 가중치가 있어도 인덱스가 참조하는 샤드가 없으면 로딩 전에 거부한다.
+
+        :return: None.
+        :raises AssertionError: 누락된 샤드를 감지하지 않거나 MLX 로딩을 호출할 때.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            model_path = Path(directory)
+            (model_path / 'config.json').write_text(json.dumps({'quantization': {'bits': 4}}))
+            (model_path / 'model-00001.safetensors').write_bytes(b'placeholder')
+            (model_path / 'model.safetensors.index.json').write_text(json.dumps({
+                'weight_map': {'first': 'model-00001.safetensors', 'second': 'model-00002.safetensors'}}))
+            mlx = SimpleNamespace(load=Mock())
+            with patch.dict(sys.modules, {'mlx_lm': mlx}):
+                with self.assertRaisesRegex(FileNotFoundError, 'weights missing.*model-00002.safetensors'):
+                    TranslationService(model_path, model_path / 'template.json')
+            mlx.load.assert_not_called()
+
     def stream_mock(self, generate):
         """기존 텍스트 목을 MLX 응답 스트림으로 감싸 생성 호출을 관찰할 수 있게 한다.
 

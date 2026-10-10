@@ -37,8 +37,15 @@ prepare:
 
 quantize:
 	@test -x .venv-mlx/bin/mlx_lm.convert || { echo '먼저 make setup-mlx를 실행하세요.'; exit 1; }
-	.venv-mlx/bin/mlx_lm.convert --hf-path models/koreanlm-fp16 \
-	  --mlx-path "$$MODEL_DIR" --quantize --q-bits 4 --q-group-size 64 --dtype float16
+	@set -e; \
+	  model_parent=$$(dirname "$$MODEL_DIR"); \
+	  mkdir -p "$$model_parent"; \
+	  quantize_tmp=$$(mktemp -d "$$model_parent/.koreanlm-quantize.XXXXXX"); \
+	  trap 'rm -rf "$$quantize_tmp"' EXIT; \
+	  .venv-mlx/bin/mlx_lm.convert --hf-path models/koreanlm-fp16 \
+	    --mlx-path "$$quantize_tmp/model" --quantize --q-bits 4 --q-group-size 64 --dtype float16; \
+	  mkdir -p "$$MODEL_DIR"; \
+	  cp -R "$$quantize_tmp/model/." "$$MODEL_DIR/"
 
 # Recursive calls keep preparation before quantization even with make -j.
 model:

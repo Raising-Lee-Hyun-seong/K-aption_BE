@@ -23,7 +23,7 @@ class TranslationService:
         :param model_path: config.json과 가중치가 있는 MLX 4bit 모델 디렉터리.
         :param template_path: 번역 프롬프트 템플릿 JSON 경로.
         :return: None.
-        :raises FileNotFoundError: 모델 설정 파일이 없을 때.
+        :raises FileNotFoundError: 모델 설정이나 필요한 가중치 파일이 없거나 가중치 파일이 비어 있을 때.
         :raises ValueError: 모델 양자화 설정이 4bit가 아닐 때.
         """
         config_path = model_path / "config.json"
@@ -35,6 +35,22 @@ class TranslationService:
         config = json.loads(config_path.read_text(encoding="utf-8"))
         if config.get("quantization", {}).get("bits") != 4:
             raise ValueError(f"Expected a 4bit MLX model at {model_path}")
+
+        weight_files = list(model_path.glob("model*.safetensors"))
+        index_path = model_path / "model.safetensors.index.json"
+        expected = {path.name for path in weight_files}
+        if index_path.is_file():
+            index = json.loads(index_path.read_text(encoding="utf-8"))
+            expected.update(index.get("weight_map", {}).values())
+        missing = sorted(name for name in expected
+                         if not (model_path / name).is_file()
+                         or (model_path / name).stat().st_size == 0)
+        if not weight_files or missing:
+            details = ", ".join(missing) or "model*.safetensors"
+            raise FileNotFoundError(
+                f"4bit model weights missing or empty at {model_path}: {details}. "
+                "Restore the model weights or run `make model` first."
+            )
 
         with measure("translation_model_load"):
             from mlx_lm import load
