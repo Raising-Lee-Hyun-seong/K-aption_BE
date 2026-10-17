@@ -13,7 +13,7 @@ HEARTBEAT_SECONDS = 15.0
 
 
 async def job_events(manager: JobManager, initial: JobStatusResponse) -> AsyncIterator[str]:
-    """최초 상태와 변경된 상태를 보내고 완료·실패·조회 불가 시 스트림을 끝낸다.
+    """최초 상태와 변경을 보내고 완료·실패·취소 완료·조회 불가 시 스트림을 끝낸다.
 
     :param manager: 기존 작업을 조회하는 관리자. 새 작업이나 모델 추론을 만들지 않는다.
     :param initial: 응답 헤더 전송 전에 조회·검증한 최초 작업 상태.
@@ -34,7 +34,7 @@ async def job_events(manager: JobManager, initial: JobStatusResponse) -> AsyncIt
             previous = comparable
             last_sent = monotonic()
             yield f'event: status\ndata: {record.model_dump_json()}\n\n'
-        if record.status in ('completed', 'failed'):
+        if record.status in ('completed', 'failed', 'cancelled'):
             return
         if monotonic() - last_sent >= HEARTBEAT_SECONDS:
             last_sent = monotonic()

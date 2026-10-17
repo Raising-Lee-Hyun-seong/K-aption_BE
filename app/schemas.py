@@ -93,10 +93,10 @@ class JobError(BaseModel):
 
 
 class JobStatusResponse(BaseModel):
-    """작업 상태·측정 가능한 번역 진행률·결과 보관 기한을 표현한다."""
+    """작업 상태·취소 진행·측정 가능한 번역 진행률·결과 보관 기한을 표현한다."""
     job_id: str
-    status: Literal['queued', 'running', 'completed', 'failed']
-    stage: Literal['queued', 'transcribing', 'grouping', 'translating', 'completed', 'failed']
+    status: Literal['queued', 'running', 'cancelling', 'cancelled', 'completed', 'failed']
+    stage: Literal['queued', 'transcribing', 'grouping', 'translating', 'cancelled', 'completed', 'failed']
     progress_percent: Optional[float] = Field(default=None, ge=0, le=100,
         description='번역 구간 처리 완료 비율. STT·대기 중에는 null, 작업 완료 시 100')
     completed_segments: int = Field(default=0, ge=0)
@@ -105,7 +105,7 @@ class JobStatusResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     expires_at: Optional[datetime] = Field(default=None,
-        description='완료·실패 시점부터의 결과 보관 기한. 미완료 작업은 null')
+        description='완료·실패·취소 완료 시점부터의 결과 보관 기한. 미완료 작업은 null')
     elapsed_seconds: float = Field(default=0, ge=0,
         description='접수 시점부터 경과한 초. 대기 포함, 종료된 작업은 종료 시점까지')
     error: Optional[JobError] = None

@@ -40,6 +40,10 @@ class JobStorageError(RuntimeError):
     """저장된 작업 결과가 없거나 손상됐음을 나타낸다."""
 
 
+class JobCancelledError(RuntimeError):
+    """현재 추론 단계 이후 협력적으로 작업을 멈추는 내부 신호를 나타낸다."""
+
+
 class JobManager:
     """업로드 포함 미완료 작업 수를 제한하고 작업을 하나씩 처리·보관한다."""
 
@@ -51,7 +55,7 @@ class JobManager:
         :param transcriber: STT 서비스를 제공하는 공유 객체.
         :param translator: 번역 서비스를 제공하는 공유 객체.
         :param max_active: 업로드·대기·실행을 합친 최대 미완료 작업 수. 양의 정수.
-        :param ttl_seconds: 완료·실패 이후 상태·결과 보관 시간(초). 양의 정수.
+        :param ttl_seconds: 완료·실패·취소 완료 이후 상태·결과 보관 시간(초). 양의 정수.
         :param clock: UTC epoch 초를 반환하는 시계. 테스트에서는 대체할 수 있다.
         :return: None.
         :raises ValueError: 작업 한도 또는 보관 시간이 양수가 아닐 때.
@@ -67,6 +71,7 @@ class JobManager:
         self._worker = self._janitor = self._lock_file = None
         self._stop = asyncio.Event()
         self._submissions = set()
+        self._queued = set()
 
     def _now(self) -> datetime:
         """현재 UTC 시각을 반환한다.
@@ -137,7 +142,7 @@ class JobManager:
             self.records[job_id] = self.records[job_id].model_copy(update=changes)
 
     def cleanup(self) -> None:
-        """보관 기한이 끝난 완료·실패 작업의 디렉터리와 메모리를 삭제한다.
+        """보관 기한이 끝난 완료·실패·취소 작업의 디렉터리와 메모리를 삭제한다.
 
         :return: None.
         :raises OSError: 만료 파일을 삭제할 수 없을 때.
@@ -157,6 +162,7 @@ class JobManager:
         :raises OSError: 복구에 필요한 파일 읽기·저장·정리가 실패할 때.
 
         이전 queued/running 작업은 자동 추론하지 않고 interrupted로 표시한다.
+        수락된 cancelling 작업은 입력·결과를 정리하고 cancelled로 복구한다.
         """
         for directory in self.root.iterdir():
             if not directory.is_dir() or directory.is_symlink() or not JOB_ID.fullmatch(directory.name):
@@ -177,7 +183,9 @@ class JobManager:
                     shutil.rmtree(directory)
                     del self.records[job_id]
                     continue
-                if record.status in ('queued', 'running'):
+                if record.status == 'cancelling':
+                    self._finish_cancel(job_id)
+                elif record.status in ('queued', 'running'):
                     self._fail(job_id, 'interrupted', 'Processing was interrupted; upload the file again')
                 elif record.status == 'completed' and not (directory / 'result.json').is_file():
                     self._fail(job_id, 'storage_error', 'Stored job result is missing')
@@ -256,6 +264,7 @@ class JobManager:
             if self._closing:
                 raise JobCapacityError('Job worker is shutting down')
             self.queue.put_nowait((job_id, language))
+            self._queued.add(job_id)
             return self._snapshot(self.records[job_id])
         except BaseException:
             self.records.pop(job_id, None)
@@ -291,7 +300,7 @@ class JobManager:
         :param record: 조회할 현재 작업 상태.
         :return: 대기 포함 경과 초를 계산한 응답 복사본.
         """
-        end = record.updated_at if record.status in ('completed', 'failed') else self._now()
+        end = record.updated_at if record.status in ('completed', 'failed', 'cancelled') else self._now()
         return record.model_copy(update={'elapsed_seconds': max(0, (end - record.created_at).total_seconds())})
 
     def get(self, job_id: str) -> JobStatusResponse:
@@ -323,8 +332,74 @@ class JobManager:
             self._fail(job_id, 'storage_error', 'Stored job result is unavailable')
             raise JobStorageError('Stored job result is unavailable') from exc
 
+    def _remove_queued(self, job_id: str) -> None:
+        """대기열의 지정 작업을 제거하고 다른 작업 순서와 join 계수를 보존한다.
+
+        :param job_id: _queued에 등록된 취소 대상 작업 ID.
+        :return: None.
+        """
+        for _ in range(self.queue.qsize()):
+            item = self.queue.get_nowait()
+            if item is None or item[0] != job_id:
+                self.queue.put_nowait(item)
+            self.queue.task_done()
+        self._queued.discard(job_id)
+
+    def _finish_cancel(self, job_id: str) -> JobStatusResponse:
+        """추론이 사용하지 않는 입력·결과를 삭제하고 취소 완료 상태를 저장한다.
+
+        :param job_id: 실행 단계가 종료됐거나 대기열에서 제거된 취소 작업 ID.
+        :return: cancelled 상태. 파일 삭제·상태 저장 실패 시 storage_error 실패 상태.
+
+        취소 완료부터 보관 기한을 계산한다. 디스크 오류가 나도 작업자는 계속 실행한다.
+        """
+        try:
+            directory = self._directory(job_id)
+            (directory / 'input.media').unlink(missing_ok=True)
+            (directory / 'result.json').unlink(missing_ok=True)
+            return self._update(job_id, status='cancelled', stage='cancelled',
+                                progress_percent=None, error=None,
+                                expires_at=self._now() + timedelta(seconds=self.ttl_seconds))
+        except OSError:
+            self._fail(job_id, 'storage_error', 'Cancelled job files or status could not be saved')
+            return self.records[job_id]
+
+    def cancel(self, job_id: str) -> JobStatusResponse:
+        """대기 작업은 즉시 정리하고 실행 작업은 다음 단계 경계에서 취소하도록 요청한다.
+
+        :param job_id: 취소할 기존 작업 ID.
+        :return: 대기는 cancelled, 실행 중은 cancelling, 재요청은 현재 취소 상태.
+        :raises KeyError: 작업이 없거나 만료된 경우.
+        :raises JobNotReadyError: 완료·실패 작업 또는 아직 접수 중인 업로드인 경우.
+        :raises JobStorageError: 취소 요청·완료 상태 기록이나 입력 삭제에 실패한 경우.
+
+        요청을 디스크에 먼저 저장한다. 스레드 강제 취소·입력 조기 삭제는 하지 않는다.
+        대기 작업은 미완료 한도를 즉시 반환하고, 실행 작업은 추론 종료까지 점유한다.
+        """
+        record = self.get(job_id)
+        if record.status in ('cancelled', 'cancelling'):
+            return record
+        if record.status in ('completed', 'failed'):
+            raise JobNotReadyError('Finished jobs cannot be cancelled')
+        queued = record.status == 'queued'
+        if queued and job_id not in self._queued:
+            raise JobNotReadyError('Upload is still being accepted')
+        try:
+            self._update(job_id, status='cancelling')
+        except OSError as exc:
+            raise JobStorageError('Cancellation request could not be saved') from exc
+        if queued:
+            self._remove_queued(job_id)
+            try:
+                record = self._finish_cancel(job_id)
+            finally:
+                self._active -= 1
+            if record.status != 'cancelled':
+                raise JobStorageError('Cancelled job files or status could not be saved')
+        return self.get(job_id)
+
     async def _run(self) -> None:
-        """대기 작업을 하나씩 실행하고 결과·실패를 저장한 뒤 입력 파일을 정리한다.
+        """대기 작업을 순서대로 처리하고 완료·실패·취소 상태와 입력 정리를 확정한다.
 
         :return: None. 종료 표식을 받으면 작업자 루프를 마친다.
 
@@ -336,18 +411,22 @@ class JobManager:
                 self.queue.task_done()
                 return
             job_id, language = item
+            self._queued.discard(job_id)
             token = request_id.set(job_id)
             directory = self._directory(job_id)
 
             async def progress(stage, completed, total, failed):
-                """현재 작업의 실제 단계·번역 구간 처리량을 저장한다.
+                """현재 작업의 실제 처리량을 저장하고 취소 요청이면 다음 추론을 막는다.
 
                 :param stage: transcribing·grouping·translating 중 하나.
                 :param completed: 처리가 끝난 번역 구간 수. 번역 실패도 포함한다.
                 :param total: 전체 번역 구간 수. STT 중에는 None.
                 :param failed: 번역 검증 실패 구간 수.
                 :return: None.
+                :raises JobCancelledError: 현재 추론 단계 뒤 취소 요청이 확인된 경우.
                 """
+                if self.records[job_id].status == 'cancelling':
+                    raise JobCancelledError('Job cancellation requested')
                 percent = 100 * completed / total if stage == 'translating' and total else None
                 self._update(job_id, stage=stage, completed_segments=completed,
                              total_segments=total, failed_segments=failed, progress_percent=percent)
@@ -357,15 +436,20 @@ class JobManager:
                     self._update(job_id, status='running', stage='transcribing')
                     response = await process_media(directory / 'input.media', self.transcriber,
                                                    self.translator, language, progress)
+                    if self.records[job_id].status == 'cancelling':
+                        raise JobCancelledError('Job cancellation requested')
                     self._write_json(directory / 'result.json', response.model_dump(mode='json'))
                     (directory / 'input.media').unlink(missing_ok=True)
                     self._update(job_id, status='completed', stage='completed', progress_percent=100,
                                  expires_at=self._now() + timedelta(seconds=self.ttl_seconds))
-            except MediaValidationError:
-                self._fail(job_id, 'invalid_media', 'Media audio or duration validation failed')
             except Exception as exc:
-                self._fail(job_id, 'storage_error' if isinstance(exc, OSError) else 'processing_failed',
-                           'Job processing failed; upload the file again')
+                if self.records[job_id].status == 'cancelling':
+                    self._finish_cancel(job_id)
+                elif isinstance(exc, MediaValidationError):
+                    self._fail(job_id, 'invalid_media', 'Media audio or duration validation failed')
+                else:
+                    self._fail(job_id, 'storage_error' if isinstance(exc, OSError) else 'processing_failed',
+                               'Job processing failed; upload the file again')
             finally:
                 try:
                     (directory / 'input.media').unlink(missing_ok=True)
@@ -405,6 +489,7 @@ class JobManager:
             await asyncio.gather(*list(self._submissions), return_exceptions=True)
         while not self.queue.empty():
             job_id, _ = self.queue.get_nowait()
+            self._queued.discard(job_id)
             self._fail(job_id, 'interrupted', 'Server shut down before processing; upload again')
             try:
                 (self._directory(job_id) / 'input.media').unlink(missing_ok=True)

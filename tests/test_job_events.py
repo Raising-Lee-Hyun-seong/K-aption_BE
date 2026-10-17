@@ -67,12 +67,12 @@ class JobEventsTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(chunks), 2)
         self.assertEqual(manager.get.call_count, 2)
 
-    async def test_completed_and_failed_jobs_emit_once_without_polling(self):
-        """이미 종료된 작업은 실패 정보를 포함해 한 번만 보내고 조회를 추가하지 않는다.
+    async def test_terminal_jobs_emit_once_without_polling(self):
+        """완료·실패·취소 작업은 정보를 한 번만 보내고 조회를 추가하지 않는다.
 
         :return: None.
         """
-        for state in ('completed', 'failed'):
+        for state in ('completed', 'failed', 'cancelled'):
             with self.subTest(state=state):
                 error = JobError(code='processing_failed', message='처리에 실패했습니다.') if state == 'failed' else None
                 initial = self.record(state, error=error)

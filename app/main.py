@@ -363,6 +363,40 @@ async def get_job(job_id: str, request: Request) -> JobStatusResponse:
         raise HTTPException(status_code=404, detail='Job not found') from exc
 
 
+@app.post('/api/v1/jobs/{job_id}/cancel', response_model=JobStatusResponse, tags=['Jobs'],
+          summary='대기·실행 작업 취소 요청', responses={
+              200: {'description': '취소 완료 또는 이미 취소된 작업'},
+              202: {'description': '현재 추론 단계가 끝나면 취소'},
+              404: {'description': '없는 작업 또는 만료'},
+              409: {'description': '완료·실패 작업 또는 아직 업로드 접수 중'},
+              500: {'description': '취소 요청·파일·상태 저장 실패'},
+              503: {'description': '작업 관리자 미준비'},
+          })
+async def cancel_job(job_id: str, request: Request, response: Response) -> JobStatusResponse:
+    """대기 작업을 취소하거나 실행 중 작업에 안전한 단계 경계 취소를 요청한다.
+
+    :param job_id: 접수 후 받은 취소 대상 작업 ID.
+    :param request: 작업 관리자가 저장된 요청.
+    :param response: 실행 중 취소 요청의 202 상태 코드와 캐시 헤더를 설정할 응답.
+    :return: 취소 완료는 200·cancelled, 실행 중은 202·cancelling 상태.
+    :raises HTTPException: 없음·만료 404, 종료 상태 409, 저장 오류 500, 관리자 미준비 503.
+
+    취소 요청을 저장하며 입력 삭제는 추론이 사용하지 않는 시점에 수행한다.
+    cancelled·cancelling 작업의 재요청은 해당 상태를 그대로 반환한다.
+    """
+    try:
+        record = job_manager(request).cancel(job_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail='Job not found') from exc
+    except JobNotReadyError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except (JobStorageError, OSError) as exc:
+        raise HTTPException(status_code=500, detail='Job cancellation could not be saved') from exc
+    response.status_code = 202 if record.status == 'cancelling' else 200
+    response.headers['Cache-Control'] = 'no-store'
+    return record
+
+
 @app.get('/api/v1/jobs/{job_id}/events', response_class=StreamingResponse, tags=['Jobs'],
          summary='작업 상태·진행률 SSE 구독', responses={
              200: {'description': '상태 스냅샷과 heartbeat', 'content': {'text/event-stream': {}}},
@@ -370,7 +404,7 @@ async def get_job(job_id: str, request: Request) -> JobStatusResponse:
              503: {'description': '작업 관리자 미준비'},
          })
 async def get_job_events(job_id: str, request: Request) -> StreamingResponse:
-    """현재 상태를 먼저 확인한 뒤 완료·실패까지 상태 변경을 SSE로 제공한다.
+    """현재 상태를 먼저 확인한 뒤 완료·실패·취소 완료까지 변경을 SSE로 제공한다.
 
     :param job_id: 구독할 기존 작업 ID.
     :param request: 작업 관리자가 저장된 요청.
@@ -378,7 +412,7 @@ async def get_job_events(job_id: str, request: Request) -> StreamingResponse:
     :raises HTTPException: 최초 조회에서 없음·만료는 404, 관리자 미준비는 503.
 
     연결 종료는 구독만 끝내며 작업을 취소하지 않는다. 재연결 시 현재 스냅샷부터
-    시작하고 이력은 재생하지 않는다. 완료·실패 상태는 한 번 보내고 연결을 닫는다.
+    시작하고 이력은 재생하지 않는다. 완료·실패·취소 완료는 한 번 보내고 연결을 닫는다.
     """
     manager = job_manager(request)
     try:
@@ -394,7 +428,7 @@ async def get_job_events(job_id: str, request: Request) -> StreamingResponse:
 @app.get('/api/v1/jobs/{job_id}/result', response_model=TranscriptionResponse, tags=['Jobs'],
          summary='완료된 작업 자막 결과 조회', responses={
              404: {'description': '없는 작업 또는 만료'},
-             409: {'description': '대기·실행·실패 상태라 완료 결과 없음'},
+             409: {'description': '대기·실행·실패·취소 상태라 완료 결과 없음'},
              500: {'description': '저장된 결과 없음 또는 손상'},
          })
 async def get_job_result(job_id: str, request: Request) -> TranscriptionResponse:
@@ -403,7 +437,7 @@ async def get_job_result(job_id: str, request: Request) -> TranscriptionResponse
     :param job_id: 접수 시 받은 작업 ID.
     :param request: 작업 관리자가 저장된 요청.
     :return: 성공·부분 실패·무음을 구분할 수 있는 자막 구간 응답.
-    :raises HTTPException: 없음·만료 404, 미완료·실패 409, 저장 손상 500, 관리자 미준비 503.
+    :raises HTTPException: 없음·만료 404, 미완료·실패·취소 409, 저장 손상 500, 관리자 미준비 503.
     """
     try:
         return job_manager(request).result(job_id)
@@ -420,7 +454,7 @@ async def get_job_result(job_id: str, request: Request) -> TranscriptionResponse
              200: {'description': 'UTF-8 자막 문서', 'content': {
                  'application/x-subrip': {}, 'text/vtt': {}}},
              404: {'description': '없는 작업 또는 만료'},
-             409: {'description': '작업 미완료 또는 실패'},
+             409: {'description': '작업 미완료·실패·취소'},
              422: {'description': '지원하지 않는 형식·언어·다운로드 옵션'},
              500: {'description': '저장 결과 손상 또는 유효하지 않은 자막'},
              503: {'description': '작업 관리자 미준비'},
@@ -439,7 +473,7 @@ async def get_job_subtitles(
     :param language: ko·en·both 중 하나. 기본 ko이며 번역 실패 구간은 원문을 제공한다.
     :param download: 참이면 attachment, 거짓이면 inline Content-Disposition을 사용한다.
     :return: UTF-8 자막 본문·파일명·미디어 유형이 포함된 HTTP 응답.
-    :raises HTTPException: 없음·만료 404, 미완료·실패 409, 옵션 422, 손상 500, 관리자 미준비 503.
+    :raises HTTPException: 없음·만료 404, 미완료·실패·취소 409, 옵션 422, 손상 500, 관리자 미준비 503.
 
     기존 결과를 읽기만 하고 모델 재추론이나 자막 파일 저장은 하지 않는다.
     """

@@ -17,6 +17,7 @@
 | 전공 용어집 | 물리학 용어 28개 및 번역 출력 검증 구현 |
 | 작업 접수·상태·진행률·결과 저장 | 파일 기반 단일 작업자 구현 |
 | 작업 상태·번역 진행률 실시간 구독 | SSE 구현. 현재 스냅샷과 상태 변경 제공 |
+| 작업 취소 | 대기 즉시 취소·실행 중 단계 경계 취소 구현 |
 | SRT/VTT 자막 다운로드·VTT 트랙 응답 | 구현. 실제 영상 화면 연결은 프론트엔드 작업 |
 
 STT 구현은 프로젝트 내부 `transcribe.py`에 있으며 API가 이를 공유합니다. `requirements-api.txt`는 `requirements-stt.txt`를 포함해 STT 의존성을 설치합니다. STT와 번역 결과를 터미널에 반환하는 CLI는 사용하지 않습니다. 프론트엔드는 HTTP API의 JSON 응답을 사용합니다.
@@ -218,6 +219,7 @@ FastAPI 요청 형식 검증 오류의 `detail`은 배열입니다.
 | `POST /api/v1/jobs?language=en` | multipart의 `file`을 접수하고 HTTP 202·상태 JSON·`Location` 헤더 반환 |
 | `GET /api/v1/jobs/{job_id}` | 현재 상태·단계·번역 구간 진행률·경과 시간·공개 오류 조회 |
 | `GET /api/v1/jobs/{job_id}/events` | SSE로 현재 상태와 진행률 변경 구독 |
+| `POST /api/v1/jobs/{job_id}/cancel` | 대기 취소 200 또는 실행 중 취소 요청 202 |
 | `GET /api/v1/jobs/{job_id}/result` | 완료 결과를 기존 `{ "segments": [...] }` 형식으로 반환 |
 | `GET /api/v1/jobs/{job_id}/subtitles` | 완료 결과의 한국어·영어·한영 SRT/VTT 다운로드 |
 
@@ -249,7 +251,7 @@ curl 'http://localhost:8000/api/v1/jobs/받은_작업_ID/result'
 
 ### 상태와 진행률
 
-상태는 `queued` → `running` → `completed` 또는 `failed`입니다. 단계는 `queued`, `transcribing`, `grouping`, `translating`, `completed`, `failed` 중 하나입니다. 프론트엔드는 접수 후 2초에서 5초 간격으로 상태를 조회하고 종료 상태에서 조회를 중단합니다.
+일반 상태는 `queued` → `running` → `completed` 또는 `failed`입니다. 취소 요청 시 `cancelling`을 거쳐 `cancelled`로 끝납니다. 대기 작업은 바로 `cancelled`로 응답합니다. 단계는 `queued`, `transcribing`, `grouping`, `translating`, `completed`, `failed`, `cancelled` 중 하나이며, `cancelling` 중에는 실제 실행 중인 단계를 유지합니다. 프론트엔드는 SSE를 구독하거나 접수 후 2초에서 5초 간격으로 상태를 조회하고 `completed`·`failed`·`cancelled`에서 조회를 중단합니다.
 
 - STT·대기 중에는 `progress_percent=null`입니다. 가짜 전체 진행률이나 예상 남은 시간은 제공하지 않습니다.
 - 번역 중에는 `completed_segments / total_segments × 100`입니다. 번역 실패한 구간도 처리가 끝났으므로 완료 수에 포함합니다. 이는 **번역 단계 진행률**이며 전체 처리 시간의 비율이 아닙니다.
@@ -270,7 +272,7 @@ const events = new EventSource(`${apiBase}/api/v1/jobs/${jobId}/events`);
 events.addEventListener('status', (event) => {
   const job = JSON.parse(event.data);
   renderJobStatus(job);
-  if (job.status === 'completed' || job.status === 'failed') {
+  if (['completed', 'failed', 'cancelled'].includes(job.status)) {
     events.close();
     // completed이면 기존 /result API로 자막을 조회합니다.
   }
@@ -282,9 +284,33 @@ events.addEventListener('unavailable', (event) => {
 // 화면을 떠날 때도 events.close()를 호출합니다.
 ```
 
-서버는 `completed`·`failed` 상태를 전송한 뒤 스트림을 끝냅니다. 브라우저의 자동 재연결을 멈추려면 위와 같이 클라이언트에서도 `close()`를 호출합니다. 연결을 끊어도 작업은 계속되며, 재연결은 현재 스냅샷부터 시작합니다. 이벤트 ID·과거 이벤트 재생·부분 자막 스트리밍은 제공하지 않습니다. 최초 조회에서 없는 작업·만료는 일반 JSON 404, 작업자 미준비는 503입니다. 연결 후 조회 불가가 되면 `event: unavailable`로 `job_not_found` 또는 `storage_error` 코드와 공개 안내를 보낸 뒤 종료합니다.
+서버는 `completed`·`failed`·`cancelled` 상태를 전송한 뒤 스트림을 끝냅니다. 브라우저의 자동 재연결을 멈추려면 위와 같이 클라이언트에서도 `close()`를 호출합니다. 연결을 끊어도 작업은 계속되며, 재연결은 현재 스냅샷부터 시작합니다. 이벤트 ID·과거 이벤트 재생·부분 자막 스트리밍은 제공하지 않습니다. 최초 조회에서 없는 작업·만료는 일반 JSON 404, 작업자 미준비는 503입니다. 연결 후 조회 불가가 되면 `event: unavailable`로 `job_not_found` 또는 `storage_error` 코드와 공개 안내를 보낸 뒤 종료합니다.
 
 상태 구독은 새 작업·모델 추론·결과 파일을 생성하지 않습니다. 응답에 `Cache-Control: no-cache, no-store`와 `X-Accel-Buffering: no`를 설정합니다. 프록시를 두는 배포 환경에서는 SSE 경로의 버퍼링과 유휴 연결 제한도 맞춰야 합니다. [브라우저 SSE 사용법](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)을 참고하세요.
+
+### 작업 취소
+
+```bash
+curl -X POST 'http://localhost:8000/api/v1/jobs/받은_작업_ID/cancel'
+```
+
+본문 없이 요청하며 기존 작업 상태와 같은 JSON을 반환합니다.
+
+| 대상 상태 | 응답과 동작 |
+| --- | --- |
+| `queued` | 200·`cancelled`. 대기열에서 제거하고 입력을 삭제하며 미완료 용량을 즉시 반환 |
+| `running` | 202·`cancelling`. 현재 STT 또는 번역 한 구간이 끝난 뒤 다음 추론 없이 취소 완료 |
+| `cancelling` | 202·현재 상태. 요청 반복으로 별도 취소 작업을 만들지 않음 |
+| `cancelled` | 200·현재 상태. 보관 기한과 경과 시간을 연장하지 않음 |
+| `completed`·`failed` | 409. 종료된 결과·실패 상태는 유지 |
+| 없음·만료·잘못된 ID | 404 |
+| 업로드 접수 진행 중 | 409. 아직 입력 복사 중인 파일은 삭제하지 않음 |
+| 요청 처리 중 취소 요청 저장·입력 정리·상태 저장 실패 | 500. 내부 경로를 포함하지 않는 안내 반환 |
+| 작업 관리자 미준비 | 503 |
+
+`cancelling`은 취소 완료를 의미하지 않습니다. 현재 추론이 돌아오는 시점까지 기다리므로 STT 중에는 취소 완료까지 시간이 걸릴 수 있습니다. 실행 중 입력 파일과 미완료 용량은 그때까지 유지합니다. 취소 완료 후에는 입력·결과를 삭제하고 `stage=cancelled`, `progress_percent=null`, `error=null`, 기본 24시간 보관 기한을 제공합니다. 일부 구간 번역이 끝났어도 취소된 결과는 제공하지 않으며 `/result`·`/subtitles`는 409입니다. 정리 실패 시 `failed`·`storage_error`로 표시하고 남은 파일은 보관 기한에 정리합니다.
+
+취소 요청은 디스크에 먼저 저장합니다. 강제 종료 후 재시작에서 `cancelling`이 발견되면 재추론하지 않고 파일을 정리해 `cancelled`로 복구합니다. SSE는 취소 상태 변경을 전달하고 취소 완료 시 연결을 닫습니다. SSE 연결 해제만으로 취소를 요청하지는 않습니다.
 
 ### 오류 계약
 
@@ -295,7 +321,7 @@ events.addEventListener('unavailable', (event) => {
 | 전체 디코딩에서 확인한 오류·길이 초과 | 접수 후 `failed`, `error.code=invalid_media` |
 | 작업자 미준비·종료 중·미완료 한도 초과 | 접수 503. 용량 초과·종료 중에는 `Retry-After: 5` |
 | 없는 ID·만료된 ID | 조회 404 |
-| 대기·실행·실패 작업의 결과 요청 | 409. 상태 조회에서 이유 확인 |
+| 대기·실행·실패·취소 작업의 결과 요청 | 409. 상태 조회에서 이유 확인 |
 | 저장 결과 누락·손상 | 결과 조회 500, 작업은 `storage_error` 실패로 변경 |
 
 접수 전 오류의 `detail` 형식은 기존 계약을 따릅니다. 접수 후 실패는 상태 조회 HTTP 200의 `error={"code": "...", "message": "..."}`로 제공합니다. 공개 코드는 `invalid_media`, `processing_failed`, `interrupted`, `storage_error`이며 내부 예외·모델 프롬프트·파일 경로는 공개 메시지에 포함하지 않습니다. 실패한 파일의 재접수는 새 작업을 생성하며 자동으로 다시 실행하지 않습니다.
@@ -324,16 +350,16 @@ UTF-8 문서를 반환하며 SRT는 `application/x-subrip; charset=utf-8`, VTT�
 - SRT는 쉼표 밀리초와 CRLF를 사용합니다. 수식의 `<`, `>`, `&`는 그대로 보존합니다. 본문의 `-->`만 타이밍 행으로 오인되지 않게 `→`로 바꿉니다. SRT의 HTML 형식 표시 지원은 재생기에 따라 다릅니다. [미 의회도서관 SRT 형식 설명](https://www.loc.gov/preservation/digital/formats/fdd/fdd000569.shtml)을 참고합니다.
 - 무음은 SRT 빈 파일, VTT 헤더만 있는 파일을 HTTP 200으로 제공합니다.
 
-잘못된 옵션은 422, 없는·만료된 작업은 404, 대기·실행·실패 작업은 409입니다. 저장 결과 손상 또는 유효하지 않은 자막 시각·빈 원문은 500, 작업 관리자 미준비는 503입니다. 기존 결과 조회와 같은 작업 상태를 사용합니다.
+잘못된 옵션은 422, 없는·만료된 작업은 404, 대기·실행·실패·취소 작업은 409입니다. 저장 결과 손상 또는 유효하지 않은 자막 시각·빈 원문은 500, 작업 관리자 미준비는 503입니다. 기존 결과 조회와 같은 작업 상태를 사용합니다.
 
 ### 저장·동시성·종료 정책
 
 - 기본 저장소는 `outputs/jobs`입니다. DB 없이 작업별 상태와 결과 JSON을 저장하며 Git에서 제외합니다. 원본 파일명은 저장 경로에 사용하지 않습니다.
 - 기본 미완료 한도는 **업로드·대기·실행을 합쳐 4개**이고 작업자 하나가 순서대로 처리합니다. 동기 API와 모델 객체·서비스 잠금을 공유하므로 동기 요청과는 모델별로 실행이 교차할 수 있습니다.
-- 완료·실패 후 상태와 결과는 기본 **24시간** 보관합니다. 만료 시 조회에서 404를 반환하며, 주기 정리 또는 조회·재시작 시 파일을 삭제합니다.
+- 완료·실패·취소 완료 후 상태와 결과는 기본 **24시간** 보관합니다. 취소 작업은 상태만 보관합니다. 만료 시 조회에서 404를 반환하며, 주기 정리 또는 조회·재시작 시 파일을 삭제합니다.
 - 업로드 원본은 처리 성공·실패 후 삭제합니다. 원본 영상 재생 경로는 제공하지 않으므로 브라우저 로컬 영상 재생은 기존 방식대로 처리합니다. 삭제에 실패한 작업 파일은 만료 정리에서 다시 처리합니다.
 - 정상 종료는 접수를 중단하고 대기 작업을 `interrupted`로 표시한 뒤 실행 중인 작업이 끝날 때까지 기다립니다. 추론 스레드가 읽는 파일을 먼저 지우지 않습니다. 따라서 종료는 추론 시간만큼 길어질 수 있습니다.
-- 강제 종료 이후에는 이전 `queued`·`running` 작업을 `interrupted`로 복구하고 남은 입력을 삭제합니다. 완료 결과는 보관 기한 내에 다시 조회할 수 있습니다. 자동 재추론은 하지 않습니다.
+- 강제 종료 이후에는 이전 `queued`·`running` 작업을 `interrupted`로 복구하고 남은 입력을 삭제합니다. `cancelling`은 파일 정리 후 `cancelled`로 복구합니다. 완료 결과는 보관 기한 내에 다시 조회할 수 있습니다. 자동 재추론은 하지 않습니다.
 - 저장소의 파일 잠금은 모델 로딩 전에 획득합니다. 같은 저장소는 **서버 worker 하나**만 사용할 수 있으며, 여러 worker 또는 같은 저장소를 쓰는 두 서버의 동시 시작은 거부합니다. 분산 작업 큐·DB 내구성·전원 차단 시 파일 영속성을 제공하는 구조는 아닙니다.
 
 ## 프론트엔드 연결
@@ -353,7 +379,7 @@ KAPTION_CORS_ORIGINS='http://localhost:3000,http://localhost:5173' make api
 | `KAPTION_CORS_ORIGINS` | 로컬 프론트엔드 2개 | 허용 origin 목록 |
 | `KAPTION_JOB_DIR` | `outputs/jobs` (프로젝트 루트 기준) | 작업 전용 저장 디렉터리 |
 | `KAPTION_MAX_ACTIVE_JOBS` | `4` | 업로드·대기·실행을 합친 최대 미완료 수. 양의 정수 |
-| `KAPTION_JOB_TTL_SECONDS` | `86400` | 완료·실패 이후 상태·결과 보관 시간(초). 양의 정수 |
+| `KAPTION_JOB_TTL_SECONDS` | `86400` | 완료·실패·취소 완료 이후 상태·결과 보관 시간(초). 양의 정수 |
 
 브라우저에서는 `FormData`를 사용하고 `Content-Type`을 직접 설정하지 않습니다. 브라우저가 multipart 경계값을 설정합니다.
 
