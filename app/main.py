@@ -22,6 +22,7 @@ from app.services.jobs import (
     JobCapacityError, JobManager, JobNotReadyError, JobStorageError, UnsupportedMediaError,
 )
 from app.services.pipeline import MediaValidationError, process_media
+from app.services.subtitle_export import render_subtitles
 from app.services.media import (
     MAX_UPLOAD_BYTES,
     ALLOWED_SUFFIXES,
@@ -127,7 +128,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=['Location', 'Retry-After'],
+    expose_headers=['Location', 'Retry-After', 'Content-Disposition'],
 )
 app.add_middleware(TimingMiddleware)
 
@@ -382,3 +383,45 @@ async def get_job_result(job_id: str, request: Request) -> TranscriptionResponse
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     except JobStorageError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get('/api/v1/jobs/{job_id}/subtitles', response_class=Response, tags=['Jobs'],
+         summary='완료 작업의 SRT·VTT 자막 다운로드', responses={
+             200: {'description': 'UTF-8 자막 문서', 'content': {
+                 'application/x-subrip': {}, 'text/vtt': {}}},
+             404: {'description': '없는 작업 또는 만료'},
+             409: {'description': '작업 미완료 또는 실패'},
+             422: {'description': '지원하지 않는 형식·언어·다운로드 옵션'},
+             500: {'description': '저장 결과 손상 또는 유효하지 않은 자막'},
+             503: {'description': '작업 관리자 미준비'},
+         })
+async def get_job_subtitles(
+    job_id: str, request: Request,
+    file_format: Literal['srt', 'vtt'] = Query(default='srt', alias='format'),
+    language: Literal['ko', 'en', 'both'] = Query(default='ko'),
+    download: bool = Query(default=True, description='false이면 브라우저 트랙용 inline 응답'),
+) -> Response:
+    """저장된 결과를 자막 문서로 변환하고 다운로드 또는 트랙용 응답을 반환한다.
+
+    :param job_id: 완료된 작업 ID.
+    :param request: 작업 관리자가 저장된 요청.
+    :param file_format: format 쿼리의 srt 또는 vtt. 기본 srt.
+    :param language: ko·en·both 중 하나. 기본 ko이며 번역 실패 구간은 원문을 제공한다.
+    :param download: 참이면 attachment, 거짓이면 inline Content-Disposition을 사용한다.
+    :return: UTF-8 자막 본문·파일명·미디어 유형이 포함된 HTTP 응답.
+    :raises HTTPException: 없음·만료 404, 미완료·실패 409, 옵션 422, 손상 500, 관리자 미준비 503.
+
+    기존 결과를 읽기만 하고 모델 재추론이나 자막 파일 저장은 하지 않는다.
+    """
+    result = await get_job_result(job_id, request)
+    try:
+        content = render_subtitles(result, file_format, language)
+    except ValueError as exc:
+        raise HTTPException(status_code=500, detail='Stored subtitles cannot be exported') from exc
+    filename = f'kaption-{job_id}-{language}.{file_format}'
+    disposition = 'attachment' if download else 'inline'
+    media_type = 'text/vtt' if file_format == 'vtt' else 'application/x-subrip; charset=utf-8'
+    return Response(content=content, media_type=media_type, headers={
+        'Content-Disposition': f'{disposition}; filename="{filename}"',
+        'Cache-Control': 'no-store',
+    })

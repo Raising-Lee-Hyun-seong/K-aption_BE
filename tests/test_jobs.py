@@ -348,7 +348,7 @@ class JobManagerTests(JobTestCase):
 class JobApiTests(JobTestCase):
     """실제 ASGI multipart 접수와 조회·오류·OpenAPI 계약을 확인한다."""
 
-    async def request(self, method, path, filename=None, data=None, query=b''):
+    async def request(self, method, path, filename=None, data=None, query=b'', decode_json=True):
         """실제 앱에 테스트 요청을 보내 상태·JSON·응답 헤더를 반환한다.
 
         :param method: GET 또는 POST 요청 메서드.
@@ -356,7 +356,8 @@ class JobApiTests(JobTestCase):
         :param filename: multipart 업로드 이름. None이면 업로드 본문을 만들지 않는다.
         :param data: 선택적 파일 바이트. 기본값은 유효한 WAV다.
         :param query: URL 인코딩한 쿼리 바이트.
-        :return: 상태 코드·JSON 응답·헤더 사전 튜플.
+        :param decode_json: 참이면 JSON을 해석하고 거짓이면 원시 응답 바이트를 반환한다.
+        :return: 상태 코드·JSON 또는 원시 본문·헤더 사전 튜플.
         """
         body, headers = b'', []
         if filename is not None:
@@ -392,7 +393,7 @@ class JobApiTests(JobTestCase):
                        'server': ('test', 80), 'root_path': ''}, receive, send)
         start = next(m for m in messages if m['type'] == 'http.response.start')
         payload = b''.join(m.get('body', b'') for m in messages if m['type'] == 'http.response.body')
-        return start['status'], json.loads(payload), dict(start['headers'])
+        return start['status'], json.loads(payload) if decode_json else payload, dict(start['headers'])
 
     async def test_create_poll_and_result_contract(self):
         """202·Location 접수 후 상태 조회와 기존 자막 형식 결과를 제공한다.
