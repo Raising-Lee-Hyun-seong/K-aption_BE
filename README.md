@@ -4,8 +4,8 @@
 
 - 저장소: https://github.com/Raising-Lee-Hyun-seong/K-aption_BE
 - STT: faster-whisper (`transcribe.py` 공통 구현, `requirements-stt.txt` 의존성)
-- 번역: `quantumaikr/KoreanLM`의 MLX 4bit 변환본
-- 실행 장비: Apple Silicon Mac
+- 번역: `quantumaikr/KoreanLM`의 MLX 4bit 변환본과 동일 가중치를 재포장한 CPU용 GGUF
+- 기본 실행 장비: Apple Silicon Mac. Windows CPU용 Linux x86 Docker 구성은 아래 실험 절차 참고
 
 ## 현재 범위
 
@@ -15,13 +15,14 @@
 | 서버 업로드 규칙 조회 | 허용 확장자·파일 크기·길이·STT 언어 제공 |
 | 문맥을 포함한 한국어 번역 | FastAPI 구현 |
 | KoreanLM 4bit 변환 | 구현 및 M4·16GB 실행 확인 |
+| Windows CPU Docker | Linux x86 CPU의 실제 STT·번역·자막 흐름 확인. 실제 Windows 속도·긴 강의 추가 검증 필요 |
 | 전공 용어집 | 물리학 용어 28개 및 번역 출력 검증 구현 |
 | 작업 접수·상태·진행률·결과 저장 | 파일 기반 단일 작업자 구현 |
 | 작업 상태·번역 진행률 실시간 구독 | SSE 구현. 현재 스냅샷과 상태 변경 제공 |
 | 작업 취소 | 대기 즉시 취소·실행 중 단계 경계 취소 구현 |
 | SRT/VTT 자막 다운로드·VTT 트랙 응답 | 구현. 실제 영상 화면 연결은 프론트엔드 작업 |
 
-STT 구현은 프로젝트 내부 `transcribe.py`에 있으며 API가 이를 공유합니다. `requirements-api.txt`는 `requirements-stt.txt`를 포함해 STT 의존성을 설치합니다. STT와 번역 결과를 터미널에 반환하는 CLI는 사용하지 않습니다. 프론트엔드는 HTTP API의 JSON 응답을 사용합니다.
+STT 구현은 프로젝트 내부 `transcribe.py`에 있으며 API가 이를 공유합니다. `requirements-api.txt`는 `requirements-stt.txt`를 포함해 STT 의존성을 설치합니다. 프론트엔드는 HTTP API의 JSON 응답을 사용하며 CPU 호환성·성능 진단은 별도 `scripts/benchmark_cpu.py`로 진행합니다.
 
 ## 실행 준비
 
@@ -50,6 +51,68 @@ make api             # 기본 주소: http://localhost:8000
 - ReDoc: http://localhost:8000/redoc
 - OpenAPI JSON: http://localhost:8000/openapi.json
 - 상태 확인: http://localhost:8000/health
+
+## Windows CPU Docker 실행
+
+GPU 없는 Galaxy Book3급 x86 Windows·RAM 16GB를 대상으로 **같은 KoreanLM을 llama.cpp CPU 엔진으로 실행**하는 구성을 추가했습니다. Mac의 기본 MLX 실행·공통 프롬프트·문맥·용어집·검증·재시도·API 계약은 유지합니다. Windows용 이미지는 MLX·Metal·CUDA·PyTorch를 설치하지 않습니다.
+
+기존 MLX affine 4bit 가중치의 정수·배율·오프셋을 GGUF Q4_1로 재포장합니다. 다시 양자화하거나 다른 모델로 바꾸지 않으며, 모든 가중치 값을 공식 GGUF 역양자화와 비교합니다. 엔진의 부동소수점 계산 차이로 출력까지 비트 단위로 같다는 보장은 없습니다. 번역 품질 문제도 그대로 평가해야 합니다. [CPU 검증 기록](evaluation/cpu-docker-smoke.md)을 참고하세요.
+
+### Windows 준비
+
+1. WSL2 기반 Docker Desktop을 설치하고 Linux 컨테이너를 사용합니다. [Docker WSL2 문서](https://docs.docker.com/desktop/features/wsl/)를 참고하세요. 이미지는 x86_64·AVX2·F16C·FMA CPU용입니다.
+2. Docker에 최소 8GB 메모리를 사용할 수 있게 설정합니다. 필요하면 `%UserProfile%\.wslconfig`에 아래 설정을 적용하고 작업 종료 후 `wsl --shutdown`과 Docker 재시작을 수행합니다. 이는 다른 WSL 배포판에도 적용되는 설정입니다.
+3. 기존 Mac의 **`models/koreanlm-4bit` 폴더 전체**를 Windows 저장소의 같은 위치로 복사합니다. config·토크나이저·약 3.5GiB 가중치가 모두 필요합니다. 모델은 Git·Docker 이미지에 포함되지 않습니다. CPU 변환은 이 폴더를 읽으며 원본 모델을 다시 내려받거나 거대한 FP16 중간 파일을 만들지 않습니다.
+
+```ini
+[wsl2]
+memory=8GB
+processors=4
+swap=4GB
+```
+
+Compose는 CPU 4개·컨테이너 RAM 상한 7GB·미완료 작업 최대 2개·서버 worker 1개로 제한합니다. WSL 8GB 중 나머지는 VM 용도로 남깁니다. 이 설정 자체가 메모리 적합성·처리 속도를 보장하지는 않으므로 아래 실제 모델 측정을 먼저 수행합니다.
+
+### 최초 빌드와 모델 재포장
+
+저장소 루트의 PowerShell에서 실행합니다. `docker/cpu.defaults`는 비밀값 없는 빈 변수 파일이며 프로젝트 `.env` 자동 읽기를 피하려고 모든 Compose 명령에 명시합니다.
+
+```powershell
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml build backend
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml run --rm --no-deps backend python scripts/prepare_koreanlm_gguf.py --source /models/koreanlm-4bit --output /data/models/koreanlm-q4_1.gguf
+```
+
+첫 빌드는 llama-cpp-python 0.3.19를 Debian과 같은 C 라이브러리에 맞춰 OpenBLAS CPU 바이너리로 직접 컴파일하므로 시간이 걸립니다. 공개 CPU wheel의 musl/glibc 호환 문제를 피하고 빌드 도구는 별도 단계에 남깁니다. 실행 이미지에는 컴파일러·GPU 패키지가 필요하지 않습니다.
+
+재포장은 최초 한 번만 실행합니다. 기존 출력 덮어쓰기는 거부하므로 이미 준비됐다면 두 번째 명령을 생략합니다. 변환 결과는 약 4.21GB(3.92GiB)이며 `/data/models/koreanlm-q4_1.conversion.json`에 원본·결과 SHA256과 검증 개수를 저장합니다. 미지원 양자화·텐서 누락·형상·수치 불일치가 있으면 실패합니다. 작업 볼륨 안에 GGUF를 보관하고 기존 MLX 폴더는 읽기 전용으로 마운트합니다. 변환 중에는 원본 외에 GGUF 임시·결과 파일용 디스크 여유도 필요합니다.
+
+### CPU 바인딩과 실제 모델 측정
+
+```powershell
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml run --rm --no-deps backend python scripts/benchmark_cpu.py --probe-only
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml run --rm --no-deps backend timeout 300 python scripts/benchmark_cpu.py --max-tokens 64 --output /data/cpu-benchmark.json
+```
+
+첫 명령은 `backend=llama-cpp`, `device=cpu`, `gpu_layers=0`, 네이티브 CPU 라이브러리·mmap 지원을 확인합니다. **바인딩 로드 검사만으로 모델 추론 통과를 뜻하지 않습니다.**
+
+두 번째 명령은 기존 모델로 `The velocity is constant.` 한 문장을 공통 프롬프트·검증·재시도 정책으로 번역하고 모델 로딩 시간·번역 전체 시간·최대 RSS(MiB)·수락 여부를 JSON으로 출력·저장합니다. 최대 RSS는 해당 프로세스의 값이며 컨테이너 전체·Windows 전체 메모리는 아닙니다. `docker stats`로 컨테이너 사용량도 확인합니다. 이 검사에는 실제 STT·긴 강의 시간이 포함되지 않으며 `accepted`도 의미 정확도 판정은 아닙니다.
+
+종료 코드 0은 검사 성공, 1은 실행 오류, 2는 번역 출력 검증 실패입니다. `timeout`의 300초 제한은 124로 종료합니다. 메모리 부족으로 강제 종료되면 보고서가 저장되지 않을 수 있습니다. 출력 상한 64는 예비 측정용이며 실제 API의 기본 128토큰은 유지합니다.
+
+### 서버 실행과 종료
+
+```powershell
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d backend
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml logs -f backend
+curl.exe http://localhost:8000/health
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml down
+```
+
+모델 로딩 후 Swagger `http://localhost:8000/swagger`와 기존 업로드·작업·취소·SSE·자막 API를 사용합니다. 호스트 포트는 `127.0.0.1:8000`에만 연결하고 CORS는 기존 로컬 프론트엔드 두 출처를 유지합니다. Whisper는 기존 `small`·CPU·int8을 유지하며 첫 STT 요청 때 공개 모델 다운로드가 필요합니다. 이후에는 Docker 캐시 볼륨을 재사용합니다.
+
+작업이 끝나기 전에 모델을 해제하지 않도록 작업자 종료 후 네이티브 모델을 닫습니다. Compose 종료 유예는 10분이며 일반 `down`은 작업·GGUF·캐시 볼륨을 남깁니다. 강제 종료 시 기존 복구 정책을 적용합니다.
+
+**실제 Galaxy Book3의 처리 속도·긴 강의·메모리 적합성은 해당 장비에서 확인해야 합니다.** Apple Silicon의 Linux x86 Docker는 에뮬레이션이어서 그 속도를 Windows CPU 수치로 해석할 수 없습니다. 기존 Mac은 `make api`와 `mlx` 기본 엔진을 계속 사용합니다.
 
 ## API
 
@@ -400,7 +463,10 @@ KAPTION_CORS_ORIGINS='http://localhost:3000,http://localhost:5173' make api
 
 | 환경 변수 | 기본값 | 설명 |
 | --- | --- | --- |
-| `KAPTION_MODEL_DIR` | `models/koreanlm-4bit` | MLX 4bit 모델 경로 |
+| `KAPTION_MODEL_DIR` | `models/koreanlm-4bit` | MLX 4bit 디렉터리 또는 llama-cpp GGUF 파일 경로 |
+| `KAPTION_TRANSLATION_BACKEND` | `mlx` | 기본 Mac은 mlx, Windows CPU 컨테이너는 llama-cpp |
+| `KAPTION_TRANSLATION_DEVICE` | `auto` | MLX 엔진 장치 선택. auto는 기본 장치, cpu는 CPU 강제 사용 |
+| `KAPTION_CPU_THREADS` | `4` | llama-cpp의 CPU 생성·프롬프트 평가 스레드 수 |
 | `KAPTION_STT_MODEL` | `small` | faster-whisper 모델 이름 |
 | `KAPTION_STT_DEVICE` | `cpu` | STT 실행 장치 |
 | `KAPTION_STT_COMPUTE_TYPE` | `int8` | STT 연산 형식 |

@@ -46,9 +46,9 @@ API_DESCRIPTION = """
 K-aption은 해외 대학 강의의 영어 음성을 인식하고 한국어로 번역합니다.
 
 - **Transcription**: 영상·음성 파일을 faster-whisper로 인식합니다.
-- **Translation**: 영어 문장과 주변 문맥을 KoreanLM 4bit 모델로 번역합니다.
+- **Translation**: 영어 문장과 주변 문맥을 KoreanLM으로 번역합니다. 기본 Mac은 MLX 4bit, CPU 컨테이너는 동일 가중치의 GGUF Q4_1을 사용합니다.
 
-추론 요청은 M4·16GB 환경의 메모리 사용을 고려해 서비스별로 직렬 처리합니다.
+추론 요청은 로컬 장비의 메모리 사용을 고려해 서비스별로 직렬 처리합니다.
 """
 OPENAPI_TAGS = [
     {
@@ -65,6 +65,28 @@ OPENAPI_TAGS = [
     },
     {"name": "Jobs", "description": "작업을 접수하고 단계·번역 진행률·저장 결과를 조회합니다."},
 ]
+
+
+def create_translation_service(model_path: Path, template_path: Path):
+    """실행 환경에 맞는 추론 엔진을 선택하고 같은 번역 계약의 서비스를 만든다.
+
+    :param model_path: mlx는 기존 4bit 디렉터리, llama-cpp는 재포장한 GGUF 파일 경로.
+    :param template_path: 공통 프롬프트 JSON 경로.
+    :return: 공통 검증·재시도를 제공하는 번역 서비스.
+    :raises ValueError: 백엔드·장치·스레드 설정 또는 모델 구조가 잘못된 경우.
+    :raises OSError: 모델이나 공통 설정 파일을 읽을 수 없는 경우.
+
+    기본 mlx 동작을 유지한다. llama-cpp는 GPU 오프로딩 없이 CPU를 사용한다.
+    """
+    backend = os.getenv('KAPTION_TRANSLATION_BACKEND', 'mlx')
+    if backend == 'mlx':
+        return TranslationService(model_path, template_path,
+                                  device=os.getenv('KAPTION_TRANSLATION_DEVICE', 'auto'))
+    if backend == 'llama-cpp':
+        from app.services.translation_llamacpp import LlamaCppTranslationService
+        return LlamaCppTranslationService(model_path, template_path,
+                                         threads=int(os.getenv('KAPTION_CPU_THREADS', '4')))
+    raise ValueError('Translation backend must be mlx or llama-cpp')
 
 
 @asynccontextmanager
@@ -89,7 +111,7 @@ async def lifespan(app: FastAPI):
     app.state.jobs = manager
     try:
         await manager.start()
-        app.state.translator = TranslationService(MODEL_DIR, TEMPLATE_PATH)
+        app.state.translator = create_translation_service(MODEL_DIR, TEMPLATE_PATH)
         app.state.transcriber = TranscriptionService(
             model_name=os.getenv('KAPTION_STT_MODEL', 'small'),
             device=os.getenv('KAPTION_STT_DEVICE', 'cpu'),
@@ -102,9 +124,14 @@ async def lifespan(app: FastAPI):
         try:
             await manager.close()
         finally:
-            app.state.jobs = None
-            app.state.translator = None
-            app.state.transcriber = None
+            try:
+                close = getattr(getattr(app.state, 'translator', None), 'close', None)
+                if callable(close):
+                    close()
+            finally:
+                app.state.jobs = None
+                app.state.translator = None
+                app.state.transcriber = None
 
 
 app = FastAPI(

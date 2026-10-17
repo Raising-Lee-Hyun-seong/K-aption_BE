@@ -65,7 +65,7 @@ class TranslationResponse(BaseModel):
 
     translation: str
     prompt_tokens: int
-    generated_tokens: int = Field(description="성공한 마지막 시도에서 MLX가 실제 생성한 토큰 수")
+    generated_tokens: int = Field(description="성공한 마지막 시도에서 추론 엔진이 실제 생성한 토큰 수")
     elapsed_seconds: float
 
 

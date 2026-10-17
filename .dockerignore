@@ -1,0 +1,18 @@
+# 허용 목록만 전송한다. 비밀 파일·모델·영상·가상환경을 빌드 컨텍스트에서 제외한다.
+**
+!Dockerfile.cpu
+!requirements-cpu.txt
+!requirements-stt.txt
+!app/
+!app/*.py
+!app/services/
+!app/services/*.py
+!transcribe.py
+!timing.py
+!templates/
+!templates/korean.json
+!data/
+!data/physics_glossary.json
+!scripts/
+!scripts/benchmark_cpu.py
+!scripts/prepare_koreanlm_gguf.py

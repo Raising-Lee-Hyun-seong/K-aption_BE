@@ -17,15 +17,18 @@ GLOSSARY_PATH = Path(__file__).resolve().parents[2] / "data/physics_glossary.jso
 
 class TranslationService:
     """4bit 번역 모델을 재사용하며 문맥을 반영한 번역을 직렬 생성·검증한다."""
-    def __init__(self, model_path: Path, template_path: Path):
+    def __init__(self, model_path: Path, template_path: Path, device: str = 'auto'):
         """4bit 모델 설정을 검증하고 모델·토크나이저·샘플러·프롬프트 템플릿을 로드한다.
 
         :param model_path: config.json과 가중치가 있는 MLX 4bit 모델 디렉터리.
         :param template_path: 번역 프롬프트 템플릿 JSON 경로.
+        :param device: auto는 MLX 기본 장치, cpu는 CPU 강제 사용. 기본 auto.
         :return: None.
         :raises FileNotFoundError: 모델 설정이나 필요한 가중치 파일이 없거나 가중치 파일이 비어 있을 때.
-        :raises ValueError: 모델 양자화 설정이 4bit가 아닐 때.
+        :raises ValueError: 모델 양자화 설정이 4bit가 아니거나 장치가 auto·cpu가 아닐 때.
         """
+        if device not in ('auto', 'cpu'):
+            raise ValueError('Translation device must be auto or cpu')
         config_path = model_path / "config.json"
         if not config_path.is_file():
             raise FileNotFoundError(
@@ -53,11 +56,24 @@ class TranslationService:
             )
 
         with measure("translation_model_load"):
+            if device == 'cpu':
+                import mlx.core as mx
+                mx.set_default_device(mx.cpu)
             from mlx_lm import load
             from mlx_lm.sample_utils import make_sampler
 
             self.model, self.tokenizer = load(str(model_path))
             self.sampler = make_sampler(temp=0)
+        self._configure_text(template_path)
+
+    def _configure_text(self, template_path: Path) -> None:
+        """공통 프롬프트·용어집과 직렬 번역 잠금을 준비한다.
+
+        :param template_path: 번역 프롬프트 템플릿 JSON 경로.
+        :return: None.
+        :raises OSError: 템플릿 또는 용어집 파일 읽기에 실패한 경우.
+        :raises ValueError: JSON 형식이 잘못된 경우.
+        """
         self.template = json.loads(template_path.read_text(encoding="utf-8"))
         self.glossary = json.loads(GLOSSARY_PATH.read_text(encoding="utf-8"))
         self._lock = Lock()
