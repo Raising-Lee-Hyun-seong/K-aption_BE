@@ -13,11 +13,13 @@ from starlette.responses import StreamingResponse
 
 from app.middleware import TimingMiddleware
 from app.schemas import (
+    CapabilitiesResponse,
     HealthResponse,
     JobStatusResponse,
     TranscriptionResponse,
     TranslationRequest,
     TranslationResponse,
+    UploadCapabilities,
 )
 from app.services.jobs import (
     JobCapacityError, JobManager, JobNotReadyError, JobStorageError, UnsupportedMediaError,
@@ -26,6 +28,7 @@ from app.services.job_events import job_events
 from app.services.pipeline import MediaValidationError, process_media
 from app.services.subtitle_export import render_subtitles
 from app.services.media import (
+    MAX_MEDIA_SECONDS,
     MAX_UPLOAD_BYTES,
     ALLOWED_SUFFIXES,
     UPLOAD_TOO_LARGE,
@@ -179,6 +182,26 @@ def health(request: Request) -> HealthResponse:
         translation_model_loaded=translator is not None,
         transcription_model_loaded=bool(transcriber and transcriber.loaded),
     )
+
+
+@app.get('/api/v1/capabilities', response_model=CapabilitiesResponse, tags=['System'],
+         summary='서버 업로드 입력 규칙 조회')
+def get_capabilities(response: Response) -> CapabilitiesResponse:
+    """실제 검증과 공유하는 확장자·크기·재생 시간 제한과 STT 언어를 반환한다.
+
+    :param response: 배포 전 입력 규칙의 캐시 재사용을 막을 헤더를 설정하는 응답.
+    :return: 동기·작업 업로드의 프론트엔드 사전 검사에 사용할 입력 규칙.
+
+    모델·작업자를 조회하거나 로드하지 않고 파일 저장·미디어 디코딩도 하지 않는다.
+    클라이언트 검사는 안내용이며 업로드 시 서버 검증을 그대로 수행한다.
+    """
+    response.headers['Cache-Control'] = 'no-store'
+    return CapabilitiesResponse(upload=UploadCapabilities(
+        allowed_extensions=sorted(ALLOWED_SUFFIXES),
+        max_upload_bytes=MAX_UPLOAD_BYTES,
+        max_duration_seconds=MAX_MEDIA_SECONDS,
+        supported_languages=['en'],
+    ))
 
 
 @app.post(

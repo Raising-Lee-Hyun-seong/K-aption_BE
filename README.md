@@ -12,6 +12,7 @@
 | 기능 | 상태 |
 | --- | --- |
 | 영상·음성 업로드 및 영어 STT | FastAPI 구현 |
+| 서버 업로드 규칙 조회 | 허용 확장자·파일 크기·길이·STT 언어 제공 |
 | 문맥을 포함한 한국어 번역 | FastAPI 구현 |
 | KoreanLM 4bit 변환 | 구현 및 M4·16GB 실행 확인 |
 | 전공 용어집 | 물리학 용어 28개 및 번역 출력 검증 구현 |
@@ -67,6 +68,33 @@ GET /health
 ```
 
 KoreanLM은 서버 시작 시 한 번 로드됩니다. faster-whisper는 첫 STT 요청에서 로드한 후 재사용하므로, STT 실행 전에는 `transcription_model_loaded`가 `false`입니다.
+
+### 서버 업로드 입력 규칙
+
+```http
+GET /api/v1/capabilities
+```
+
+```bash
+curl 'http://localhost:8000/api/v1/capabilities'
+```
+
+```json
+{
+  "upload": {
+    "allowed_extensions": [".m4a", ".mkv", ".mov", ".mp3", ".mp4", ".wav", ".webm"],
+    "max_upload_bytes": 1073741824,
+    "max_duration_seconds": 5400,
+    "supported_languages": ["en"]
+  }
+}
+```
+
+프론트엔드는 업로드 화면에서 이 규칙을 조회해 파일 선택기의 `accept`, 파일 크기·길이 사전 검사와 안내 문구에 사용합니다. 확장자에는 점이 포함되며 소문자·정렬된 목록으로 반환합니다. 파일명 확장자는 소문자로 정규화해 비교합니다. 크기는 파일 자체의 바이트 수, 길이는 초이며 **상한과 같은 값은 허용**합니다. 두 업로드 API인 `/api/v1/transcriptions`와 `/api/v1/jobs`에 같은 규칙이 적용됩니다. `supported_languages`는 음성 인식 입력 언어이며 자막 출력 언어가 아닙니다.
+
+이 응답은 실제 업로드 검증의 `app/services/media.py` 상수를 공유하고 `Cache-Control: no-store`로 반환합니다. 조회 자체가 모델 로딩·추론·작업 생성·파일 저장을 수행하지는 않습니다. 입력 규칙 조회는 서버의 모델 준비 상태 확인을 대신하지 않으며 준비 상태는 `/health`를 사용합니다. 이 경로에도 기존 CORS 출처 제한을 적용합니다.
+
+클라이언트 검사는 안내용입니다. 실제 업로드에서는 서버가 확장자·바이트 수·오디오·알려진 재생 길이를 다시 검사합니다. 길이 메타데이터가 없는 입력 등은 처리 중 실제 디코딩에서 거부될 수도 있으므로 규칙 조회나 클라이언트 검사를 업로드 성공 보장으로 취급하지 않습니다.
 
 ### 한국어 번역
 

@@ -9,7 +9,8 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 API_TESTS = ('test_api_contract', 'test_pipeline', 'test_jobs',
-             'test_media_limits', 'test_subtitle_export', 'test_job_events', 'test_job_cancellation')
+             'test_media_limits', 'test_subtitle_export', 'test_job_events', 'test_job_cancellation',
+             'test_capabilities')
 TRANSLATION_TESTS = ('test_translation_validation', 'test_pipeline',
                      'test_prompt_matrix', 'test_qwen_lecture')
 OWNERS = {
@@ -19,7 +20,7 @@ OWNERS = {
     'timing.py': ('test_timing',),
     'transcribe.py': ('test_pipeline', 'test_media_limits'),
     'app/services/transcription.py': ('test_pipeline', 'test_media_limits'),
-    'app/services/media.py': ('test_media_limits', 'test_jobs', 'test_pipeline'),
+    'app/services/media.py': ('test_media_limits', 'test_jobs', 'test_pipeline', 'test_capabilities'),
     'app/services/jobs.py': ('test_jobs', 'test_subtitle_export', 'test_job_events', 'test_job_cancellation'),
     'app/services/job_events.py': ('test_job_events', 'test_job_cancellation'),
     'app/services/pipeline.py': ('test_pipeline', 'test_jobs', 'test_job_cancellation'),

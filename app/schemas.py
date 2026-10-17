@@ -12,6 +12,22 @@ class HealthResponse(BaseModel):
     transcription_model_loaded: bool
 
 
+class UploadCapabilities(BaseModel):
+    """동기·작업 업로드에 공통 적용하는 형식·크기·시간·언어 제한을 표현한다."""
+
+    allowed_extensions: list[str] = Field(
+        description='점으로 시작하는 소문자 확장자 목록. 파일명 확장자는 대소문자를 구분하지 않음')
+    max_upload_bytes: int = Field(gt=0, description='파일 자체의 최대 바이트 수. 상한 포함')
+    max_duration_seconds: int = Field(gt=0, description='미디어 최대 재생 시간(초). 상한 포함')
+    supported_languages: list[Literal['en']] = Field(description='STT 입력 언어. 현재 영어 en만 지원')
+
+
+class CapabilitiesResponse(BaseModel):
+    """프론트엔드 사전 검사에 사용할 서버의 공개 입력 규칙을 제공한다."""
+
+    upload: UploadCapabilities
+
+
 class TranslationRequest(BaseModel):
     """번역할 문장, 문맥 및 최대 생성 토큰 수의 입력 제약을 정의한다."""
     model_config = ConfigDict(
