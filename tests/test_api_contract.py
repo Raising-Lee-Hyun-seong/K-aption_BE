@@ -175,4 +175,21 @@ class ApiContractTests(unittest.IsolatedAsyncioTestCase):
         operation = spec['paths']['/api/v1/transcriptions']['post']
         language = next(p for p in operation['parameters'] if p['name'] == 'language')
         self.assertEqual(language['schema']['const'], 'en')
-        self.assertTrue({'200', '415', '422', '500'} <= operation['responses'].keys())
+        self.assertTrue({'200', '413', '415', '422', '500'} <= operation['responses'].keys())
+
+    async def test_oversized_upload_and_long_media_errors(self):
+        """파일 크기와 재생 길이 초과가 각각 413·422와 문자열 오류로 반환되는지 확인한다.
+
+        :return: None.
+        :raises AssertionError: 제한 오류의 상태·본문 또는 번역 호출 여부가 계약과 다를 때.
+        """
+        translator = SimpleNamespace(translate=Mock())
+        with patch('app.main.MAX_UPLOAD_BYTES', 4):
+            status, body = await self.upload(translator)
+        self.assertEqual(status, 413)
+        self.assertEqual(body['detail'], 'The uploaded file exceeds the 1 GiB limit')
+        status, body = await self.upload(translator, stt_error=ValueError(
+            'The uploaded media exceeds the 90 minute limit'))
+        self.assertEqual(status, 422)
+        self.assertEqual(body['detail'], 'The uploaded media exceeds the 90 minute limit')
+        translator.translate.assert_not_called()

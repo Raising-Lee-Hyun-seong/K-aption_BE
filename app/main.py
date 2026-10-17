@@ -1,6 +1,5 @@
 """FastAPI 서버의 모델 생명주기, CORS, 상태 조회 및 STT·한국어 번역 엔드포인트를 구성한다."""
 import os
-import shutil
 import tempfile
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -19,6 +18,12 @@ from app.schemas import (
     TranslationResponse,
 )
 from app.services.subtitles import group_segments
+from app.services.media import (
+    MAX_UPLOAD_BYTES,
+    UPLOAD_TOO_LARGE,
+    UploadTooLargeError,
+    copy_upload,
+)
 from app.services.transcription import TranscriptionService
 from app.services.translation import TranslationService
 from timing import measure, segment_index
@@ -181,6 +186,7 @@ async def translate(body: TranslationRequest, request: Request) -> TranslationRe
     summary="영상·음성 영어 STT",
     description=(
         "업로드한 미디어를 영어 원문과 타임스탬프로 변환하고, "
+        "파일은 1GiB 이하·재생 길이 90분 이하만 허용합니다. "
         "인접한 STT 조각을 문장 단위로 묶어 한국어로 번역합니다. "
         "묶음의 첫 시작·마지막 종료 시각을 반환하므로 원래 STT 구간 수와 다를 수 있습니다. "
         "번역 검증에 실패한 구간은 "
@@ -188,10 +194,13 @@ async def translate(body: TranslationRequest, request: Request) -> TranslationRe
         "음성이 없으면 segments=[]를 반환합니다. 모든 시각의 단위는 초입니다."
     ),
     responses={
+        413: {"description": "업로드 파일이 1GiB를 초과", "content": {
+            "application/json": {"example": {"detail": UPLOAD_TOO_LARGE}}
+        }},
         415: {"description": "지원하지 않는 미디어 확장자", "content": {
             "application/json": {"example": {"detail": "Unsupported media file extension"}}
         }},
-        422: {"description": "요청 형식 또는 오디오 디코딩·검증 오류", "content": {
+        422: {"description": "요청 형식, 90분 초과 또는 오디오 디코딩·검증 오류", "content": {
             "application/json": {"examples": {
                 "audio": {"summary": "오디오 디코딩 실패", "value": {
                     "detail": "The uploaded media does not contain decodable audio"}},
@@ -217,10 +226,10 @@ async def transcribe(
     문맥에는 이전 영어 원문만 사용해 실패하거나 잘못된 번역의 전파를 막는다.
 
     :param request: 서비스 인스턴스가 저장된 앱에 접근할 FastAPI 요청.
-    :param file: 음성 인식할 업로드 미디어. 처리가 끝나면 닫는다.
+    :param file: 1GiB 이하·90분 이하의 업로드 미디어. 처리가 끝나면 닫는다.
     :param language: 인식할 음성 언어 코드. 기본값은 영어 en이다.
     :return: 영어 원문·한국어 번역·초 단위 시각·구간 오류를 담은 TranscriptionResponse.
-    :raises HTTPException: 미지원 확장자는 415, 오디오 디코딩·검증 실패는 422로 발생한다. 구간별 번역 검증 실패는 결과에 기록한다.
+    :raises HTTPException: 크기 초과는 413, 미지원 확장자는 415, 길이 초과·오디오 디코딩·검증 실패는 422로 발생한다. 구간별 번역 검증 실패는 결과에 기록한다.
 
     업로드를 임시 파일에 저장하며 성공·실패 모두 업로드를 닫고 임시 파일을 삭제한다.
     """
@@ -229,11 +238,18 @@ async def transcribe(
         suffix = Path(file.filename or "upload").suffix.lower()
         if suffix not in ALLOWED_SUFFIXES:
             raise HTTPException(status_code=415, detail="Unsupported media file extension")
+        if file.size is not None and file.size > MAX_UPLOAD_BYTES:
+            raise HTTPException(status_code=413, detail=UPLOAD_TOO_LARGE)
 
-        with measure("upload_save"):
-            with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
-                temp_path = Path(temp_file.name)
-                await run_in_threadpool(shutil.copyfileobj, file.file, temp_file)
+        try:
+            with measure("upload_save") as metrics:
+                with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
+                    temp_path = Path(temp_file.name)
+                    metrics["upload_bytes"] = await run_in_threadpool(
+                        copy_upload, file.file, temp_file,
+                    )
+        except UploadTooLargeError as exc:
+            raise HTTPException(status_code=413, detail=str(exc)) from exc
         try:
             with measure("stt") as metrics:
                 result = await run_in_threadpool(

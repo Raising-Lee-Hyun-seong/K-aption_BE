@@ -399,7 +399,8 @@ class ServiceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'decodable audio'):
                 service.transcribe(path)
         for audio in (np.array([], dtype=np.float32), np.array([np.nan]), np.array([np.inf])):
-            with patch('faster_whisper.audio.decode_audio', return_value=audio):
+            with patch('transcribe.validate_media_duration'), patch(
+                    'faster_whisper.audio.decode_audio', return_value=audio):
                 with self.assertRaises(ValueError):
                     service.transcribe(Path('invalid.wav'))
         self.assertFalse(service.loaded)
@@ -415,7 +416,8 @@ class ServiceTests(unittest.TestCase):
             SimpleNamespace(start=-0.2, end=1.5, text=' Hello. '),
             SimpleNamespace(start=2.0, end=3.0, text='Outside.')]),
             SimpleNamespace(language='en', language_probability=1.0))))
-        with patch('faster_whisper.audio.decode_audio', return_value=np.zeros(16000)):
+        with patch('transcribe.validate_media_duration'), patch(
+                'faster_whisper.audio.decode_audio', return_value=np.zeros(16000)):
             result = service.transcribe(Path('clip.wav'))
         self.assertEqual(result['segments'], [{'start': 0.0, 'end': 1.0, 'text': 'Hello.'}])
 

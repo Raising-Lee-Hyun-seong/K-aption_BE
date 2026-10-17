@@ -4,6 +4,7 @@ from threading import Lock
 from time import perf_counter
 
 from timing import measure
+from app.services.media import MAX_MEDIA_SECONDS, MEDIA_TOO_LONG, validate_media_duration
 
 class TranscriptionService:
     """Whisper 모델을 지연 로드하고 직렬 추론으로 타임스탬프가 있는 음성 구간을 제공한다."""
@@ -59,19 +60,22 @@ class TranscriptionService:
         :param media_path: 오디오를 추출할 영상 또는 음성 파일 경로.
         :param language: 인식할 음성 언어 코드. 기본값은 영어 en이다.
         :return: language·language_probability·segments(start/end는 초, text는 원문)·elapsed_seconds(추론 대기 포함 초) 사전.
-        :raises ValueError: 오디오 디코딩 실패·빈 오디오·비유한 샘플일 때.
+        :raises ValueError: 미디어가 90분을 초과하거나 오디오 디코딩 실패·빈 오디오·비유한 샘플일 때.
         """
         import numpy as np
         from av.error import FFmpegError
         from faster_whisper.audio import decode_audio
 
         with measure("stt_decode"):
+            validate_media_duration(media_path)
             try:
                 audio = decode_audio(str(media_path))
             except (FFmpegError, OSError) as exc:
                 raise ValueError("The uploaded media does not contain decodable audio") from exc
             if audio.size == 0:
                 raise ValueError("The uploaded media does not contain decodable audio")
+            if audio.size > MAX_MEDIA_SECONDS * 16_000:
+                raise ValueError(MEDIA_TOO_LONG)
             if not np.isfinite(audio).all():
                 raise ValueError("The uploaded media contains invalid audio samples")
         duration = audio.size / 16_000
