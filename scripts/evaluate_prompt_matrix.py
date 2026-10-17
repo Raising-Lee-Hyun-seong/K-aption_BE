@@ -1,11 +1,13 @@
-"""같은 22문장으로 두 로컬 모델의 네 프롬프트를 재시도 없이 비교하고 원시 결과를 저장한다."""
+"""같은 22문장으로 로컬 모델의 기준·보완 프롬프트를 비교하고 원시 결과를 저장한다."""
 import argparse
+from datetime import date, datetime
 from importlib.metadata import version
 import json
 from pathlib import Path
 import platform
 import sys
 from time import perf_counter
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -17,7 +19,9 @@ from scripts.evaluate_candidates import (
     save_report, sha256_file,
 )
 
-VARIANTS = ('koreanlm-current', 'koreanlm-simple', 'qwen-base', 'qwen-glossary')
+VARIANTS = ('koreanlm-current', 'koreanlm-simple', 'qwen-base', 'qwen-glossary',
+            'qwen-glossary-v2', 'qwen-relations-v2')
+GLOSSARY_ADDITIONS = ROOT / 'evaluation/physics_glossary_additions_v2.json'
 QWEN_INSTRUCTION = (
     'Translate the following English text into Korean. Preserve negation, numbers '
     'and mathematical relations. Output only the translation.'
@@ -26,6 +30,13 @@ QWEN_PRESERVATION = (
     ' Keep mathematical symbols, operations, inequalities and corrections unchanged. '
     'Preserve the subject and whether a sentence is a statement or question. '
     'Do not add facts, units, explanations or instructions.'
+)
+QWEN_RELATIONS = (
+    ' Translate definitions as complete grammatical Korean sentences, preserving '
+    'the defined quantity and its defining relation. In mathematical speech, '
+    'preserve the full equality, including factors and division, even when '
+    'a parenthetical comment interrupts it. Do not infer missing relations '
+    'or repair uncertain source text.'
 )
 
 
@@ -40,16 +51,24 @@ def prompt_service() -> TranslationService:
     return service
 
 
-def variant_prompt(variant: str, tokenizer, service: TranslationService, text: str) -> str:
+def variant_prompt(
+    variant: str, tokenizer, service: TranslationService, text: str,
+    context: str = '', retry: bool = False, context_format: str = 'inline',
+) -> str:
     """기준 번역을 사용하지 않고 지정된 실험 조건의 번역 프롬프트를 구성한다.
 
-    :param variant: VARIANTS의 네 조건 중 하나.
+    :param variant: VARIANTS에 정의된 기준 또는 보완 실험 조건.
     :param tokenizer: Qwen 채팅 템플릿을 제공하는 모델 토크나이저.
     :param service: 현재 템플릿·용어집·원문 매칭 로직을 가진 실험 객체.
-    :param text: 번역할 영어 원문. 이전 문맥을 추가하지 않는다.
+    :param text: 번역할 영어 원문. 기준 번역은 전달하지 않는다.
+    :param context: Qwen 조건에서만 사용할 앞 영어 문맥. 마지막 256자를 참고로 제공한다.
+    :param retry: Qwen 재시도에서 완결된 한국어 출력 지시를 추가할지 여부.
+    :param context_format: inline이면 지시에 문맥을 붙이고 system이면 별도 시스템 메시지로 분리한다.
     :return: 모델에 그대로 전달할 프롬프트 문자열.
     :raises ValueError: 알려지지 않은 실험 조건일 때.
     """
+    if context_format not in ('inline', 'system'):
+        raise ValueError(f'Unknown context format: {context_format}')
     if variant == 'koreanlm-current':
         return service._build_prompt(text, '')
     if variant == 'koreanlm-simple':
@@ -57,14 +76,34 @@ def variant_prompt(variant: str, tokenizer, service: TranslationService, text: s
             instruction='다음 영어 원문을 한국어로 번역하세요. 번역문만 출력하세요.', input=text)
     if variant == 'qwen-base':
         return build_prompt(tokenizer, {'original_repository': 'Qwen/Qwen3-4B-Instruct-2507'}, text)
-    if variant == 'qwen-glossary':
+    if variant in ('qwen-glossary', 'qwen-glossary-v2', 'qwen-relations-v2'):
         instruction = QWEN_INSTRUCTION + QWEN_PRESERVATION
-        terms = service._matching_terms(text)
+        matcher = service
+        if variant.endswith('-v2'):
+            matcher = TranslationService.__new__(TranslationService)
+            matcher.glossary = service.glossary + json.loads(GLOSSARY_ADDITIONS.read_text())
+        if variant == 'qwen-relations-v2':
+            instruction += QWEN_RELATIONS
+        terms = matcher._matching_terms(text)
         if terms:
             instruction += ' Terminology: ' + '; '.join(
                 f'{entry["en"]}={entry["ko"]}' for entry in terms) + '.'
+        messages = []
+        if context and context_format == 'inline':
+            instruction += ('\nPrevious English context (reference only; do not translate): '
+                            + context[-256:])
+        elif context:
+            messages.append({'role': 'system', 'content': (
+                "Translate only the current English source in the user's message. "
+                'The previous English context below is background only. Never translate, '
+                'quote, summarize or repeat that context. Never output context labels. '
+                'Output only the Korean translation of the current source. '
+                '\nPrevious English context:\n' + context[-256:])})
+        if retry:
+            instruction += '\nReturn only complete Korean translation sentences.'
+        messages.append({'role': 'user', 'content': instruction + '\n\n' + text})
         return tokenizer.apply_chat_template(
-            [{'role': 'user', 'content': instruction + '\n\n' + text}],
+            messages,
             tokenize=False, add_generation_prompt=True)
     raise ValueError(f'Unknown variant: {variant}')
 
@@ -119,6 +158,7 @@ def main() -> None:
 
     :return: None.
     :raises ValueError: CLI 생성 조건이나 모델 파일 검증이 잘못되었을 때.
+    :raises FileExistsError: 기존 평가 결과를 덮어쓰려 할 때. 새 출력 경로를 지정해야 한다.
 
     로컬 모델만 로드하고 평가 JSON을 저장한다. API·가중치를 변경하거나 재시도하지 않는다.
     """
@@ -127,9 +167,14 @@ def main() -> None:
     parser.add_argument('--repeats', type=int, default=2)
     parser.add_argument('--max-tokens', type=int, default=256)
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--evaluated-on', type=date.fromisoformat,
+                        default=datetime.now(ZoneInfo('Asia/Seoul')).date())
     args = parser.parse_args()
     if args.repeats < 1 or args.max_tokens < 1:
         raise ValueError('Repeats and max_tokens must be positive')
+    output = args.output or ROOT / f'evaluation/prompt-matrix-{args.variant}.json'
+    if output.exists():
+        raise FileExistsError(f'Evaluation already exists; choose a new --output: {output}')
     service = prompt_service()
     if args.variant.startswith('koreanlm-'):
         directory = ROOT / 'models/koreanlm-4bit'
@@ -147,9 +192,9 @@ def main() -> None:
     started = perf_counter()
     model, tokenizer = load(str(directory), tokenizer_config={'token': False, 'local_files_only': True})
     mx.synchronize()
-    output = args.output or ROOT / f'evaluation/prompt-matrix-{args.variant}.json'
     report = {
-        'evaluated_on': '2026-10-10', 'variant': args.variant, 'model_directory': str(directory.relative_to(ROOT)),
+        'evaluated_on': args.evaluated_on.isoformat(),
+        'variant': args.variant, 'model_directory': str(directory.relative_to(ROOT)),
         'source_verification': source, 'model_load_seconds': perf_counter() - started,
         'platform': {'system': platform.system(), 'machine': platform.machine()},
         'versions': {name: version(name) for name in ('mlx-lm', 'mlx', 'transformers')},
@@ -168,6 +213,10 @@ def main() -> None:
                    'Current KoreanLM prompt uses no preceding context; this is not the 36-group API run.'],
         'results': [], 'complete': False, 'semantic_review': 'pending',
     }
+    if args.variant.endswith('-v2'):
+        report['implementation_sha256'][str(GLOSSARY_ADDITIONS.relative_to(ROOT))] = sha256_file(GLOSSARY_ADDITIONS)
+        report['limits'].append(
+            'V2 prompts were developed on these known cases; this is not a held-out generalization test.')
     report['warmup'] = generate_once(model, tokenizer, variant_prompt(
         args.variant, tokenizer, service, 'Hello, welcome to the lecture.'), args.max_tokens)
     save_report(output, report)

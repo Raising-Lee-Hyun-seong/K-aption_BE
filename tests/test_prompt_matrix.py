@@ -30,7 +30,7 @@ class PromptMatrixTests(unittest.TestCase):
     """동일 입력 비교를 유지하고 진단 통과를 의미 정확도로 오인하지 않도록 검증한다."""
 
     def test_every_variant_preserves_source_without_reference_leak(self):
-        """네 조건 모두 22개 원문을 한 번만 포함하고 기준 번역을 포함하지 않는다.
+        """기준·보완 조건 모두 22개 원문을 한 번만 포함하고 기준 번역을 포함하지 않는다.
 
         :return: None.
         :raises AssertionError: 원문이 중복·누락되거나 기준 번역이 프롬프트에 들어갈 때.
@@ -86,6 +86,25 @@ class PromptMatrixTests(unittest.TestCase):
         self.assertNotIn('semantic_pass', result)
         self.assertIn('token_limit', diagnose_output(prompt_service(), 'Hello.', '안녕하세요.',
                                                    'length')['validation_problems'])
+
+    def test_refined_terms_are_isolated_from_baseline_and_api_glossary(self):
+        """보완 용어는 원문에 있을 때만 사용하고 기준 조건과 API 용어집을 바꾸지 않는다.
+
+        :return: None.
+        :raises AssertionError: 실험 간 용어가 누출되거나 무관한 용어가 입력될 때.
+        """
+        service, tokenizer = prompt_service(), MessageTokenizer()
+        original = list(service.glossary)
+        for variant in ('qwen-glossary-v2', 'qwen-relations-v2'):
+            prompt = variant_prompt(variant, tokenizer, service, 'The rocket has constant speed.')
+            self.assertIn('rocket=로켓', prompt)
+            self.assertIn('constant=상수', prompt)
+            self.assertNotIn('magnitude=크기', prompt)
+            self.assertNotIn('rocket=로켓', variant_prompt(
+                variant, tokenizer, service, 'Velocity is constant.'))
+        self.assertEqual(service.glossary, original)
+        self.assertNotIn('rocket=로켓', variant_prompt(
+            'qwen-glossary', tokenizer, service, 'The rocket has constant speed.'))
 
     def test_missing_shard_is_rejected_before_model_loading(self):
         """부분 가중치 인덱스의 누락 샤드는 모델 로딩 전에 거부한다.
