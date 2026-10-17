@@ -1,0 +1,62 @@
+name: Backend changed tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changed-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      EVENT_NAME: ${{ github.event_name }}
+      HF_HUB_OFFLINE: '1'
+      HF_HUB_DISABLE_IMPLICIT_TOKEN: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Select related tests
+        id: select
+        shell: bash
+        run: |
+          set -euo pipefail
+          compare_options=()
+          if test "$EVENT_NAME" = pull_request; then
+            compare_options+=(--merge-base)
+          fi
+          python scripts/run_changed_tests.py --base "$BASE_SHA" --head "$HEAD_SHA" "${compare_options[@]}" --list > "$RUNNER_TEMP/selected-tests.txt"
+          cat "$RUNNER_TEMP/selected-tests.txt"
+          if test -s "$RUNNER_TEMP/selected-tests.txt"; then
+            echo 'has_tests=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install CPU test dependencies
+        if: steps.select.outputs.has_tests == 'true'
+        run: |
+          python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r requirements-ci.txt
+      - name: Run related tests
+        if: steps.select.outputs.has_tests == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          compare_options=()
+          if test "$EVENT_NAME" = pull_request; then
+            compare_options+=(--merge-base)
+          fi
+          python scripts/run_changed_tests.py --base "$BASE_SHA" --head "$HEAD_SHA" "${compare_options[@]}"

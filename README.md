@@ -410,11 +410,22 @@ make model
 
 KoreanLM 기반 코드의 라이선스는 저장소의 `LICENSE`를 확인하세요. 강의 영상과 생성 자막의 이용 조건은 코드와 별도로 관리합니다.
 
-## 통합 회귀 테스트
+## 변경 범위 테스트와 CI
 
 ```bash
-.venv-api/bin/python -m unittest discover -s tests -v
+# 구현한 파일에 해당하는 테스트만 실행
+.venv-api/bin/python scripts/run_changed_tests.py --files app/services/subtitle_export.py
+
+# 실행 없이 선택 범위 확인
+.venv-api/bin/python scripts/run_changed_tests.py --files app/main.py --list
+
+# CI 실행기 자체 검증
+.venv-api/bin/python scripts/run_changed_tests.py --files scripts/run_changed_tests.py
 ```
+
+전체 테스트를 기본으로 실행하지 않습니다. `scripts/run_changed_tests.py`의 `OWNERS`가 변경 파일을 관련 테스트에 연결합니다. 직접 변경한 `tests/test_*.py`도 실행 대상이며 중복은 제거합니다. 문서만 바뀌면 실행을 생략합니다. 연결되지 않은 Python·의존성 파일은 오류로 처리하므로 새 기능을 추가할 때 관련 테스트를 `OWNERS`에 등록해야 합니다. 삭제된 테스트는 실행하지 않습니다.
+
+`.github/workflows/backend-ci.yml`은 PR과 main push의 변경 SHA를 비교하여 같은 선택 규칙을 적용합니다. PR은 공통 조상부터 비교해 대상 브랜치에만 추가된 변경은 제외하고, push는 이전 커밋과 비교합니다. 비교 이력을 확보하려고 전체 Git 이력을 checkout하지만 테스트는 선택된 파일만 수집합니다. 최초 push는 해당 커밋의 파일 목록으로 선택합니다. Python 3.11·Linux CPU 환경에서 `requirements-ci.txt`와 CPU PyTorch 2.8.0을 설치하며 MLX는 설치하지 않습니다. Hugging Face는 오프라인으로 설정해 모델 다운로드를 차단합니다. 테스트 연결 누락·수집 오류·검증 실패는 CI 실패로 반환합니다. CI 설정 변경 자체는 선택 실행기 테스트로 확인합니다.
 
 모델 생성은 테스트 대역으로 검증하며, 실제 미디어 디코더로 손상된 파일을 확인합니다. 문장 묶기·타임스탬프·직전 영어 문맥 전달, 번역 재시도·숫자·수식·단위·스트림 조기 종료와 자원 정리를 검증합니다. 실제 모델의 번역 품질 평가는 별도로 수행합니다.
 
