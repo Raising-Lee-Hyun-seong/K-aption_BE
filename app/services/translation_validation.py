@@ -1,12 +1,12 @@
-"""번역의 반복·지시문 유출과 원문 숫자·수식 기호의 유실을 검출한다."""
+"""번역의 반복·지시문·언어 혼입과 원문 숫자·수식 기호의 유실을 검출한다."""
 import re
 from decimal import Decimal
 from typing import Optional
 
 
 RAW_SYMBOL_PATTERN = (
-    r"(?:d\s*m\s*[rR]\s*u|d\s*[mv]\s*[rR]|[mMvV]\s+[rR]|[mv]\s*[rR]|[mv]0|"
-    r"d\s*[tmv]|ln|[mutvg])"
+    r"(?:d[\s_]*m[\s_]*[rR][\s_]*u|d[\s_]*[mv][\s_]*[rR]|"
+    r"[mMvV][\s_]+[rR]|[mv][\s_]*[rR]|[mv]_?0|d[\s_]*[tmv]|ln|[mutvg])"
 )
 SYMBOL_PATTERN = re.compile(
     r"(?<![A-Za-z_])" + RAW_SYMBOL_PATTERN + r"(?![A-Za-z0-9_])"
@@ -39,7 +39,9 @@ LEAK_MARKERS = (
     "설명 없이 번역문만", "번역하거나 반복하지", "한국어로 번역하세요",
     "라는 영어 원문", "로 번역됩니다", "입력된 문장", "그대로 쓸 기호:",
     "(참고만 하세요.)", "원문을 한국어로 번역",
+    "이전 영문 맥락", "Previous English context:",
 )
+FOREIGN_PROSE = re.compile(r'[\u0400-\u052f]{2,}|[\u3040-\u30ff]{2,}|[\u3400-\u9fff]{2,}')
 UNIT_ALIASES = {
     'kilogram': (r'kg|kilograms?', '킬로그램'),
     'gram': (r'g|grams?', '그램'),
@@ -97,7 +99,7 @@ def _units(text: str, include_korean: bool = False) -> set:
 
 
 def protected_symbols(text: str) -> list[str]:
-    """원문 수식의 공백·소문자 별칭을 정규화해 등장 순서대로 중복 없이 반환한다.
+    """원문 수식의 공백·밑줄·소문자 별칭을 정규화해 등장 순서대로 중복 없이 반환한다.
 
     dmRu는 dmR과 u로 보존한다. 복합 기호 속 단일 글자를 중복 추출하지 않으며,
     수량 뒤 m·g 단위 약자는 독립 변수로 취급하지 않는다. 원문 자체는 수정하지 않는다.
@@ -107,7 +109,7 @@ def protected_symbols(text: str) -> list[str]:
     """
     symbols = []
     for match in SYMBOL_PATTERN.finditer(text):
-        compact = re.sub(r'\s+', '', match.group()).lower()
+        compact = re.sub(r'[\s_]+', '', match.group()).lower()
         if _is_unit_symbol(text, match.start(), compact):
             continue
         values = ['dmR', 'u'] if compact == 'dmru' else [SYMBOL_CANONICAL[compact]]
@@ -145,12 +147,19 @@ def generation_problem(output: str) -> Optional[str]:
 
 
 def preservation_problem(source: str, translation: str) -> Optional[str]:
-    """수식 별칭·프라임·숫자의 유실과 원문에 없는 숫자·단위 추가를 검사한다.
+    """수식·숫자·단위 보존과 원문에 없는 연속 외국 문자 혼입을 검사한다.
+
+    키릴·가나·한자 문자가 두 자 이상 이어지면 원문에도 같은 문자열이 있는지
+    확인한다. 한글 바로 뒤 괄호의 한자 병기는 허용한다. 단일 수식 문자·그리스
+    문자는 이 검사에서 제외하며 일반적인 언어·의미 판별을 보장하지 않는다.
 
     :param source: 숫자·수식·단위 보존의 기준이 되는 영어 원문.
     :param translation: 정리하거나 검증할 한국어 번역 후보 문자열.
-    :return: 수식·숫자·단위 보존 실패 사유 코드. 문제를 발견하지 못하면 None.
+    :return: 보존 실패 또는 unexpected_script 사유 코드. 문제를 발견하지 못하면 None.
     """
+    prose = re.sub(r'(?<=[가-힣])\([\u3400-\u9fff]+\)', '', translation)
+    if any(match.group() not in source for match in FOREIGN_PROSE.finditer(prose)):
+        return 'unexpected_script'
     source_symbols = protected_symbols(source)
     output_symbols = protected_symbols(translation)
     for symbol in source_symbols:

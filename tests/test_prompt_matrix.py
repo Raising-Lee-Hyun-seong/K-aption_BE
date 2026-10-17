@@ -95,7 +95,7 @@ class PromptMatrixTests(unittest.TestCase):
         """
         service, tokenizer = prompt_service(), MessageTokenizer()
         original = list(service.glossary)
-        for variant in ('qwen-glossary-v2', 'qwen-relations-v2'):
+        for variant in ('qwen-glossary-v2', 'qwen-relations-v2', 'qwen-relations-v3'):
             prompt = variant_prompt(variant, tokenizer, service, 'The rocket has constant speed.')
             self.assertIn('rocket=로켓', prompt)
             self.assertIn('constant=상수', prompt)

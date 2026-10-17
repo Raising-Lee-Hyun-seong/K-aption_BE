@@ -21,6 +21,7 @@ class QwenLectureTests(unittest.TestCase):
         service = EvaluationQwenService.__new__(EvaluationQwenService)
         service.tokenizer = MessageTokenizer()
         service.context_format = 'system'
+        service.variant = 'qwen-relations-v2'
         service.glossary = prompt_service().glossary
         text = 'The rocket has constant speed.'
         self.assertEqual(service._build_prompt(text, ''), variant_prompt(
@@ -41,6 +42,7 @@ class QwenLectureTests(unittest.TestCase):
         service.glossary = prompt_service().glossary
         service._lock = Lock()
         service.context_format = 'system'
+        service.variant = 'qwen-relations-v2'
         service._generate_output = Mock(side_effect=[
             {'text': '', 'tokens': 1, 'finish_reason': 'stop', 'stop_reason': None},
             {'text': '다음 문장입니다.', 'tokens': 5, 'finish_reason': 'stop', 'stop_reason': None},

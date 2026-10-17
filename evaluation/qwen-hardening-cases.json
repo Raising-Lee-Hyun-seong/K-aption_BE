@@ -1,0 +1,1325 @@
+{
+  "evaluated_on": "2026-10-18",
+  "variant": "qwen-relations-v3",
+  "model_directory": "models/qwen3-4b-instruct-2507-4bit",
+  "source_verification": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "files": [
+      {
+        "name": "README.md",
+        "bytes": 969,
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657"
+      },
+      {
+        "name": "added_tokens.json",
+        "bytes": 707,
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+      },
+      {
+        "name": "chat_template.jinja",
+        "bytes": 4040,
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541"
+      },
+      {
+        "name": "config.json",
+        "bytes": 938,
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849"
+      },
+      {
+        "name": "generation_config.json",
+        "bytes": 238,
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48"
+      },
+      {
+        "name": "merges.txt",
+        "bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      {
+        "name": "model.safetensors",
+        "bytes": 2263022417,
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "bytes": 63964,
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777"
+      },
+      {
+        "name": "special_tokens_map.json",
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "name": "tokenizer_config.json",
+        "bytes": 5440,
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9"
+      },
+      {
+        "name": "vocab.json",
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    ],
+    "elapsed_seconds": 0.915827708
+  },
+  "model_load_seconds": 0.8469295830000001,
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "versions": {
+    "mlx-lm": "0.29.1",
+    "mlx": "0.29.3",
+    "transformers": "4.57.6"
+  },
+  "settings": {
+    "temperature": 0,
+    "max_tokens": 256,
+    "context": false,
+    "retries": 0,
+    "early_stopping_rules": false,
+    "output_cleaning": false,
+    "repeats": 2,
+    "prompt_plus_output_limit": 2048
+  },
+  "eos_token_ids": [
+    151645
+  ],
+  "input_sha256": {
+    "evaluation/mit_rocket_cases.json": "73d5716de9d76b16e9ec80cface4a7b27b821ee2baf5f5f27473e99133ec1faf",
+    "evaluation/physics_cases.json": "f56d18cf7b2ade7b4d77889b712c856068139b9f570ed3f855977d9c6936db84"
+  },
+  "implementation_sha256": {
+    "scripts/evaluate_prompt_matrix.py": "460068115aeff0763d663fc19f108e8395e7ce2134d6c3b8c4ac701812b2b89d",
+    "scripts/evaluate_candidates.py": "4df3a224c9c52103ed3e03956b9df1d747a6388fc78470ee3b899c59b9ae9b18",
+    "app/services/translation.py": "338d7c5580333df2b8f7c4e1f4f8c650fdb23e0b1a0947aaf35698cc1142a7d2",
+    "app/services/translation_validation.py": "7b6a59b1b2785c217f382d9b57610cb0c4444ff574b75ffb333bd4e2325cee54",
+    "templates/korean.json": "74ab31be94a48ce42c683437dd3bc0a903a73c57c27ad4f53bdaf80f7879f099",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "evaluation/physics_glossary_additions_v3.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "limits": [
+    "Raw validator diagnostics are not semantic accuracy or the actual API retry outcome.",
+    "Qwen glossary changes terminology and preservation instructions together.",
+    "Current KoreanLM prompt uses no preceding context; this is not the 36-group API run.",
+    "V2 prompts were developed on these known cases; this is not a held-out generalization test."
+  ],
+  "results": [
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: rocket=로켓; speed=속력.\n\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 우리는 로켓의 속력을 최종적으로 얻고자 한다.",
+      "elapsed_seconds": 1.0930099160000006,
+      "prompt_tokens": 194,
+      "generated_tokens": 18,
+      "finish_reason": "stop",
+      "prompt_tps": 351.9827230332721,
+      "generation_tps": 39.14728871163268,
+      "mlx_process_peak_gb": 2.65984408,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: separation of variables=변수 분리; integrate=적분.\n\nSo we have to apply a technique called separation of variables and then we want to integrate.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그러므로 우리는 변수 분리 기법을 적용하고 그 후 적분을 해야 한다.",
+      "elapsed_seconds": 1.186506583,
+      "prompt_tokens": 204,
+      "generated_tokens": 22,
+      "finish_reason": "stop",
+      "prompt_tps": 368.1314275104366,
+      "generation_tps": 40.41536591036193,
+      "mlx_process_peak_gb": 2.673934348,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: dt, mR, dvR, dmR, u.\n\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "무엇을 할지라 하면, 먼저 나누기—dt를 곱하여 사라지며, 그 결과 mr dvr = dmru가 남는다.",
+      "elapsed_seconds": 1.645031542,
+      "prompt_tokens": 226,
+      "generated_tokens": 38,
+      "finish_reason": "stop",
+      "prompt_tps": 363.9756691928215,
+      "generation_tps": 40.27477465004999,
+      "mlx_process_peak_gb": 2.715467876,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m.\n\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기겠습니다.",
+      "elapsed_seconds": 0.9441987919999999,
+      "prompt_tokens": 189,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 393.2030308281013,
+      "generation_tps": 41.39094742396853,
+      "mlx_process_peak_gb": 2.715467876,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: dvR, u, dmR, mR. Terminology: constant=상수.\n\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 우리는 dvR이 등가된다-- u는 상수다-- 그러므로 그는 앞쪽으로 온다, 그리고 그 다음에 dmR over mR이 있다.",
+      "elapsed_seconds": 1.6663431670000008,
+      "prompt_tokens": 225,
+      "generated_tokens": 41,
+      "finish_reason": "stop",
+      "prompt_tps": 407.92267417788327,
+      "generation_tps": 40.131955828420274,
+      "mlx_process_peak_gb": 2.715467876,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integrate=적분.\n\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "elapsed_seconds": 0.9321408330000001,
+      "prompt_tokens": 187,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 388.1495726947492,
+      "generation_tps": 40.53733140817765,
+      "mlx_process_peak_gb": 2.715467876,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integration limits=적분 구간.\n\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 어려운 점은 여기 적분 구간을 적절히 처리해야 한다는 점이다.",
+      "elapsed_seconds": 1.3111626670000014,
+      "prompt_tokens": 197,
+      "generated_tokens": 27,
+      "finish_reason": "stop",
+      "prompt_tps": 355.3198511562619,
+      "generation_tps": 40.22978658098216,
+      "mlx_process_peak_gb": 2.715467876,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m0. Terminology: fuel mass=연료 질량; dry mass=건조 질량; mass=질량.\n\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "실제로는 m0가 아니고, 2m0입니다. 이 초기 질량은 건조 질량과 연료 질량을 포함하므로, 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+      "elapsed_seconds": 2.038451458000001,
+      "prompt_tokens": 244,
+      "generated_tokens": 52,
+      "finish_reason": "stop",
+      "prompt_tps": 389.54220189419317,
+      "generation_tps": 39.86079637914216,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: mR. Terminology: velocity=속도; rocket=로켓; mass=질량.\n\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "mR, 로켓의 질량은 이전보다 이후에 줄어든다. 즉, 여기서 나타나는 항은 0보다 작아진다. 이는 속도가 초기 속도에서 뭔가를 빼는 것임을 의미한다.",
+      "elapsed_seconds": 2.3425796660000024,
+      "prompt_tokens": 237,
+      "generated_tokens": 64,
+      "finish_reason": "stop",
+      "prompt_tps": 376.1844799292906,
+      "generation_tps": 39.81402287634374,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; sled=썰매.\n\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "즉, 우리는 속도의 감소를 가진다. 이는 내 썰매가 결국 정지하게 된다는 뜻이다.",
+      "elapsed_seconds": 1.4635279580000002,
+      "prompt_tokens": 202,
+      "generated_tokens": 33,
+      "finish_reason": "stop",
+      "prompt_tps": 366.9938399793267,
+      "generation_tps": 40.87814302983541,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: net force=알짜힘.\n\nThe net force acting on the object is zero.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "물체에 작용하는 알짜힘은 0이다.",
+      "elapsed_seconds": 0.938749541,
+      "prompt_tokens": 189,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 392.62287950459125,
+      "generation_tps": 41.76297766155129,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; constant=상수.\n\nThe velocity is constant.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "속도는 상수이다.",
+      "elapsed_seconds": 0.7458404999999999,
+      "prompt_tokens": 187,
+      "generated_tokens": 8,
+      "finish_reason": "stop",
+      "prompt_tps": 388.4507227055082,
+      "generation_tps": 45.02193403907379,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: mass=질량.\n\nThe mass of the object is two kilograms.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "물체의 질량은 두 킬로그램이다.",
+      "elapsed_seconds": 0.8877466660000017,
+      "prompt_tokens": 186,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 383.8166594486104,
+      "generation_tps": 42.42670651593049,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: acceleration=가속도; velocity=속도.\n\nAcceleration is the rate of change of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "가속도는 속도의 변화율이다.",
+      "elapsed_seconds": 0.8619059589999978,
+      "prompt_tokens": 192,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 394.534870101449,
+      "generation_tps": 43.123674365810125,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: magnitude=크기; velocity=속도; speed=속력.\n\nSpeed is the magnitude of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "속력은 속도의 크기이다.",
+      "elapsed_seconds": 0.9184164579999994,
+      "prompt_tokens": 194,
+      "generated_tokens": 12,
+      "finish_reason": "stop",
+      "prompt_tps": 350.9257475487211,
+      "generation_tps": 42.17501234128727,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: displacement=변위; distance=거리.\n\nDisplacement differs from distance traveled.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "변위는 거리와 다름.",
+      "elapsed_seconds": 0.8104825829999989,
+      "prompt_tokens": 188,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 386.2461446009005,
+      "generation_tps": 43.27313679395865,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; momentum=운동량; mass=질량.\n\nMomentum is the product of mass and velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "운동량은 질량과 속도의 곱이다.",
+      "elapsed_seconds": 1.0213057079999999,
+      "prompt_tokens": 197,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 352.8410081849713,
+      "generation_tps": 41.53125746264794,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: momentum=운동량; impulse=충격량.\n\nImpulse is the change in momentum.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "충격량은 운동량의 변화이다.",
+      "elapsed_seconds": 0.8793183750000004,
+      "prompt_tokens": 191,
+      "generated_tokens": 12,
+      "finish_reason": "stop",
+      "prompt_tps": 391.2719719185534,
+      "generation_tps": 42.41573517735712,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: kinetic energy=운동 에너지; speed=속력.\n\nKinetic energy increases with speed.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "운동 에너지는 속력과 함께 증가한다.",
+      "elapsed_seconds": 0.9673760410000014,
+      "prompt_tokens": 192,
+      "generated_tokens": 16,
+      "finish_reason": "stop",
+      "prompt_tps": 394.42805294585446,
+      "generation_tps": 42.01326692842426,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integration limits=적분 구간.\n\nWe need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "여기서는 적분 구간을 잘 관리해야 한다.",
+      "elapsed_seconds": 0.9595446249999995,
+      "prompt_tokens": 191,
+      "generated_tokens": 16,
+      "finish_reason": "stop",
+      "prompt_tps": 392.5974480874012,
+      "generation_tps": 40.67053852396393,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: gravity=중력.\n\nGravity pulls the object downward.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "중력은 물체를 아래로 끌어당긴다.",
+      "elapsed_seconds": 0.9939544999999974,
+      "prompt_tokens": 183,
+      "generated_tokens": 17,
+      "finish_reason": "stop",
+      "prompt_tps": 376.1346347904115,
+      "generation_tps": 41.137371665858716,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 1,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: friction=마찰.\n\nFriction opposes the motion.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "마찰은 운동을 반대한다.",
+      "elapsed_seconds": 0.8301299580000006,
+      "prompt_tokens": 183,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 375.46083046740654,
+      "generation_tps": 43.69038806497755,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:rocket-speed",
+      "start": 14.41,
+      "end": 17.83,
+      "source_cue_indices": [
+        3
+      ],
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "reference_ko": "그리고 우리가 궁극적으로 구하려는 것은 로켓의 속력입니다.",
+      "semantic_checks": [
+        "speed는 속력이며 원하는 대상은 로켓의 속력이다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: rocket=로켓; speed=속력.\n\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 우리는 로켓의 속력을 최종적으로 얻고자 한다.",
+      "elapsed_seconds": 1.0683333340000019,
+      "prompt_tokens": 194,
+      "generated_tokens": 18,
+      "finish_reason": "stop",
+      "prompt_tps": 348.50604646583344,
+      "generation_tps": 42.02116754684106,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:separation-integrate",
+      "start": 17.83,
+      "end": 25.464,
+      "source_cue_indices": [
+        4,
+        5
+      ],
+      "text": "So we have to apply a technique called separation of variables and then we want to integrate.",
+      "reference_ko": "그러므로 변수분리법이라는 기법을 적용한 뒤 적분하려고 합니다.",
+      "semantic_checks": [
+        "separation of variables는 변수분리법이다.",
+        "integrate는 이 문맥에서 적분이며 통합이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: separation of variables=변수 분리; integrate=적분.\n\nSo we have to apply a technique called separation of variables and then we want to integrate.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그러므로 우리는 변수 분리 기법을 적용하고 그 후 적분을 해야 한다.",
+      "elapsed_seconds": 1.195152084,
+      "prompt_tokens": 204,
+      "generated_tokens": 22,
+      "finish_reason": "stop",
+      "prompt_tps": 361.5601056961428,
+      "generation_tps": 40.92890311121968,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:multiply-dt",
+      "start": 25.464,
+      "end": 42.61,
+      "source_cue_indices": [
+        6,
+        7,
+        8
+      ],
+      "text": "What we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.",
+      "reference_ko": "먼저 dt를 곱해서 소거하면 m r d v r = d m r u가 남습니다.",
+      "semantic_checks": [
+        "dt를 곱하며 소거한다는 관계를 유지한다.",
+        "m r d v r와 d m r u를 임의 단위나 다른 수식으로 바꾸지 않는다."
+      ],
+      "notes": "divide-- multiply는 화자가 말을 고친 부분으로 해석했다. 변수의 아래첨자는 자막만으로 확정하지 않고 공식 발화 표기를 유지했다.",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: dt, mR, dvR, dmR, u.\n\nWhat we're going to do is, first we're going to divide-- multiply by dt so that falls away, and we are left with m r d v r equals d m r u.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "무엇을 할지라 하면, 먼저 나누기—dt를 곱하여 사라지며, 그 결과 mr dvr = dmru가 남는다.",
+      "elapsed_seconds": 1.6566103339999998,
+      "prompt_tokens": 226,
+      "generated_tokens": 38,
+      "finish_reason": "stop",
+      "prompt_tps": 353.84238336530467,
+      "generation_tps": 40.54308707029427,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:move-m",
+      "start": 42.61,
+      "end": 47.1,
+      "source_cue_indices": [
+        9
+      ],
+      "text": "And we're going to shuffle the m onto the other side.",
+      "reference_ko": "그리고 m을 반대쪽으로 옮깁니다.",
+      "semantic_checks": [
+        "옮기는 대상은 m이며 다른 변수나 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m.\n\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기겠습니다.",
+      "elapsed_seconds": 0.9394978750000007,
+      "prompt_tokens": 189,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 384.66085115225394,
+      "generation_tps": 42.07316944898887,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:constant-u",
+      "start": 47.1,
+      "end": 58.51,
+      "source_cue_indices": [
+        10,
+        11,
+        12
+      ],
+      "text": "And we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.",
+      "reference_ko": "그러면 d v r는 상수 u를 앞에 둔 u d m r / m r가 됩니다.",
+      "semantic_checks": [
+        "u가 상수라는 정보를 유지한다.",
+        "d v r = u d m r / m r의 변수와 나눗셈 관계를 유지한다."
+      ],
+      "notes": "공식 자막의 equals-- 중단 및 so that goes up front 설명을 하나의 문장으로 옮겼다. 영어 입력과 수식 문자는 보정하지 않았다.",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: dvR, u, dmR, mR. Terminology: constant=상수.\n\nAnd we're left with d v r equals-- u is a constant-- so that goes up front, and then we have d m r over m r.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 우리는 dvR이 등가된다-- u는 상수다-- 그러므로 그는 앞쪽으로 온다, 그리고 그 다음에 dmR over mR이 있다.",
+      "elapsed_seconds": 1.6837907090000002,
+      "prompt_tokens": 225,
+      "generated_tokens": 41,
+      "finish_reason": "stop",
+      "prompt_tps": 398.6314249698972,
+      "generation_tps": 39.843909056763486,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:integrable-equation",
+      "start": 58.51,
+      "end": 61.716,
+      "source_cue_indices": [
+        13
+      ],
+      "text": "That's an equation that we can integrate now.",
+      "reference_ko": "이제 이 방정식을 적분할 수 있습니다.",
+      "semantic_checks": [
+        "방정식을 적분할 수 있다고 말한다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integrate=적분.\n\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "elapsed_seconds": 0.9436382499999993,
+      "prompt_tokens": 187,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 378.79235435059604,
+      "generation_tps": 42.36853774301718,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:integration-limits",
+      "start": 65.83,
+      "end": 70.93,
+      "source_cue_indices": [
+        15,
+        16
+      ],
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "reference_ko": "그리고 주의해야 할 점은 여기서 적분 구간의 경계를 제대로 처리해야 한다는 것입니다.",
+      "semantic_checks": [
+        "integration limits는 적분의 경계 또는 적분 한계이며 제한 사항 일반론이 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integration limits=적분 구간.\n\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "그리고 어려운 점은 여기 적분 구간을 적절히 처리해야 한다는 점이다.",
+      "elapsed_seconds": 1.315509249999998,
+      "prompt_tokens": 197,
+      "generated_tokens": 27,
+      "finish_reason": "stop",
+      "prompt_tps": 347.4460510639875,
+      "generation_tps": 40.88646910717494,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:initial-mass",
+      "start": 99.27000000000001,
+      "end": 116.4,
+      "source_cue_indices": [
+        22,
+        23,
+        24
+      ],
+      "text": "Actually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "reference_ko": "정확히는 m0가 아니라 2m0입니다. 처음 질량은 건조 질량과 연료 질량을 합친 것이므로 2m0이며, 이것이 초기 질량입니다.",
+      "semantic_checks": [
+        "m0를 2m0로 정정하는 내용을 보존한다.",
+        "건조 질량과 연료 질량을 합친 것이 초기 질량이다.",
+        "2m0에 kg나 미터 등 원문에 없는 단위를 추가하지 않는다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m0. Terminology: fuel mass=연료 질량; dry mass=건조 질량; mass=질량.\n\nActually, not quite m0, it's 2m0 because the initial mass of this is the dry mass and the fuel mass, so that's 2m0, so this is the initial mass.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "실제로는 m0가 아니고, 2m0입니다. 이 초기 질량은 건조 질량과 연료 질량을 포함하므로, 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+      "elapsed_seconds": 2.060932125000001,
+      "prompt_tokens": 244,
+      "generated_tokens": 52,
+      "finish_reason": "stop",
+      "prompt_tps": 378.5624285710659,
+      "generation_tps": 39.73906969188679,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:mass-less-negative",
+      "start": 179.53,
+      "end": 200.9,
+      "source_cue_indices": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "text": "M r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.",
+      "reference_ko": "로켓의 질량 M r는 나중에 이전보다 작아집니다. 따라서 이 항은 0보다 작아지고, 속도는 초기 속도에서 어떤 값을 뺀 값이 됩니다.",
+      "semantic_checks": [
+        "로켓 질량이 감소한다.",
+        "항이 0보다 작다는 부등호 관계를 보존한다.",
+        "초기 속도에 더하는 것이 아니라 어떤 값을 빼는 관계를 보존한다."
+      ],
+      "notes": "원문의 M r 표기를 유지했다. 물리식 부호와 u의 정의는 자막만으로 추가 판정하지 않는다.",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: mR. Terminology: velocity=속도; rocket=로켓; mass=질량.\n\nM r, the mass of the rocket is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "mR, 로켓의 질량은 이전보다 이후에 줄어든다. 즉, 여기서 나타나는 항은 0보다 작아진다. 이는 속도가 초기 속도에서 뭔가를 빼는 것임을 의미한다.",
+      "elapsed_seconds": 2.3967665000000054,
+      "prompt_tokens": 237,
+      "generated_tokens": 64,
+      "finish_reason": "stop",
+      "prompt_tps": 364.27933692707046,
+      "generation_tps": 38.77093022846346,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "official:sled-stops",
+      "start": 200.9,
+      "end": 209.75,
+      "source_cue_indices": [
+        40,
+        41
+      ],
+      "text": "Which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "reference_ko": "즉 속도가 감소하고, 결국 썰매가 멈추게 됩니다.",
+      "semantic_checks": [
+        "속도 감소와 정지의 인과관계를 유지한다.",
+        "sled는 썰매이며 스레드가 아니다."
+      ],
+      "notes": "",
+      "suite": "official",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; sled=썰매.\n\nWhich means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "즉, 우리는 속도의 감소를 가진다. 이는 내 썰매가 결국 정지하게 된다는 뜻이다.",
+      "elapsed_seconds": 1.5166471659999985,
+      "prompt_tokens": 202,
+      "generated_tokens": 33,
+      "finish_reason": "stop",
+      "prompt_tps": 355.8584591441131,
+      "generation_tps": 38.314306005840564,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:net_force",
+      "text": "The net force acting on the object is zero.",
+      "reference": "물체에 작용하는 알짜힘은 0이다.",
+      "required_terms": [
+        "알짜힘"
+      ],
+      "forbidden_terms": [
+        "중력"
+      ],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: net force=알짜힘.\n\nThe net force acting on the object is zero.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "물체에 작용하는 알짜힘은 0이다.",
+      "elapsed_seconds": 0.9483680840000019,
+      "prompt_tokens": 189,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 377.51187714285817,
+      "generation_tps": 42.3991313288584,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:velocity",
+      "text": "The velocity is constant.",
+      "reference": "속도는 일정하다.",
+      "required_terms": [
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; constant=상수.\n\nThe velocity is constant.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "속도는 상수이다.",
+      "elapsed_seconds": 0.7852967080000042,
+      "prompt_tokens": 187,
+      "generated_tokens": 8,
+      "finish_reason": "stop",
+      "prompt_tps": 375.20183375703033,
+      "generation_tps": 41.61986231348394,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:mass",
+      "text": "The mass of the object is two kilograms.",
+      "reference": "물체의 질량은 2킬로그램이다.",
+      "required_terms": [
+        "질량"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: mass=질량.\n\nThe mass of the object is two kilograms.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "물체의 질량은 두 킬로그램이다.",
+      "elapsed_seconds": 0.938320791999999,
+      "prompt_tokens": 186,
+      "generated_tokens": 14,
+      "finish_reason": "stop",
+      "prompt_tps": 365.45051787904237,
+      "generation_tps": 40.30251354542317,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:acceleration",
+      "text": "Acceleration is the rate of change of velocity.",
+      "reference": "가속도는 속도의 변화율이다.",
+      "required_terms": [
+        "가속도",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: acceleration=가속도; velocity=속도.\n\nAcceleration is the rate of change of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "가속도는 속도의 변화율이다.",
+      "elapsed_seconds": 0.8855189579999987,
+      "prompt_tokens": 192,
+      "generated_tokens": 13,
+      "finish_reason": "stop",
+      "prompt_tps": 378.57931211941747,
+      "generation_tps": 43.13657662321033,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:speed",
+      "text": "Speed is the magnitude of velocity.",
+      "reference": "속력은 속도의 크기이다.",
+      "required_terms": [
+        "속력",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: magnitude=크기; velocity=속도; speed=속력.\n\nSpeed is the magnitude of velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "속력은 속도의 크기이다.",
+      "elapsed_seconds": 0.9258719999999983,
+      "prompt_tokens": 194,
+      "generated_tokens": 12,
+      "finish_reason": "stop",
+      "prompt_tps": 339.2524479975716,
+      "generation_tps": 42.887285266579674,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:displacement",
+      "text": "Displacement differs from distance traveled.",
+      "reference": "변위는 이동한 거리와 다르다.",
+      "required_terms": [
+        "변위",
+        "거리"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: displacement=변위; distance=거리.\n\nDisplacement differs from distance traveled.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "변위는 거리와 다름.",
+      "elapsed_seconds": 0.8096401669999977,
+      "prompt_tokens": 188,
+      "generated_tokens": 10,
+      "finish_reason": "stop",
+      "prompt_tps": 375.07316270880364,
+      "generation_tps": 43.771394472761415,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:momentum",
+      "text": "Momentum is the product of mass and velocity.",
+      "reference": "운동량은 질량과 속도의 곱이다.",
+      "required_terms": [
+        "운동량",
+        "질량",
+        "속도"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; momentum=운동량; mass=질량.\n\nMomentum is the product of mass and velocity.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "운동량은 질량과 속도의 곱이다.",
+      "elapsed_seconds": 1.0387736660000044,
+      "prompt_tokens": 197,
+      "generated_tokens": 15,
+      "finish_reason": "stop",
+      "prompt_tps": 343.0337837135297,
+      "generation_tps": 40.29209988822006,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:impulse",
+      "text": "Impulse is the change in momentum.",
+      "reference": "충격량은 운동량의 변화이다.",
+      "required_terms": [
+        "충격량",
+        "운동량"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: momentum=운동량; impulse=충격량.\n\nImpulse is the change in momentum.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "충격량은 운동량의 변화이다.",
+      "elapsed_seconds": 0.8805216659999999,
+      "prompt_tokens": 191,
+      "generated_tokens": 12,
+      "finish_reason": "stop",
+      "prompt_tps": 377.5294219253274,
+      "generation_tps": 41.57202895318643,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:energy",
+      "text": "Kinetic energy increases with speed.",
+      "reference": "운동 에너지는 속력이 증가하면 증가한다.",
+      "required_terms": [
+        "운동 에너지",
+        "속력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: kinetic energy=운동 에너지; speed=속력.\n\nKinetic energy increases with speed.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "운동 에너지는 속력과 함께 증가한다.",
+      "elapsed_seconds": 0.9766065840000024,
+      "prompt_tokens": 192,
+      "generated_tokens": 16,
+      "finish_reason": "stop",
+      "prompt_tps": 380.24793543789633,
+      "generation_tps": 41.94142032386516,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:limits",
+      "text": "We need to take care of the integration limits here.",
+      "reference": "여기서 적분 구간에 주의해야 한다.",
+      "required_terms": [
+        "적분"
+      ],
+      "forbidden_terms": [],
+      "context": "속도는 일정합니다.",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integration limits=적분 구간.\n\nWe need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "여기서는 적분 구간을 잘 관리해야 한다.",
+      "elapsed_seconds": 0.9645040420000015,
+      "prompt_tokens": 191,
+      "generated_tokens": 16,
+      "finish_reason": "stop",
+      "prompt_tps": 380.27955217953564,
+      "generation_tps": 42.60934289735564,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:gravity",
+      "text": "Gravity pulls the object downward.",
+      "reference": "중력은 물체를 아래로 당긴다.",
+      "required_terms": [
+        "중력"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: gravity=중력.\n\nGravity pulls the object downward.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "중력은 물체를 아래로 끌어당긴다.",
+      "elapsed_seconds": 0.9932042080000016,
+      "prompt_tokens": 183,
+      "generated_tokens": 17,
+      "finish_reason": "stop",
+      "prompt_tps": 366.8245298369392,
+      "generation_tps": 42.39423518002984,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    },
+    {
+      "id": "physics:friction",
+      "text": "Friction opposes the motion.",
+      "reference": "마찰은 운동을 방해한다.",
+      "required_terms": [
+        "마찰"
+      ],
+      "forbidden_terms": [],
+      "context": "",
+      "suite": "physics",
+      "repeat": 2,
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: friction=마찰.\n\nFriction opposes the motion.<|im_end|>\n<|im_start|>assistant\n",
+      "translation": "마찰은 운동을 반대한다.",
+      "elapsed_seconds": 0.827181791000001,
+      "prompt_tokens": 183,
+      "generated_tokens": 11,
+      "finish_reason": "stop",
+      "prompt_tps": 367.006913561927,
+      "generation_tps": 42.99006299544956,
+      "mlx_process_peak_gb": 2.747613356,
+      "validation_problems": [],
+      "raw_validator_rejection_reason": null,
+      "error": null
+    }
+  ],
+  "complete": true,
+  "semantic_review": "pending",
+  "warmup": {
+    "translation": "안녕하세요, 강의에 오신 것을 환영합니다.",
+    "elapsed_seconds": 1.2533482500000002,
+    "prompt_tokens": 176,
+    "generated_tokens": 16,
+    "finish_reason": "stop",
+    "prompt_tps": 222.65283899764475,
+    "generation_tps": 41.31396483019642,
+    "mlx_process_peak_gb": 2.6596474
+  },
+  "mlx_process_peak_gb": 2.747613356
+}

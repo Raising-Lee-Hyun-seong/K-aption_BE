@@ -90,6 +90,34 @@ class PreservationTests(unittest.TestCase):
                          'missing_math_symbol')
         self.assertEqual(preservation_problem('2mr', '3 m r입니다.'), 'missing_number')
 
+    def test_subscript_aliases_preserve_symbols_without_matching_identifiers(self):
+        """수식 밑줄 표기는 동등하게 처리하고 긴 식별자·계수 변경은 계속 거부한다.
+
+        :return: None.
+        :raises AssertionError: 정상 별칭을 거부하거나 변수 누락·숫자 변경을 허용할 때.
+        """
+        self.assertEqual(protected_symbols('M_r v_r d_m_r d_v_r m_0 v_0'),
+                         ['mR', 'vR', 'dmR', 'dvR', 'm0', 'v0'])
+        self.assertIsNone(preservation_problem('M r and vR', 'M_r와 v_r입니다.'))
+        self.assertIsNone(preservation_problem('d_m_r u', 'dmRu입니다.'))
+        self.assertIsNone(preservation_problem('m_r prime', "mR'입니다."))
+        self.assertEqual(protected_symbols('some_m_r m_r_value m_r2'), [])
+        self.assertEqual(preservation_problem('2 m_r', '3mR입니다.'), 'missing_number')
+        self.assertEqual(preservation_problem('m_r u', 'm_r입니다.'), 'missing_math_symbol')
+
+    def test_foreign_prose_is_source_aware_and_keeps_math_and_hanja(self):
+        """새 외국 문자 어구를 거부하되 원문 인용·단일 수식 문자·한자 병기는 허용한다.
+
+        :return: None.
+        :raises AssertionError: 관찰된 언어 혼입을 수락하거나 허용 표기를 잘못 거부할 때.
+        """
+        for output in ('并且 로켓입니다.', '서로 равно합니다.', 'これは 값입니다.'):
+            with self.subTest(output=output):
+                self.assertEqual(preservation_problem('The rocket.', output), 'unexpected_script')
+        self.assertIsNone(preservation_problem('The word равно.', 'равно라는 단어입니다.'))
+        self.assertIsNone(preservation_problem('Momentum.', '운동량(運動量)입니다.'))
+        self.assertIsNone(preservation_problem('A symbol.', 'α와 β 그리고 Ж 기호입니다.'))
+
     def test_dmru_preserves_both_differential_and_velocity_symbol(self):
         """STT의 붙인 dmRu를 dmR u와 동일하게 취급하고 어느 기호의 누락도 거부한다.
 
@@ -157,6 +185,8 @@ class PreservationTests(unittest.TestCase):
         :raises AssertionError: 검증 대상의 동작이 테스트 기대값과 다를 때.
         """
         self.assertEqual(generation_problem('이전 영어 문맥: hello'), 'prompt_leak')
+        self.assertEqual(generation_problem('이전 영문 맥락(참조용만): 문장'), 'prompt_leak')
+        self.assertEqual(generation_problem('Previous English context: hello'), 'prompt_leak')
         self.assertEqual(generation_problem('설명입니다. (참고만 하세요.)'), 'prompt_leak')
         self.assertEqual(generation_problem('원문을 한국어로 번역합니다.'), 'prompt_leak')
         self.assertEqual(generation_problem('속도를 계산합니다. ' * 3), 'repetition')
@@ -229,6 +259,24 @@ class StreamingTests(unittest.TestCase):
         with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=stream_generate)}):
             with self.assertRaises(ValueError):
                 self.translator().translate('The velocity is constant.', '', 128)
+
+    def test_foreign_prose_is_retried_without_accepting_first_output(self):
+        """언어 혼입 출력을 수락하지 않고 문맥 없는 재시도에서 정상 번역을 반환한다.
+
+        :return: None.
+        :raises AssertionError: 혼입 출력을 반환하거나 재시도 정책을 따르지 않을 때.
+        """
+        service = self.translator()
+        outputs = [
+            {'text': '속도는 равно이다.', 'tokens': 5, 'finish_reason': 'stop', 'stop_reason': None},
+            {'text': '속도는 일정합니다.', 'tokens': 6, 'finish_reason': 'stop', 'stop_reason': None},
+        ]
+        with patch.object(service, '_generate_output', side_effect=outputs) as generate:
+            result = service.translate('The velocity is constant.', 'Earlier sentence.', 128)
+        self.assertEqual(result['translation'], '속도는 일정합니다.')
+        self.assertEqual(generate.call_count, 2)
+        self.assertIn('Earlier sentence.', generate.call_args_list[0].args[0])
+        self.assertNotIn('Earlier sentence.', generate.call_args_list[1].args[0])
 
     def test_leak_is_rejected_before_cleaning(self):
         """정리 과정에서 지워질 수 있는 지시문도 원시 출력 단계에서 검출한다.

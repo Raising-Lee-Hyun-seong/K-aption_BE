@@ -14,14 +14,16 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.services.translation import TranslationService
+from app.services.translation_validation import protected_symbols
 from scripts.evaluate_candidates import (
     build_prompt, generate_once, inspect_output, load_cases, prepare_candidate,
     save_report, sha256_file,
 )
 
 VARIANTS = ('koreanlm-current', 'koreanlm-simple', 'qwen-base', 'qwen-glossary',
-            'qwen-glossary-v2', 'qwen-relations-v2')
+            'qwen-glossary-v2', 'qwen-relations-v2', 'qwen-relations-v3')
 GLOSSARY_ADDITIONS = ROOT / 'evaluation/physics_glossary_additions_v2.json'
+GLOSSARY_ADDITIONS_V3 = ROOT / 'evaluation/physics_glossary_additions_v3.json'
 QWEN_INSTRUCTION = (
     'Translate the following English text into Korean. Preserve negation, numbers '
     'and mathematical relations. Output only the translation.'
@@ -37,6 +39,12 @@ QWEN_RELATIONS = (
     'preserve the full equality, including factors and division, even when '
     'a parenthetical comment interrupts it. Do not infer missing relations '
     'or repair uncertain source text.'
+)
+QWEN_MATH = (
+    ' In mathematical speech, preserve division expressed by "over". '
+    'Descriptions of factor placement refer to position in the expression, '
+    'not an increase in value. Prime denotes a mathematical prime mark, '
+    'not a prime number. Keep variable labels rather than translating them as words.'
 )
 
 
@@ -76,14 +84,20 @@ def variant_prompt(
             instruction='다음 영어 원문을 한국어로 번역하세요. 번역문만 출력하세요.', input=text)
     if variant == 'qwen-base':
         return build_prompt(tokenizer, {'original_repository': 'Qwen/Qwen3-4B-Instruct-2507'}, text)
-    if variant in ('qwen-glossary', 'qwen-glossary-v2', 'qwen-relations-v2'):
+    if variant in ('qwen-glossary', 'qwen-glossary-v2', 'qwen-relations-v2', 'qwen-relations-v3'):
         instruction = QWEN_INSTRUCTION + QWEN_PRESERVATION
         matcher = service
-        if variant.endswith('-v2'):
+        if variant.endswith(('-v2', '-v3')):
             matcher = TranslationService.__new__(TranslationService)
-            matcher.glossary = service.glossary + json.loads(GLOSSARY_ADDITIONS.read_text())
-        if variant == 'qwen-relations-v2':
+            additions = GLOSSARY_ADDITIONS_V3 if variant.endswith('-v3') else GLOSSARY_ADDITIONS
+            matcher.glossary = service.glossary + json.loads(additions.read_text())
+        if variant.startswith('qwen-relations-'):
             instruction += QWEN_RELATIONS
+        if variant == 'qwen-relations-v3':
+            instruction += QWEN_MATH
+            symbols = protected_symbols(text)
+            if symbols:
+                instruction += ' Keep these source symbols: ' + ', '.join(symbols) + '.'
         terms = matcher._matching_terms(text)
         if terms:
             instruction += ' Terminology: ' + '; '.join(
@@ -213,8 +227,9 @@ def main() -> None:
                    'Current KoreanLM prompt uses no preceding context; this is not the 36-group API run.'],
         'results': [], 'complete': False, 'semantic_review': 'pending',
     }
-    if args.variant.endswith('-v2'):
-        report['implementation_sha256'][str(GLOSSARY_ADDITIONS.relative_to(ROOT))] = sha256_file(GLOSSARY_ADDITIONS)
+    if args.variant.endswith(('-v2', '-v3')):
+        additions = GLOSSARY_ADDITIONS_V3 if args.variant.endswith('-v3') else GLOSSARY_ADDITIONS
+        report['implementation_sha256'][str(additions.relative_to(ROOT))] = sha256_file(additions)
         report['limits'].append(
             'V2 prompts were developed on these known cases; this is not a held-out generalization test.')
     report['warmup'] = generate_once(model, tokenizer, variant_prompt(

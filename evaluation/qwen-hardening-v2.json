@@ -1,0 +1,2117 @@
+{
+  "evaluated_on": "2026-10-18",
+  "variant": "qwen-relations-v2",
+  "source_verification": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "files": [
+      {
+        "name": "README.md",
+        "bytes": 969,
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657"
+      },
+      {
+        "name": "added_tokens.json",
+        "bytes": 707,
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+      },
+      {
+        "name": "chat_template.jinja",
+        "bytes": 4040,
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541"
+      },
+      {
+        "name": "config.json",
+        "bytes": 938,
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849"
+      },
+      {
+        "name": "generation_config.json",
+        "bytes": 238,
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48"
+      },
+      {
+        "name": "merges.txt",
+        "bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      {
+        "name": "model.safetensors",
+        "bytes": 2263022417,
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "bytes": 63964,
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777"
+      },
+      {
+        "name": "special_tokens_map.json",
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "name": "tokenizer_config.json",
+        "bytes": 5440,
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9"
+      },
+      {
+        "name": "vocab.json",
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    ],
+    "elapsed_seconds": 0.937118834
+  },
+  "lecture_source": {
+    "title": "Rocket Sled - Integrate the Rocket Equation",
+    "publisher": "Massachusetts Institute of Technology, MIT OpenCourseWare",
+    "course": "8.01SC Classical Mechanics, Fall 2016",
+    "instructor": "Prof. Anna Frebel",
+    "page_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/resources/rocket-sled-integrate-the-rocket-equation/",
+    "caption_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/99c06ede3b5d5192b4cb4119435b6b9f_7Kq8BINVDiw.vtt",
+    "transcript_pdf_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/5fb03318c1359e623617218715101f57_7Kq8BINVDiw.pdf",
+    "retrieved_on": "2026-10-04",
+    "language": "en",
+    "format": "WEBVTT",
+    "license": {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "notice": "MIT OCW 페이지의 license metadata에 명시된 라이선스. 원본 자막의 출처를 표시하고 파생 기준 번역에도 동일한 라이선스를 적용한다."
+    },
+    "sha256": "16f5205352d8258e11365fa85832e350b352efd89dd15ad2a7dd5d39dcb5f454",
+    "transformations": [
+      "VTT의 줄바꿈을 공백으로 병합했다.",
+      "VTT의 명시된 시작·종료 시각을 초 단위로 변환했다.",
+      "cue 순서 index는 0부터 시작한다. 단어·수식 표기는 보정하지 않았다."
+    ],
+    "known_uncertainties": [
+      {
+        "source_cue_indices": [
+          0
+        ],
+        "text": "arrived",
+        "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+      },
+      {
+        "source_cue_indices": [
+          19,
+          20
+        ],
+        "text": "2vr prime of equal vr of t",
+        "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          25
+        ],
+        "text": "m of vr",
+        "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          28
+        ],
+        "text": "lm",
+        "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          31
+        ],
+        "text": "the r of t",
+        "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+      }
+    ]
+  },
+  "model_load_seconds": 0.8102851669999995,
+  "settings": {
+    "temperature": 0,
+    "max_tokens": 128,
+    "context_characters": 256,
+    "context_format": "system",
+    "max_attempts": 2,
+    "retry_context": false,
+    "output_cleaning": true,
+    "early_stopping_rules": true,
+    "prompt_plus_output_limit": 2048,
+    "validation_glossary": "unchanged API glossary (28 entries)"
+  },
+  "input_sha256": {
+    "evaluation/lecture.json": "6ae562bfbe2b2883343645cbf0f9bc218c5e837716d65b41fa6a627cb242db0c",
+    "evaluation/mit_rocket_reference.json": "24fe7b5ea2a7dc1ad4afd026cc395ae110220c724f7b2113d39909f38bd7e3ab"
+  },
+  "implementation_sha256": {
+    "scripts/evaluate_qwen_lecture.py": "ad1831800c09fd6ffd57405b80f68ea53cc3fe1e6d33bbc8b11f7c3fcaa11fd1",
+    "scripts/evaluate_prompt_matrix.py": "460068115aeff0763d663fc19f108e8395e7ce2134d6c3b8c4ac701812b2b89d",
+    "scripts/evaluate_candidates.py": "4df3a224c9c52103ed3e03956b9df1d747a6388fc78470ee3b899c59b9ae9b18",
+    "scripts/evaluate_lecture_quality.py": "5b9d647c27c9464586aae1ae3199c3c252e21ba0692d69240e6061dac5fcfe4b",
+    "app/services/translation.py": "338d7c5580333df2b8f7c4e1f4f8c650fdb23e0b1a0947aaf35698cc1142a7d2",
+    "app/services/translation_validation.py": "7b6a59b1b2785c217f382d9b57610cb0c4444ff574b75ffb333bd4e2325cee54",
+    "app/services/subtitles.py": "ba068adbada423170d35f213e63ef3aabed8076b6269be9019e50e2f7d668a8b",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "evaluation/physics_glossary_additions_v2.json": "55c5bfc8070fed4cd9b35e6b3272854701a8933691b97e6bdc4b8bad4087b34b",
+    "evaluation/physics_glossary_additions_v3.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "limits": [
+    "Saved STT is reused; decoding and end-to-end API time are not measured.",
+    "This differs from the 22-case raw generation experiment.",
+    "Validation success is not semantic accuracy; expert review remains pending.",
+    "This is an evaluation subclass; the API remains KoreanLM."
+  ],
+  "complete": true,
+  "warmup": {
+    "translation": "안녕하세요, 강의에 오신 것을 환영합니다.",
+    "elapsed_seconds": 1.0858324590000006,
+    "prompt_tokens": 125,
+    "generated_tokens": 16,
+    "finish_reason": "stop",
+    "prompt_tps": 200.13583875822076,
+    "generation_tps": 41.19245727489366,
+    "mlx_process_peak_gb": 2.569567976
+  },
+  "results": [
+    {
+      "start": 3.6,
+      "end": 7.28,
+      "text": "We just derived this relation here.",
+      "source_indices": [
+        0
+      ],
+      "id": "stt-0",
+      "baseline": {
+        "source_indices": [
+          0
+        ],
+        "translations": [
+          "우리는 이곳에서 이 관계를 찾았습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.7851018749999987,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "여기서 우리는 이 관계를 도출했다.",
+      "prompt_tokens": 125,
+      "generated_tokens": 13,
+      "elapsed_seconds": 0.7311308329999999,
+      "context": "",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.7310674589999993,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 125,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.7313245410000002,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 7.28,
+      "end": 14.44,
+      "text": "The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.",
+      "source_indices": [
+        1,
+        2,
+        3
+      ],
+      "id": "stt-1",
+      "baseline": {
+        "source_indices": [
+          1,
+          2,
+          3
+        ],
+        "translations": [
+          "속력의 차이는 어떻게 되나요?",
+          "",
+          "발사기"
+        ],
+        "error_count": 1,
+        "translation_seconds": 11.17378004099999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "로켓의 선두 속력의 미분과 로켓의 질량의 미분 사이의 관계.",
+      "prompt_tokens": 223,
+      "generated_tokens": 26,
+      "elapsed_seconds": 1.2742904589999995,
+      "context": "We just derived this relation here.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.274246625,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 223,
+          "max_tokens": 128,
+          "raw_output_tokens": 26,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.27443725,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 14.44,
+      "end": 17.76,
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "source_indices": [
+        4
+      ],
+      "id": "stt-2",
+      "baseline": {
+        "source_indices": [
+          4
+        ],
+        "translations": [
+          "우리는 로켓의 속력을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.418470583999998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 우리는 로켓의 속력을 최종적으로 얻고자 한다.",
+      "prompt_tokens": 223,
+      "generated_tokens": 20,
+      "elapsed_seconds": 1.1322975829999997,
+      "context": "The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.1322578330000006,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 223,
+          "max_tokens": 128,
+          "raw_output_tokens": 20,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.132424458000001,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 17.76,
+      "end": 23.0,
+      "text": "So we have to apply a technique called separation variables.",
+      "source_indices": [
+        5,
+        6
+      ],
+      "id": "stt-3",
+      "baseline": {
+        "source_indices": [
+          5,
+          6
+        ],
+        "translations": [
+          "우리는 로켓의 속력을 원하는 것입니다. 로켓의 속력을 원하는 것으로 번역됩니다.",
+          "로켓의 속력을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.642212416,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "따라서 우리는 변수 분리 기법을 적용해야 한다.",
+      "prompt_tokens": 198,
+      "generated_tokens": 15,
+      "elapsed_seconds": 0.9882309169999992,
+      "context": "And we want to ultimately get the speed of the rocket.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9881586250000005,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 198,
+          "max_tokens": 128,
+          "raw_output_tokens": 15,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9885195420000006,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 23.0,
+      "end": 25.96,
+      "text": "And then we want to integrate.",
+      "source_indices": [
+        7
+      ],
+      "id": "stt-4",
+      "baseline": {
+        "source_indices": [
+          7
+        ],
+        "translations": [
+          "그리고 우리는 통합을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.4113965830000055,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 그 후에 우리는 적분을 해야 한다.",
+      "prompt_tokens": 201,
+      "generated_tokens": 15,
+      "elapsed_seconds": 1.0010580839999985,
+      "context": "So we have to apply a technique called separation variables.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.000996666999999,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 201,
+          "max_tokens": 128,
+          "raw_output_tokens": 15,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0012416670000004,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 25.96,
+      "end": 33.32,
+      "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away.",
+      "source_indices": [
+        8,
+        9
+      ],
+      "id": "stt-5",
+      "baseline": {
+        "source_indices": [
+          8,
+          9
+        ],
+        "translations": [
+          "우리는 통합을 원하는 것입니다.",
+          "더 이상 존재하지 않게 만들어주세요."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.742702667000003,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "할 것은, 먼저 dt로 곱해서 그 항이 사라진다.",
+      "prompt_tokens": 205,
+      "generated_tokens": 18,
+      "elapsed_seconds": 1.0522834999999997,
+      "context": "And then we want to integrate.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.052246084,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 205,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0524084159999987,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 33.32,
+      "end": 42.32,
+      "text": "And we're left with mR dvR equals dmRu.",
+      "source_indices": [
+        10
+      ],
+      "id": "stt-6",
+      "baseline": {
+        "source_indices": [
+          10
+        ],
+        "translations": [
+          "더 이상 존재하지 않게 만들어주세요.\" 라는 영어 원문은 한국어로 \"더 이상 존재하지 않게 만들어주세요.\"로 번역됩니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.858288375000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 우리는 mR dvR = dmRu를 얻는다.",
+      "prompt_tokens": 211,
+      "generated_tokens": 18,
+      "elapsed_seconds": 1.0527327920000005,
+      "context": "What we're going to do is, first, we're going to multiply by dt, so that falls away.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0527003749999988,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 211,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.052853291,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 42.32,
+      "end": 47.0,
+      "text": "And we're going to shuffle the m onto the other side.",
+      "source_indices": [
+        11
+      ],
+      "id": "stt-7",
+      "baseline": {
+        "source_indices": [
+          11
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.1943685830000064,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기려고 한다.",
+      "prompt_tokens": 201,
+      "generated_tokens": 19,
+      "elapsed_seconds": 1.0755953750000007,
+      "context": "And we're left with mR dvR equals dmRu.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0755631250000004,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 201,
+          "max_tokens": 128,
+          "raw_output_tokens": 19,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0757239169999995,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 47.0,
+      "end": 51.16,
+      "text": "And we're left with dvR equals u is a constant.",
+      "source_indices": [
+        12
+      ],
+      "id": "stt-8",
+      "baseline": {
+        "source_indices": [
+          12
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것"
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.638294375000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 우리는 dvR가 u와 같고 그 값은 상수이다.",
+      "prompt_tokens": 209,
+      "generated_tokens": 19,
+      "elapsed_seconds": 1.1056201249999997,
+      "context": "And we're going to shuffle the m onto the other side.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.105556667,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 209,
+          "max_tokens": 128,
+          "raw_output_tokens": 19,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.105902167,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 51.16,
+      "end": 53.24,
+      "text": "So that goes up front.",
+      "source_indices": [
+        13
+      ],
+      "id": "stt-9",
+      "baseline": {
+        "source_indices": [
+          13
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.8221906659999973,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그러므로 처음에 증가한다.",
+      "prompt_tokens": 194,
+      "generated_tokens": 11,
+      "elapsed_seconds": 0.9010180830000003,
+      "context": "And we're left with dvR equals u is a constant.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9009543749999995,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 194,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9011961670000002,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 53.24,
+      "end": 58.56,
+      "text": "And then we have dmR over mR.",
+      "source_indices": [
+        14
+      ],
+      "id": "stt-10",
+      "baseline": {
+        "source_indices": [
+          14
+        ],
+        "translations": [
+          "그리고 우리는 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터"
+        ],
+        "error_count": 0,
+        "translation_seconds": 9.431052459,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 그 다음에 우리는 dmR over mR를 가진다.",
+      "prompt_tokens": 191,
+      "generated_tokens": 18,
+      "elapsed_seconds": 0.9869614159999998,
+      "context": "So that goes up front.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.986927541,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 191,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9870953750000009,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 58.56,
+      "end": 61.68,
+      "text": "That's an equation that we can integrate now.",
+      "source_indices": [
+        15
+      ],
+      "id": "stt-11",
+      "baseline": {
+        "source_indices": [
+          15
+        ],
+        "translations": [
+          "그것은 지금 설계 된 수식입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.9713318339999972,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "prompt_tokens": 203,
+      "generated_tokens": 15,
+      "elapsed_seconds": 0.9927791670000019,
+      "context": "And then we have dmR over mR.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9927028750000026,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 203,
+          "max_tokens": 128,
+          "raw_output_tokens": 15,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9931716249999987,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 61.68,
+      "end": 65.76,
+      "text": "And we can do that.",
+      "source_indices": [
+        16
+      ],
+      "id": "stt-12",
+      "baseline": {
+        "source_indices": [
+          16
+        ],
+        "translations": [
+          "그러면 우리는 그것을 할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 5.024093500000006,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것은 우리가 할 수 있다.",
+      "prompt_tokens": 191,
+      "generated_tokens": 9,
+      "elapsed_seconds": 0.7838935420000013,
+      "context": "That's an equation that we can integrate now.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.7838199169999989,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 191,
+          "max_tokens": 128,
+          "raw_output_tokens": 9,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.784146290999999,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 65.76,
+      "end": 70.96,
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "source_indices": [
+        17,
+        18
+      ],
+      "id": "stt-13",
+      "baseline": {
+        "source_indices": [
+          17,
+          18
+        ],
+        "translations": [
+          "그 배치는 어렵습니다. 우리는 그것을 체계적으로 관리해야 합니다.",
+          "적분 구간은 어렵습니다. 우리는 그것을 체계적으로 관리해야 합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.645774040999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 어려운 부분은 여기 적분 구간을 잘 관리해야 한다는 점이다.",
+      "prompt_tokens": 209,
+      "generated_tokens": 25,
+      "elapsed_seconds": 1.2406564169999967,
+      "context": "And we can do that.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.2406148749999986,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 209,
+          "max_tokens": 128,
+          "raw_output_tokens": 25,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.2407907079999987,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 70.96,
+      "end": 76.4,
+      "text": "We have vR, and actually these now are all primes.",
+      "source_indices": [
+        19
+      ],
+      "id": "stt-14",
+      "baseline": {
+        "source_indices": [
+          19
+        ],
+        "translations": [
+          "우리는 그것을 체계적으로 관리해야 합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.261706832999991,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "And the tricky bit is that we need to take care of the integration limits here.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.024184709,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 205,
+          "max_tokens": 128,
+          "raw_output_tokens": 17,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8804005420000003,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 138,
+          "max_tokens": 128,
+          "raw_output_tokens": 17,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_math_prime",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 1.9047919170000007,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 76.4,
+      "end": 80.84,
+      "text": "So we have vR going from v0.",
+      "source_indices": [
+        20
+      ],
+      "id": "stt-15",
+      "baseline": {
+        "source_indices": [
+          20
+        ],
+        "translations": [
+          "우리는 0.0에서 시작하여 가속화된 움직임을 보이는 가상현실 기술을 개발하고 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 7.198555083000002,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그러므로 vR은 v0에서 시작한다.",
+      "prompt_tokens": 198,
+      "generated_tokens": 13,
+      "elapsed_seconds": 0.9459446660000026,
+      "context": "We have vR, and actually these now are all primes.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9458565000000014,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 198,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9461203750000031,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 80.84,
+      "end": 83.48,
+      "text": "That is our initial condition here.",
+      "source_indices": [
+        21
+      ],
+      "id": "stt-16",
+      "baseline": {
+        "source_indices": [
+          21
+        ],
+        "translations": [
+          "첫째 조건은 이곳입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.496033291999993,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것이 여기서 초기 조건이다.",
+      "prompt_tokens": 203,
+      "generated_tokens": 11,
+      "elapsed_seconds": 0.9278566670000004,
+      "context": "So we have vR going from v0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9277837919999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 203,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9280730000000013,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 83.48,
+      "end": 94.12,
+      "text": "2 vR prime of t.",
+      "source_indices": [
+        22
+      ],
+      "id": "stt-17",
+      "baseline": {
+        "source_indices": [
+          22
+        ],
+        "translations": [
+          "2 번째 숫자 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인"
+        ],
+        "error_count": 0,
+        "translation_seconds": 9.11010487499999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": null,
+      "context": "That is our initial condition here.",
+      "error": "KoreanLM did not produce a valid Korean translation",
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.7523796659999995,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 189,
+          "max_tokens": 128,
+          "raw_output_tokens": 8,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.6536500420000024,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 132,
+          "max_tokens": 128,
+          "raw_output_tokens": 8,
+          "finish_reason": "stop",
+          "rejection_reason": "invalid_format",
+          "accepted": false
+        }
+      ],
+      "total_seconds": 1.406266875,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 94.12,
+      "end": 99.32,
+      "text": "And for the mass, we have mR prime equals m0.",
+      "source_indices": [
+        23
+      ],
+      "id": "stt-18",
+      "baseline": {
+        "source_indices": [
+          23
+        ],
+        "translations": [
+          "질량에 대한 정보를 제공하지 않았습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.0165171669999893,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "질량에 대해, 우리는 mR prime이 m0에 해당한다.",
+      "prompt_tokens": 204,
+      "generated_tokens": 17,
+      "elapsed_seconds": 1.0271049580000025,
+      "context": "2 vR prime of t.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0270670419999988,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 204,
+          "max_tokens": 128,
+          "raw_output_tokens": 17,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0272500420000021,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 99.32,
+      "end": 100.8,
+      "text": "Actually, not quite m0.",
+      "source_indices": [
+        24
+      ],
+      "id": "stt-19",
+      "baseline": {
+        "source_indices": [
+          24
+        ],
+        "translations": [
+          "실제로 적어도 0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "error_count": 0,
+        "translation_seconds": 7.29099633300001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "실제로는 정확히 m0가 아니다.",
+      "prompt_tokens": 196,
+      "generated_tokens": 13,
+      "elapsed_seconds": 0.92904725,
+      "context": "And for the mass, we have mR prime equals m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9290094589999995,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 196,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9291915410000016,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 100.8,
+      "end": 108.68,
+      "text": "It's 2 m0, because the initial mass of this is the dry mass and the fuel mass.",
+      "source_indices": [
+        25,
+        26
+      ],
+      "id": "stt-20",
+      "baseline": {
+        "source_indices": [
+          25,
+          26
+        ],
+        "translations": [
+          "이 것은 2kg입니다. 이것은 처음적인 질량이 청정 질량입니다.",
+          "and the fuel mass.\" 는 한국어로 \"배출물 질량\"으로 번역됩니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.154161248999998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "이것은 2 m0이다. 왜냐하면 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이다.",
+      "prompt_tokens": 228,
+      "generated_tokens": 36,
+      "elapsed_seconds": 1.6151463339999985,
+      "context": "Actually, not quite m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.615066291999998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 228,
+          "max_tokens": 128,
+          "raw_output_tokens": 36,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.615492291999999,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 108.68,
+      "end": 111.6,
+      "text": "So that's 2 m0.",
+      "source_indices": [
+        27
+      ],
+      "id": "stt-21",
+      "baseline": {
+        "source_indices": [
+          27
+        ],
+        "translations": [
+          "배출물 질량이 2 미터입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.5305734169999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그러므로 2m0이다.",
+      "prompt_tokens": 205,
+      "generated_tokens": 10,
+      "elapsed_seconds": 0.8769231249999976,
+      "context": "It's 2 m0, because the initial mass of this is the dry mass and the fuel mass.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8768587500000002,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 205,
+          "max_tokens": 128,
+          "raw_output_tokens": 10,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.877194750000001,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 111.6,
+      "end": 116.4,
+      "text": "So this is the initial mass.",
+      "source_indices": [
+        28
+      ],
+      "id": "stt-22",
+      "baseline": {
+        "source_indices": [
+          28
+        ],
+        "translations": [
+          "이것은 초기 질량입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.271580499999999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "이것이 초기 질량이다.",
+      "prompt_tokens": 198,
+      "generated_tokens": 9,
+      "elapsed_seconds": 0.8256167080000019,
+      "context": "So that's 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8255732080000016,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 198,
+          "max_tokens": 128,
+          "raw_output_tokens": 9,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.8257488750000022,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 116.4,
+      "end": 124.92,
+      "text": "And then we go to mR prime equals m of vR.",
+      "source_indices": [
+        29
+      ],
+      "id": "stt-23",
+      "baseline": {
+        "source_indices": [
+          29
+        ],
+        "translations": [
+          "그러면 우리는 mR 프리미엄이 mR 변수를 가리킵니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 5.013867792000013,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 그 후에 우리는 mR' = m of vR이다.",
+      "prompt_tokens": 139,
+      "generated_tokens": 18,
+      "elapsed_seconds": 1.9832247090000017,
+      "context": "So this is the initial mass.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0792152080000008,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 196,
+          "max_tokens": 128,
+          "raw_output_tokens": 19,
+          "finish_reason": "stop",
+          "rejection_reason": "unexpected_script",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9039419580000008,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 139,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.9833637500000023,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 124.92,
+      "end": 127.4,
+      "text": "All right, so let's do that.",
+      "source_indices": [
+        30
+      ],
+      "id": "stt-24",
+      "baseline": {
+        "source_indices": [
+          30
+        ],
+        "translations": [
+          "좋아요, 그럴게 해봅시다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.959064624999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "좋아, 그러므로 그걸 해보자.",
+      "prompt_tokens": 198,
+      "generated_tokens": 12,
+      "elapsed_seconds": 0.9199998329999985,
+      "context": "And then we go to mR prime equals m of vR.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.919939957999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 198,
+          "max_tokens": 128,
+          "raw_output_tokens": 12,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9202926660000017,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 127.4,
+      "end": 136.96,
+      "text": "We're going to get vR minus v0 equals u1 over m.",
+      "source_indices": [
+        31
+      ],
+      "id": "stt-25",
+      "baseline": {
+        "source_indices": [
+          31
+        ],
+        "translations": [
+          "우리는 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해"
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.7096149589999925,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "vR - v0 = u1 / m이다.",
+      "prompt_tokens": 200,
+      "generated_tokens": 13,
+      "elapsed_seconds": 0.968801083999999,
+      "context": "All right, so let's do that.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9686967919999958,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 200,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9691781249999991,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 136.96,
+      "end": 139.56,
+      "text": "Integrated gives us an ln.",
+      "source_indices": [
+        32
+      ],
+      "id": "stt-26",
+      "baseline": {
+        "source_indices": [
+          32
+        ],
+        "translations": [
+          "ln\"은 \"logarithmic\"의 줄임말로, 최적화된 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 �"
+        ],
+        "error_count": 0,
+        "translation_seconds": 8.891169500000018,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "통합은 ln을 제공한다.",
+      "prompt_tokens": 197,
+      "generated_tokens": 9,
+      "elapsed_seconds": 0.853486666000002,
+      "context": "We're going to get vR minus v0 equals u1 over m.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8534054579999975,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 197,
+          "max_tokens": 128,
+          "raw_output_tokens": 9,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.8536991249999986,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 139.56,
+      "end": 141.32,
+      "text": "So ln.",
+      "source_indices": [
+        33
+      ],
+      "id": "stt-27",
+      "baseline": {
+        "source_indices": [
+          33
+        ],
+        "translations": [
+          "ln은 logarithmic의 줄임말로, 최적화된 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 최�"
+        ],
+        "error_count": 0,
+        "translation_seconds": 8.18607554099998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그래서 ln.",
+      "prompt_tokens": 184,
+      "generated_tokens": 5,
+      "elapsed_seconds": 0.656258875000006,
+      "context": "Integrated gives us an ln.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.6562219170000034,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 184,
+          "max_tokens": 128,
+          "raw_output_tokens": 5,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.6563937080000031,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 141.32,
+      "end": 152.81,
+      "text": "And then we can immediately do this here over 2 m0.",
+      "source_indices": [
+        34
+      ],
+      "id": "stt-28",
+      "baseline": {
+        "source_indices": [
+          34
+        ],
+        "translations": [
+          "이제 우리는 이곳에서 즉각적으로 이 일을 수행할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.988525417000005,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 그 후 우리는 여기 2m0에서 즉시 이를 할 수 있다.",
+      "prompt_tokens": 192,
+      "generated_tokens": 20,
+      "elapsed_seconds": 1.0353243750000019,
+      "context": "So ln.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.035281083000001,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 192,
+          "max_tokens": 128,
+          "raw_output_tokens": 20,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.035465791,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 152.81,
+      "end": 156.89,
+      "text": "And we ultimately want this.",
+      "source_indices": [
+        35
+      ],
+      "id": "stt-29",
+      "baseline": {
+        "source_indices": [
+          35
+        ],
+        "translations": [
+          "우리는 이곳에서 즉각적으로 이 일을 수행할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.7137844169999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 우리는 결국 이걸 원한다.",
+      "prompt_tokens": 195,
+      "generated_tokens": 11,
+      "elapsed_seconds": 0.8746047079999997,
+      "context": "And then we can immediately do this here over 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8745700000000056,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 195,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.8747303340000059,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 156.89,
+      "end": 159.01,
+      "text": "So this is a vR of t, of course.",
+      "source_indices": [
+        36
+      ],
+      "id": "stt-30",
+      "baseline": {
+        "source_indices": [
+          36
+        ],
+        "translations": [
+          "이것은 테스트 입니다. 물론 이것은 가능한 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.826570707999991,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그러므로 이는 t에 대한 vR이다.",
+      "prompt_tokens": 193,
+      "generated_tokens": 13,
+      "elapsed_seconds": 0.8558557919999998,
+      "context": "And we ultimately want this.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8558210420000023,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 193,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.8559823339999966,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 159.01,
+      "end": 171.65,
+      "text": "And then we got v0 plus u ln mR over 2 m0.",
+      "source_indices": [
+        37
+      ],
+      "id": "stt-31",
+      "baseline": {
+        "source_indices": [
+          37
+        ],
+        "translations": [
+          "그러면 우리는 0.5로 나누어 받아들였습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.197667749999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그리고 그 후에 우리는 v0 plus u ln mR over 2 m0를 얻었다.",
+      "prompt_tokens": 204,
+      "generated_tokens": 25,
+      "elapsed_seconds": 1.2862595419999963,
+      "context": "So this is a vR of t, of course.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.2861949999999993,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 204,
+          "max_tokens": 128,
+          "raw_output_tokens": 25,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.2864722499999957,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 171.65,
+      "end": 176.78,
+      "text": "And that is our equation.",
+      "source_indices": [
+        38
+      ],
+      "id": "stt-32",
+      "baseline": {
+        "source_indices": [
+          38
+        ],
+        "translations": [
+          "그것은 우리의 방정식입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.699453417000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그것이 우리의 방정식이다.",
+      "prompt_tokens": 198,
+      "generated_tokens": 10,
+      "elapsed_seconds": 0.8711954169999956,
+      "context": "And then we got v0 plus u ln mR over 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.8711399589999971,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 198,
+          "max_tokens": 128,
+          "raw_output_tokens": 10,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.8714152080000019,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 176.78,
+      "end": 179.58,
+      "text": "So what does this equation tell us?",
+      "source_indices": [
+        39
+      ],
+      "id": "stt-33",
+      "baseline": {
+        "source_indices": [
+          39
+        ],
+        "translations": [
+          "이 방정식은 무엇을 알려주는지 설명합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.337206500000008,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+      "prompt_tokens": 189,
+      "generated_tokens": 18,
+      "elapsed_seconds": 0.9843250829999945,
+      "context": "And that is our equation.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9842842500000017,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 189,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9845055830000007,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 179.58,
+      "end": 194.46,
+      "text": "mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,",
+      "source_indices": [
+        40,
+        41
+      ],
+      "id": "stt-34",
+      "baseline": {
+        "source_indices": [
+          40,
+          41
+        ],
+        "translations": [
+          "설명 없이 번역문만 답하세요. 용어: mass=질량. 이전 문맥(번역하거나 반복하지 마세요): 이 방정식은 무엇을 알려주는지 설명합니다. \"설명 없이 번역문만 답하세요.",
+          "이 방정식은 무엇을 알려주는지 설명합니다.\" 라는 문장은 어떤 방정식이 양수가 아닌지 설명하지 않습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 11.349506625000004,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "로켓의 질량 mR은 이전보다 나중에 줄어들며, 여기서 말하는 항은 0보다 작아질 것이다.",
+      "prompt_tokens": 228,
+      "generated_tokens": 35,
+      "elapsed_seconds": 1.5787305839999988,
+      "context": "So what does this equation tell us?",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.5786262499999992,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 228,
+          "max_tokens": 128,
+          "raw_output_tokens": 35,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.579126666999997,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 194.46,
+      "end": 209.9,
+      "text": "which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "source_indices": [
+        42,
+        43,
+        44
+      ],
+      "id": "stt-35",
+      "baseline": {
+        "source_indices": [
+          42,
+          43,
+          44
+        ],
+        "translations": [
+          "속도\"는 \"속도\"입니다.",
+          "속도가 감소하고 있습니다.",
+          "속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 �"
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.749694876000007,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "translation": "즉, 속도는 초기 속도에서 어떤 값이 빠져나간다는 뜻이므로 속도가 감소한다는 의미이며, 따라서 내 슬라이드는 결국 정지하게 된다.",
+      "prompt_tokens": 246,
+      "generated_tokens": 50,
+      "elapsed_seconds": 1.972469916999998,
+      "context": "mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.972303666000002,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 246,
+          "max_tokens": 128,
+          "raw_output_tokens": 50,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.9729071670000025,
+      "semantic_review": "pending_manual_review"
+    }
+  ],
+  "summary": {
+    "group_count": 36,
+    "validated_outputs": 34,
+    "failed_outputs": 2,
+    "translation_seconds": 39.62489779000001,
+    "attempt_count": 39,
+    "rejection_reasons": {
+      "invalid_format": 2,
+      "missing_math_prime": 2,
+      "unexpected_script": 1
+    },
+    "semantic_accuracy": null,
+    "interpretation": "검증 통과는 의미 정확성의 판정이 아니다. 기준 번역·수식·부정·비교 관계를 수동 확인해야 한다."
+  },
+  "raw_attempts": [
+    {
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nWe just derived this relation here.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "여기서 우리는 이 관계를 도출했다.",
+      "tokens": 13,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe just derived this relation here.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: rocket=로켓; speed=속력; mass=질량.\n\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "로켓의 선두 속력의 미분과 로켓의 질량의 미분 사이의 관계.",
+      "tokens": 26,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: rocket=로켓; speed=속력.\n\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 로켓의 속력을 최종적으로 얻고자 한다.",
+      "tokens": 20,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo we have to apply a technique called separation variables.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "따라서 우리는 변수 분리 기법을 적용해야 한다.",
+      "tokens": 15,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo we have to apply a technique called separation variables.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: integrate=적분.\n\nAnd then we want to integrate.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에 우리는 적분을 해야 한다.",
+      "tokens": 15,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we want to integrate.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nWhat we're going to do is, first, we're going to multiply by dt, so that falls away.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "할 것은, 먼저 dt로 곱해서 그 항이 사라진다.",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWhat we're going to do is, first, we're going to multiply by dt, so that falls away.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd we're left with mR dvR equals dmRu.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 mR dvR = dmRu를 얻는다.",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we're left with mR dvR equals dmRu.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 m을 다른 쪽으로 옮기려고 한다.",
+      "tokens": 19,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: constant=상수.\n\nAnd we're left with dvR equals u is a constant.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 dvR가 u와 같고 그 값은 상수이다.",
+      "tokens": 19,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we're left with dvR equals u is a constant.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo that goes up front.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그러므로 처음에 증가한다.",
+      "tokens": 11,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo that goes up front.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd then we have dmR over mR.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 다음에 우리는 dmR over mR를 가진다.",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we have dmR over mR.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: integrate=적분.\n\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것은 이제 적분할 수 있는 방정식이다.",
+      "tokens": 15,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd we can do that.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것은 우리가 할 수 있다.",
+      "tokens": 9,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we can do that.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: integration limits=적분 구간.\n\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 어려운 부분은 여기 적분 구간을 잘 관리해야 한다는 점이다.",
+      "tokens": 25,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nWe have vR, and actually these now are all primes.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "우리는 vR을 가지고 있으며, 실제로 이들은 모두 소수입니다.",
+      "tokens": 17,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\nReturn only complete Korean translation sentences.\n\nWe have vR, and actually these now are all primes.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "우리는 vR을 가지고 있으며, 실제로 이들은 모두 소수입니다.",
+      "tokens": 17,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe have vR, and actually these now are all primes.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo we have vR going from v0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그러므로 vR은 v0에서 시작한다.",
+      "tokens": 13,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo we have vR going from v0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: initial condition=초기 조건.\n\nThat is our initial condition here.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것이 여기서 초기 조건이다.",
+      "tokens": 11,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThat is our initial condition here.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\n2 vR prime of t.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "2 vR prime of t.",
+      "tokens": 8,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\nReturn only complete Korean translation sentences.\n\n2 vR prime of t.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "2vR prime of t.",
+      "tokens": 8,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\n2 vR prime of t.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: mass=질량.\n\nAnd for the mass, we have mR prime equals m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "질량에 대해, 우리는 mR prime이 m0에 해당한다.",
+      "tokens": 17,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd for the mass, we have mR prime equals m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nActually, not quite m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "실제로는 정확히 m0가 아니다.",
+      "tokens": 13,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nActually, not quite m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: fuel mass=연료 질량; dry mass=건조 질량; mass=질량.\n\nIt's 2 m0, because the initial mass of this is the dry mass and the fuel mass.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "이것은 2 m0이다. 왜냐하면 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이다.",
+      "tokens": 36,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nIt's 2 m0, because the initial mass of this is the dry mass and the fuel mass.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo that's 2 m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그러므로 2m0이다.",
+      "tokens": 10,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo that's 2 m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: mass=질량.\n\nSo this is the initial mass.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "이것이 초기 질량이다.",
+      "tokens": 9,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo this is the initial mass.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd then we go to mR prime equals m of vR.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에 mR'은 m에 vR에 равно한다.",
+      "tokens": 19,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\nReturn only complete Korean translation sentences.\n\nAnd then we go to mR prime equals m of vR.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에 우리는 mR' = m of vR이다.",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we go to mR prime equals m of vR.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAll right, so let's do that.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "좋아, 그러므로 그걸 해보자.",
+      "tokens": 12,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAll right, so let's do that.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nWe're going to get vR minus v0 equals u1 over m.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "vR - v0 = u1 / m이다.",
+      "tokens": 13,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe're going to get vR minus v0 equals u1 over m.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nIntegrated gives us an ln.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "통합은 ln을 제공한다.",
+      "tokens": 9,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nIntegrated gives us an ln.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo ln.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그래서 ln.",
+      "tokens": 5,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo ln.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd then we can immediately do this here over 2 m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후 우리는 여기 2m0에서 즉시 이를 할 수 있다.",
+      "tokens": 20,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we can immediately do this here over 2 m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd we ultimately want this.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 결국 이걸 원한다.",
+      "tokens": 11,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we ultimately want this.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo this is a vR of t, of course.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그러므로 이는 t에 대한 vR이다.",
+      "tokens": 13,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo this is a vR of t, of course.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd then we got v0 plus u ln mR over 2 m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에 우리는 v0 plus u ln mR over 2 m0를 얻었다.",
+      "tokens": 25,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we got v0 plus u ln mR over 2 m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nAnd that is our equation.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것이 우리의 방정식이다.",
+      "tokens": 10,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd that is our equation.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text.\n\nSo what does this equation tell us?<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo what does this equation tell us?<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: rocket=로켓; mass=질량.\n\nmR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,<|im_end|>\n<|im_start|>assistant\n",
+      "text": "로켓의 질량 mR은 이전보다 나중에 줄어들며, 여기서 말하는 항은 0보다 작아질 것이다.",
+      "tokens": 35,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nmR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. Terminology: velocity=속도.\n\nwhich means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "즉, 속도는 초기 속도에서 어떤 값이 빠져나간다는 뜻이므로 속도가 감소한다는 의미이며, 따라서 내 슬라이드는 결국 정지하게 된다.",
+      "tokens": 50,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "mlx_process_peak_gb": 2.751479988
+}
