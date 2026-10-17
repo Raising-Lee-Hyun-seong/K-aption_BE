@@ -9,6 +9,7 @@ from fastapi import FastAPI, File, HTTPException, Query, Request, Response, Uplo
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from starlette.responses import StreamingResponse
 
 from app.middleware import TimingMiddleware
 from app.schemas import (
@@ -21,6 +22,7 @@ from app.schemas import (
 from app.services.jobs import (
     JobCapacityError, JobManager, JobNotReadyError, JobStorageError, UnsupportedMediaError,
 )
+from app.services.job_events import job_events
 from app.services.pipeline import MediaValidationError, process_media
 from app.services.subtitle_export import render_subtitles
 from app.services.media import (
@@ -359,6 +361,34 @@ async def get_job(job_id: str, request: Request) -> JobStatusResponse:
         return job_manager(request).get(job_id)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail='Job not found') from exc
+
+
+@app.get('/api/v1/jobs/{job_id}/events', response_class=StreamingResponse, tags=['Jobs'],
+         summary='작업 상태·진행률 SSE 구독', responses={
+             200: {'description': '상태 스냅샷과 heartbeat', 'content': {'text/event-stream': {}}},
+             404: {'description': '없는 작업 또는 만료'},
+             503: {'description': '작업 관리자 미준비'},
+         })
+async def get_job_events(job_id: str, request: Request) -> StreamingResponse:
+    """현재 상태를 먼저 확인한 뒤 완료·실패까지 상태 변경을 SSE로 제공한다.
+
+    :param job_id: 구독할 기존 작업 ID.
+    :param request: 작업 관리자가 저장된 요청.
+    :return: status 이벤트와 heartbeat를 제공하는 text/event-stream 응답.
+    :raises HTTPException: 최초 조회에서 없음·만료는 404, 관리자 미준비는 503.
+
+    연결 종료는 구독만 끝내며 작업을 취소하지 않는다. 재연결 시 현재 스냅샷부터
+    시작하고 이력은 재생하지 않는다. 완료·실패 상태는 한 번 보내고 연결을 닫는다.
+    """
+    manager = job_manager(request)
+    try:
+        initial = manager.get(job_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail='Job not found') from exc
+    return StreamingResponse(job_events(manager, initial), media_type='text/event-stream', headers={
+        'Cache-Control': 'no-cache, no-store',
+        'X-Accel-Buffering': 'no',
+    })
 
 
 @app.get('/api/v1/jobs/{job_id}/result', response_model=TranscriptionResponse, tags=['Jobs'],

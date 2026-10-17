@@ -16,6 +16,7 @@
 | KoreanLM 4bit 변환 | 구현 및 M4·16GB 실행 확인 |
 | 전공 용어집 | 물리학 용어 28개 및 번역 출력 검증 구현 |
 | 작업 접수·상태·진행률·결과 저장 | 파일 기반 단일 작업자 구현 |
+| 작업 상태·번역 진행률 실시간 구독 | SSE 구현. 현재 스냅샷과 상태 변경 제공 |
 | SRT/VTT 자막 다운로드·VTT 트랙 응답 | 구현. 실제 영상 화면 연결은 프론트엔드 작업 |
 
 STT 구현은 프로젝트 내부 `transcribe.py`에 있으며 API가 이를 공유합니다. `requirements-api.txt`는 `requirements-stt.txt`를 포함해 STT 의존성을 설치합니다. STT와 번역 결과를 터미널에 반환하는 CLI는 사용하지 않습니다. 프론트엔드는 HTTP API의 JSON 응답을 사용합니다.
@@ -216,6 +217,7 @@ FastAPI 요청 형식 검증 오류의 `detail`은 배열입니다.
 | --- | --- |
 | `POST /api/v1/jobs?language=en` | multipart의 `file`을 접수하고 HTTP 202·상태 JSON·`Location` 헤더 반환 |
 | `GET /api/v1/jobs/{job_id}` | 현재 상태·단계·번역 구간 진행률·경과 시간·공개 오류 조회 |
+| `GET /api/v1/jobs/{job_id}/events` | SSE로 현재 상태와 진행률 변경 구독 |
 | `GET /api/v1/jobs/{job_id}/result` | 완료 결과를 기존 `{ "segments": [...] }` 형식으로 반환 |
 | `GET /api/v1/jobs/{job_id}/subtitles` | 완료 결과의 한국어·영어·한영 SRT/VTT 다운로드 |
 
@@ -254,6 +256,35 @@ curl 'http://localhost:8000/api/v1/jobs/받은_작업_ID/result'
 - 일부 또는 모든 번역의 검증 실패는 작업 전체 오류가 아닙니다. 작업은 `completed`가 되고 `failed_segments`와 결과의 `translation_error`로 구분합니다.
 - 무음은 `completed`, `total_segments=0`, 결과 `segments=[]`입니다. 작업 완료 상태의 진행률은 100입니다.
 - `elapsed_seconds`는 multipart 수신·파싱이 끝난 접수 시작부터의 경과 시간으로 입력 복사·검증·대기·처리를 포함합니다. 종료된 작업은 종료 시점에서 고정됩니다. HTTP 업로드 수신 시간은 포함하지 않습니다.
+
+### 실시간 상태 구독 (SSE)
+
+```bash
+curl -N 'http://localhost:8000/api/v1/jobs/받은_작업_ID/events'
+```
+
+응답은 UTF-8 `text/event-stream`이며 `event: status`의 `data`에는 기존 상태 조회와 같은 JSON이 들어갑니다. 연결 즉시 현재 상태를 보낸 뒤 1초마다 변경을 확인합니다. 경과 시간만 증가하면 이벤트를 보내지 않으며, 변경이 없어도 15초마다 `: heartbeat` 주석을 보냅니다. `elapsed_seconds`는 마지막 상태 이벤트의 값이므로 계속 증가하는 화면 시계가 필요하면 클라이언트에서 경과분을 계산합니다. 상태는 스냅샷 방식이어서 확인 사이에 지나간 중간 단계를 모두 보내지는 않습니다.
+
+```javascript
+const events = new EventSource(`${apiBase}/api/v1/jobs/${jobId}/events`);
+events.addEventListener('status', (event) => {
+  const job = JSON.parse(event.data);
+  renderJobStatus(job);
+  if (job.status === 'completed' || job.status === 'failed') {
+    events.close();
+    // completed이면 기존 /result API로 자막을 조회합니다.
+  }
+});
+events.addEventListener('unavailable', (event) => {
+  events.close();
+  showJobUnavailable(JSON.parse(event.data));
+});
+// 화면을 떠날 때도 events.close()를 호출합니다.
+```
+
+서버는 `completed`·`failed` 상태를 전송한 뒤 스트림을 끝냅니다. 브라우저의 자동 재연결을 멈추려면 위와 같이 클라이언트에서도 `close()`를 호출합니다. 연결을 끊어도 작업은 계속되며, 재연결은 현재 스냅샷부터 시작합니다. 이벤트 ID·과거 이벤트 재생·부분 자막 스트리밍은 제공하지 않습니다. 최초 조회에서 없는 작업·만료는 일반 JSON 404, 작업자 미준비는 503입니다. 연결 후 조회 불가가 되면 `event: unavailable`로 `job_not_found` 또는 `storage_error` 코드와 공개 안내를 보낸 뒤 종료합니다.
+
+상태 구독은 새 작업·모델 추론·결과 파일을 생성하지 않습니다. 응답에 `Cache-Control: no-cache, no-store`와 `X-Accel-Buffering: no`를 설정합니다. 프록시를 두는 배포 환경에서는 SSE 경로의 버퍼링과 유휴 연결 제한도 맞춰야 합니다. [브라우저 SSE 사용법](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)을 참고하세요.
 
 ### 오류 계약
 
@@ -398,7 +429,7 @@ make model
 1. 공통 검증에 수식 밑줄 별칭·문맥 표식·원문에 없는 연속 외국 문자 검사를 보완했습니다. Qwen3 v3는 22문장 의미 보존 21/22, 저장 강의 36구간에서는 28/36·자동 수락 35/36이었으나 수식만 출력한 구간의 번역 미제공과 썰매 오역이 남았습니다. 단일 Codex 판정이며 사람 검수 전입니다. API 모델·프롬프트·용어집은 유지하고 STT 수식 경계·수식 출력 정책·대상 보존을 보완한 뒤 새 강의로 검증합니다. [검증 보완과 회귀를 포함한 평가 결과](evaluation/qwen-hardening-comparison.md)를 참고하세요.
 2. 부정·수식 연산 관계·문장 간 의미 반복을 판정하는 평가를 확대하고, STT 문장 경계·전문 용어 인식과 용어 별칭을 개선합니다.
 3. 생성·재시도 로그를 기준으로 출력 한도·재시도 정책·프롬프트 캐시·재처리 캐시의 시간과 품질을 비교합니다.
-4. 작업 ID·번역 구간 진행률·백그라운드 처리·파일 기반 결과 조회 API를 구현했습니다. 프론트엔드는 작업 API에 상태 UI를 연결하고, 결과 스트리밍은 후속으로 검토합니다.
+4. 작업 ID·번역 구간 진행률·백그라운드 처리·파일 기반 결과 조회와 상태 SSE 구독을 구현했습니다. 프론트엔드는 작업 API·SSE에 상태 UI를 연결하고, 부분 자막 스트리밍은 후속으로 검토합니다.
 5. SRT/VTT 다운로드와 VTT 트랙용 응답을 구현했습니다. 프론트엔드 영상·자막 연결과 실제 재생 동기화 오차를 확인하고 다른 전공 평가 데이터로 확대합니다.
 
 ## 참고 자료
