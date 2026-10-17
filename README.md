@@ -15,6 +15,7 @@
 | 문맥을 포함한 한국어 번역 | FastAPI 구현 |
 | KoreanLM 4bit 변환 | 구현 및 M4·16GB 실행 확인 |
 | 전공 용어집 | 물리학 용어 28개 및 번역 출력 검증 구현 |
+| 작업 접수·상태·진행률·결과 저장 | 파일 기반 단일 작업자 구현 |
 | SRT/VTT 생성 및 자막 재생 | 후속 작업 |
 
 STT 구현은 프로젝트 내부 `transcribe.py`에 있으며 API가 이를 공유합니다. `requirements-api.txt`는 `requirements-stt.txt`를 포함해 STT 의존성을 설치합니다. STT와 번역 결과를 터미널에 반환하는 CLI는 사용하지 않습니다. 프론트엔드는 HTTP API의 JSON 응답을 사용합니다.
@@ -134,7 +135,7 @@ Apple Silicon에서 faster-whisper의 mel 계산 중 허위 overflow 경고가 �
 
 ## 자막 API 계약
 
-`POST /api/v1/transcriptions`는 `multipart/form-data`의 필수 `file` 필드로 영상·음성을 받습니다. `language`는 생략하거나 `en`으로 지정합니다. 다른 언어는 HTTP 422로 거부합니다. 처리가 끝날 때까지 연결을 유지하는 동기 응답이며, 현재 작업 ID와 진행률 조회는 제공하지 않습니다.
+`POST /api/v1/transcriptions`는 `multipart/form-data`의 필수 `file` 필드로 영상·음성을 받습니다. `language`는 생략하거나 `en`으로 지정합니다. 다른 언어는 HTTP 422로 거부합니다. 이 경로는 처리가 끝날 때까지 연결을 유지하는 동기 응답입니다. 연결과 독립적인 처리·작업 ID·진행률 조회는 아래 작업 API를 사용합니다.
 
 | 필드 | 형식 | 의미 |
 | --- | --- | --- |
@@ -207,6 +208,76 @@ FastAPI 요청 형식 검증 오류의 `detail`은 배열입니다.
 
 500 응답은 JSON 형식을 보장하지 않습니다. 프론트엔드는 상태 코드를 먼저 확인하고 JSON이 아니면 일반 처리 실패 메시지를 표시합니다. 번역 단독 API `POST /api/v1/translations`는 부분 결과 없이 토큰 제한·출력 검증 실패를 HTTP 422로 반환합니다.
 
+## 비동기 작업 API
+
+작업 API는 같은 STT·번역 파이프라인을 백그라운드에서 실행합니다. 업로드 저장·사전 검증이 끝나면 202와 작업 ID를 반환하고, 이후에는 업로드 연결을 유지하지 않아도 됩니다. 번역 모델과 부분 실패 결과 형식은 기존 동기 API와 같습니다.
+
+| Method·경로 | 동작 |
+| --- | --- |
+| `POST /api/v1/jobs?language=en` | multipart의 `file`을 접수하고 HTTP 202·상태 JSON·`Location` 헤더 반환 |
+| `GET /api/v1/jobs/{job_id}` | 현재 상태·단계·번역 구간 진행률·경과 시간·공개 오류 조회 |
+| `GET /api/v1/jobs/{job_id}/result` | 완료 결과를 기존 `{ "segments": [...] }` 형식으로 반환 |
+
+```bash
+curl -i -X POST 'http://localhost:8000/api/v1/jobs?language=en' \
+  -F 'file=@lecture.mp4'
+curl 'http://localhost:8000/api/v1/jobs/받은_작업_ID'
+curl 'http://localhost:8000/api/v1/jobs/받은_작업_ID/result'
+```
+
+접수 응답의 구조 예시입니다. 시각은 UTC이고 실제 ID·시각은 서버가 생성합니다.
+
+```json
+{
+  "job_id": "aabbccddeeff00112233445566778899",
+  "status": "queued",
+  "stage": "queued",
+  "progress_percent": null,
+  "completed_segments": 0,
+  "total_segments": null,
+  "failed_segments": 0,
+  "created_at": "2026-10-18T00:00:00Z",
+  "updated_at": "2026-10-18T00:00:00Z",
+  "expires_at": null,
+  "elapsed_seconds": 0,
+  "error": null
+}
+```
+
+### 상태와 진행률
+
+상태는 `queued` → `running` → `completed` 또는 `failed`입니다. 단계는 `queued`, `transcribing`, `grouping`, `translating`, `completed`, `failed` 중 하나입니다. 프론트엔드는 접수 후 2초에서 5초 간격으로 상태를 조회하고 종료 상태에서 조회를 중단합니다.
+
+- STT·대기 중에는 `progress_percent=null`입니다. 가짜 전체 진행률이나 예상 남은 시간은 제공하지 않습니다.
+- 번역 중에는 `completed_segments / total_segments × 100`입니다. 번역 실패한 구간도 처리가 끝났으므로 완료 수에 포함합니다. 이는 **번역 단계 진행률**이며 전체 처리 시간의 비율이 아닙니다.
+- 일부 또는 모든 번역의 검증 실패는 작업 전체 오류가 아닙니다. 작업은 `completed`가 되고 `failed_segments`와 결과의 `translation_error`로 구분합니다.
+- 무음은 `completed`, `total_segments=0`, 결과 `segments=[]`입니다. 작업 완료 상태의 진행률은 100입니다.
+- `elapsed_seconds`는 multipart 수신·파싱이 끝난 접수 시작부터의 경과 시간으로 입력 복사·검증·대기·처리를 포함합니다. 종료된 작업은 종료 시점에서 고정됩니다. HTTP 업로드 수신 시간은 포함하지 않습니다.
+
+### 오류 계약
+
+| 조건 | 응답 |
+| --- | --- |
+| 크기 초과·미지원 확장자·요청 오류 | 접수 단계에서 기존처럼 413·415·422 |
+| 미디어를 열 수 없음·메타데이터에서 확인한 90분 초과 | 접수 단계에서 422 |
+| 전체 디코딩에서 확인한 오류·길이 초과 | 접수 후 `failed`, `error.code=invalid_media` |
+| 작업자 미준비·종료 중·미완료 한도 초과 | 접수 503. 용량 초과·종료 중에는 `Retry-After: 5` |
+| 없는 ID·만료된 ID | 조회 404 |
+| 대기·실행·실패 작업의 결과 요청 | 409. 상태 조회에서 이유 확인 |
+| 저장 결과 누락·손상 | 결과 조회 500, 작업은 `storage_error` 실패로 변경 |
+
+접수 전 오류의 `detail` 형식은 기존 계약을 따릅니다. 접수 후 실패는 상태 조회 HTTP 200의 `error={"code": "...", "message": "..."}`로 제공합니다. 공개 코드는 `invalid_media`, `processing_failed`, `interrupted`, `storage_error`이며 내부 예외·모델 프롬프트·파일 경로는 공개 메시지에 포함하지 않습니다. 실패한 파일의 재접수는 새 작업을 생성하며 자동으로 다시 실행하지 않습니다.
+
+### 저장·동시성·종료 정책
+
+- 기본 저장소는 `outputs/jobs`입니다. DB 없이 작업별 상태와 결과 JSON을 저장하며 Git에서 제외합니다. 원본 파일명은 저장 경로에 사용하지 않습니다.
+- 기본 미완료 한도는 **업로드·대기·실행을 합쳐 4개**이고 작업자 하나가 순서대로 처리합니다. 동기 API와 모델 객체·서비스 잠금을 공유하므로 동기 요청과는 모델별로 실행이 교차할 수 있습니다.
+- 완료·실패 후 상태와 결과는 기본 **24시간** 보관합니다. 만료 시 조회에서 404를 반환하며, 주기 정리 또는 조회·재시작 시 파일을 삭제합니다.
+- 업로드 원본은 처리 성공·실패 후 삭제합니다. 원본 영상 재생 경로는 제공하지 않으므로 브라우저 로컬 영상 재생은 기존 방식대로 처리합니다. 삭제에 실패한 작업 파일은 만료 정리에서 다시 처리합니다.
+- 정상 종료는 접수를 중단하고 대기 작업을 `interrupted`로 표시한 뒤 실행 중인 작업이 끝날 때까지 기다립니다. 추론 스레드가 읽는 파일을 먼저 지우지 않습니다. 따라서 종료는 추론 시간만큼 길어질 수 있습니다.
+- 강제 종료 이후에는 이전 `queued`·`running` 작업을 `interrupted`로 복구하고 남은 입력을 삭제합니다. 완료 결과는 보관 기한 내에 다시 조회할 수 있습니다. 자동 재추론은 하지 않습니다.
+- 저장소의 파일 잠금은 모델 로딩 전에 획득합니다. 같은 저장소는 **서버 worker 하나**만 사용할 수 있으며, 여러 worker 또는 같은 저장소를 쓰는 두 서버의 동시 시작은 거부합니다. 분산 작업 큐·DB 내구성·전원 차단 시 파일 영속성을 제공하는 구조는 아닙니다.
+
 ## 프론트엔드 연결
 
 기본 CORS 허용 origin은 `http://localhost:3000`, `http://localhost:5173`입니다. 다른 주소를 사용할 때는 쉼표로 구분합니다.
@@ -222,6 +293,9 @@ KAPTION_CORS_ORIGINS='http://localhost:3000,http://localhost:5173' make api
 | `KAPTION_STT_DEVICE` | `cpu` | STT 실행 장치 |
 | `KAPTION_STT_COMPUTE_TYPE` | `int8` | STT 연산 형식 |
 | `KAPTION_CORS_ORIGINS` | 로컬 프론트엔드 2개 | 허용 origin 목록 |
+| `KAPTION_JOB_DIR` | `outputs/jobs` (프로젝트 루트 기준) | 작업 전용 저장 디렉터리 |
+| `KAPTION_MAX_ACTIVE_JOBS` | `4` | 업로드·대기·실행을 합친 최대 미완료 수. 양의 정수 |
+| `KAPTION_JOB_TTL_SECONDS` | `86400` | 완료·실패 이후 상태·결과 보관 시간(초). 양의 정수 |
 
 브라우저에서는 `FormData`를 사용하고 `Content-Type`을 직접 설정하지 않습니다. 브라우저가 multipart 경계값을 설정합니다.
 
@@ -297,7 +371,7 @@ make model
 1. 공통 검증에 수식 밑줄 별칭·문맥 표식·원문에 없는 연속 외국 문자 검사를 보완했습니다. Qwen3 v3는 22문장 의미 보존 21/22, 저장 강의 36구간에서는 28/36·자동 수락 35/36이었으나 수식만 출력한 구간의 번역 미제공과 썰매 오역이 남았습니다. 단일 Codex 판정이며 사람 검수 전입니다. API 모델·프롬프트·용어집은 유지하고 STT 수식 경계·수식 출력 정책·대상 보존을 보완한 뒤 새 강의로 검증합니다. [검증 보완과 회귀를 포함한 평가 결과](evaluation/qwen-hardening-comparison.md)를 참고하세요.
 2. 부정·수식 연산 관계·문장 간 의미 반복을 판정하는 평가를 확대하고, STT 문장 경계·전문 용어 인식과 용어 별칭을 개선합니다.
 3. 생성·재시도 로그를 기준으로 출력 한도·재시도 정책·프롬프트 캐시·재처리 캐시의 시간과 품질을 비교합니다.
-4. 작업 ID·진행률·백그라운드 처리와 결과 스트리밍을 구현하고 프론트엔드 처리 상태 UI를 연결합니다.
+4. 작업 ID·번역 구간 진행률·백그라운드 처리·파일 기반 결과 조회 API를 구현했습니다. 프론트엔드는 작업 API에 상태 UI를 연결하고, 결과 스트리밍은 후속으로 검토합니다.
 5. SRT/VTT 생성과 영상 자막 재생 API를 추가하고 다른 전공 평가 데이터로 확대합니다.
 
 ## 참고 자료
@@ -316,6 +390,10 @@ KoreanLM 기반 코드의 라이선스는 저장소의 `LICENSE`를 확인하세
 ```
 
 모델 생성은 테스트 대역으로 검증하며, 실제 미디어 디코더로 손상된 파일을 확인합니다. 문장 묶기·타임스탬프·직전 영어 문맥 전달, 번역 재시도·숫자·수식·단위·스트림 조기 종료와 자원 정리를 검증합니다. 실제 모델의 번역 품질 평가는 별도로 수행합니다.
+
+작업 API 추가 후 전체 107개 테스트를 통과했습니다. 작업 전이·실제 구간 진행률·부분 실패·무음·용량 제한·취소·정상 종료·재시작·만료·파일 손상·저장 실패를 확인합니다. 모델 시작 오류가 나도 저장소 잠금이 해제되는지 검사합니다.
+
+2026-10-18 실제 로컬 KoreanLM·Whisper로 기존 강의의 첫 12초를 WAV로 잘라 작업 API를 실행했습니다. 202 접수 → 완료 → 결과 조회 200과 입력 삭제·결과 저장을 확인했습니다. 반환 구간은 1개이고 번역 검증 실패로 한국어는 null, 영어 원문과 시각·실패 표시는 보존됐습니다. 이는 작업 처리·부분 실패 경로 검증이며 번역 품질 통과 결과가 아닙니다. 처리 경과 시간은 약 10.46초인 단일 측정입니다.
 
 ## 번역 품질 평가
 
@@ -358,6 +436,7 @@ INFO: event=http_request request_id=abc123 segment_index=None elapsed_seconds=24
 | 로그 이벤트 | 측정 범위 |
 | --- | --- |
 | `http_request` | API 요청의 본문 수신·검증·처리·응답 전송. 실패 응답도 포함 |
+| `job_processing` | 백그라운드 작업 시작부터 결과 저장·상태 완료까지. `job_id`를 기록 |
 | `upload_save` | multipart 파싱 후 업로드 파일을 임시 파일에 복사 |
 | `stt` | 스레드풀 대기와 디코딩·모델 준비·STT 전체 |
 | `stt_decode` | 오디오 디코딩 및 샘플 검증 |
@@ -375,7 +454,7 @@ INFO: event=http_request request_id=abc123 segment_index=None elapsed_seconds=24
 
 시간 단위는 초이며 시스템 시각 변경에 영향받지 않는 `perf_counter`로 측정합니다. 상위 이벤트는 하위 이벤트를 포함하므로 모든 로그 시간을 더하면 중복 계산됩니다. `accepted=False`는 생성은 끝났지만 검증에 실패해 재시도하거나 해당 구간이 실패한다는 의미입니다. 예외·취소 시 `status=error`, `error_type`을 기록하며 원래 예외를 전달합니다. HTTP 200의 부분 실패는 `translation_batch.failed_segments`로 구분합니다.
 
-`raw_output_tokens`는 각 시도의 실제 MLX 생성 토큰 수입니다. `finish_reason`은 정상 종료 `stop`, 토큰 상한 `length`, 조기 중단 시 `None`일 수 있습니다. `early_stop_reason`은 `repetition`, `prompt_leak`, `invalid_character` 등 조기 중단 이유이고, `rejection_reason`에는 검증 실패 이유도 기록됩니다. 번역문·프롬프트·업로드 파일 내용은 시간 로그에 넣지 않습니다. 서버 시작 시 모델 로그와 API 외의 직접 서비스 호출은 `request_id=-`입니다.
+`raw_output_tokens`는 각 시도의 실제 MLX 생성 토큰 수입니다. `finish_reason`은 정상 종료 `stop`, 토큰 상한 `length`, 조기 중단 시 `None`일 수 있습니다. `early_stop_reason`은 `repetition`, `prompt_leak`, `invalid_character` 등 조기 중단 이유이고, `rejection_reason`에는 검증 실패 이유도 기록됩니다. 번역문·프롬프트·업로드 파일 내용은 시간 로그에 넣지 않습니다. 백그라운드 작업은 `request_id`에 작업 ID를 사용합니다. 서버 시작 시 모델 로그와 요청·작업 외의 직접 서비스 호출은 `request_id=-`입니다.
 
 ## 수행 시간 개선 후보
 

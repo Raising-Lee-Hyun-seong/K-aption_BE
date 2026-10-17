@@ -4,6 +4,7 @@ from typing import BinaryIO
 
 MAX_UPLOAD_BYTES = 1024 ** 3
 MAX_MEDIA_SECONDS = 90 * 60
+ALLOWED_SUFFIXES = {'.mp4', '.mov', '.mkv', '.webm', '.wav', '.mp3', '.m4a'}
 UPLOAD_TOO_LARGE = "The uploaded file exceeds the 1 GiB limit"
 MEDIA_TOO_LONG = "The uploaded media exceeds the 90 minute limit"
 

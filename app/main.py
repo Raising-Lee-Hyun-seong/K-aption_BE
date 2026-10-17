@@ -1,11 +1,11 @@
-"""FastAPI 서버의 모델 생명주기, CORS, 상태 조회 및 STT·한국어 번역 엔드포인트를 구성한다."""
+"""모델·작업자 생명주기와 동기 STT·번역 및 비동기 작업 API를 구성한다."""
 import os
 import tempfile
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, Response, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
@@ -13,25 +13,29 @@ from fastapi.openapi.utils import get_openapi
 from app.middleware import TimingMiddleware
 from app.schemas import (
     HealthResponse,
+    JobStatusResponse,
     TranscriptionResponse,
     TranslationRequest,
     TranslationResponse,
 )
-from app.services.subtitles import group_segments
+from app.services.jobs import (
+    JobCapacityError, JobManager, JobNotReadyError, JobStorageError, UnsupportedMediaError,
+)
+from app.services.pipeline import MediaValidationError, process_media
 from app.services.media import (
     MAX_UPLOAD_BYTES,
+    ALLOWED_SUFFIXES,
     UPLOAD_TOO_LARGE,
     UploadTooLargeError,
     copy_upload,
 )
 from app.services.transcription import TranscriptionService
 from app.services.translation import TranslationService
-from timing import measure, segment_index
+from timing import measure
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_DIR = Path(os.getenv("KAPTION_MODEL_DIR", ROOT / "models/koreanlm-4bit"))
 TEMPLATE_PATH = ROOT / "templates/korean.json"
-ALLOWED_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".wav", ".mp3", ".m4a"}
 API_DESCRIPTION = """
 K-aption은 해외 대학 강의의 영어 음성을 인식하고 한국어로 번역합니다.
 
@@ -53,26 +57,48 @@ OPENAPI_TAGS = [
         "name": "Transcription",
         "description": "영상·음성 파일에서 영어 원문과 구간 시간을 추출합니다.",
     },
+    {"name": "Jobs", "description": "작업을 접수하고 단계·번역 진행률·저장 결과를 조회합니다."},
 ]
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """서버 시작 시 번역·STT 서비스를 준비하고 종료 시 애플리케이션 참조를 해제한다.
+    """공유 모델과 단일 작업자를 시작하고 정상 종료 시 추론 종료·파일 정리를 기다린다.
 
     :param app: 서비스를 저장할 FastAPI 또는 호출할 하위 ASGI 애플리케이션.
     :return: 비동기 컨텍스트 관리자. 진입 시 서비스 준비가 끝난 시점의 None. 컨텍스트 종료 시 앱의 서비스 참조를 해제한다.
     :yield: 서비스 준비가 끝난 시점의 None. 컨텍스트 종료 시 앱의 서비스 참조를 해제한다.
+    :raises RuntimeError: 작업 저장소를 다른 서버 작업자가 이미 사용 중일 때.
+    :raises OSError: 작업 저장소 생성·복구·정리가 실패할 때.
+
+    모델을 로드하고 작업 저장소를 생성·복구한다. 정상 종료는 현재 작업을 기다리고
+    대기 작업을 실패 처리하며 입력을 삭제한다. 같은 저장소는 서버 worker 하나만 사용한다.
     """
-    app.state.translator = TranslationService(MODEL_DIR, TEMPLATE_PATH)
-    app.state.transcriber = TranscriptionService(
-        model_name=os.getenv("KAPTION_STT_MODEL", "small"),
-        device=os.getenv("KAPTION_STT_DEVICE", "cpu"),
-        compute_type=os.getenv("KAPTION_STT_COMPUTE_TYPE", "int8"),
+    manager = JobManager(
+        Path(os.getenv('KAPTION_JOB_DIR', ROOT / 'outputs/jobs')),
+        None, None,
+        max_active=int(os.getenv('KAPTION_MAX_ACTIVE_JOBS', '4')),
+        ttl_seconds=int(os.getenv('KAPTION_JOB_TTL_SECONDS', '86400')),
     )
-    yield
-    app.state.translator = None
-    app.state.transcriber = None
+    app.state.jobs = manager
+    try:
+        await manager.start()
+        app.state.translator = TranslationService(MODEL_DIR, TEMPLATE_PATH)
+        app.state.transcriber = TranscriptionService(
+            model_name=os.getenv('KAPTION_STT_MODEL', 'small'),
+            device=os.getenv('KAPTION_STT_DEVICE', 'cpu'),
+            compute_type=os.getenv('KAPTION_STT_COMPUTE_TYPE', 'int8'),
+        )
+        manager.transcriber = app.state.transcriber
+        manager.translator = app.state.translator
+        yield
+    finally:
+        try:
+            await manager.close()
+        finally:
+            app.state.jobs = None
+            app.state.translator = None
+            app.state.transcriber = None
 
 
 app = FastAPI(
@@ -101,6 +127,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=['Location', 'Retry-After'],
 )
 app.add_middleware(TimingMiddleware)
 
@@ -251,56 +278,107 @@ async def transcribe(
         except UploadTooLargeError as exc:
             raise HTTPException(status_code=413, detail=str(exc)) from exc
         try:
-            with measure("stt") as metrics:
-                result = await run_in_threadpool(
-                    request.app.state.transcriber.transcribe,
-                    temp_path,
-                    language,
-                )
-                metrics["segment_count"] = len(result["segments"])
-        except ValueError as exc:
+            return await process_media(
+                temp_path, request.app.state.transcriber, request.app.state.translator, language,
+            )
+        except MediaValidationError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
-        with measure("sentence_grouping", source_segment_count=len(result["segments"])) as metrics:
-            sentences = group_segments(result["segments"])
-            metrics["sentence_count"] = len(sentences)
-        previous_source = ""
-        translated_segments = []
-        with measure(
-            "translation_batch", source_segment_count=len(result["segments"]),
-            sentence_count=len(sentences),
-        ) as metrics:
-            failed_segments = 0
-            metrics["failed_segments"] = failed_segments
-            for index, sentence in enumerate(sentences):
-                segment = {key: sentence[key] for key in ("start", "end", "text")}
-                token = segment_index.set(index)
-                try:
-                    with measure("segment_translation"):
-                        translated = await run_in_threadpool(
-                            request.app.state.translator.translate,
-                            segment["text"],
-                            previous_source,
-                            128,
-                        )
-                except ValueError:
-                    translated_segments.append({
-                        **segment, "translation": None,
-                        "translation_error": "translation_failed",
-                    })
-                    failed_segments += 1
-                else:
-                    translated_segments.append({
-                        **segment, "translation": translated["translation"],
-                        "translation_error": None,
-                    })
-                finally:
-                    previous_source = segment["text"][-256:]
-                    segment_index.reset(token)
-                    metrics["failed_segments"] = failed_segments
-        return TranscriptionResponse(segments=translated_segments)
     finally:
         try:
             await file.close()
         finally:
             if temp_path is not None:
                 temp_path.unlink(missing_ok=True)
+
+
+def job_manager(request: Request) -> JobManager:
+    """서버에 준비된 작업 관리자를 반환한다.
+
+    :param request: 작업 관리자가 저장된 FastAPI 요청.
+    :return: 현재 앱의 작업 관리자.
+    :raises HTTPException: 작업 관리자가 준비되지 않았으면 HTTP 503.
+    """
+    manager = getattr(request.app.state, 'jobs', None)
+    if manager is None:
+        raise HTTPException(status_code=503, detail='Job worker is unavailable')
+    return manager
+
+
+@app.post('/api/v1/jobs', status_code=202, response_model=JobStatusResponse, tags=['Jobs'],
+          summary='영상·음성 처리 작업 접수', responses={
+              413: {'description': '1GiB 크기 초과'},
+              415: {'description': '미지원 확장자'},
+              422: {'description': '요청·미디어 열기·알려진 90분 길이 검증 실패'},
+              503: {'description': '작업자 미준비·종료 중 또는 미완료 작업 한도 초과'},
+          })
+async def create_job(
+    request: Request, response: Response,
+    file: UploadFile = File(description='영어 영상·음성. 1GiB·90분 이하'),
+    language: Literal['en'] = Query(default='en'),
+) -> JobStatusResponse:
+    """업로드를 저장·검증한 뒤 연결과 독립적으로 처리할 작업을 접수한다.
+
+    :param request: 작업 관리자가 저장된 요청.
+    :param response: 상태 조회 경로를 Location 헤더에 추가할 HTTP 응답.
+    :param file: 처리할 업로드 파일. 성공·실패 모두 닫는다.
+    :param language: 인식 언어. en만 허용한다.
+    :return: 작업 ID와 접수 상태. HTTP 202는 번역 완료를 뜻하지 않는다.
+    :raises HTTPException: 크기 413·확장자 415·미디어 422·용량 또는 작업자 503 오류.
+
+    작업 저장소에 미디어·상태를 저장한다. 전체 디코딩에서만 확인되는 오류는
+    접수 후 작업의 failed 상태로 제공한다.
+    """
+    try:
+        record = await job_manager(request).submit(file, language)
+    except UploadTooLargeError as exc:
+        raise HTTPException(status_code=413, detail=str(exc)) from exc
+    except UnsupportedMediaError as exc:
+        raise HTTPException(status_code=415, detail=str(exc)) from exc
+    except MediaValidationError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except JobCapacityError as exc:
+        raise HTTPException(status_code=503, detail=str(exc), headers={'Retry-After': '5'}) from exc
+    finally:
+        await file.close()
+    response.headers['Location'] = f'/api/v1/jobs/{record.job_id}'
+    return record
+
+
+@app.get('/api/v1/jobs/{job_id}', response_model=JobStatusResponse, tags=['Jobs'],
+         summary='작업 상태·번역 진행률 조회', responses={404: {'description': '없는 작업 또는 만료'}})
+async def get_job(job_id: str, request: Request) -> JobStatusResponse:
+    """작업의 실제 단계·구간 진행률·공개 실패 사유를 반환한다.
+
+    :param job_id: 접수 시 받은 작업 ID.
+    :param request: 작업 관리자가 저장된 요청.
+    :return: 현재 작업 상태와 대기 포함 경과 시간.
+    :raises HTTPException: 작업이 없거나 만료됐으면 404, 관리자 미준비는 503.
+    """
+    try:
+        return job_manager(request).get(job_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail='Job not found') from exc
+
+
+@app.get('/api/v1/jobs/{job_id}/result', response_model=TranscriptionResponse, tags=['Jobs'],
+         summary='완료된 작업 자막 결과 조회', responses={
+             404: {'description': '없는 작업 또는 만료'},
+             409: {'description': '대기·실행·실패 상태라 완료 결과 없음'},
+             500: {'description': '저장된 결과 없음 또는 손상'},
+         })
+async def get_job_result(job_id: str, request: Request) -> TranscriptionResponse:
+    """완료 작업의 저장된 자막을 기존 동기 API와 같은 형식으로 반환한다.
+
+    :param job_id: 접수 시 받은 작업 ID.
+    :param request: 작업 관리자가 저장된 요청.
+    :return: 성공·부분 실패·무음을 구분할 수 있는 자막 구간 응답.
+    :raises HTTPException: 없음·만료 404, 미완료·실패 409, 저장 손상 500, 관리자 미준비 503.
+    """
+    try:
+        return job_manager(request).result(job_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail='Job not found') from exc
+    except JobNotReadyError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except JobStorageError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc

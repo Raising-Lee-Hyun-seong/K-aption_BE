@@ -1,4 +1,5 @@
 """상태 조회, 번역 및 자막 API의 요청·응답 형식과 입력 검증 규칙을 정의한다."""
+from datetime import datetime
 from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -83,3 +84,28 @@ class TranscriptionResponse(BaseModel):
     segments: list[TranscriptionSegment] = Field(
         description="인식 순서의 자막 구간. 음성이 없으면 빈 배열"
     )
+
+
+class JobError(BaseModel):
+    """작업 실패의 공개 코드와 안전한 안내 메시지를 제공한다."""
+    code: Literal['invalid_media', 'processing_failed', 'interrupted', 'storage_error']
+    message: str
+
+
+class JobStatusResponse(BaseModel):
+    """작업 상태·측정 가능한 번역 진행률·결과 보관 기한을 표현한다."""
+    job_id: str
+    status: Literal['queued', 'running', 'completed', 'failed']
+    stage: Literal['queued', 'transcribing', 'grouping', 'translating', 'completed', 'failed']
+    progress_percent: Optional[float] = Field(default=None, ge=0, le=100,
+        description='번역 구간 처리 완료 비율. STT·대기 중에는 null, 작업 완료 시 100')
+    completed_segments: int = Field(default=0, ge=0)
+    total_segments: Optional[int] = Field(default=None, ge=0)
+    failed_segments: int = Field(default=0, ge=0)
+    created_at: datetime
+    updated_at: datetime
+    expires_at: Optional[datetime] = Field(default=None,
+        description='완료·실패 시점부터의 결과 보관 기한. 미완료 작업은 null')
+    elapsed_seconds: float = Field(default=0, ge=0,
+        description='접수 시점부터 경과한 초. 대기 포함, 종료된 작업은 종료 시점까지')
+    error: Optional[JobError] = None
