@@ -38,7 +38,7 @@ Apple Silicon Mac에서 GPU 계층·KQV·연산 오프로딩을 모두 비활성
 - llama-cpp-python 0.3.19를 같은 Debian C 라이브러리에 맞춰 OpenBLAS CPU 소스 빌드한다. AVX2·F16C·FMA CPU를 대상으로 하며 CUDA·Metal·Vulkan을 끈다. 컴파일 도구는 빌드 단계에만 둔다.
 - 공개 Linux CPU wheel은 이 Debian 이미지에서 `libc.musl-x86_64.so.1` 로드 오류를 재현해 사용하지 않았다.
 - CPU 실행 이미지는 MLX·PyTorch·Transformers를 설치하지 않는다. 프롬프트·문맥·용어집·숫자·수식 검증·한 번 재시도·부분 실패 계약은 기존 서비스에서 공유한다.
-- 기존 MLX 모델은 읽기 전용, GGUF·작업·Whisper 캐시는 Docker 볼륨이다. `.dockerignore` 허용 목록으로 비밀 파일·영상·가상환경·모델을 빌드 컨텍스트에서 제외한다. Compose는 비밀값 없는 `docker/cpu.defaults`를 명시해 프로젝트 `.env`를 자동으로 읽지 않는다.
+- 초기 검증에서는 기존 MLX 모델을 읽기 전용으로 마운트해 GGUF를 준비했다. 현재 배포 구성은 호스트 모델 마운트 없이 고정 GitHub Release에서 GGUF를 자동으로 받는다. GGUF·작업·Whisper 캐시는 Docker 볼륨이다. `.dockerignore` 허용 목록으로 비밀 파일·영상·가상환경·모델을 빌드 컨텍스트에서 제외한다. Compose는 비밀값 없는 `docker/cpu.defaults`를 명시해 프로젝트 `.env`를 자동으로 읽지 않는다.
 - CPU 측정 CLI는 기본 300초 외부 제한과 프로세스 최대 RSS·검증 수락 여부·시간 보고서를 제공한다. 결과 수락은 의미 정확도 판정이 아니다.
 
 ## 변경 범위 테스트
@@ -67,3 +67,16 @@ CPU 설정·수명주기·보고서 10개, llama.cpp 생성·UTF-8·EOS·길이�
 검증 호스트의 Docker는 ARM64·약 4GB 메모리여서 x86 컨테이너는 에뮬레이션이다. CPU 실행·재포장·짧은 실제 STT·번역·API 흐름은 확인했지만 실제 Windows에서 긴 영상·메모리·취소·재생 동기화와 해당 CPU의 처리 속도를 추가 확인해야 한다. 기존 KoreanLM의 의미 오류와 짧은 물리 강의에 편중된 품질 평가 한계는 이번 실행 환경 이식으로 해결되지 않았다.
 
 근거: [공식 Llama 변환과 Q/K 행 순서](https://github.com/ggml-org/llama.cpp/blob/b6000/convert_hf_to_gguf.py), [공식 GGUF Q4_1 구현](https://github.com/ggml-org/llama.cpp/blob/b6000/gguf-py/gguf/quants.py), [llama-cpp-python CPU 빌드](https://github.com/abetlen/llama-cpp-python).
+
+
+## GitHub 모델 자동 배포
+
+모델 릴리스: https://github.com/Raising-Lee-Hyun-seong/K-aption_BE/releases/tag/koreanlm-q4_1-v1
+
+동일 GGUF를 1,610,612,736바이트 조각 2개와 991,924,256바이트 조각 1개로 나눠 공개했다. GitHub API가 반환한 세 자산의 실제 크기와 SHA256이 `docker/koreanlm-model.json`의 고정 값과 모두 일치했다. 원본 Apache 2.0 라이선스·모델 카드·변경 고지·기존 변환 검증 보고서도 함께 배포했다.
+
+모델 자동 설치 테스트 7개를 로컬과 최종 Linux CPU Docker 이미지에서 통과했다. 조각 결합, 다운로드 없는 캐시 재사용, 크기 초과·누락·조각 손상·전체 해시 불일치 거부, 네트워크 실패 후 정리와 재시도, 기존 손상 파일 보존, 명세 검증을 확인했다. 변경 테스트 선택기 테스트 11개도 통과했다. 전체 테스트 모음은 실행하지 않았다.
+
+호스트 모델을 마운트하지 않고 로그인 정보 없이 빈 `kaption-bootstrap-smoke-v1` 볼륨에서 최종 CPU 이미지의 기본 시작 명령을 실행했다. 공개 Release에서 4,213,149,728바이트 전체를 다운로드하고 조각별·전체 검증 후 모델 로딩과 `/health` 200 응답까지 확인했다. 응답은 `translation_model_loaded=true`, 첫 STT 요청 전이므로 `transcription_model_loaded=false`였다. 모델 로딩은 단일 실행 1.859초였으며 다운로드 시간이나 Windows 속도를 나타내지 않는다.
+
+서버를 정상 종료한 다음 같은 볼륨을 연결한 새 컨테이너를 `--network none`으로 실행했다. 설치 스크립트가 체크섬을 다시 검증하고 `Model verified, using cached file`로 성공해 네트워크 없는 재사용을 확인했다. 검증용 컨테이너와 새 시험 볼륨만 정리했으며 기존 작업·모델·Whisper 캐시 볼륨은 유지했다. 이번 검증은 Apple Silicon의 Linux x86 에뮬레이션이며 Windows 실기기 검증은 아니다.

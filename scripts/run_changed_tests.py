@@ -13,7 +13,8 @@ API_TESTS = ('test_api_contract', 'test_pipeline', 'test_jobs',
              'test_capabilities')
 TRANSLATION_TESTS = ('test_translation_validation', 'test_pipeline',
                      'test_prompt_matrix', 'test_qwen_lecture')
-CPU_TESTS = ('test_cpu_runtime', 'test_llamacpp_translation', 'test_gguf_conversion')
+CPU_TESTS = ('test_cpu_runtime', 'test_llamacpp_translation', 'test_gguf_conversion',
+             'test_model_download')
 OWNERS = {
     'app/main.py': API_TESTS + ('test_cpu_runtime', 'test_llamacpp_translation'),
     'app/schemas.py': API_TESTS,
@@ -41,6 +42,8 @@ OWNERS = {
     'scripts/run_changed_tests.py': ('test_changed_tests',),
     'scripts/benchmark_cpu.py': ('test_cpu_runtime',),
     'scripts/prepare_koreanlm_gguf.py': ('test_gguf_conversion',),
+    'scripts/download_cpu_model.py': ('test_model_download',),
+    'docker/koreanlm-model.json': ('test_model_download',),
     'Dockerfile.cpu': CPU_TESTS,
     '.dockerignore': CPU_TESTS,
     'compose.cpu.yaml': CPU_TESTS,

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "model": "quantumaikr/KoreanLM",
+  "revision": "f4351abcdd6a933afbaffad0badf60c273e71920",
+  "release_url": "https://github.com/Raising-Lee-Hyun-seong/K-aption_BE/releases/download/koreanlm-q4_1-v1",
+  "filename": "koreanlm-q4_1.gguf",
+  "bytes": 4213149728,
+  "sha256": "f4e6b85689909fa69289dd67d4c6f67ecc95fb8400eb95b77ff9be57f0eed70e",
+  "parts": [
+    {
+      "name": "koreanlm-q4_1.gguf.part01",
+      "bytes": 1610612736,
+      "sha256": "71fb2c874ef16f66aa2b478bd2d7fc575c27125c95d79d25df71bf3bdc468eb4"
+    },
+    {
+      "name": "koreanlm-q4_1.gguf.part02",
+      "bytes": 1610612736,
+      "sha256": "87b381d8d814d9c3832888d9ecc61961d7c423b5ec94878ff1b013fc5b70e7e8"
+    },
+    {
+      "name": "koreanlm-q4_1.gguf.part03",
+      "bytes": 991924256,
+      "sha256": "9faa4e1e711176c88c681d9745b6ab0aeaf2559c395afbda04de373973ec2ef1"
+    }
+  ]
+}

@@ -21,12 +21,6 @@ services:
       HF_HUB_DISABLE_IMPLICIT_TOKEN: '1'
       HF_HUB_DISABLE_TELEMETRY: '1'
     volumes:
-      - type: bind
-        source: ./models/koreanlm-4bit
-        target: /models/koreanlm-4bit
-        read_only: true
-        bind:
-          create_host_path: false
       - jobs:/data
       - model-cache:/cache/huggingface
     cpus: 4.0

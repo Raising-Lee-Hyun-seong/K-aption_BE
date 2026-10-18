@@ -16,3 +16,11 @@
 !scripts/
 !scripts/benchmark_cpu.py
 !scripts/prepare_koreanlm_gguf.py
+!scripts/download_cpu_model.py
+!docker/
+!docker/koreanlm-model.json
+!third_party/
+!third_party/koreanlm/
+!third_party/koreanlm/LICENSE
+!third_party/koreanlm/NOTICE.md
+!third_party/koreanlm/ORIGINAL_MODEL_CARD.md

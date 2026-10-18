@@ -36,6 +36,9 @@ COPY templates/korean.json ./templates/korean.json
 COPY data/physics_glossary.json ./data/physics_glossary.json
 COPY scripts/benchmark_cpu.py ./scripts/benchmark_cpu.py
 COPY scripts/prepare_koreanlm_gguf.py ./scripts/prepare_koreanlm_gguf.py
+COPY scripts/download_cpu_model.py ./scripts/download_cpu_model.py
+COPY docker/koreanlm-model.json ./docker/koreanlm-model.json
+COPY third_party/koreanlm ./third_party/koreanlm
 
 RUN useradd --uid 10001 --create-home kaption \
     && mkdir -p /data/jobs /cache/huggingface \
@@ -43,6 +46,6 @@ RUN useradd --uid 10001 --create-home kaption \
 USER kaption
 
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30m --retries=3 \
     CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).close()"]
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD ["sh", "-c", "python scripts/download_cpu_model.py && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1"]
