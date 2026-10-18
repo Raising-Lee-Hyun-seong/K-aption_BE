@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "e6f794d44f9395d0184a966c27b5ae99ea356fcb",
+  "quantization": "Q8_0",
+  "release_url": "https://huggingface.co/ggml-org/Qwen3-4B-Instruct-2507-Q8_0-GGUF/resolve/e6f794d44f9395d0184a966c27b5ae99ea356fcb",
+  "filename": "qwen3-4b-instruct-2507-q8_0.gguf",
+  "bytes": 4280403520,
+  "sha256": "ae916ede1c010a26955ee8ae2e908bf8815a3f135ec860439ab924701c69d5f1",
+  "parts": [
+    {
+      "name": "qwen3-4b-instruct-2507-q8_0.gguf",
+      "bytes": 4280403520,
+      "sha256": "ae916ede1c010a26955ee8ae2e908bf8815a3f135ec860439ab924701c69d5f1"
+    }
+  ]
+}

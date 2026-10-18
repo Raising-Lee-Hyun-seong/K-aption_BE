@@ -6,7 +6,7 @@ Windows 첫 실행은 [README](README.md)를 참고하세요. 이 문서는 API 
 
 - 저장소: https://github.com/Raising-Lee-Hyun-seong/K-aption_BE
 - STT: faster-whisper (`transcribe.py` 공통 구현, `requirements-stt.txt` 의존성)
-- 번역: `quantumaikr/KoreanLM`의 MLX 4bit 변환본과 동일 가중치를 재포장한 CPU용 GGUF
+- 기본 번역: Qwen3-4B-Instruct-2507. Mac MLX 4bit·CPU GGUF Q8_0. 기존 KoreanLM은 수동 호환 경로로 보존
 - 기본 실행 장비: Apple Silicon Mac. Windows CPU용 Linux x86 Docker 구성은 아래 실험 절차 참고
 
 ## 현재 범위
@@ -35,17 +35,16 @@ git clone https://github.com/Raising-Lee-Hyun-seong/K-aption_BE.git
 cd K-aption_BE
 
 make setup-api
-make setup-mlx
 make model
 make api
 ```
 
-이미 `models/koreanlm-4bit`이 준비된 장비에서는 `make model`을 다시 실행하지 않습니다.
+`make model`은 고정 Qwen MLX 파일 약 2.28GB를 다운로드하고 파일별 SHA256을 확인합니다. 기존 정상 파일은 재사용합니다. 모델 교체 후 실행 중인 서버는 재시작해야 합니다.
 
 ```bash
 make setup-api       # FastAPI·STT·번역 환경 설치
-make setup-mlx       # KoreanLM 변환 환경 설치
-make model           # 원본 다운로드 → FP16 → MLX 4bit
+make setup-mlx       # 기존 KoreanLM 수동 변환에만 필요
+make model           # 고정 Qwen3 MLX 4bit 다운로드·검증
 make api             # 기본 주소: http://localhost:8000
 ```
 
@@ -56,15 +55,15 @@ make api             # 기본 주소: http://localhost:8000
 
 ## Windows CPU Docker 실행
 
-GPU 없는 Galaxy Book3급 x86 Windows·RAM 16GB를 대상으로 **같은 KoreanLM을 llama.cpp CPU 엔진으로 실행**하는 구성을 추가했습니다. Mac의 기본 MLX 실행·공통 프롬프트·문맥·용어집·검증·재시도·API 계약은 유지합니다. Windows용 이미지는 MLX·Metal·CUDA·PyTorch를 설치하지 않습니다.
+GPU 없는 Galaxy Book3급 x86 Windows·RAM 16GB에서 기본 Qwen3 Instruct 2507을 llama.cpp CPU 엔진으로 실행합니다. Mac의 MLX 4bit와 같은 원본 모델 계열이지만 CPU는 ggml-org 배포 GGUF Q8_0을 사용하므로 출력이 같다고 보장하지 않습니다. 공통 문맥·검증·재시도·API 계약은 유지합니다. Windows 이미지에는 MLX·Metal·CUDA·PyTorch를 설치하지 않습니다.
 
-기존 MLX affine 4bit 가중치의 정수·배율·오프셋을 GGUF Q4_1로 재포장합니다. 다시 양자화하거나 다른 모델로 바꾸지 않으며, 모든 가중치 값을 공식 GGUF 역양자화와 비교합니다. 엔진의 부동소수점 계산 차이로 출력까지 비트 단위로 같다는 보장은 없습니다. 번역 품질 문제도 그대로 평가해야 합니다. [CPU 검증 기록](evaluation/cpu-docker-smoke.md)을 참고하세요.
+KoreanLM의 실행·재포장 검증 기록은 과거 결과로 [CPU 검증 기록](evaluation/cpu-docker-smoke.md)에 보존합니다. 현재 기본 모델의 품질·실행 결과는 [Qwen API 적용 검증](evaluation/qwen-api-adoption.md)을 참고하세요.
 
 ### Windows 준비
 
 1. WSL2 기반 Docker Desktop을 설치하고 Linux 컨테이너를 사용합니다. [Docker WSL2 문서](https://docs.docker.com/desktop/features/wsl/)를 참고하세요. 이미지는 x86_64·AVX2·F16C·FMA CPU용입니다.
 2. Docker에 최소 8GB 메모리를 사용할 수 있게 설정합니다. 필요하면 `%UserProfile%\.wslconfig`에 아래 설정을 적용하고 작업 종료 후 `wsl --shutdown`과 Docker 재시작을 수행합니다. 이는 다른 WSL 배포판에도 적용되는 설정입니다.
-3. GitHub 저장소를 clone하거나 기존 저장소에서 pull합니다. **모델 파일을 별도로 전달받거나 Mac에서 복사할 필요가 없습니다.** 첫 실행에는 공개 GitHub Release의 모델 약 4.21GB와 이미지 빌드 의존성을 받을 인터넷이 필요합니다. Docker 이미지·빌드 캐시·모델·미디어 작업을 위한 충분한 디스크 여유도 확보합니다.
+3. GitHub 저장소를 clone하거나 기존 저장소에서 pull합니다. **모델 파일을 별도로 전달받거나 Mac에서 복사할 필요가 없습니다.** 첫 실행에는 공개 GitHub Release의 모델 약 4.28GB와 이미지 빌드 의존성을 받을 인터넷이 필요합니다. Docker 이미지·빌드 캐시·모델·미디어 작업을 위한 충분한 디스크 여유도 확보합니다.
 
 ```ini
 [wsl2]
@@ -84,9 +83,9 @@ docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d --build 
 docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml logs -f backend
 ```
 
-첫 빌드에서는 llama-cpp-python 0.3.19를 OpenBLAS CPU 바이너리로 컴파일하므로 시간이 걸립니다. 이어서 서버 시작 전에 **동일 KoreanLM GGUF를 자동 다운로드**합니다. 로그에 `CPU model ready`와 Uvicorn 시작 안내가 나오면 준비 완료입니다. 로그 보기만 종료하려면 `Ctrl+C`를 누릅니다. 백그라운드 서버는 계속 실행됩니다.
+첫 빌드에서는 llama-cpp-python 0.3.19를 OpenBLAS CPU 바이너리로 컴파일하므로 시간이 걸립니다. 이어서 서버 시작 전에 **Qwen3 Instruct GGUF를 자동 다운로드**합니다. 로그에 `CPU model ready`와 Uvicorn 시작 안내가 나오면 준비 완료입니다. 로그 보기만 종료하려면 `Ctrl+C`를 누릅니다. 백그라운드 서버는 계속 실행됩니다.
 
-모델은 [고정 모델 릴리스](https://github.com/Raising-Lee-Hyun-seong/K-aption_BE/releases/tag/koreanlm-q4_1-v1)에 3개 조각으로 배포됩니다. `docker/koreanlm-model.json` 순서로 스트리밍 결합하고 조각별·전체 크기와 SHA256이 일치할 때만 `/data/models/koreanlm-q4_1.gguf`로 저장합니다. API 키·Hugging Face 로그인·Git LFS 설치가 필요하지 않습니다. 모델은 Git 이력이나 Docker 이미지에 포함하지 않습니다. 원본 라이선스·모델 카드·변경 고지는 `third_party/koreanlm/`에 있습니다.
+모델은 [ggml-org의 고정 공개 GGUF](https://huggingface.co/ggml-org/Qwen3-4B-Instruct-2507-Q8_0-GGUF/tree/e6f794d44f9395d0184a966c27b5ae99ea356fcb)에서 받습니다. `docker/qwen3-model.json`의 파일 크기와 SHA256이 일치할 때만 `/data/models/qwen3-4b-instruct-2507-q8_0.gguf`로 저장합니다. API 키·Hugging Face 로그인·Git LFS 설치가 필요하지 않습니다. 라이선스·출처는 `third_party/qwen3/`에 있습니다. 기존 KoreanLM 파일과 작업·Whisper 캐시는 삭제하지 않습니다.
 
 완성 모델은 Docker의 `jobs` 영구 볼륨에 보관합니다. 재실행 시 체크섬을 확인하고 다운로드 없이 재사용합니다. 첫 다운로드에 실패하면 서버는 시작하지 않으며 미완성 임시 파일을 삭제합니다. 네트워크·디스크 문제를 해결한 뒤 아래 명령으로 다시 시도합니다. 중간 바이트부터 이어받지는 않습니다.
 
@@ -98,7 +97,7 @@ docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d backend
 
 ```powershell
 docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml down
-docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml run --rm --no-deps backend python -c "from pathlib import Path; Path('/data/models/koreanlm-q4_1.gguf').unlink(missing_ok=True)"
+docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml run --rm --no-deps backend python -c "from pathlib import Path; Path('/data/models/qwen3-4b-instruct-2507-q8_0.gguf').unlink(missing_ok=True)"
 docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d backend
 ```
 
@@ -150,7 +149,7 @@ GET /health
 }
 ```
 
-KoreanLM은 서버 시작 시 한 번 로드됩니다. faster-whisper는 첫 STT 요청에서 로드한 후 재사용하므로, STT 실행 전에는 `transcription_model_loaded`가 `false`입니다.
+선택한 번역 모델은 서버 시작 시 한 번 로드됩니다. faster-whisper는 첫 STT 요청에서 로드한 후 재사용하므로, STT 실행 전에는 `transcription_model_loaded`가 `false`입니다.
 
 ### 서버 업로드 입력 규칙
 
@@ -204,7 +203,7 @@ curl -X POST http://localhost:8000/api/v1/translations \
   }'
 ```
 
-응답에는 `translation`, `prompt_tokens`, `generated_tokens`, `elapsed_seconds`가 포함됩니다. `context`에는 앞 영어 원문을 전달하며 마지막 256자를 사용합니다. `generated_tokens`는 성공한 마지막 시도의 실제 생성 토큰 수이며 재시도 합계는 시간 로그에서 확인합니다. 입력과 출력의 합이 KoreanLM의 2,048토큰 제한을 넘으면 HTTP 422를 반환합니다. M4·16GB에서 메모리 충돌을 피하기 위해 번역 요청은 한 번에 하나씩 실행됩니다.
+응답에는 `translation`, `prompt_tokens`, `generated_tokens`, `elapsed_seconds`가 포함됩니다. `context`에는 앞 영어 원문을 전달하며 마지막 256자를 사용합니다. `generated_tokens`는 성공한 마지막 시도의 실제 생성 토큰 수이며 재시도 합계는 시간 로그에서 확인합니다. 입력과 출력의 합이 API의 입출력 합계 2,048토큰 제한을 넘으면 HTTP 422를 반환합니다. M4·16GB에서 메모리 충돌을 피하기 위해 번역 요청은 한 번에 하나씩 실행됩니다.
 
 ### 영어 STT
 
@@ -218,7 +217,7 @@ curl -X POST 'http://localhost:8000/api/v1/transcriptions?language=en' \
   -F 'file=@MIT8_01F16_W06PS01-2_360p.mp4'
 ```
 
-STT가 끝나면 인접한 영어 조각을 문장 단위로 묶어 KoreanLM으로 번역합니다. 응답은 `segments`만 반환하며, 각 묶음은 첫 조각의 시작·마지막 조각의 종료 시각과 영문·한글 자막을 포함합니다. 원래 STT 구간 수와 반환 구간 수는 다를 수 있습니다.
+STT가 끝나면 인접한 영어 조각을 문장 단위로 묶어 선택한 모델로 번역합니다. 응답은 `segments`만 반환하며, 각 묶음은 첫 조각의 시작·마지막 조각의 종료 시각과 영문·한글 자막을 포함합니다. 원래 STT 구간 수와 반환 구간 수는 다를 수 있습니다.
 
 ```json
 {
@@ -483,7 +482,8 @@ KAPTION_CORS_ORIGINS='http://localhost:3000,http://localhost:5173' make api
 
 | 환경 변수 | 기본값 | 설명 |
 | --- | --- | --- |
-| `KAPTION_MODEL_DIR` | `models/koreanlm-4bit` | MLX 4bit 디렉터리 또는 llama-cpp GGUF 파일 경로 |
+| `KAPTION_MODEL_DIR` | `models/qwen3-4b-instruct-2507-4bit` | MLX 4bit 디렉터리 또는 llama-cpp GGUF 파일 경로 |
+| `KAPTION_TRANSLATION_MODEL` | `qwen3` | MLX 모델 계열. 기존 모델은 koreanlm과 해당 모델 경로를 함께 지정 |
 | `KAPTION_TRANSLATION_BACKEND` | `mlx` | 기본 Mac은 mlx, Windows CPU 컨테이너는 llama-cpp |
 | `KAPTION_TRANSLATION_DEVICE` | `auto` | MLX 엔진 장치 선택. auto는 기본 장치, cpu는 CPU 강제 사용 |
 | `KAPTION_CPU_THREADS` | `4` | llama-cpp의 CPU 생성·프롬프트 평가 스레드 수 |
@@ -530,15 +530,16 @@ async function transcribeVideo(file) {
 }
 ```
 
-Uvicorn worker를 여러 개 실행하면 worker마다 KoreanLM을 중복 로드합니다. 현재 M4·16GB 환경에서는 worker 하나를 사용합니다.
+Uvicorn worker를 여러 개 실행하면 worker마다 번역 모델을 중복 로드합니다. 현재 M4·16GB 환경에서는 worker 하나를 사용합니다.
 
-## KoreanLM 4bit 모델 준비
+## 기존 KoreanLM 4bit 모델 준비
 
 원본 KoreanLM은 PyTorch `.bin` 형식입니다. `scripts/prepare_koreanlm.py`가 고정된 원본 리비전을 다운로드하고 FP16 safetensors로 변환한 뒤 MLX에서 4bit로 양자화합니다.
 
 ```bash
 make setup-mlx
-make model
+make prepare
+make quantize
 ```
 
 - 원본 모델: `quantumaikr/KoreanLM`
@@ -549,8 +550,7 @@ make model
 
 `config.json`과 토크나이저만 있는 폴더는 준비된 모델이 아닙니다. 최종 모델에는
 `model*.safetensors` 가중치가 있어야 하며 인덱스가 있으면 참조한 모든 샤드가 필요합니다.
-가중치를 삭제했거나 새로 받은 저장소에서 서버가 `model weights missing or empty`로
-종료하면 `make model`로 같은 KoreanLM을 다시 준비한 뒤 `make api`를 실행합니다.
+가중치를 삭제했거나 `model weights missing or empty`로 종료하면 `make prepare`와 `make quantize`를 순서대로 실행합니다. 실행은 `make api KAPTION_TRANSLATION_MODEL=koreanlm`이며 기본 Qwen 모델과 저장 경로를 분리합니다.
 준비 단계에서는 FP16 중간 파일도 생성되므로 4bit 최종 모델보다 추가 디스크 공간이 필요합니다.
 양자화는 임시 디렉터리에서 완료한 뒤 최종 폴더에 복사하므로 설정 파일만 남은 폴더에도 복구할 수 있습니다.
 
@@ -562,7 +562,7 @@ make model
 
 실행 가능성은 확인했지만 번역 품질 기준은 통과하지 않았습니다. `The net force acting on the object is zero.`를 `물체의 중력이 없습니다.`로 번역하는 의미 오류가 있었습니다. 프롬프트, 문맥 구성과 전공 용어집을 개선하고 5~10분 강의 구간으로 다시 평가해야 합니다.
 
-현재 API는 원본 모델을 4bit로 변환해 사용하며 LoRA 어댑터를 적용하지 않습니다. [공식 추론 예시](https://github.com/quantumaikr/KoreanLM#추론)의 base+LoRA 구성과 다릅니다. 다만 2026-10-05 공식 고정 리비전의 실제 파일을 확인한 결과 B 행렬 64개가 모두 0이어서 해당 어댑터는 학습된 변화를 추가하지 않습니다. 다운로드·MLX 변환은 완료했으며 전체 모델 추론은 하지 않았습니다. [어댑터 점검 결과](evaluation/lora_conversion.md)에 근거와 재현 방법을 기록했습니다.
+기존 KoreanLM 경로는 원본 모델을 4bit로 변환해 사용하며 LoRA 어댑터를 적용하지 않습니다. [공식 추론 예시](https://github.com/quantumaikr/KoreanLM#추론)의 base+LoRA 구성과 다릅니다. 다만 2026-10-05 공식 고정 리비전의 실제 파일을 확인한 결과 B 행렬 64개가 모두 0이어서 해당 어댑터는 학습된 변화를 추가하지 않습니다. 다운로드·MLX 변환은 완료했으며 전체 모델 추론은 하지 않았습니다. [어댑터 점검 결과](evaluation/lora_conversion.md)에 근거와 재현 방법을 기록했습니다.
 
 ## 다음 작업
 
@@ -656,7 +656,7 @@ INFO: event=http_request request_id=abc123 segment_index=None elapsed_seconds=24
 | `stt_model_load` | 최초 Whisper 모델 로딩 |
 | `stt_queue` | STT 추론 잠금 대기 |
 | `stt_inference` | 음성 인식과 지연 구간 generator 순회 |
-| `translation_model_load` | 서버 시작 시 KoreanLM 모듈·모델·샘플러 로딩 |
+| `translation_model_load` | 서버 시작 시 번역 모듈·모델·샘플러 로딩 |
 | `sentence_grouping` | STT 조각을 문장으로 묶는 시간과 원본·묶음 개수 |
 | `translation_batch` | 전체 구간 번역과 실패 구간 수 |
 | `segment_translation` | 한 구간의 스레드풀 대기와 번역 처리 |

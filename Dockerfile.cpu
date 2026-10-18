@@ -14,7 +14,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     TOKENIZERS_PARALLELISM=false \
     KAPTION_TRANSLATION_BACKEND=llama-cpp \
-    KAPTION_MODEL_DIR=/data/models/koreanlm-q4_1.gguf \
+    KAPTION_TRANSLATION_MODEL=qwen3 \
+    KAPTION_MODEL_DIR=/data/models/qwen3-4b-instruct-2507-q8_0.gguf \
     KAPTION_JOB_DIR=/data/jobs \
     HF_HOME=/cache/huggingface
 
@@ -34,11 +35,14 @@ COPY app ./app
 COPY transcribe.py timing.py ./
 COPY templates/korean.json ./templates/korean.json
 COPY data/physics_glossary.json ./data/physics_glossary.json
+COPY data/qwen_translation_terms.json ./data/qwen_translation_terms.json
 COPY scripts/benchmark_cpu.py ./scripts/benchmark_cpu.py
 COPY scripts/prepare_koreanlm_gguf.py ./scripts/prepare_koreanlm_gguf.py
 COPY scripts/download_cpu_model.py ./scripts/download_cpu_model.py
 COPY docker/koreanlm-model.json ./docker/koreanlm-model.json
+COPY docker/qwen3-model.json ./docker/qwen3-model.json
 COPY third_party/koreanlm ./third_party/koreanlm
+COPY third_party/qwen3 ./third_party/qwen3
 
 RUN useradd --uid 10001 --create-home kaption \
     && mkdir -p /data/jobs /cache/huggingface \

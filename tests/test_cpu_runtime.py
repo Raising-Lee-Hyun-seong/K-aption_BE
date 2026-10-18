@@ -91,6 +91,7 @@ class CpuLifespanTests(unittest.IsolatedAsyncioTestCase):
         """
         manager = SimpleNamespace(start=AsyncMock(), close=AsyncMock())
         with patch.dict('os.environ', {'KAPTION_TRANSLATION_DEVICE': 'cpu',
+                                      'KAPTION_TRANSLATION_MODEL': 'koreanlm',
                                       'KAPTION_TRANSLATION_BACKEND': 'mlx'}), \
                 patch('app.main.JobManager', return_value=manager), \
                 patch('app.main.TranslationService') as service, \

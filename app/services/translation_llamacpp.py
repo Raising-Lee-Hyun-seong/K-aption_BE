@@ -1,8 +1,9 @@
-"""동일 KoreanLM의 GGUF 가중치를 CPU에서 생성하고 기존 번역 검증·재시도를 공유한다."""
+"""Qwen3 또는 기존 KoreanLM GGUF를 CPU에서 생성하고 공통 번역 검증·재시도를 공유한다."""
 
 from pathlib import Path
 
 from app.services.translation import TranslationService
+from app.services.translation_qwen import QwenPromptMixin, render_chatml
 from app.services.translation_validation import generation_problem
 from timing import measure
 
@@ -10,30 +11,44 @@ from timing import measure
 class LlamaTokenizer:
     """기존 번역 서비스의 토큰 수 계산을 GGUF SentencePiece 토크나이저에 연결한다."""
 
-    def __init__(self, model):
+    def __init__(self, model, add_bos: bool = True):
         """GGUF 모델의 토크나이저를 보관한다.
 
         :param model: tokenize 메서드를 제공하는 llama_cpp.Llama 객체.
+        :param add_bos: KoreanLM은 True, Qwen ChatML은 False로 BOS 추가를 선택한다.
         :return: None.
         """
         self.model = model
+        self.add_bos = add_bos
 
     def encode(self, text: str) -> list[int]:
-        """기존 BOS 포함 정책으로 프롬프트를 토큰화한다.
+        """모델별 BOS 정책으로 프롬프트를 토큰화한다.
 
-        :param text: 공통 템플릿으로 만든 한국어 지시와 영어 원문.
-        :return: BOS를 포함한 토큰 ID 목록.
+        :param text: 모델별 템플릿으로 만든 번역 지시와 영어 원문.
+        :return: 모델별 BOS 정책을 적용한 토큰 ID 목록.
         """
-        return self.model.tokenize(text.encode('utf-8'), add_bos=True, special=True)
+        return self.model.tokenize(text.encode('utf-8'), add_bos=self.add_bos, special=True)
+
+    def apply_chat_template(self, messages: list, tokenize: bool = False,
+                            add_generation_prompt: bool = True) -> str:
+        """CPU Qwen의 시스템·사용자 메시지를 공식 비추론 ChatML 문자열로 구성한다.
+
+        :param messages: system 또는 user 역할과 문자열 content를 가진 메시지 목록.
+        :param tokenize: False만 지원하며 실제 인코딩은 encode에서 수행한다.
+        :param add_generation_prompt: assistant 시작 표식 추가 여부.
+        :return: Qwen3 Instruct 2507 채팅 프롬프트 문자열.
+        :raises ValueError: 메시지 역할·내용·토큰화 옵션이 지원 범위와 다를 때.
+        """
+        return render_chatml(messages, tokenize, add_generation_prompt)
 
 
-class LlamaCppTranslationService(TranslationService):
-    """프롬프트·문맥·검증·재시도는 유지하고 토큰 생성만 llama.cpp CPU로 수행한다."""
+class LlamaCppTranslationService(QwenPromptMixin, TranslationService):
+    """모델별 프롬프트와 공통 검증·재시도를 사용해 llama.cpp CPU 번역을 수행한다."""
 
     def __init__(self, model_path: Path, template_path: Path, threads: int = 4):
-        """기존 모델을 재포장한 GGUF를 메모리 매핑하고 CPU 전용 추론을 준비한다.
+        """GGUF를 메모리 매핑하고 구조에 맞는 CPU 전용 추론·프롬프트를 준비한다.
 
-        :param model_path: 준비 스크립트로 만든 기존 KoreanLM의 Q4_1 GGUF 파일 경로.
+        :param model_path: 고정 Qwen3 Instruct GGUF 또는 기존 KoreanLM Q4_1 GGUF 파일 경로.
         :param template_path: 공통 번역 프롬프트 JSON 경로.
         :param threads: 생성·프롬프트 평가에 사용할 CPU 스레드 수. 양의 정수, 기본 4.
         :return: None.
@@ -46,7 +61,7 @@ class LlamaCppTranslationService(TranslationService):
         if threads < 1:
             raise ValueError('CPU thread count must be positive')
         if not model_path.is_file():
-            raise FileNotFoundError('GGUF model is missing; run scripts/prepare_koreanlm_gguf.py first')
+            raise FileNotFoundError('GGUF model is missing; run scripts/download_cpu_model.py first')
         from llama_cpp import Llama
         with measure('translation_model_load', backend='llama-cpp', device='cpu'):
             self.model = Llama(model_path=str(model_path), n_ctx=2048, n_gpu_layers=0,
@@ -54,12 +69,16 @@ class LlamaCppTranslationService(TranslationService):
                                n_threads=threads, n_threads_batch=threads,
                                n_batch=256, n_ubatch=128, use_mmap=True, use_mlock=False,
                                seed=0, verbose=False)
-        if self.model.metadata.get('general.architecture') != 'llama':
+        architecture = self.model.metadata.get('general.architecture')
+        if architecture not in ('llama', 'qwen3'):
             self.model.close()
-            raise ValueError('Expected a Llama architecture GGUF')
-        self.tokenizer = LlamaTokenizer(self.model)
+            raise ValueError('Expected a Qwen3 or Llama architecture GGUF')
+        self.model_family = 'qwen3' if architecture == 'qwen3' else 'koreanlm'
+        self.tokenizer = LlamaTokenizer(self.model, add_bos=architecture == 'llama')
         try:
             self._configure_text(template_path)
+            if self.model_family == 'qwen3':
+                self._configure_qwen()
         except (OSError, ValueError):
             self.model.close()
             raise
@@ -74,7 +93,7 @@ class LlamaCppTranslationService(TranslationService):
     def _generate_output(self, prompt: str, max_tokens: int) -> dict:
         """탐욕 생성으로 토큰을 읽고 기존 이상 탐지와 EOS·길이 종료 정보를 제공한다.
 
-        :param prompt: 기존 템플릿·문맥·용어집으로 만든 프롬프트 문자열.
+        :param prompt: 선택한 모델의 템플릿·문맥·용어집으로 만든 프롬프트 문자열.
         :param max_tokens: 한 번 생성할 최대 토큰 수. 양의 정수.
         :return: 기존 MLX 서비스와 같은 text·tokens·finish_reason·stop_reason 사전.
         :raises ValueError: 최대 토큰 수가 양수가 아니거나 추론 입력이 잘못된 경우.

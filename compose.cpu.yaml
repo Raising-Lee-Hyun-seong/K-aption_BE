@@ -10,6 +10,7 @@ services:
       - '127.0.0.1:8000:8000'
     environment:
       KAPTION_TRANSLATION_BACKEND: llama-cpp
+      KAPTION_TRANSLATION_MODEL: qwen3
       KAPTION_CPU_THREADS: '4'
       KAPTION_MAX_ACTIVE_JOBS: '2'
       KAPTION_STT_MODEL: small

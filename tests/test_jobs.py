@@ -447,7 +447,7 @@ class JobApiTests(JobTestCase):
         """
         await self.manager.close()
         with patch.dict('os.environ', {'KAPTION_JOB_DIR': str(self.root)}), patch(
-                'app.main.TranslationService', side_effect=RuntimeError('model failure')):
+                'app.main.create_translation_service', side_effect=RuntimeError('model failure')):
             with self.assertRaisesRegex(RuntimeError, 'model failure'):
                 async with lifespan(app):
                     self.fail('Startup must fail')

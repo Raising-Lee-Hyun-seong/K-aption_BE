@@ -1,7 +1,7 @@
 # K-aption BE
 
 영어 영상·음성을 한국어로 번역하고 SRT/VTT 자막을 만드는 백엔드입니다.
-Windows에서는 GPU 없이 Docker로 실행할 수 있습니다. 아래 명령은 **PowerShell** 기준입니다.
+기본 번역 모델은 **Qwen3 4B Instruct 2507**입니다. Windows에서는 GPU 없이 Docker로 실행할 수 있습니다. 아래 명령은 **PowerShell** 기준입니다.
 
 ## 1. 준비
 
@@ -23,7 +23,7 @@ docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d --build 
 docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml logs -f backend
 ```
 
-처음에는 이미지 빌드와 **약 4.21GB 모델 다운로드**로 시간이 걸립니다.
+처음에는 이미지 빌드와 **약 4.28GB 모델 다운로드**로 시간이 걸립니다.
 로그에 `Uvicorn running`이 나오면 준비 완료입니다. `Ctrl+C`로 로그 보기를 종료해도 서버는 계속 실행됩니다.
 
 브라우저에서 **http://localhost:8000/swagger** 를 열어 사용합니다.
@@ -45,7 +45,7 @@ http://localhost:8000/api/v1/jobs/작업_ID/subtitles?format=srt&language=ko
 - VTT가 필요하면 `format=vtt`, 한영 자막은 `language=both`로 바꿉니다.
 - 입력은 영어 음성이며 MP4·MOV·MKV·WEBM·WAV·MP3·M4A를 지원합니다. 최대 1GiB·90분입니다.
 - 첫 음성 처리에는 Whisper 모델도 자동 다운로드합니다. CPU에서는 처리 시간이 길 수 있으니 처음에는 짧은 파일로 확인하세요.
-- 번역이 실패한 구간은 영어 원문으로 남습니다. 결과는 기본 24시간 보관됩니다.
+- 번역이 실패한 구간은 영어 원문으로 남습니다. 정상 응답도 오역이 있을 수 있으므로 중요한 수식·내용은 확인하세요. 결과는 기본 24시간 보관됩니다.
 
 ## 4. 종료·재실행·업데이트
 
@@ -63,7 +63,7 @@ docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml down
 docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d backend
 ```
 
-**최신 코드로 업데이트**
+**최신 코드로 업데이트** — 기존 KoreanLM은 유지하고 새 Qwen 모델을 별도로 받습니다.
 
 ```powershell
 git pull
@@ -83,6 +83,8 @@ docker compose --env-file docker/cpu.defaults -f compose.cpu.yaml up -d --build 
 | 모델 검증 실패 | [모델 복구 절차](DEVELOPMENT.md#최초-빌드와-실행) 참고 |
 
 상태 확인 주소: http://localhost:8000/health
+
+Mac에서는 `make model`로 Qwen 모델을 준비한 뒤 `make api`로 실행합니다. 기존 서버가 켜져 있다면 종료하고 다시 실행하세요.
 
 Mac 실행·API 상세·환경 설정·성능 측정은 [개발 문서](DEVELOPMENT.md), 실제 검증 결과는 [CPU 검증 기록](evaluation/cpu-docker-smoke.md)에 있습니다.
 Windows 실기기의 처리 속도와 긴 영상 성능은 아직 추가 검증이 필요합니다.

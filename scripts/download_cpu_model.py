@@ -1,4 +1,4 @@
-"""고정 GitHub Release의 모델 조각을 받아 크기·SHA256을 검증하고 CPU 모델을 원자적으로 저장한다."""
+"""고정 공개 배포의 모델을 받아 크기·SHA256을 검증하고 CPU 모델을 원자적으로 저장한다."""
 
 import argparse
 from contextlib import contextmanager
@@ -10,7 +10,7 @@ import tempfile
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / 'docker/koreanlm-model.json'
+MANIFEST = ROOT / 'docker/qwen3-model.json'
 
 
 def file_digest(path: Path) -> str:
@@ -38,7 +38,7 @@ def load_manifest(path: Path) -> dict:
     manifest = json.loads(path.read_text(encoding='utf-8'))
     entries = [manifest, *manifest['parts']]
     if (manifest['schema_version'] != 1 or not manifest['parts']
-            or not manifest['release_url'].startswith('https://github.com/')
+            or not manifest['release_url'].startswith(('https://github.com/', 'https://huggingface.co/'))
             or any(type(entry['bytes']) is not int or entry['bytes'] <= 0
                    or len(entry['sha256']) != 64
                    or any(char not in '0123456789abcdef' for char in entry['sha256'])
@@ -91,7 +91,7 @@ def ensure_model(manifest: dict, target: Path) -> Path:
                 raise ValueError(f'Existing model failed verification; remove or move it first: {target}')
             print(f'Model verified, using cached file: {target}', flush=True)
             return target
-        print(f'Downloading CPU model ({manifest["bytes"] / 1024 ** 3:.2f} GiB); first run only.', flush=True)
+        print(f'Downloading model ({manifest["bytes"] / 1024 ** 3:.2f} GiB); first run only.', flush=True)
         with tempfile.TemporaryDirectory(prefix='.model-download-', dir=target.parent) as directory:
             temporary = Path(directory) / 'model.partial'
             whole = hashlib.sha256()
@@ -102,6 +102,7 @@ def ensure_model(manifest: dict, target: Path) -> Path:
                                       headers={'User-Agent': 'K-aption-model-installer/1'})
                     digest = hashlib.sha256()
                     size = 0
+                    next_progress = 256 * 1024 * 1024
                     with urlopen(request, timeout=60) as response:
                         while chunk := response.read(2 * 1024 * 1024):
                             size += len(chunk)
@@ -110,6 +111,9 @@ def ensure_model(manifest: dict, target: Path) -> Path:
                             digest.update(chunk)
                             whole.update(chunk)
                             output.write(chunk)
+                            if size >= next_progress:
+                                print(f'{part["name"]}: {size / part["bytes"]:.0%}', flush=True)
+                                next_progress += 256 * 1024 * 1024
                     if size != part['bytes'] or digest.hexdigest() != part['sha256']:
                         raise ValueError(f'Model part verification failed: {part["name"]}')
                 output.flush()
@@ -131,7 +135,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description='Download and verify the pinned CPU model release')
     parser.add_argument('--manifest', type=Path, default=MANIFEST)
     parser.add_argument('--output', type=Path,
-                        default=Path(os.getenv('KAPTION_MODEL_DIR', '/data/models/koreanlm-q4_1.gguf')))
+                        default=Path(os.getenv('KAPTION_MODEL_DIR', '/data/models/qwen3-4b-instruct-2507-q8_0.gguf')))
     args = parser.parse_args()
     ensure_model(load_manifest(args.manifest), args.output)
 

@@ -1,4 +1,4 @@
-"""KoreanLM MLX 4bit 모델로 문맥을 반영한 한국어 번역을 생성하고 출력을 정리·검증한다."""
+"""MLX 4bit 모델의 공통 로딩·생성·검증과 기존 KoreanLM 번역 프롬프트를 제공한다."""
 import json
 import re
 from pathlib import Path
@@ -78,14 +78,16 @@ class TranslationService:
         self.glossary = json.loads(GLOSSARY_PATH.read_text(encoding="utf-8"))
         self._lock = Lock()
 
-    def _matching_terms(self, text: str) -> list:
+    def _matching_terms(self, text: str, glossary=None) -> list:
         """단어 경계로 용어를 찾고 겹치는 위치에서는 긴 복합 용어를 우선한다.
 
         :param text: 검사하거나 번역할 입력 텍스트.
+        :param glossary: 선택적 용어 목록. None이면 서비스의 필수 검증 용어집을 사용한다.
         :return: 원문과 매칭된 영어·한국어 용어 항목 목록.
         """
         matched, occupied = [], []
-        for entry in sorted(self.glossary, key=lambda entry: -len(entry["en"])):
+        for entry in sorted(self.glossary if glossary is None else glossary,
+                            key=lambda entry: -len(entry["en"])):
             spans = [match.span() for match in re.finditer(
                 r"\b" + re.escape(entry["en"]) + r"\b", text, re.IGNORECASE)
                 if not any(match.start() < end and match.end() > start
@@ -263,7 +265,7 @@ class TranslationService:
                     if accepted:
                         break
                 else:
-                    raise ValueError("KoreanLM did not produce a valid Korean translation")
+                    raise ValueError("Model did not produce a valid Korean translation")
                 return {
                     "translation": translation,
                     "prompt_tokens": prompt_tokens,
