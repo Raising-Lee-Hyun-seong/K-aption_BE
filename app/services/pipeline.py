@@ -19,7 +19,7 @@ async def process_media(
     media_path: Path, transcriber, translator, language: str = 'en',
     progress: Optional[ProgressCallback] = None,
 ) -> TranscriptionResponse:
-    """STT 결과를 문장으로 묶고 앞 원문 문맥으로 번역하며 실제 구간 진행을 알린다.
+    """STT 결과의 문장·수학 연결을 묶고 앞 원문 문맥으로 번역하며 구간 진행을 알린다.
 
     :param media_path: 처리할 로컬 미디어 경로. 파일 삭제는 호출자가 담당한다.
     :param transcriber: transcribe 메서드를 제공하는 STT 서비스.
@@ -42,7 +42,7 @@ async def process_media(
     if progress:
         await progress('grouping', 0, None, 0)
     with measure('sentence_grouping', source_segment_count=len(result['segments'])) as metrics:
-        sentences = group_segments(result['segments'])
+        sentences = group_segments(result['segments'], merge_math=True)
         metrics['sentence_count'] = len(sentences)
     previous_source, translated_segments, failed_segments = '', [], 0
     if progress:

@@ -1,4 +1,4 @@
-"""Qwen API 기본 선택·문맥 분리·대상 보존 재시도와 CPU 채팅 구성을 검증한다."""
+"""Qwen 기본 선택·존댓말·문맥 분리·대상 보존 재시도와 CPU 채팅 구성을 검증한다."""
 
 import hashlib
 import json
@@ -10,7 +10,7 @@ from unittest.mock import Mock, patch
 
 from app.main import create_translation_service
 from app.services.translation_llamacpp import LlamaCppTranslationService
-from app.services.translation_qwen import QwenTranslationService, render_chatml
+from app.services.translation_qwen import QwenTranslationService, informal_ending, render_chatml
 from scripts.download_cpu_model import load_manifest
 from scripts.prepare_qwen import prepare
 
@@ -114,6 +114,60 @@ class QwenTranslationTests(unittest.TestCase):
         self.assertIsNone(service._rejection_reason('그리고 dmR / mR입니다.', source, ''))
         self.assertIsNone(service._rejection_reason('그리고 dmR을 mR로 나눕니다.', source, ''))
         self.assertIsNone(service._rejection_reason('적분하면 ln을 얻습니다.', 'Integrated gives us an ln.', ''))
+
+    def test_formal_style_is_requested_in_first_attempt_and_retry(self):
+        """첫 생성과 재시도 모두 존댓말을 지시하고 원문의 질문·진술을 보존한다.
+
+        :return: None.
+        """
+        service = self.service()
+        for retry in (False, True):
+            prompt = service._build_prompt('What does this equation tell us?', '', retry)
+            self.assertIn('polite Korean', prompt)
+            self.assertIn('합니다', prompt)
+            self.assertIn('statement or question', prompt)
+
+    def test_plain_speech_is_retried_without_rewriting_the_output(self):
+        """반말 출력은 기계적으로 고치지 않고 실제 모델의 존댓말 재시도 결과를 쓴다.
+
+        :return: None.
+        """
+        service = self.service()
+        service._generate_output = Mock(side_effect=[
+            {'text': '이것이 초기 질량이다.', 'tokens': 8, 'finish_reason': 'stop', 'stop_reason': None},
+            {'text': '이것이 초기 질량입니다.', 'tokens': 9, 'finish_reason': 'stop', 'stop_reason': None}])
+        result = service.translate('This is the initial mass.', '', 128)
+        self.assertEqual(result['translation'], '이것이 초기 질량입니다.')
+        self.assertEqual(service._generate_output.call_count, 2)
+        self.assertEqual(service._rejection_reason('이것이 초기 질량이다.', 'This is the initial mass.', ''),
+                         'informal_speech')
+
+    def test_formal_statements_questions_and_math_nouns_are_not_rejected(self):
+        """존댓말 진술·질문과 람다·캐나다 같은 명사구를 반말로 오인하지 않는다.
+
+        :return: None.
+        """
+        for text in ('속도는 일정합니다.', '초기 질량입니다.', '무엇을 뜻합니까?', '적분합시다.',
+                     '람다.', '캐나다.', '우간다.', '판다.'):
+            with self.subTest(text=text):
+                self.assertFalse(informal_ending(text))
+        for text in ('속도는 일정하다.', '초기 질량이다.', '그것을 얻었다.', '해보자.', '그 값이 사라진다.',
+                     '질량입니다. 속도가 감소한다.', '왜 그런 거야?'):
+            with self.subTest(text=text):
+                self.assertTrue(informal_ending(text))
+
+    def test_repeated_plain_speech_stops_at_two_attempts(self):
+        """두 번 모두 반말이면 시도 한도를 지키고 번역 실패로 처리한다.
+
+        :return: None.
+        """
+        service = self.service()
+        service._generate_output = Mock(return_value={
+            'text': '이것이 초기 질량이다.', 'tokens': 8,
+            'finish_reason': 'stop', 'stop_reason': None})
+        with self.assertRaisesRegex(ValueError, 'valid Korean translation'):
+            service.translate('This is the initial mass.', '', 128)
+        self.assertEqual(service._generate_output.call_count, 2)
 
     def test_wrong_mlx_architecture_is_rejected_before_native_loading(self):
         """기존 모델 경로를 Qwen으로 잘못 지정하면 모델 로딩 전에 명시적으로 거부한다.

@@ -1,0 +1,553 @@
+{
+  "evaluated_on": "2026-10-18",
+  "media_sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+  "model": "small",
+  "device": "cpu",
+  "compute_type": "int8",
+  "conditions": [
+    {
+      "condition": "baseline",
+      "initial_prompt": null,
+      "hotwords": null,
+      "language": "en",
+      "language_probability": 1,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 7.28,
+          "text": "We just derived this relation here."
+        },
+        {
+          "start": 7.28,
+          "end": 10.08,
+          "text": "The relation between the differential of the speed of"
+        },
+        {
+          "start": 10.08,
+          "end": 13.24,
+          "text": "the rocket's lead and the differential of the mass of"
+        },
+        {
+          "start": 13.24,
+          "end": 14.44,
+          "text": "the rocket."
+        },
+        {
+          "start": 14.44,
+          "end": 17.76,
+          "text": "And we want to ultimately get the speed of the rocket."
+        },
+        {
+          "start": 17.76,
+          "end": 21.64,
+          "text": "So we have to apply a technique called separation"
+        },
+        {
+          "start": 21.64,
+          "end": 23.0,
+          "text": "variables."
+        },
+        {
+          "start": 23.0,
+          "end": 25.96,
+          "text": "And then we want to integrate."
+        },
+        {
+          "start": 25.96,
+          "end": 29.8,
+          "text": "What we're going to do is, first, we're going to"
+        },
+        {
+          "start": 29.8,
+          "end": 33.32,
+          "text": "multiply by dt, so that falls away."
+        },
+        {
+          "start": 33.32,
+          "end": 42.32,
+          "text": "And we're left with mR dvR equals dmRu."
+        },
+        {
+          "start": 42.32,
+          "end": 47.0,
+          "text": "And we're going to shuffle the m onto the other side."
+        },
+        {
+          "start": 47.0,
+          "end": 51.16,
+          "text": "And we're left with dvR equals u is a constant."
+        },
+        {
+          "start": 51.16,
+          "end": 53.24,
+          "text": "So that goes up front."
+        },
+        {
+          "start": 53.24,
+          "end": 58.56,
+          "text": "And then we have dmR over mR."
+        },
+        {
+          "start": 58.56,
+          "end": 61.68,
+          "text": "That's an equation that we can integrate now."
+        },
+        {
+          "start": 61.68,
+          "end": 65.76,
+          "text": "And we can do that."
+        },
+        {
+          "start": 65.76,
+          "end": 69.2,
+          "text": "And the tricky bit is that we need to take care of the"
+        },
+        {
+          "start": 69.2,
+          "end": 70.96,
+          "text": "integration limits here."
+        },
+        {
+          "start": 70.96,
+          "end": 76.4,
+          "text": "We have vR, and actually these now are all primes."
+        },
+        {
+          "start": 76.4,
+          "end": 80.84,
+          "text": "So we have vR going from v0."
+        },
+        {
+          "start": 80.84,
+          "end": 83.48,
+          "text": "That is our initial condition here."
+        },
+        {
+          "start": 83.48,
+          "end": 94.12,
+          "text": "2 vR prime of t."
+        },
+        {
+          "start": 94.12,
+          "end": 99.32,
+          "text": "And for the mass, we have mR prime equals m0."
+        },
+        {
+          "start": 99.32,
+          "end": 100.8,
+          "text": "Actually, not quite m0."
+        },
+        {
+          "start": 100.8,
+          "end": 107.76,
+          "text": "It's 2 m0, because the initial mass of this is the dry mass"
+        },
+        {
+          "start": 107.76,
+          "end": 108.68,
+          "text": "and the fuel mass."
+        },
+        {
+          "start": 108.68,
+          "end": 111.6,
+          "text": "So that's 2 m0."
+        },
+        {
+          "start": 111.6,
+          "end": 116.4,
+          "text": "So this is the initial mass."
+        },
+        {
+          "start": 116.4,
+          "end": 124.92,
+          "text": "And then we go to mR prime equals m of vR."
+        },
+        {
+          "start": 124.92,
+          "end": 127.4,
+          "text": "All right, so let's do that."
+        },
+        {
+          "start": 127.4,
+          "end": 136.96,
+          "text": "We're going to get vR minus v0 equals u1 over m."
+        },
+        {
+          "start": 136.96,
+          "end": 139.56,
+          "text": "Integrated gives us an ln."
+        },
+        {
+          "start": 139.56,
+          "end": 141.32,
+          "text": "So ln."
+        },
+        {
+          "start": 141.32,
+          "end": 152.81,
+          "text": "And then we can immediately do this here over 2 m0."
+        },
+        {
+          "start": 152.81,
+          "end": 156.89,
+          "text": "And we ultimately want this."
+        },
+        {
+          "start": 156.89,
+          "end": 159.01,
+          "text": "So this is a vR of t, of course."
+        },
+        {
+          "start": 159.01,
+          "end": 171.65,
+          "text": "And then we got v0 plus u ln mR over 2 m0."
+        },
+        {
+          "start": 171.65,
+          "end": 176.78,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.78,
+          "end": 179.58,
+          "text": "So what does this equation tell us?"
+        },
+        {
+          "start": 179.58,
+          "end": 188.14,
+          "text": "mR, the mass of the rocket, is less later on than it was before,"
+        },
+        {
+          "start": 188.14,
+          "end": 194.46,
+          "text": "which means this term here is going to be less than 0,"
+        },
+        {
+          "start": 194.46,
+          "end": 199.74,
+          "text": "which means the velocity is our initial velocity minus"
+        },
+        {
+          "start": 199.74,
+          "end": 205.66,
+          "text": "something, which means we have a decrease in velocity, which"
+        },
+        {
+          "start": 205.66,
+          "end": 209.9,
+          "text": "means my sled will eventually come to a stop."
+        }
+      ],
+      "elapsed_seconds": 25.25727675
+    },
+    {
+      "condition": "math_prompt",
+      "initial_prompt": "A university physics lecture about rocket sleds, differential equations, separation of variables, integration limits and prime notation. Symbols include mR, vR, m0, v0, u and t.",
+      "hotwords": null,
+      "language": "en",
+      "language_probability": 1,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 17.6,
+          "text": "We just arrived this relation here, the relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket and we want to ultimately get the speed of the rocket."
+        },
+        {
+          "start": 17.6,
+          "end": 25.6,
+          "text": "So we have to do, we have to apply a technique called separation of variables and then we want to integrate."
+        },
+        {
+          "start": 25.6,
+          "end": 32.6,
+          "text": "What we're going to do is first we're going to divide, multiply by dT so that falls away."
+        },
+        {
+          "start": 32.6,
+          "end": 41.6,
+          "text": "And we're left with mR dvR equals dmRu."
+        },
+        {
+          "start": 41.6,
+          "end": 46.6,
+          "text": "And we're going to shuffle the m onto the other side."
+        },
+        {
+          "start": 46.6,
+          "end": 50.6,
+          "text": "And we're left with dvR equals u as a constant."
+        },
+        {
+          "start": 50.6,
+          "end": 52.6,
+          "text": "So that goes up front."
+        },
+        {
+          "start": 52.6,
+          "end": 57.6,
+          "text": "And then we have dmR over mR."
+        },
+        {
+          "start": 57.6,
+          "end": 65.6,
+          "text": "That's an equation that we can integrate now and we can do that."
+        },
+        {
+          "start": 65.6,
+          "end": 70.6,
+          "text": "And the tricky bit is that we need to take care of the integration limits here."
+        },
+        {
+          "start": 70.6,
+          "end": 75.6,
+          "text": "We have vR and actually these now are all primes."
+        },
+        {
+          "start": 75.6,
+          "end": 80.6,
+          "text": "So we have vR going from v0."
+        },
+        {
+          "start": 80.6,
+          "end": 93.6,
+          "text": "That is our initial condition here to vR prime of, oops, equal vR of t."
+        },
+        {
+          "start": 93.6,
+          "end": 98.6,
+          "text": "And for the mass we have mR prime equals m0."
+        },
+        {
+          "start": 98.6,
+          "end": 100.6,
+          "text": "Actually not quite m0."
+        },
+        {
+          "start": 100.6,
+          "end": 108.6,
+          "text": "It's 2 m0 because the initial mass of this is the dry mass and the fuel mass."
+        },
+        {
+          "start": 108.6,
+          "end": 111.6,
+          "text": "So that's 2 m0."
+        },
+        {
+          "start": 111.6,
+          "end": 115.6,
+          "text": "So this is the initial mass."
+        },
+        {
+          "start": 115.6,
+          "end": 124.6,
+          "text": "And then we go to mR prime equals m of vR."
+        },
+        {
+          "start": 124.6,
+          "end": 127.6,
+          "text": "All right, so let's do that."
+        },
+        {
+          "start": 127.6,
+          "end": 139.6,
+          "text": "We're going to get vR minus v0 equals u1 over m integrated gives us an ln."
+        },
+        {
+          "start": 139.6,
+          "end": 141.6,
+          "text": "So ln."
+        },
+        {
+          "start": 141.6,
+          "end": 153.09,
+          "text": "And then we can immediately do this here over 2 m0."
+        },
+        {
+          "start": 153.09,
+          "end": 157.09,
+          "text": "And well, we ultimately want this."
+        },
+        {
+          "start": 157.09,
+          "end": 159.09,
+          "text": "So this is an vR of t, of course."
+        },
+        {
+          "start": 159.09,
+          "end": 172.09,
+          "text": "And then we got v0 plus u ln mR over 2 m0."
+        },
+        {
+          "start": 172.09,
+          "end": 176.94,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.94,
+          "end": 179.94,
+          "text": "So what does this equation tell us?"
+        },
+        {
+          "start": 179.94,
+          "end": 187.94,
+          "text": "mR, the mass of the rocket is less later on than it was before,"
+        },
+        {
+          "start": 187.94,
+          "end": 193.94,
+          "text": "which means this term here is going to be less than 0,"
+        },
+        {
+          "start": 193.94,
+          "end": 200.94,
+          "text": "which means the velocity is our initial velocity minus something,"
+        },
+        {
+          "start": 200.94,
+          "end": 204.94,
+          "text": "which means we have a decrease in velocity,"
+        },
+        {
+          "start": 204.94,
+          "end": 208.94,
+          "text": "which means my sled will eventually come to a stop."
+        }
+      ],
+      "elapsed_seconds": 24.837904291999997
+    },
+    {
+      "condition": "math_hotwords",
+      "initial_prompt": null,
+      "hotwords": "rocket sled, differential, separation of variables, integration, prime",
+      "language": "en",
+      "language_probability": 1,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 10.12,
+          "text": "We just arrived this relation here, the relation between the differential of the speed of the"
+        },
+        {
+          "start": 10.12,
+          "end": 15.8,
+          "text": "rocket sled and the differential of the mass of the rocket and we want to ultimately get"
+        },
+        {
+          "start": 15.8,
+          "end": 17.92,
+          "text": "the speed of the rocket."
+        },
+        {
+          "start": 17.92,
+          "end": 23.36,
+          "text": "So we have to do, we have to apply a technique called separation of variables and then we"
+        },
+        {
+          "start": 23.36,
+          "end": 24.36,
+          "text": "want to integrate."
+        },
+        {
+          "start": 24.36,
+          "end": 32.16,
+          "text": "What we're going to do is first we're going to divide, multiply by dt so that falls"
+        },
+        {
+          "start": 32.16,
+          "end": 45.08,
+          "text": "away and we're left with mr dvr equals dmru and we're going to shuffle the m onto the other"
+        },
+        {
+          "start": 45.08,
+          "end": 56.08,
+          "text": "side and we're left with dvr equals u is a constant so that goes up front and then we have dmr over"
+        },
+        {
+          "start": 56.92,
+          "end": 58.92,
+          "text": "mr."
+        },
+        {
+          "start": 58.92,
+          "end": 68.08,
+          "text": "That's an equation that we can integrate now and we can do that and the tricky bit is that"
+        },
+        {
+          "start": 68.08,
+          "end": 71.04,
+          "text": "we need to take care of the integration limits here."
+        },
+        {
+          "start": 71.04,
+          "end": 81.24,
+          "text": "We have vr and actually these now are all primes so we have vr going from v0 that is"
+        },
+        {
+          "start": 81.24,
+          "end": 96.92,
+          "text": "our initial condition here to vr prime of equal vr of t and for the mass we have mr prime"
+        },
+        {
+          "start": 96.92,
+          "end": 107.24,
+          "text": "equals m0 actually not quite m0 it's 2 m0 because the initial mass of this is the dry"
+        },
+        {
+          "start": 107.24,
+          "end": 119.8,
+          "text": "mass and the fuel mass so that's 2 m0 so this is the initial mass and then we go to mr prime"
+        },
+        {
+          "start": 119.8,
+          "end": 125.04,
+          "text": "equals m of vr."
+        },
+        {
+          "start": 125.04,
+          "end": 137.8,
+          "text": "Alright so let's do that we're going to get vr minus v0 equals u1 over m integrated gives"
+        },
+        {
+          "start": 137.8,
+          "end": 156.37,
+          "text": "us an ln so ln and then we can immediately do this here over 2 m0 and well we ultimately"
+        },
+        {
+          "start": 156.37,
+          "end": 173.05,
+          "text": "want this so this is an vr of t of course and then we got v0 plus u ln mr over 2 m0 and"
+        },
+        {
+          "start": 173.05,
+          "end": 176.94,
+          "text": "that is our equation."
+        },
+        {
+          "start": 176.94,
+          "end": 186.06,
+          "text": "So what does this equation tell us mr the mass of the rocket is less later on than"
+        },
+        {
+          "start": 186.06,
+          "end": 196.38,
+          "text": "it was before which means this term here is going to be less than 0 which means the velocity"
+        },
+        {
+          "start": 196.38,
+          "end": 205.54,
+          "text": "is our initial velocity minus something which means we have a decrease in velocity which"
+        },
+        {
+          "start": 205.54,
+          "end": 208.54,
+          "text": "means my sled will eventually come to a stop."
+        }
+      ],
+      "elapsed_seconds": 35.9616725
+    }
+  ],
+  "limits": [
+    "Development lecture, not an independent transcription accuracy benchmark.",
+    "Hints contain vocabulary only, not reference captions or equations."
+  ]
+}

@@ -96,6 +96,28 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             return_value={'segments': segments})), translator)
         self.assertEqual(translator.translate.call_args_list[1].args[1], source[-256:])
 
+    async def test_math_explanation_is_one_api_segment_and_next_context(self):
+        """실제 업로드 경로에서 수식 설명을 한 번 번역하고 합친 시각·다음 문맥을 전달한다.
+
+        :return: None.
+        """
+        texts = ['We have dvR equals u is a constant.', 'So that goes up front.',
+                 'And then we have dmR over mR.', 'Now integrate.']
+        segments = [{'start': index * 3, 'end': (index + 1) * 3, 'text': text}
+                    for index, text in enumerate(texts)]
+        stt = SimpleNamespace(transcribe=Mock(return_value={'segments': segments}))
+        translator = SimpleNamespace(translate=Mock(side_effect=[
+            {'translation': 'u를 앞으로 빼내고 dmR/mR을 얻습니다.'}, {'translation': '적분합니다.'}]))
+        response = await self.run_upload(stt, translator)
+        self.assertEqual(len(response.segments), 2)
+        combined = ' '.join(texts[:3])
+        self.assertEqual(translator.translate.call_args_list[0].args, (combined, '', 128))
+        self.assertEqual(translator.translate.call_args_list[1].args,
+                         ('Now integrate.', combined[-256:], 128))
+        self.assertEqual(response.segments[0].start, 0)
+        self.assertEqual(response.segments[0].end, 9)
+        self.assertNotIn('merge_reasons', response.segments[0].model_dump())
+
     async def test_errors_cleanup_upload_and_temp_file(self):
         """STT 검증 오류와 예기치 않은 번역 오류에서도 파일이 정리되는지 확인한다.
 

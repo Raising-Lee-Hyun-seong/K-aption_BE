@@ -8,6 +8,7 @@ from app.services.translation import TranslationService
 from app.services.translation_validation import protected_symbols
 
 ROOT = Path(__file__).resolve().parents[2]
+FORMAL_STYLE = 'Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. '
 INSTRUCTION = (
     'Translate the following English text into Korean. Preserve negation, numbers '
     'and mathematical relations. Output only the translation.'
@@ -24,6 +25,27 @@ INSTRUCTION = (
     'not an increase in value. Prime denotes a mathematical prime mark, '
     'not a prime number. Keep variable labels rather than translating them as words.'
 )
+
+
+def informal_ending(translation: str) -> bool:
+    """문장 끝의 뚜렷한 평서형 반말과 일부 구어체 반말을 검사한다.
+
+    :param translation: 정리된 한국어 번역 후보.
+    :return: 명백한 반말 종결형을 발견하면 True. 일반적인 문법·존대 분류기는 아니다.
+
+    합니다·입니다·합시다와 같은 존댓말은 허용한다. 명사구·수식만으로 끝난
+    표현을 자동으로 고치거나 모든 문장의 존댓말 완전성을 보장하지 않는다.
+    """
+    for match in re.finditer(r'([가-힣]+)(?=[.!?](?:\s|$)|$)', translation):
+        ending = match.group(1)
+        plain_endings = ('한다', '된다', '하다', '이다', '있다', '없다', '같다', '아니다', '싶다',
+                         '했다', '겠다', '었다', '았다', '는다', '온다', '준다',
+                         '크다', '작다', '그렇다', '멈춘다', '진다')
+        if not ending.endswith(('니다', '시다')) and ending.endswith(plain_endings):
+            return True
+        if ending.endswith(('했어', '있어', '없어', '뭐야', '거야', '해봐', '해라', '하자', '해보자')):
+            return True
+    return False
 
 
 def render_chatml(messages: list, tokenize: bool = False,
@@ -80,16 +102,17 @@ class QwenPromptMixin:
         if terms:
             instruction += ' Terminology: ' + '; '.join(
                 f'{entry["en"]}={entry["ko"]}' for entry in terms) + '.'
-        messages = []
+        system = FORMAL_STYLE
         if context:
-            messages.append({'role': 'system', 'content': (
+            system += (
                 "Translate only the current English source in the user's message. "
                 'The previous English context below is background only. Never translate, '
                 'quote, summarize or repeat that context. Never output context labels. '
                 'Output only the Korean translation of the current source. '
-                '\nPrevious English context:\n' + context[-256:])})
+                '\nPrevious English context:\n' + context[-256:])
+        messages = [{'role': 'system', 'content': system}]
         if retry:
-            instruction += '\nReturn only complete Korean translation sentences.'
+            instruction += '\nReturn only complete polite Korean translation sentences ending in 합니다/입니다.'
             if symbols:
                 instruction += (' Start with Korean words and then give the expression; '
                                 'a formula alone is not a complete Korean translation.')
@@ -97,7 +120,7 @@ class QwenPromptMixin:
         return self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
     def _rejection_reason(self, translation: str, text: str, context: str):
-        """공통 검증과 함께 수학 문맥의 번역되지 않은 영어 연산어를 검사한다.
+        """공통 검증과 함께 반말 종결형·번역되지 않은 영어 수학 연산어를 검사한다.
 
         :param translation: 정리된 한국어 번역 후보.
         :param text: 현재 영어 원문.
@@ -107,6 +130,8 @@ class QwenPromptMixin:
         reason = super()._rejection_reason(translation, text, context)
         if reason or getattr(self, 'model_family', 'koreanlm') != 'qwen3':
             return reason
+        if informal_ending(translation):
+            return 'informal_speech'
         if protected_symbols(text):
             for operator in ('over', 'plus', 'minus', 'equals'):
                 pattern = r'\b' + operator + r'\b'

@@ -1,0 +1,1615 @@
+{
+  "evaluated_on": "2026-10-18",
+  "backend": "mlx",
+  "model_path": "models/qwen3-4b-instruct-2507-4bit",
+  "service": "QwenTranslationService",
+  "load_seconds": 3.636644583,
+  "lecture_source": {
+    "title": "Rocket Sled - Integrate the Rocket Equation",
+    "publisher": "Massachusetts Institute of Technology, MIT OpenCourseWare",
+    "course": "8.01SC Classical Mechanics, Fall 2016",
+    "instructor": "Prof. Anna Frebel",
+    "page_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/resources/rocket-sled-integrate-the-rocket-equation/",
+    "caption_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/99c06ede3b5d5192b4cb4119435b6b9f_7Kq8BINVDiw.vtt",
+    "transcript_pdf_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/5fb03318c1359e623617218715101f57_7Kq8BINVDiw.pdf",
+    "retrieved_on": "2026-10-04",
+    "language": "en",
+    "format": "WEBVTT",
+    "license": {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "notice": "MIT OCW 페이지의 license metadata에 명시된 라이선스. 원본 자막의 출처를 표시하고 파생 기준 번역에도 동일한 라이선스를 적용한다."
+    },
+    "sha256": "16f5205352d8258e11365fa85832e350b352efd89dd15ad2a7dd5d39dcb5f454",
+    "transformations": [
+      "VTT의 줄바꿈을 공백으로 병합했다.",
+      "VTT의 명시된 시작·종료 시각을 초 단위로 변환했다.",
+      "cue 순서 index는 0부터 시작한다. 단어·수식 표기는 보정하지 않았다."
+    ],
+    "known_uncertainties": [
+      {
+        "source_cue_indices": [
+          0
+        ],
+        "text": "arrived",
+        "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+      },
+      {
+        "source_cue_indices": [
+          19,
+          20
+        ],
+        "text": "2vr prime of equal vr of t",
+        "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          25
+        ],
+        "text": "m of vr",
+        "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          28
+        ],
+        "text": "lm",
+        "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+      },
+      {
+        "source_cue_indices": [
+          31
+        ],
+        "text": "the r of t",
+        "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+      }
+    ]
+  },
+  "input_sha256": "6ae562bfbe2b2883343645cbf0f9bc218c5e837716d65b41fa6a627cb242db0c",
+  "merge_math": true,
+  "original_group_count": 36,
+  "raw_attempts": [
+    {
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nWe just derived this relation here.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "여기서 우리는 이 관계를 도출했습니다.",
+      "tokens": 13,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe just derived this relation here.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: rocket=로켓; speed=속력; mass=질량.\n\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "로켓의 선두 속력의 미분과 로켓의 질량의 미분 사이의 관계.",
+      "tokens": 26,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: rocket=로켓; speed=속력.\n\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 결국 로켓의 속력을 얻고자 한다.",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we want to ultimately get the speed of the rocket.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nSo we have to apply a technique called separation variables.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "따라서 우리는 변수 분리 기법을 적용해야 한다.",
+      "tokens": 15,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo we have to apply a technique called separation variables.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integrate=적분.\n\nAnd then we want to integrate.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에 우리는 적분을 해야 한다.",
+      "tokens": 15,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we want to integrate.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: dt. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\n\nWhat we're going to do is, first, we're going to multiply by dt, so that falls away.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "무엇을 할지 말이다, 먼저 dt로 곱해준다. 그러면 그 값은 사라진다.",
+      "tokens": 27,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWhat we're going to do is, first, we're going to multiply by dt, so that falls away.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: mR, dvR, dmR, u. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\n\nAnd we're left with mR dvR equals dmRu.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 mR dvR = dmR u로 남는다.",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we're left with mR dvR equals dmRu.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\n\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 m을 다른 쪽으로 옮기겠다.",
+      "tokens": 17,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we're going to shuffle the m onto the other side.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: dvR, u, dmR, mR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: constant=상수.\n\nAnd we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 dvR = u가 상수라는 것을 얻는다. 따라서 이를 앞쪽에 놓는다. 그리고 그 다음에 dmR / mR가 있다.",
+      "tokens": 42,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integrate=적분.\n\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것은 이제 적분할 수 있는 방정식이다.",
+      "tokens": 15,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThat's an equation that we can integrate now.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nAnd we can do that.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것은 이제 적분할 수 있다.",
+      "tokens": 11,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we can do that.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integration limits=적분 구간.\n\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 어려운 부분은 여기 적분 구간을 올바르게 처리해야 한다는 점이다.",
+      "tokens": 28,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd the tricky bit is that we need to take care of the integration limits here.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: vR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: primes=프라임.\n\nWe have vR, and actually these now are all primes.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "vR를 가지고 있으며, 실제로 이들은 모두 프라임입니다.",
+      "tokens": 16,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe have vR, and actually these now are all primes.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: vR, v0, t. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: initial condition=초기 조건; prime=프라임.\n\nSo we have vR going from v0. That is our initial condition here. 2 vR prime of t.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "따라서 우리는 vR이 v0에서 시작한다는 것을 가진다. 이는 우리의 초기 조건이다. 2 vR 프라임 of t.",
+      "tokens": 36,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo we have vR going from v0. That is our initial condition here. 2 vR prime of t.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: fuel mass=연료 질량; dry mass=건조 질량; prime=프라임; mass=질량.\n\nAnd for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 질량에 대해선 mR' = m0이다. 실제로는 약간 m0가 아니다. 2m0이다. 초기 질량은 건조 질량과 연료 질량을 포함하므로 그렇게 된다.",
+      "tokens": 53,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: mass=질량.\n\nSo this is the initial mass.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "이것이 초기 질량이다.",
+      "tokens": 9,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo this is the initial mass.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: mR, m, vR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: prime=프라임.\n\nAnd then we go to mR prime equals m of vR.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에 mR 프라임은 m의 vR에 해당한다.",
+      "tokens": 21,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we go to mR prime equals m of vR.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nAll right, so let's do that.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "좋아, 그러므로 그걸 해보자.",
+      "tokens": 12,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAll right, so let's do that.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: vR, v0, m, ln. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: integrated=적분.\n\nWe're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "vR - v0 = u1/m이다. 적분은 ln을 제공한다. 따라서 ln이다.",
+      "tokens": 24,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\n\nAnd then we can immediately do this here over 2 m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 그 후에는 여기서 2m0로 나누어 할 수 있다.",
+      "tokens": 21,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd then we can immediately do this here over 2 m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nAnd we ultimately want this.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그리고 우리는 결국 이걸 원한다.",
+      "tokens": 11,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd we ultimately want this.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: vR, t, v0, u, ln, mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\n\nSo this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "이것은 t에 대한 vR이다. 물론. 그리고 그 후에 v0 + u ln mR / 2 m0를 얻었다.",
+      "tokens": 34,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nAnd that is our equation.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그것이 우리의 방정식이다.",
+      "tokens": 10,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nAnd that is our equation.<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\n\nSo what does this equation tell us?<|im_end|>\n<|im_start|>assistant\n",
+      "text": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+      "tokens": 18,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nSo what does this equation tell us?<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: mR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: rocket=로켓; mass=질량.\n\nmR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,<|im_end|>\n<|im_start|>assistant\n",
+      "text": "로켓의 질량 mR은 이전보다 나중에 작아진다. 즉, 여기서 나타나는 항은 0보다 작아진다.",
+      "tokens": 37,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>system\nTranslate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nmR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,<|im_end|>\n<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; sled=썰매.\n\nwhich means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "즉, 속도는 초기 속도에서 어떤 값 빼기 때문에, 속도가 감소한다는 의미이며, 따라서 내 씰이 결국 정지하게 된다.",
+      "tokens": 42,
+      "finish_reason": "stop",
+      "stop_reason": null
+    },
+    {
+      "prompt": "<|im_start|>user\nTranslate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; sled=썰매.\nReturn only complete Korean translation sentences.\n\nwhich means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "이는 속도가 초기 속도에서 어떤 값 빼기 때문에, 속도가 감소한다는 의미이며, 따라서 내 썰매는 결국 정지하게 된다.",
+      "tokens": 41,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "limits": [
+    "Saved STT replay, not new transcription or end-to-end HTTP timing.",
+    "Validation success is not semantic accuracy; independent review pending."
+  ],
+  "implementation_sha256": {
+    "app/services/translation.py": "516f99e2eb5a4ce0382a27369eaf80080e2a7edbf80ea2b60e66cf0320387cd4",
+    "app/services/translation_qwen.py": "ad0c25b2647116a6d8d5ec587bcc68cf98c479ec678cb6a4e27e2acd71c7519e",
+    "app/services/translation_llamacpp.py": "37c52c535a0b2623a275458dad6067f49521ce116ad083372f01c0f7574b0c5c",
+    "app/services/translation_validation.py": "7b6a59b1b2785c217f382d9b57610cb0c4444ff574b75ffb333bd4e2325cee54",
+    "app/services/subtitles.py": "22dfe2499744e2a3e5e59e19bd681b09e72f5904a8153f8512c5067ecbbfdc54",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "model_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+  "results": [
+    {
+      "start": 3.6,
+      "end": 7.28,
+      "text": "We just derived this relation here.",
+      "source_indices": [
+        0
+      ],
+      "id": "group-0",
+      "baseline": {
+        "source_indices": [
+          0
+        ],
+        "translations": [
+          "우리는 이곳에서 이 관계를 찾았습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.7851018749999987,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-0"
+      ],
+      "translation": "여기서 우리는 이 관계를 도출했습니다.",
+      "prompt_tokens": 176,
+      "generated_tokens": 13,
+      "elapsed_seconds": 1.3441606249999998,
+      "context": "",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.3440319169999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 176,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.344922167,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 7.28,
+      "end": 14.44,
+      "text": "The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.",
+      "source_indices": [
+        1,
+        2,
+        3
+      ],
+      "id": "group-1",
+      "baseline": {
+        "source_indices": [
+          1,
+          2,
+          3
+        ],
+        "translations": [
+          "속력의 차이는 어떻게 되나요?",
+          "",
+          "발사기"
+        ],
+        "error_count": 1,
+        "translation_seconds": 11.17378004099999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-1"
+      ],
+      "translation": "로켓의 선두 속력의 미분과 로켓의 질량의 미분 사이의 관계.",
+      "prompt_tokens": 274,
+      "generated_tokens": 26,
+      "elapsed_seconds": 1.4787093749999993,
+      "context": "We just derived this relation here.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.478616959,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 274,
+          "max_tokens": 128,
+          "raw_output_tokens": 26,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.4789501669999998,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 14.44,
+      "end": 17.76,
+      "text": "And we want to ultimately get the speed of the rocket.",
+      "source_indices": [
+        4
+      ],
+      "id": "group-2",
+      "baseline": {
+        "source_indices": [
+          4
+        ],
+        "translations": [
+          "우리는 로켓의 속력을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.418470583999998,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-2"
+      ],
+      "translation": "그리고 우리는 결국 로켓의 속력을 얻고자 한다.",
+      "prompt_tokens": 274,
+      "generated_tokens": 18,
+      "elapsed_seconds": 1.3136300839999997,
+      "context": "The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.3135657089999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 274,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.3138143330000007,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 17.76,
+      "end": 23.0,
+      "text": "So we have to apply a technique called separation variables.",
+      "source_indices": [
+        5,
+        6
+      ],
+      "id": "group-3",
+      "baseline": {
+        "source_indices": [
+          5,
+          6
+        ],
+        "translations": [
+          "우리는 로켓의 속력을 원하는 것입니다. 로켓의 속력을 원하는 것으로 번역됩니다.",
+          "로켓의 속력을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.642212416,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-3"
+      ],
+      "translation": "따라서 우리는 변수 분리 기법을 적용해야 한다.",
+      "prompt_tokens": 249,
+      "generated_tokens": 15,
+      "elapsed_seconds": 1.5011135409999987,
+      "context": "And we want to ultimately get the speed of the rocket.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.501077209,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 249,
+          "max_tokens": 128,
+          "raw_output_tokens": 15,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.5012388750000003,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 23.0,
+      "end": 25.96,
+      "text": "And then we want to integrate.",
+      "source_indices": [
+        7
+      ],
+      "id": "group-4",
+      "baseline": {
+        "source_indices": [
+          7
+        ],
+        "translations": [
+          "그리고 우리는 통합을 원하는 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.4113965830000055,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-4"
+      ],
+      "translation": "그리고 그 후에 우리는 적분을 해야 한다.",
+      "prompt_tokens": 252,
+      "generated_tokens": 15,
+      "elapsed_seconds": 1.175893792,
+      "context": "So we have to apply a technique called separation variables.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.1758401250000006,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 252,
+          "max_tokens": 128,
+          "raw_output_tokens": 15,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.1765057499999987,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 25.96,
+      "end": 33.32,
+      "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away.",
+      "source_indices": [
+        8,
+        9
+      ],
+      "id": "group-5",
+      "baseline": {
+        "source_indices": [
+          8,
+          9
+        ],
+        "translations": [
+          "우리는 통합을 원하는 것입니다.",
+          "더 이상 존재하지 않게 만들어주세요."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.742702667000003,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-5"
+      ],
+      "translation": "무엇을 할지 말이다, 먼저 dt로 곱해준다. 그러면 그 값은 사라진다.",
+      "prompt_tokens": 304,
+      "generated_tokens": 27,
+      "elapsed_seconds": 1.787808333000001,
+      "context": "And then we want to integrate.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.7877518329999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 304,
+          "max_tokens": 128,
+          "raw_output_tokens": 27,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.788256875,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 33.32,
+      "end": 42.32,
+      "text": "And we're left with mR dvR equals dmRu.",
+      "source_indices": [
+        10
+      ],
+      "id": "group-6",
+      "baseline": {
+        "source_indices": [
+          10
+        ],
+        "translations": [
+          "더 이상 존재하지 않게 만들어주세요.\" 라는 영어 원문은 한국어로 \"더 이상 존재하지 않게 만들어주세요.\"로 번역됩니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.858288375000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-6"
+      ],
+      "translation": "그리고 우리는 mR dvR = dmR u로 남는다.",
+      "prompt_tokens": 319,
+      "generated_tokens": 18,
+      "elapsed_seconds": 1.3424801669999997,
+      "context": "What we're going to do is, first, we're going to multiply by dt, so that falls away.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.3424317919999993,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 319,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.3426420829999994,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 42.32,
+      "end": 47.0,
+      "text": "And we're going to shuffle the m onto the other side.",
+      "source_indices": [
+        11
+      ],
+      "id": "group-7",
+      "baseline": {
+        "source_indices": [
+          11
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.1943685830000064,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-7"
+      ],
+      "translation": "그리고 우리는 m을 다른 쪽으로 옮기겠다.",
+      "prompt_tokens": 300,
+      "generated_tokens": 17,
+      "elapsed_seconds": 1.3154264999999992,
+      "context": "And we're left with mR dvR equals dmRu.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.3153424999999999,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 300,
+          "max_tokens": 128,
+          "raw_output_tokens": 17,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.3157803340000012,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 47.0,
+      "end": 58.56,
+      "text": "And we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.",
+      "source_indices": [
+        12,
+        13,
+        14
+      ],
+      "id": "group-8",
+      "baseline": {
+        "source_indices": [
+          12,
+          13,
+          14
+        ],
+        "translations": [
+          "와 우리는 다른 쪽에서 m을 순회할 것",
+          "와 우리는 다른 쪽에서 m을 순회할 것입니다.",
+          "그리고 우리는 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터 마이닝 기술을 사용하여 데이터"
+        ],
+        "error_count": 0,
+        "translation_seconds": 18.8915375,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "merge_reasons": [
+        "factor_position",
+        "equation_continuation"
+      ],
+      "original_group_ids": [
+        "stt-8",
+        "stt-9",
+        "stt-10"
+      ],
+      "translation": "그리고 우리는 dvR = u가 상수라는 것을 얻는다. 따라서 이를 앞쪽에 놓는다. 그리고 그 다음에 dmR / mR가 있다.",
+      "prompt_tokens": 333,
+      "generated_tokens": 42,
+      "elapsed_seconds": 2.08534225,
+      "context": "And we're going to shuffle the m onto the other side.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.0851802500000005,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 333,
+          "max_tokens": 128,
+          "raw_output_tokens": 42,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.085738166999999,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 58.56,
+      "end": 61.68,
+      "text": "That's an equation that we can integrate now.",
+      "source_indices": [
+        15
+      ],
+      "id": "group-9",
+      "baseline": {
+        "source_indices": [
+          15
+        ],
+        "translations": [
+          "그것은 지금 설계 된 수식입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.9713318339999972,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-11"
+      ],
+      "translation": "그것은 이제 적분할 수 있는 방정식이다.",
+      "prompt_tokens": 273,
+      "generated_tokens": 15,
+      "elapsed_seconds": 1.2611454590000015,
+      "context": "And we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.261082457999997,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 273,
+          "max_tokens": 128,
+          "raw_output_tokens": 15,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.2613318749999998,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 61.68,
+      "end": 65.76,
+      "text": "And we can do that.",
+      "source_indices": [
+        16
+      ],
+      "id": "group-10",
+      "baseline": {
+        "source_indices": [
+          16
+        ],
+        "translations": [
+          "그러면 우리는 그것을 할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 5.024093500000006,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-12"
+      ],
+      "translation": "그것은 이제 적분할 수 있다.",
+      "prompt_tokens": 242,
+      "generated_tokens": 11,
+      "elapsed_seconds": 0.9930034170000006,
+      "context": "That's an equation that we can integrate now.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9929513330000006,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 242,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 0.9934191250000026,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 65.76,
+      "end": 70.96,
+      "text": "And the tricky bit is that we need to take care of the integration limits here.",
+      "source_indices": [
+        17,
+        18
+      ],
+      "id": "group-11",
+      "baseline": {
+        "source_indices": [
+          17,
+          18
+        ],
+        "translations": [
+          "그 배치는 어렵습니다. 우리는 그것을 체계적으로 관리해야 합니다.",
+          "적분 구간은 어렵습니다. 우리는 그것을 체계적으로 관리해야 합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.645774040999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-13"
+      ],
+      "translation": "그리고 어려운 부분은 여기 적분 구간을 올바르게 처리해야 한다는 점이다.",
+      "prompt_tokens": 260,
+      "generated_tokens": 28,
+      "elapsed_seconds": 1.550491791999999,
+      "context": "And we can do that.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.5503979999999977,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 260,
+          "max_tokens": 128,
+          "raw_output_tokens": 28,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.5508193329999997,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 70.96,
+      "end": 76.4,
+      "text": "We have vR, and actually these now are all primes.",
+      "source_indices": [
+        19
+      ],
+      "id": "group-12",
+      "baseline": {
+        "source_indices": [
+          19
+        ],
+        "translations": [
+          "우리는 그것을 체계적으로 관리해야 합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.261706832999991,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-14"
+      ],
+      "translation": "vR를 가지고 있으며, 실제로 이들은 모두 프라임입니다.",
+      "prompt_tokens": 314,
+      "generated_tokens": 16,
+      "elapsed_seconds": 1.3320262499999984,
+      "context": "And the tricky bit is that we need to take care of the integration limits here.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.3319632089999978,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 314,
+          "max_tokens": 128,
+          "raw_output_tokens": 16,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.3323494999999994,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 76.4,
+      "end": 94.12,
+      "text": "So we have vR going from v0. That is our initial condition here. 2 vR prime of t.",
+      "source_indices": [
+        20,
+        21,
+        22
+      ],
+      "id": "group-13",
+      "baseline": {
+        "source_indices": [
+          20,
+          21,
+          22
+        ],
+        "translations": [
+          "우리는 0.0에서 시작하여 가속화된 움직임을 보이는 가상현실 기술을 개발하고 있습니다.",
+          "첫째 조건은 이곳입니다.",
+          "2 번째 숫자 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인 체인"
+        ],
+        "error_count": 0,
+        "translation_seconds": 22.804693249999985,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "merge_reasons": [
+        "limit_explanation",
+        "limit_endpoint"
+      ],
+      "original_group_ids": [
+        "stt-15",
+        "stt-16",
+        "stt-17"
+      ],
+      "translation": "따라서 우리는 vR이 v0에서 시작한다는 것을 가진다. 이는 우리의 초기 조건이다. 2 vR 프라임 of t.",
+      "prompt_tokens": 335,
+      "generated_tokens": 36,
+      "elapsed_seconds": 1.990795417000001,
+      "context": "We have vR, and actually these now are all primes.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.9907397079999996,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 335,
+          "max_tokens": 128,
+          "raw_output_tokens": 36,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.992147040999999,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 94.12,
+      "end": 111.6,
+      "text": "And for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.",
+      "source_indices": [
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "id": "group-14",
+      "baseline": {
+        "source_indices": [
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "translations": [
+          "질량에 대한 정보를 제공하지 않았습니다.",
+          "실제로 적어도 0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "이 것은 2kg입니다. 이것은 처음적인 질량이 청정 질량입니다.",
+          "and the fuel mass.\" 는 한국어로 \"배출물 질량\"으로 번역됩니다.",
+          "배출물 질량이 2 미터입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 22.992248165999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "merge_reasons": [
+        "math_correction",
+        "correction_explanation",
+        "correction_explanation"
+      ],
+      "original_group_ids": [
+        "stt-18",
+        "stt-19",
+        "stt-20",
+        "stt-21"
+      ],
+      "translation": "그리고 질량에 대해선 mR' = m0이다. 실제로는 약간 m0가 아니다. 2m0이다. 초기 질량은 건조 질량과 연료 질량을 포함하므로 그렇게 된다.",
+      "prompt_tokens": 384,
+      "generated_tokens": 53,
+      "elapsed_seconds": 2.5431891669999978,
+      "context": "So we have vR going from v0. That is our initial condition here. 2 vR prime of t.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.5430520419999993,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 384,
+          "max_tokens": 128,
+          "raw_output_tokens": 53,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 2.546085625,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 111.6,
+      "end": 116.4,
+      "text": "So this is the initial mass.",
+      "source_indices": [
+        28
+      ],
+      "id": "group-15",
+      "baseline": {
+        "source_indices": [
+          28
+        ],
+        "translations": [
+          "이것은 초기 질량입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 2.271580499999999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-22"
+      ],
+      "translation": "이것이 초기 질량이다.",
+      "prompt_tokens": 292,
+      "generated_tokens": 9,
+      "elapsed_seconds": 1.091040875000001,
+      "context": "And for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0909411660000004,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 292,
+          "max_tokens": 128,
+          "raw_output_tokens": 9,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0921933749999972,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 116.4,
+      "end": 124.92,
+      "text": "And then we go to mR prime equals m of vR.",
+      "source_indices": [
+        29
+      ],
+      "id": "group-16",
+      "baseline": {
+        "source_indices": [
+          29
+        ],
+        "translations": [
+          "그러면 우리는 mR 프리미엄이 mR 변수를 가리킵니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 5.013867792000013,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-23"
+      ],
+      "translation": "그리고 그 후에 mR 프라임은 m의 vR에 해당한다.",
+      "prompt_tokens": 310,
+      "generated_tokens": 21,
+      "elapsed_seconds": 1.4357514169999988,
+      "context": "So this is the initial mass.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.4357082500000011,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 310,
+          "max_tokens": 128,
+          "raw_output_tokens": 21,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.4361400830000015,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 124.92,
+      "end": 127.4,
+      "text": "All right, so let's do that.",
+      "source_indices": [
+        30
+      ],
+      "id": "group-17",
+      "baseline": {
+        "source_indices": [
+          30
+        ],
+        "translations": [
+          "좋아요, 그럴게 해봅시다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.959064624999996,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-24"
+      ],
+      "translation": "좋아, 그러므로 그걸 해보자.",
+      "prompt_tokens": 249,
+      "generated_tokens": 12,
+      "elapsed_seconds": 1.1114156659999992,
+      "context": "And then we go to mR prime equals m of vR.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.1113725840000015,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 249,
+          "max_tokens": 128,
+          "raw_output_tokens": 12,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.1115724169999979,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 127.4,
+      "end": 141.32,
+      "text": "We're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.",
+      "source_indices": [
+        31,
+        32,
+        33
+      ],
+      "id": "group-18",
+      "baseline": {
+        "source_indices": [
+          31,
+          32,
+          33
+        ],
+        "translations": [
+          "우리는 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해",
+          "ln\"은 \"logarithmic\"의 줄임말로, 최적화된 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 �",
+          "ln은 logarithmic의 줄임말로, 최적화된 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 버스 운행 시간을 최적화하기 위해 최�"
+        ],
+        "error_count": 0,
+        "translation_seconds": 23.78685999999999,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "merge_reasons": [
+        "integration_result",
+        "logarithm_continuation"
+      ],
+      "original_group_ids": [
+        "stt-25",
+        "stt-26",
+        "stt-27"
+      ],
+      "translation": "vR - v0 = u1/m이다. 적분은 ln을 제공한다. 따라서 ln이다.",
+      "prompt_tokens": 324,
+      "generated_tokens": 24,
+      "elapsed_seconds": 1.661716166999998,
+      "context": "All right, so let's do that.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.6616394579999998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 324,
+          "max_tokens": 128,
+          "raw_output_tokens": 24,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.662011083999996,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 141.32,
+      "end": 152.81,
+      "text": "And then we can immediately do this here over 2 m0.",
+      "source_indices": [
+        34
+      ],
+      "id": "group-19",
+      "baseline": {
+        "source_indices": [
+          34
+        ],
+        "translations": [
+          "이제 우리는 이곳에서 즉각적으로 이 일을 수행할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 6.988525417000005,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-28"
+      ],
+      "translation": "그리고 그 후에는 여기서 2m0로 나누어 할 수 있다.",
+      "prompt_tokens": 314,
+      "generated_tokens": 21,
+      "elapsed_seconds": 1.4681408339999962,
+      "context": "We're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.468059832999998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 314,
+          "max_tokens": 128,
+          "raw_output_tokens": 21,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.468396042000002,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 152.81,
+      "end": 156.89,
+      "text": "And we ultimately want this.",
+      "source_indices": [
+        35
+      ],
+      "id": "group-20",
+      "baseline": {
+        "source_indices": [
+          35
+        ],
+        "translations": [
+          "우리는 이곳에서 즉각적으로 이 일을 수행할 수 있습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 3.7137844169999994,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-29"
+      ],
+      "translation": "그리고 우리는 결국 이걸 원한다.",
+      "prompt_tokens": 246,
+      "generated_tokens": 11,
+      "elapsed_seconds": 1.0057519169999978,
+      "context": "And then we can immediately do this here over 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0056889159999969,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 246,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0062171669999955,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 156.89,
+      "end": 171.65,
+      "text": "So this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.",
+      "source_indices": [
+        36,
+        37
+      ],
+      "id": "group-21",
+      "baseline": {
+        "source_indices": [
+          36,
+          37
+        ],
+        "translations": [
+          "이것은 테스트 입니다. 물론 이것은 가능한 것입니다.",
+          "그러면 우리는 0.5로 나누어 받아들였습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 17.024238457999985,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "merge_reasons": [
+        "function_expression"
+      ],
+      "original_group_ids": [
+        "stt-30",
+        "stt-31"
+      ],
+      "translation": "이것은 t에 대한 vR이다. 물론. 그리고 그 후에 v0 + u ln mR / 2 m0를 얻었다.",
+      "prompt_tokens": 325,
+      "generated_tokens": 34,
+      "elapsed_seconds": 1.794960125000003,
+      "context": "And we ultimately want this.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.7949188750000005,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 325,
+          "max_tokens": 128,
+          "raw_output_tokens": 34,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.7951138749999984,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 171.65,
+      "end": 176.78,
+      "text": "And that is our equation.",
+      "source_indices": [
+        38
+      ],
+      "id": "group-22",
+      "baseline": {
+        "source_indices": [
+          38
+        ],
+        "translations": [
+          "그것은 우리의 방정식입니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.699453417000001,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-32"
+      ],
+      "translation": "그것이 우리의 방정식이다.",
+      "prompt_tokens": 261,
+      "generated_tokens": 10,
+      "elapsed_seconds": 1.0327757909999988,
+      "context": "So this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.0327255830000013,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 261,
+          "max_tokens": 128,
+          "raw_output_tokens": 10,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.0329223329999948,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 176.78,
+      "end": 179.58,
+      "text": "So what does this equation tell us?",
+      "source_indices": [
+        39
+      ],
+      "id": "group-23",
+      "baseline": {
+        "source_indices": [
+          39
+        ],
+        "translations": [
+          "이 방정식은 무엇을 알려주는지 설명합니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 4.337206500000008,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-33"
+      ],
+      "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+      "prompt_tokens": 240,
+      "generated_tokens": 18,
+      "elapsed_seconds": 1.1705337080000007,
+      "context": "And that is our equation.",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.1704816249999936,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 240,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.1706981669999976,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 179.58,
+      "end": 194.46,
+      "text": "mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,",
+      "source_indices": [
+        40,
+        41
+      ],
+      "id": "group-24",
+      "baseline": {
+        "source_indices": [
+          40,
+          41
+        ],
+        "translations": [
+          "설명 없이 번역문만 답하세요. 용어: mass=질량. 이전 문맥(번역하거나 반복하지 마세요): 이 방정식은 무엇을 알려주는지 설명합니다. \"설명 없이 번역문만 답하세요.",
+          "이 방정식은 무엇을 알려주는지 설명합니다.\" 라는 문장은 어떤 방정식이 양수가 아닌지 설명하지 않습니다."
+        ],
+        "error_count": 0,
+        "translation_seconds": 11.349506625000004,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-34"
+      ],
+      "translation": "로켓의 질량 mR은 이전보다 나중에 작아진다. 즉, 여기서 나타나는 항은 0보다 작아진다.",
+      "prompt_tokens": 328,
+      "generated_tokens": 37,
+      "elapsed_seconds": 1.8725567079999976,
+      "context": "So what does this equation tell us?",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.8725068749999991,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 328,
+          "max_tokens": 128,
+          "raw_output_tokens": 37,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 1.872700249999994,
+      "semantic_review": "pending_manual_review"
+    },
+    {
+      "start": 194.46,
+      "end": 209.9,
+      "text": "which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "source_indices": [
+        42,
+        43,
+        44
+      ],
+      "id": "group-25",
+      "baseline": {
+        "source_indices": [
+          42,
+          43,
+          44
+        ],
+        "translations": [
+          "속도\"는 \"속도\"입니다.",
+          "속도가 감소하고 있습니다.",
+          "속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 감소하고 있습니다. -> 속도가 �"
+        ],
+        "error_count": 0,
+        "translation_seconds": 10.749694876000007,
+        "interpretation": "이전 조각별 결과를 묶음과 나란히 비교하기 위한 자료이며 정확도 판정은 아니다."
+      },
+      "original_group_ids": [
+        "stt-35"
+      ],
+      "translation": "이는 속도가 초기 속도에서 어떤 값 빼기 때문에, 속도가 감소한다는 의미이며, 따라서 내 썰매는 결국 정지하게 된다.",
+      "prompt_tokens": 220,
+      "generated_tokens": 41,
+      "elapsed_seconds": 3.6147670829999967,
+      "context": "mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,",
+      "error": null,
+      "attempts": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.9313670839999943,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 302,
+          "max_tokens": 128,
+          "raw_output_tokens": 42,
+          "finish_reason": "stop",
+          "rejection_reason": "missing_term",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.683341917,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 220,
+          "max_tokens": 128,
+          "raw_output_tokens": 41,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ],
+      "total_seconds": 3.6149317080000003,
+      "semantic_review": "pending_manual_review"
+    }
+  ],
+  "summary": {
+    "group_count": 26,
+    "validated_outputs": 26,
+    "failed_outputs": 0,
+    "translation_seconds": 40.28689775099998,
+    "attempt_count": 27,
+    "rejection_reasons": {
+      "missing_term": 1
+    },
+    "semantic_accuracy": null,
+    "interpretation": "검증 통과는 의미 정확성의 판정이 아니다. 기준 번역·수식·부정·비교 관계를 수동 확인해야 한다.",
+    "failed_original_group_ids": []
+  },
+  "mlx_peak_gb": 2.821309612
+}

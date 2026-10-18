@@ -2,6 +2,7 @@
 from pathlib import Path
 from threading import Lock
 from time import perf_counter
+from typing import Optional
 
 from timing import measure
 from app.services.media import MAX_MEDIA_SECONDS, MEDIA_TOO_LONG, validate_media_duration
@@ -13,17 +14,23 @@ class TranscriptionService:
         model_name: str = "small",
         device: str = "cpu",
         compute_type: str = "int8",
+        initial_prompt: Optional[str] = None,
+        hotwords: Optional[str] = None,
     ):
         """모델·장치·연산 형식을 저장하고 모델 로딩 및 추론 잠금을 준비한다.
 
         :param model_name: 사용할 Whisper 모델 이름 또는 로컬 모델 경로.
         :param device: Whisper 추론 장치. 예: cpu, cuda.
         :param compute_type: Whisper 연산 정밀도. 예: int8.
+        :param initial_prompt: 선택적 영어 전사 문맥 힌트. None이면 기존 기본값을 유지한다.
+        :param hotwords: 선택적 용어 힌트 문자열. None이면 별도 용어를 지정하지 않는다.
         :return: None.
         """
         self.model_name = model_name
         self.device = device
         self.compute_type = compute_type
+        self.initial_prompt = initial_prompt
+        self.hotwords = hotwords
         self._model = None
         self._load_lock = Lock()
         self._inference_lock = Lock()
@@ -92,6 +99,8 @@ class TranscriptionService:
                     task="transcribe",
                     beam_size=5,
                     vad_filter=True,
+                    initial_prompt=self.initial_prompt,
+                    hotwords=self.hotwords,
                 )
                 segments = [
                     {
