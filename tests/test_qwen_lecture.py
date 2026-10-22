@@ -6,7 +6,7 @@ from unittest.mock import Mock
 
 from scripts.evaluate_prompt_matrix import prompt_service, variant_prompt
 from scripts.evaluate_qwen_lecture import EvaluationQwenService
-from test_prompt_matrix import MessageTokenizer
+from tests.test_prompt_matrix import MessageTokenizer
 
 
 class QwenLectureTests(unittest.TestCase):

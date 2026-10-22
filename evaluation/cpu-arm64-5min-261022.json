@@ -1,0 +1,2823 @@
+{
+  "started_at": "2026-10-22T11:22:36.220297+00:00",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "media": "/private/tmp/kaption-mit1802-5min.mp4",
+  "host_memory_goal": "unverified",
+  "job_id": "1b30d035cf294fe499ee10c04fa947ee",
+  "initial_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": false
+  },
+  "final_job": {
+    "job_id": "1b30d035cf294fe499ee10c04fa947ee",
+    "status": "completed",
+    "stage": "completed",
+    "progress_percent": 100.0,
+    "completed_segments": 31,
+    "total_segments": 31,
+    "failed_segments": 31,
+    "created_at": "2026-10-22T11:22:36.439171Z",
+    "updated_at": "2026-10-22T11:24:03.219305Z",
+    "expires_at": "2026-10-23T11:24:03.219297Z",
+    "elapsed_seconds": 86.780134,
+    "error": null
+  },
+  "events": [
+    {
+      "seconds": 0.280052334,
+      "state": {
+        "job_id": "1b30d035cf294fe499ee10c04fa947ee",
+        "status": "running",
+        "stage": "transcribing",
+        "progress_percent": null,
+        "completed_segments": 0,
+        "total_segments": null,
+        "failed_segments": 0,
+        "created_at": "2026-10-22T11:22:36.439171Z",
+        "updated_at": "2026-10-22T11:22:36.555775Z",
+        "expires_at": null,
+        "elapsed_seconds": 0.120027,
+        "error": null
+      }
+    },
+    {
+      "seconds": 87.37109358400001,
+      "state": {
+        "job_id": "1b30d035cf294fe499ee10c04fa947ee",
+        "status": "completed",
+        "stage": "completed",
+        "progress_percent": 100.0,
+        "completed_segments": 31,
+        "total_segments": 31,
+        "failed_segments": 31,
+        "created_at": "2026-10-22T11:22:36.439171Z",
+        "updated_at": "2026-10-22T11:24:03.219305Z",
+        "expires_at": "2026-10-23T11:24:03.219297Z",
+        "elapsed_seconds": 86.780134,
+        "error": null
+      }
+    }
+  ],
+  "elapsed_seconds": 87.38374791700001,
+  "result": {
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.0,
+        "text": "extra practice if you feel the need to.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 3.0,
+        "end": 6.0,
+        "text": "You'll see it's pretty easy.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 6.0,
+        "end": 19.79,
+        "text": "So, just to remind you, a vector is a quantity that has both a direction and a magnitude or length.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 19.79,
+        "end": 37.05,
+        "text": "So, concretely, the way you draw a vector is by some",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 37.05,
+        "end": 44.05,
+        "text": "row like that. And so, it has a length and it's pointing in some direction.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 44.05,
+        "end": 53.05,
+        "text": "And so, now the way that we compute things with vectors typically is we introduce a coordinate system.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 53.05,
+        "end": 64.05,
+        "text": "So, if we're in the plane x, y axis, if we're in space, x, y, z axis, usually I will try to draw my x, y, z axis consistently to look like this.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 64.05,
+        "end": 71.05,
+        "text": "And then I can represent my vector in terms of its coordinates along the coordinate axis.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 71.05,
+        "end": 81.05,
+        "text": "So, that means when I have this arrow, I can ask how much does it go in the x direction, how much does it go in the y direction, how much does it go in the z direction?",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 81.05,
+        "end": 85.05,
+        "text": "And so, for example, let's call this a vector a.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 85.05,
+        "end": 92.05,
+        "text": "So, a small convention, when we have a vector quantity, we put an arrow on top to remind us that it's a vector.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 92.05,
+        "end": 97.05,
+        "text": "If it's in a textbook, then sometimes it's in bold and sometimes it's easier to type set.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 97.05,
+        "end": 105.05,
+        "text": "If you've tried, you know, in your favorite word processor there's bold is easy and vectors are not easy.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 105.05,
+        "end": 116.05,
+        "text": "So, the vector you can try to decompose in terms of unit vectors directed along the coordinate axis.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 116.05,
+        "end": 127.93,
+        "text": "So, the convention is there's a vector that we call i hat that points along the x axis and has length one.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 127.93,
+        "end": 136.93,
+        "text": "There's a vector called j hat that does the same along the y axis and a k hat that does the same along the z axis.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 136.93,
+        "end": 152.85,
+        "text": "And so, we can express any vector in terms of its components. So, the other notation is a1, a2, a3 between these square brackets.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 152.85,
+        "end": 156.85,
+        "text": "Maybe I should say angular brackets.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 156.85,
+        "end": 166.85,
+        "text": "So, the length of a vector we denote by, if you want, it's the same notation as the absolute value.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 166.85,
+        "end": 177.85,
+        "text": "So, that's going to be a number. Or, as we say now, a scalar quantity. So, a scalar quantity is a usual numerical quantity as opposed to a vector quantity.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 177.85,
+        "end": 187.84,
+        "text": "And its direction is sometimes called the air of A.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 187.84,
+        "end": 194.84,
+        "text": "And that can be obtained just by scaling the vector down to unit length. For example,",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 194.84,
+        "end": 212.02,
+        "text": "by dividing it by its length. Well, there's a lot of notation to be learned. So, for example,",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 212.02,
+        "end": 225.02,
+        "text": "if I have two points, p and q, then I can draw a vector from p to q. And that vector is called A. So, maybe I'm going to call it A.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 225.02,
+        "end": 241.16,
+        "text": "But, a vector doesn't really have necessarily a starting point and an ending point. So, if I decide to start here and I go by the same distance in the same direction, this is also the vector A. It's the same vector.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 241.16,
+        "end": 254.57,
+        "text": "So, a lot of vectors will draw starting at the origin, but we don't have to. So, let's just check and see how things went in recitation.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 254.57,
+        "end": 263.28,
+        "text": "So, let's say that I give you the vector 3 to 1.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 263.28,
+        "end": 270.19,
+        "text": "And so, what do you think about the length of this",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 270.19,
+        "end": 285.72,
+        "text": "vector? I see an answer forming.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 285.72,
+        "end": 288.72,
+        "text": "So, a lot of you are answering the same thing.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      },
+      {
+        "start": 288.72,
+        "end": 300.0021875,
+        "text": "Maybe I shouldn't spoil it for those who haven't answered. OK, I think the overwhelming vote is in favor of answer number two.",
+        "translation": null,
+        "translation_error": "translation_failed"
+      }
+    ]
+  },
+  "subtitles": {
+    "srt": {
+      "status": 200,
+      "download": "attachment; filename=\"kaption-1b30d035cf294fe499ee10c04fa947ee-both.srt\""
+    },
+    "vtt": {
+      "status": 200,
+      "download": "attachment; filename=\"kaption-1b30d035cf294fe499ee10c04fa947ee-both.vtt\""
+    }
+  },
+  "timing_logs": [
+    {
+      "event": "stt_decode",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "0.221",
+      "status": "ok"
+    },
+    {
+      "event": "stt_model_load",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "1.238",
+      "status": "ok",
+      "model": "small"
+    },
+    {
+      "event": "stt_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "stt_inference",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "84.947",
+      "status": "ok",
+      "audio_seconds": "300.0021875",
+      "segment_count": "61"
+    },
+    {
+      "event": "stt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "86.512",
+      "status": "ok",
+      "segment_count": "61"
+    },
+    {
+      "event": "sentence_grouping",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "0.002",
+      "status": "ok",
+      "source_segment_count": "61",
+      "sentence_count": "31"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "0",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "0",
+      "elapsed_seconds": "0.019",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "0",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "0",
+      "elapsed_seconds": "0.022",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "0",
+      "elapsed_seconds": "0.023",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "1",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "1",
+      "elapsed_seconds": "0.002",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "1",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "1",
+      "elapsed_seconds": "0.004",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "1",
+      "elapsed_seconds": "0.004",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "2",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "2",
+      "elapsed_seconds": "0.002",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "2",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "2",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "2",
+      "elapsed_seconds": "0.004",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "3",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "3",
+      "elapsed_seconds": "0.002",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "3",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "3",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "3",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "4",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "4",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "4",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "4",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "4",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "5",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "5",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "5",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "5",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "5",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "6",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "6",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "6",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "6",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "6",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "7",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "7",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "7",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "7",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "7",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "8",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "8",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "8",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "8",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "8",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "9",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "9",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "9",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "9",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "9",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "10",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "10",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "10",
+      "elapsed_seconds": "0.016",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "10",
+      "elapsed_seconds": "0.017",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "10",
+      "elapsed_seconds": "0.018",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "11",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "11",
+      "elapsed_seconds": "0.009",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "11",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "11",
+      "elapsed_seconds": "0.012",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "11",
+      "elapsed_seconds": "0.012",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "12",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "12",
+      "elapsed_seconds": "0.002",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "12",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "12",
+      "elapsed_seconds": "0.005",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "12",
+      "elapsed_seconds": "0.005",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "13",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "13",
+      "elapsed_seconds": "0.005",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "13",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "13",
+      "elapsed_seconds": "0.007",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "13",
+      "elapsed_seconds": "0.007",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "14",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "14",
+      "elapsed_seconds": "0.005",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "14",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "14",
+      "elapsed_seconds": "0.007",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "14",
+      "elapsed_seconds": "0.007",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "15",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "15",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "15",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "15",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "15",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "16",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "16",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "16",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "16",
+      "elapsed_seconds": "0.004",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "16",
+      "elapsed_seconds": "0.004",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "17",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "17",
+      "elapsed_seconds": "0.002",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "17",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "17",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "17",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "18",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "18",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "18",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "18",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "18",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "19",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "19",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "19",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "19",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "19",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "20",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "20",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "20",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "20",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "20",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "21",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "21",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "21",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "21",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "21",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "22",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "22",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "22",
+      "elapsed_seconds": "0.002",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "22",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "22",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "23",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "23",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "23",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "23",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "23",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "24",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "24",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "24",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "24",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "24",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "25",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "25",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "25",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "25",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "25",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "26",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "26",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "26",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "26",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "26",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "27",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "27",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "27",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "27",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "27",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "28",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "28",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "28",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "28",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "28",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "29",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "29",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "29",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "29",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "29",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_queue",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "30",
+      "elapsed_seconds": "0.000",
+      "status": "ok"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "30",
+      "elapsed_seconds": "0.001",
+      "status": "ok",
+      "attempt": "1",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False"
+    },
+    {
+      "event": "translation_attempt",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "30",
+      "elapsed_seconds": "0.001",
+      "status": "error",
+      "attempt": "2",
+      "rejection_reason": "translator_unavailable",
+      "accepted": "False",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_total",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "30",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "attempts": "2",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "segment_translation",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "30",
+      "elapsed_seconds": "0.003",
+      "status": "error",
+      "error_type": "TranslationTransportError"
+    },
+    {
+      "event": "translation_batch",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "0.151",
+      "status": "ok",
+      "source_segment_count": "61",
+      "sentence_count": "31",
+      "failed_segments": "31"
+    },
+    {
+      "event": "job_processing",
+      "request_id": "1b30d035cf294fe499ee10c04fa947ee",
+      "segment_index": "None",
+      "elapsed_seconds": "86.668",
+      "status": "ok",
+      "job_id": "1b30d035cf294fe499ee10c04fa947ee"
+    }
+  ],
+  "docker": {
+    "samples": [
+      {
+        "seconds": 0.04813654199999999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 100200448,
+            "working_set_bytes": 86966272,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 772784000,
+            "cpu_percent": null
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 3528867840,
+            "working_set_bytes": 3297648640,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7952482000,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 1.06334575,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 395042816,
+            "working_set_bytes": 206581760,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 1308028000,
+            "cpu_percent": 51.30879431607258
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 3214438400,
+            "working_set_bytes": 2876313600,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7954114000,
+            "cpu_percent": 0.15475477400626958
+          }
+        }
+      },
+      {
+        "seconds": 2.115229709,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 792997888,
+            "working_set_bytes": 756908032,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 2404415000,
+            "cpu_percent": 105.89994225129632
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2909286400,
+            "working_set_bytes": 2902859776,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7976408000,
+            "cpu_percent": 2.179946729099204
+          }
+        }
+      },
+      {
+        "seconds": 3.1404601249999997,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 980054016,
+            "working_set_bytes": 979177472,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 5639370000,
+            "cpu_percent": 241.51197564652227
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2875985920,
+            "working_set_bytes": 2875715584,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7981852000,
+            "cpu_percent": 0.3386691997032562
+          }
+        }
+      },
+      {
+        "seconds": 4.74668725,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 968298496,
+            "working_set_bytes": 960638976,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 11114573000,
+            "cpu_percent": 384.521449251615
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2876227584,
+            "working_set_bytes": 2875838464,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7995968000,
+            "cpu_percent": 1.0616673600057993
+          }
+        }
+      },
+      {
+        "seconds": 6.078999917,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 915832832,
+            "working_set_bytes": 915148800,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 16827376000,
+            "cpu_percent": 374.7132324968187
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2876063744,
+            "working_set_bytes": 2875961344,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7998404000,
+            "cpu_percent": 0.14813768256277285
+          }
+        }
+      },
+      {
+        "seconds": 7.722990584,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 998842368,
+            "working_set_bytes": 996491264,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 22977855000,
+            "cpu_percent": 395.22029526279425
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2876813312,
+            "working_set_bytes": 2875994112,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7999093000,
+            "cpu_percent": 0.041543081275662024
+          }
+        }
+      },
+      {
+        "seconds": 9.380707292,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1017761792,
+            "working_set_bytes": 1017663488,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 30151881000,
+            "cpu_percent": 347.77030682651764
+          }
+        }
+      },
+      {
+        "seconds": 14.04420825,
+        "containers": {}
+      },
+      {
+        "seconds": 21.051310417000003,
+        "containers": {}
+      },
+      {
+        "seconds": 28.06078275,
+        "containers": {
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 6574080,
+            "working_set_bytes": 6574080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 8160537000,
+            "cpu_percent": 0.6817910005175303
+          }
+        }
+      },
+      {
+        "seconds": 33.060743125,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1112698880,
+            "working_set_bytes": 1107816448,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 56591065000,
+            "cpu_percent": 113.19065690174467
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 1803509760,
+            "working_set_bytes": 1794011136,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 394414000,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 34.612452375000004,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1098371072,
+            "working_set_bytes": 1088233472,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 63881017000,
+            "cpu_percent": 454.6234505620641
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2640195584,
+            "working_set_bytes": 1895075840,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1583191000,
+            "cpu_percent": 80.25683179953967
+          }
+        }
+      },
+      {
+        "seconds": 36.097173375000004,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1106698240,
+            "working_set_bytes": 1100926976,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 69653827000,
+            "cpu_percent": 407.78440805152434
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2629836800,
+            "working_set_bytes": 2280628224,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 2926032000,
+            "cpu_percent": 95.20620246493054
+          }
+        }
+      },
+      {
+        "seconds": 37.505355042000005,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1136623616,
+            "working_set_bytes": 1136623616,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 74238439000,
+            "cpu_percent": 396.7930323526671
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 38.594077417,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1187409920,
+            "working_set_bytes": 1186873344,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 78710624000,
+            "cpu_percent": 256.86429262921996
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2436222976,
+            "working_set_bytes": 1486671872,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 781486000,
+            "cpu_percent": 40.94491091997629
+          }
+        }
+      },
+      {
+        "seconds": 40.503020875000004,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1197137920,
+            "working_set_bytes": 1189269504,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 86690032000,
+            "cpu_percent": 542.3273004573414
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2577375232,
+            "working_set_bytes": 1870598144,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 2075578000,
+            "cpu_percent": 93.22290973832783
+          }
+        }
+      },
+      {
+        "seconds": 41.889653917000004,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1230082048,
+            "working_set_bytes": 1226567680,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 91527454000,
+            "cpu_percent": 335.7764176193031
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 547565568,
+            "working_set_bytes": 547565568,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 3576662000,
+            "cpu_percent": 91.1285949975719
+          }
+        }
+      },
+      {
+        "seconds": 43.538228375,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1142947840,
+            "working_set_bytes": 1142947840,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 96995742000,
+            "cpu_percent": 410.1616803841665
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 107991040,
+            "working_set_bytes": 98361344,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 345379000,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 44.576227209,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1156763648,
+            "working_set_bytes": 1156661248,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 103400173000,
+            "cpu_percent": 369.1805164893652
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2524712960,
+            "working_set_bytes": 2133041152,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1293030000,
+            "cpu_percent": 52.79452316941192
+          }
+        }
+      },
+      {
+        "seconds": 46.371269792,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1175445504,
+            "working_set_bytes": 1167519744,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 109762131000,
+            "cpu_percent": 365.7236007084247
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2600091648,
+            "working_set_bytes": 2251788288,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 3033585000,
+            "cpu_percent": 87.47686897319261
+          }
+        }
+      },
+      {
+        "seconds": 48.357002625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1229602816,
+            "working_set_bytes": 1228705792,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 116032800000,
+            "cpu_percent": 454.7894114623506
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 49.423913667,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1152749568,
+            "working_set_bytes": 1151852544,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 120271293000,
+            "cpu_percent": 351.5754998024134
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 54337536,
+            "working_set_bytes": 49950720,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 99679000,
+            "cpu_percent": 6.916026211155815
+          }
+        }
+      },
+      {
+        "seconds": 50.864832375,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1181585408,
+            "working_set_bytes": 1180688384,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 125852778000,
+            "cpu_percent": 383.0204231519578
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 1820315648,
+            "working_set_bytes": 1810685952,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 785500000,
+            "cpu_percent": 50.2184389071482
+          }
+        }
+      },
+      {
+        "seconds": 52.23324275,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1157255168,
+            "working_set_bytes": 1140920320,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 130742471000,
+            "cpu_percent": 300.27024483540373
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2559287296,
+            "working_set_bytes": 927940608,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 2142345000,
+            "cpu_percent": 88.48742904545283
+          }
+        }
+      },
+      {
+        "seconds": 53.762376834,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1167785984,
+            "working_set_bytes": 1151008768,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 136088786000,
+            "cpu_percent": 473.42865549003506
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2607767552,
+            "working_set_bytes": 1478041600,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 3226308000,
+            "cpu_percent": 95.37208183351392
+          }
+        }
+      },
+      {
+        "seconds": 54.900652834,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1179226112,
+            "working_set_bytes": 1170776064,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 141674161000,
+            "cpu_percent": 374.65771161458383
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2626420736,
+            "working_set_bytes": 2441170944,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 4720071000,
+            "cpu_percent": 77.23989378394212
+          }
+        }
+      },
+      {
+        "seconds": 56.833918542,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1198460928,
+            "working_set_bytes": 1197670400,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 148045792000,
+            "cpu_percent": 398.0510074133074
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 57.936605917,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1241448448,
+            "working_set_bytes": 1240657920,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 152119586000,
+            "cpu_percent": 398.0132363034429
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 58.955473917,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1153015808,
+            "working_set_bytes": 1152225280,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 156590486000,
+            "cpu_percent": 359.33488195959046
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 1350533120,
+            "working_set_bytes": 1341079552,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 540279000,
+            "cpu_percent": 35.753402119230685
+          }
+        }
+      },
+      {
+        "seconds": 60.466883667000005,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1127419904,
+            "working_set_bytes": 1122197504,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 163878577000,
+            "cpu_percent": 404.5013442039562
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2609270784,
+            "working_set_bytes": 1363660800,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1889249000,
+            "cpu_percent": 82.35696340864075
+          }
+        }
+      },
+      {
+        "seconds": 62.104230375,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1128206336,
+            "working_set_bytes": 1125498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 168534967000,
+            "cpu_percent": 403.7365332813108
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2599944192,
+            "working_set_bytes": 1368748032,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 2934311000,
+            "cpu_percent": 95.8903079663672
+          }
+        }
+      },
+      {
+        "seconds": 63.195711292,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1129934848,
+            "working_set_bytes": 1113063424,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 174397406000,
+            "cpu_percent": 298.6695502269976
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 26312704,
+            "working_set_bytes": 24645632,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 4740525000,
+            "cpu_percent": 86.13517708897245
+          }
+        }
+      },
+      {
+        "seconds": 65.29382324999999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1183924224,
+            "working_set_bytes": 1174896640,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 180000366000,
+            "cpu_percent": 465.2881527721419
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 66.325465959,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1152925696,
+            "working_set_bytes": 1143898112,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 184049142000,
+            "cpu_percent": 394.78691244726133
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 67.349159417,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1153441792,
+            "working_set_bytes": 1144414208,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 188233737000,
+            "cpu_percent": 409.1801133885743
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 68.368027,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1153564672,
+            "working_set_bytes": 1144537088,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 192384368000,
+            "cpu_percent": 205.08588371206318
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2481831936,
+            "working_set_bytes": 1889374208,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1105003000,
+            "cpu_percent": 46.98116622590991
+          }
+        }
+      },
+      {
+        "seconds": 70.72046891699999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1168175104,
+            "working_set_bytes": 1163001856,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 202409420000,
+            "cpu_percent": 611.3503851944772
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2543591424,
+            "working_set_bytes": 1577226240,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 2503785000,
+            "cpu_percent": 97.86623260181044
+          }
+        }
+      },
+      {
+        "seconds": 72.14949229199999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1181859840,
+            "working_set_bytes": 1179533312,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 208509221000,
+            "cpu_percent": 339.80849176903087
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 74.048437084,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1152942080,
+            "working_set_bytes": 1150160896,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 214616221000,
+            "cpu_percent": 489.89399781649274
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 75.070774125,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1165078528,
+            "working_set_bytes": 1162297344,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 218617089000,
+            "cpu_percent": 396.0864586642848
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 76.08329408399999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1178800128,
+            "working_set_bytes": 1176018944,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 222603208000,
+            "cpu_percent": 393.60179198998054
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 77.09669458399999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1235984384,
+            "working_set_bytes": 1233203200,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 226581116000,
+            "cpu_percent": 393.36451496591127
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 78.10729599999999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1227698176,
+            "working_set_bytes": 1224916992,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 230602980000,
+            "cpu_percent": 396.44750833049
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 79.124026375,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1161601024,
+            "working_set_bytes": 1158819840,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 234726454000,
+            "cpu_percent": 403.9827354707091
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      },
+      {
+        "seconds": 80.14500625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1172967424,
+            "working_set_bytes": 1170186240,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 239011224000,
+            "cpu_percent": 381.2801565190201
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2598907904,
+            "working_set_bytes": 833646592,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 634767000,
+            "cpu_percent": 30.01084805304098
+          }
+        }
+      },
+      {
+        "seconds": 82.2612735,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1176760320,
+            "working_set_bytes": 1162285056,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 247875534000,
+            "cpu_percent": 387.0541521175651
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2547744768,
+            "working_set_bytes": 1563418624,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 2123954000,
+            "cpu_percent": 106.94339193116859
+          }
+        }
+      },
+      {
+        "seconds": 83.65429854199999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1192226816,
+            "working_set_bytes": 1186091008,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 253828474000,
+            "cpu_percent": 369.57200209218684
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 184725504,
+            "working_set_bytes": 184725504,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 3880037000,
+            "cpu_percent": 91.77349316695405
+          }
+        }
+      },
+      {
+        "seconds": 85.567400542,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1321287680,
+            "working_set_bytes": 1311301632,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 260071838000,
+            "cpu_percent": 435.6355833061768
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 86.603739167,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 1227689984,
+            "working_set_bytes": 1217703936,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 264149842000,
+            "cpu_percent": 399.0678313041174
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": null,
+            "working_set_bytes": null,
+            "cgroup_max_bytes": null,
+            "limit_bytes": null,
+            "cpu_total_ns": 0,
+            "cpu_percent": 0.0
+          }
+        }
+      }
+    ],
+    "errors": [
+      {
+        "seconds": 13.042003417,
+        "container": "kaption-cpu-refactor-translator-1",
+        "type": "ReadTimeout"
+      },
+      {
+        "seconds": 17.046711000000002,
+        "container": "kaption-cpu-refactor-backend-1",
+        "type": "ReadTimeout"
+      },
+      {
+        "seconds": 20.048934000000003,
+        "container": "kaption-cpu-refactor-translator-1",
+        "type": "ReadTimeout"
+      },
+      {
+        "seconds": 24.053591125,
+        "container": "kaption-cpu-refactor-backend-1",
+        "type": "ReadTimeout"
+      },
+      {
+        "seconds": 27.055702250000003,
+        "container": "kaption-cpu-refactor-translator-1",
+        "type": "ReadTimeout"
+      },
+      {
+        "seconds": 31.062170959000003,
+        "container": "kaption-cpu-refactor-backend-1",
+        "type": "ReadTimeout"
+      }
+    ],
+    "initial_states": {
+      "kaption-cpu-refactor-backend-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      },
+      "kaption-cpu-refactor-translator-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      }
+    },
+    "final_states": {
+      "kaption-cpu-refactor-backend-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      },
+      "kaption-cpu-refactor-translator-1": {
+        "oom_killed": true,
+        "restart_count": 8
+      }
+    },
+    "oom_or_restart": true,
+    "sampled_combined_working_set_peak_bytes": 3872485376,
+    "complete": false,
+    "host_memory_goal": "unverified",
+    "limits": [
+      "Sampled container working sets exclude Docker/VM host overhead.",
+      "Sampling can miss short peaks; separate host measurement is required."
+    ]
+  },
+  "pipeline_succeeded": false
+}

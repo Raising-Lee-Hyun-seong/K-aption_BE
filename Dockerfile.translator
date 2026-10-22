@@ -1,0 +1,2 @@
+# 공식 CPU 전용 amd64·arm64 바이너리. GPU 변형은 사용하지 않는다.
+FROM ghcr.io/ggml-org/llama.cpp:server@sha256:c7b03e45cff9c4e984acd39032a6f3a82c811075b72bf176e329f84b8598c135

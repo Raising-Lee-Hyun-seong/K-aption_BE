@@ -1,0 +1,430 @@
+{
+  "recorded_on": "2026-10-22",
+  "source": {
+    "title": "MIT 18.02 Fall 2007 Lecture 1: Dot Product",
+    "instructor": "Denis Auroux",
+    "page": "https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/resources/lecture-1-dot-product/",
+    "download": "https://archive.org/download/MIT18.02F07/ocw-18_02-f07-lec01_300k.mp4",
+    "license": "CC BY-NC-SA 4.0; source media retained locally, not committed",
+    "sha256": "bfdcd45df714492ca8f8a7abdde4977c43a975754ba0fae476b9785805df191e",
+    "bytes": 89598573,
+    "duration_seconds": 2320.300408
+  },
+  "preparation": {
+    "offset_seconds": 60,
+    "method": "ffmpeg -ss 60 -i SOURCE -t SECONDS -map 0:v:0 -map 0:a:0 -c copy OUTPUT.mp4",
+    "repeated_or_synthetic": false,
+    "overlap": "The 5-minute clip is the opening portion of the 30-minute clip. These are load tests, not independent quality holdouts."
+  },
+  "clips": [
+    {
+      "nominal_minutes": 5,
+      "local_file": "/private/tmp/kaption-mit1802-5min.mp4",
+      "sha256": "e3f54c825fbdfb2b6f6cc486ed5467706601b0cc381dcf72b65df4515f6f08d0",
+      "bytes": 11008947,
+      "container_duration_seconds": 300.094
+    },
+    {
+      "nominal_minutes": 30,
+      "local_file": "/private/tmp/kaption-mit1802-30min.mp4",
+      "sha256": "40578770eea4a8930f85409da1f9dafed26e9b604e583006d518f9d9e79311ff",
+      "bytes": 68574105,
+      "container_duration_seconds": 1800.095
+    }
+  ],
+  "environment": {
+    "host": "Apple Silicon macOS, 16 GiB physical RAM",
+    "target": "Native Linux ARM64 Docker; not Windows hardware",
+    "docker_vm_memory_bytes": 4106604544,
+    "docker_vm_cpus": 8,
+    "host_settings_changed": false,
+    "model": "docker/qwen3-model.json",
+    "translator_image": "Dockerfile.translator",
+    "baseline_config": "compose.yaml before adding --no-repack",
+    "experimental_override": "Baseline translator command plus --no-repack only",
+    "stt_initialization": "Backend restarted before each 5-minute run; cached Whisper download, fresh lazy model load",
+    "experimental_container_config": {
+      "kaption-cpu-refactor-translator-1": {
+        "image_id": "sha256:4cc9a392870c5cd82f3f7fef6837e4115f7f85e3d3976733739da65899bf537a",
+        "command": [
+          "--model",
+          "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+          "--alias",
+          "qwen3-4b-instruct-2507",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "8080",
+          "--device",
+          "none",
+          "--n-gpu-layers",
+          "0",
+          "--no-kv-offload",
+          "--no-op-offload",
+          "--ctx-size",
+          "2048",
+          "--parallel",
+          "1",
+          "--threads",
+          "4",
+          "--threads-batch",
+          "4",
+          "--batch-size",
+          "256",
+          "--ubatch-size",
+          "128",
+          "--cache-ram",
+          "0",
+          "--no-context-shift",
+          "--jinja",
+          "--no-repack"
+        ],
+        "memory_limit_bytes": 4000000000,
+        "memory_swap_limit_bytes": 4000000000
+      },
+      "kaption-cpu-refactor-backend-1": {
+        "image_id": "sha256:12c2b9a040ab99897feaf88b0e7852373048c155ac1435cf507c7781ba504a8a",
+        "command": [
+          "uvicorn",
+          "app.main:app",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "8000",
+          "--workers",
+          "1"
+        ],
+        "memory_limit_bytes": 2500000000,
+        "memory_swap_limit_bytes": 2500000000
+      }
+    }
+  },
+  "baseline_failure": {
+    "report": "cpu-arm64-5min-261022.json",
+    "status": "failed; not a passing long-media validation",
+    "translated_segments": 0,
+    "total_segments": 31,
+    "docker_oom_events": 8,
+    "translator_restart_count_at_report_end": 8,
+    "exit_code": 137,
+    "baseline_translator_before_test": {
+      "anon_bytes": 2866479104,
+      "anon_thp_bytes": 2382364672,
+      "file_bytes": 3272704
+    },
+    "no_repack_translator_after_load_snapshot": {
+      "anon_bytes": 376614912,
+      "file_bytes": 2083782656,
+      "file_mapped_bytes": 2031546368
+    },
+    "interpretation": "CPU weight repacking occupies anonymous memory that cannot be reclaimed as file cache. Disabling repacking moves most model storage to reclaimable mmap pages. Snapshot categories are not independent memory peaks.",
+    "cancel_attempt": "After detecting the restarts, cancel returned HTTP 409 because all segments had already failed and the job was completed. No production jobs were cancelled.",
+    "docker_events": [
+      {
+        "time": 1792668107,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668188,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668188,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668188,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668193,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668193,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668194,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668198,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668198,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668199,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668204,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668204,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668205,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668212,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668212,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668214,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668220,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668220,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668223,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668229,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668229,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668235,
+        "action": "start",
+        "exit_code": null
+      },
+      {
+        "time": 1792668240,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792668240,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792668253,
+        "action": "start",
+        "exit_code": null
+      }
+    ]
+  },
+  "limits": [
+    "Host 7 GB goal remains unverified until host coverage and successful long-media runs are assessed.",
+    "A completed job with all translations failed is not pipeline success.",
+    "macOS footprint can observe the Docker-owned VM after lsof verifies its open Docker.raw. Privileged helper footprint may be unavailable."
+  ],
+  "host_translation_snapshot": {
+    "samples": [
+      {
+        "seconds": 0.21522629199999999,
+        "processes": [
+          {
+            "pid": 831,
+            "rss_bytes": 1376256,
+            "executable": "/Library/PrivilegedHelperTools/com.docker.vmnetd",
+            "physical_footprint_bytes": null
+          },
+          {
+            "pid": 3878,
+            "rss_bytes": 7077888,
+            "executable": "/Applications/Docker.app/Contents/MacOS/com.docker.backend",
+            "physical_footprint_bytes": 33342448
+          },
+          {
+            "pid": 3894,
+            "rss_bytes": 92979200,
+            "executable": "/Applications/Docker.app/Contents/MacOS/com.docker.backend",
+            "physical_footprint_bytes": 148850344
+          },
+          {
+            "pid": 3895,
+            "rss_bytes": 3489792,
+            "executable": "/Applications/Docker.app/Contents/MacOS/com.docker.backend",
+            "physical_footprint_bytes": 31294400
+          },
+          {
+            "pid": 3962,
+            "rss_bytes": 2719744,
+            "executable": "/Applications/Docker.app/Contents/MacOS/com.docker.build",
+            "physical_footprint_bytes": 26444568
+          },
+          {
+            "pid": 3966,
+            "rss_bytes": 45727744,
+            "executable": "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/Contents/MacOS/Docker Desktop",
+            "physical_footprint_bytes": 97110080
+          },
+          {
+            "pid": 4017,
+            "rss_bytes": 8192000,
+            "executable": "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/Contents/Frameworks/Docker Desktop Helper.app/Contents/MacOS/Docker Desktop Helper",
+            "physical_footprint_bytes": 60114096
+          },
+          {
+            "pid": 4050,
+            "rss_bytes": 5292032,
+            "executable": "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/Contents/Frameworks/Docker Desktop Helper.app/Contents/MacOS/Docker Desktop Helper",
+            "physical_footprint_bytes": 7603208
+          },
+          {
+            "pid": 4055,
+            "rss_bytes": 73449472,
+            "executable": "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/Contents/Frameworks/Docker Desktop Helper (Renderer).app/Contents/MacOS/Docker Desktop Helper (Renderer)",
+            "physical_footprint_bytes": 95585864
+          },
+          {
+            "pid": 33589,
+            "rss_bytes": 10010624,
+            "executable": "/Applications/Docker.app/Contents/MacOS/com.docker.virtualization",
+            "physical_footprint_bytes": 39486520
+          },
+          {
+            "pid": 33590,
+            "rss_bytes": 5153554432,
+            "executable": "/System/Library/Frameworks/Virtualization.framework/Versions/A/XPCServices/com.apple.Virtualization.VirtualMachine.xpc/Contents/MacOS/com.apple.Virtualization.VirtualMachine",
+            "physical_footprint_bytes": 4349336368
+          }
+        ],
+        "sum_physical_footprint_bytes": 4889167896
+      }
+    ],
+    "errors": [
+      {
+        "seconds": 0.21521866699999997,
+        "type": "IncompleteFootprint",
+        "missing_pids": [
+          831
+        ]
+      }
+    ],
+    "attribution": {
+      "vm_pid": 33590,
+      "method": "lsof open Docker.raw",
+      "verified": true
+    },
+    "sampled_process_footprint_peak_bytes": 4889167896,
+    "complete": false,
+    "host_memory_goal": "unverified",
+    "limits": [
+      "macOS process physical footprint sum includes the verified Docker VM.",
+      "Unavailable process footprints are null and excluded from the observed sum.",
+      "Shared memory may be counted more than once; kernel/driver attribution is incomplete.",
+      "Sampling can miss short peaks and is not a Windows/WSL measurement."
+    ],
+    "coverage": "One translation-phase snapshot during 5-minute no-repack run; not full-run host peak"
+  },
+  "no_repack_5min_result": {
+    "report": "cpu-arm64-5min-no-repack-261022.json",
+    "translated_segments": 27,
+    "total_segments": 31,
+    "failed_segments": 4,
+    "oom_or_restart": false,
+    "elapsed_seconds": 836.72615825,
+    "stt_seconds": 43.358,
+    "translation_seconds": 792.761,
+    "sampled_combined_working_set_peak_bytes": 3489697792,
+    "memory_sampling_complete": true,
+    "pipeline_succeeded": false,
+    "bounded_fft": false
+  },
+  "first_30min_failure": {
+    "report": "cpu-arm64-30min-no-repack-261022.json",
+    "job_id": "34333d362cdc48af8dedc9f97ee8757e",
+    "job_recovered_status": "failed",
+    "job_recovered_error_code": "interrupted",
+    "backend_oom_events": [
+      {
+        "time": 1792669289,
+        "action": "oom",
+        "exit_code": null
+      },
+      {
+        "time": 1792669289,
+        "action": "die",
+        "exit_code": "137"
+      },
+      {
+        "time": 1792669290,
+        "action": "start",
+        "exit_code": null
+      }
+    ],
+    "interpretation": "Whole-audio FFT allocations exceeded backend memory during STT. No translation was performed. A failed SSE connection is not test success."
+  },
+  "bounded_fft_trial": {
+    "report": "cpu-arm64-30min-bounded-fft-261022.json",
+    "input_audio_chunking": false,
+    "fft_block_frames": 3000,
+    "normalization": "Whole-audio maximum, as upstream; never per-block maximum",
+    "file_sha256": {
+      "transcribe.py": "d8358bcb1d39b55bb2bd2b689504c389ccd400d6241c6509f67a40423923000d",
+      "app/services/stt_features.py": "a4a40681da133373e1a27092dfe1f5729dcc967f19549664076b8fcfe0562b37",
+      "scripts/benchmark_cpu.py": "7fa73302e1b210d0718d4161e07c2535aef127379696d9e7fe3cc9d9d81a3796",
+      "scripts/macos_docker_memory.py": "1545571cc5b94bcdbaabb102531cbfb14cf530bba07ed4f4468b0c97e30d0aac",
+      "compose.yaml": "82c7f52e4227aa43189853304328e17d42f5777a7ba8864f6e825babaafb6691"
+    },
+    "status": "STT completed; pipeline intentionally cancelled during early translation; not full 30-minute validation",
+    "stop_reason": "Finish memory-stabilization checkpoint and avoid further long translation after the user asked why execution was taking so long.",
+    "stt_seconds": 280.292,
+    "stt_inference_seconds": 277.764,
+    "source_segment_count": 398,
+    "grouped_sentence_count": 190,
+    "measured_audio_seconds": 1800.01125,
+    "final_job_completed_segments": 2,
+    "oom_or_restart": false,
+    "sampled_combined_working_set_peak_bytes": 3256434688,
+    "observed_host_process_footprint_peak_bytes": 4917284112,
+    "host_coverage": "Incomplete: privileged helper PID 831 footprint unavailable; kernel attribution and between-sample peaks unverified",
+    "cgroup_after_stt": {
+      "backend": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 5\n1669894144\n",
+      "translator": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 26\n2797785088\n"
+    },
+    "post_run_docstring_only_edits": [
+      "transcribe.py",
+      "app/services/stt_features.py"
+    ],
+    "post_run_worktree_sha256": {
+      "transcribe.py": "4f467be1e9ec5c78744110ea9f296aa91940f1b54ea77135a37131718243fe3a",
+      "app/services/stt_features.py": "303723aa1eabfe8ac56f4419a32fd34cec3422e014e482820837234b0b8ce0f8"
+    }
+  }
+}

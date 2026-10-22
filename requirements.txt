@@ -1,17 +1,2 @@
-numpy
-rouge_score
-fire
-transformers>=4.28.1
-torch
-sentencepiece
-tokenizers>=0.13.3
-deepspeed
-appdirs
-loralib
-bitsandbytes
-black
-black[jupyter]
-datasets
-git+https://github.com/huggingface/peft.git
-gradio
-accelerate
+# 백엔드 공통 설치. 과거 학습 의존성은 evaluation/archive에 보존한다.
+-r requirements-api.txt

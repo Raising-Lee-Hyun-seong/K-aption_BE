@@ -196,60 +196,14 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
 
 class ServiceTests(unittest.TestCase):
     """번역 재시도·토큰 제한과 실제 오디오 디코딩 검증을 수행한다."""
-    def test_missing_weights_fail_before_mlx_loading(self):
-        """설정만 남은 모델 폴더는 MLX를 호출하지 않고 가중치 복구 방법을 안내한다.
 
-        :return: None.
-        :raises AssertionError: 가중치 누락을 감지하지 않거나 MLX 로딩을 호출할 때.
-        """
-        with tempfile.TemporaryDirectory() as directory:
-            model_path = Path(directory)
-            (model_path / 'config.json').write_text(json.dumps({'quantization': {'bits': 4}}))
-            mlx = SimpleNamespace(load=Mock())
-            with patch.dict(sys.modules, {'mlx_lm': mlx}):
-                with self.assertRaisesRegex(FileNotFoundError, 'weights missing.*make model'):
-                    TranslationService(model_path, model_path / 'template.json')
-            mlx.load.assert_not_called()
 
-    def test_empty_weights_fail_before_mlx_loading(self):
-        """빈 가중치 파일은 준비된 모델로 취급하지 않고 로딩 전에 거부한다.
-
-        :return: None.
-        :raises AssertionError: 빈 가중치 파일을 감지하지 않거나 MLX 로딩을 호출할 때.
-        """
-        with tempfile.TemporaryDirectory() as directory:
-            model_path = Path(directory)
-            (model_path / 'config.json').write_text(json.dumps({'quantization': {'bits': 4}}))
-            (model_path / 'model.safetensors').touch()
-            mlx = SimpleNamespace(load=Mock())
-            with patch.dict(sys.modules, {'mlx_lm': mlx}):
-                with self.assertRaisesRegex(FileNotFoundError, 'weights missing or empty.*model.safetensors'):
-                    TranslationService(model_path, model_path / 'template.json')
-            mlx.load.assert_not_called()
-
-    def test_incomplete_weight_shards_fail_before_mlx_loading(self):
-        """일부 가중치가 있어도 인덱스가 참조하는 샤드가 없으면 로딩 전에 거부한다.
-
-        :return: None.
-        :raises AssertionError: 누락된 샤드를 감지하지 않거나 MLX 로딩을 호출할 때.
-        """
-        with tempfile.TemporaryDirectory() as directory:
-            model_path = Path(directory)
-            (model_path / 'config.json').write_text(json.dumps({'quantization': {'bits': 4}}))
-            (model_path / 'model-00001.safetensors').write_bytes(b'placeholder')
-            (model_path / 'model.safetensors.index.json').write_text(json.dumps({
-                'weight_map': {'first': 'model-00001.safetensors', 'second': 'model-00002.safetensors'}}))
-            mlx = SimpleNamespace(load=Mock())
-            with patch.dict(sys.modules, {'mlx_lm': mlx}):
-                with self.assertRaisesRegex(FileNotFoundError, 'weights missing.*model-00002.safetensors'):
-                    TranslationService(model_path, model_path / 'template.json')
-            mlx.load.assert_not_called()
 
     def stream_mock(self, generate):
-        """기존 텍스트 목을 MLX 응답 스트림으로 감싸 생성 호출을 관찰할 수 있게 한다.
+        """기존 텍스트 목을 공통 생성 응답 스트림으로 감싸 생성 호출을 관찰할 수 있게 한다.
 
         :param generate: 모델 생성 결과를 반환하는 테스트 대역.
-        :return: MLX 응답 대역을 생성하는 responses 함수.
+        :return: 생성 응답 대역을 생성하는 responses 함수.
         """
         def responses(*args, **kwargs):
             """목 생성 결과를 종료 사유와 실제 생성 토큰 수가 있는 응답으로 반환한다.
@@ -257,7 +211,7 @@ class ServiceTests(unittest.TestCase):
             :param args: 생성 대역에 그대로 전달할 위치 인자.
             :param kwargs: 생성 대역에 그대로 전달할 키워드 인자.
             :return: 아래 값을 순차 제공하는 생성기.
-            :yield: text·generation_tokens·finish_reason 속성을 가진 MLX 응답 대역.
+            :yield: text·generation_tokens·finish_reason 속성을 가진 생성 응답 대역.
             """
             yield SimpleNamespace(text=generate(*args, **kwargs), generation_tokens=17,
                                   finish_reason='stop')
@@ -269,7 +223,7 @@ class ServiceTests(unittest.TestCase):
         :return: 모델을 로드하지 않는 TranslationService 테스트 인스턴스.
         """
         service = TranslationService.__new__(TranslationService)
-        service.model = object()
+        service._build_prompt = Mock(side_effect=lambda text, context, retry=False: text + context)
         service.tokenizer = SimpleNamespace(encode=lambda text: list(text))
         service.template = {'prompt_input': '{instruction}\n{input}'}
         service.glossary = []
@@ -284,7 +238,7 @@ class ServiceTests(unittest.TestCase):
         :raises AssertionError: 검증 대상의 동작이 테스트 기대값과 다를 때.
         """
         generate = Mock(side_effect=['English only', '### Response:\n출력: "한국어 번역."'])
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             result = self.translator().translate('Hello.', '이전 문맥', 128)
         self.assertEqual(result['translation'], '한국어 번역.')
         self.assertIn('이전 문맥', generate.call_args_list[0].kwargs['prompt'])
@@ -298,7 +252,7 @@ class ServiceTests(unittest.TestCase):
         """
         service = self.translator()
         generate = Mock(side_effect=['English only', '한국어 번역.'])
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             with self.assertLogs(timing_logger, level='INFO') as logs:
                 service.translate('Private source.', '', 128)
         records = [record.timing for record in logs.records]
@@ -322,7 +276,7 @@ class ServiceTests(unittest.TestCase):
         """
         service = self.translator()
         generate = Mock(side_effect=RuntimeError('private model output'))
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             with self.assertLogs(timing_logger, level='INFO') as logs:
                 with self.assertRaises(RuntimeError):
                     service.translate('Hello.', '', 128)
@@ -339,7 +293,7 @@ class ServiceTests(unittest.TestCase):
         :raises AssertionError: 검증 대상의 동작이 테스트 기대값과 다를 때.
         """
         generate = Mock(return_value='English only')
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             with self.assertRaises(ValueError):
                 self.translator().translate('Hello.', '', 128)
         self.assertEqual(generate.call_count, 2)
@@ -351,7 +305,7 @@ class ServiceTests(unittest.TestCase):
         :raises AssertionError: 검증 대상의 동작이 테스트 기대값과 다를 때.
         """
         generate = Mock()
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             with self.assertRaises(ValueError):
                 self.translator().translate('x' * 2048, '', 128)
         generate.assert_not_called()
@@ -365,7 +319,7 @@ class ServiceTests(unittest.TestCase):
         service = self.translator()
         service.glossary = [{'en': 'net force', 'ko': '알짜힘'}]
         generate = Mock(side_effect=['물체의 중력이 없습니다.', '물체에 작용하는 알짜힘은 0입니다.'])
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             result = service.translate('The net force is zero.', '', 128)
         self.assertIn('알짜힘', result['translation'])
         self.assertEqual(generate.call_count, 2)
@@ -377,7 +331,7 @@ class ServiceTests(unittest.TestCase):
         :raises AssertionError: 검증 대상의 동작이 테스트 기대값과 다를 때.
         """
         generate = Mock(return_value='속도는 일정합니다.')
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=self.stream_mock(generate))}):
+        with patch.object(TranslationService, '_stream_output', side_effect=self.stream_mock(generate)):
             with self.assertRaises(ValueError):
                 self.translator().translate('The mass is two kilograms.', '속도는 일정합니다.', 128)
         self.assertEqual(generate.call_count, 2)

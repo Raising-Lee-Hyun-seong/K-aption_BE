@@ -135,7 +135,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description='Download and verify the pinned CPU model release')
     parser.add_argument('--manifest', type=Path, default=MANIFEST)
     parser.add_argument('--output', type=Path,
-                        default=Path(os.getenv('KAPTION_MODEL_DIR', '/data/models/qwen3-4b-instruct-2507-q8_0.gguf')))
+                        default=Path(os.getenv('KAPTION_MODEL_DIR', '/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf')))
     args = parser.parse_args()
     ensure_model(load_manifest(args.manifest), args.output)
 

@@ -1,7 +1,8 @@
 # 허용 목록만 전송한다. 비밀 파일·모델·영상·가상환경을 빌드 컨텍스트에서 제외한다.
 **
 !Dockerfile.cpu
-!requirements-cpu.txt
+!Dockerfile.translator
+!requirements-api.txt
 !requirements-stt.txt
 !app/
 !app/*.py
@@ -15,17 +16,10 @@
 !data/physics_glossary.json
 !data/qwen_translation_terms.json
 !scripts/
-!scripts/benchmark_cpu.py
-!scripts/prepare_koreanlm_gguf.py
 !scripts/download_cpu_model.py
 !docker/
-!docker/koreanlm-model.json
 !docker/qwen3-model.json
 !third_party/
-!third_party/koreanlm/
-!third_party/koreanlm/LICENSE
-!third_party/koreanlm/NOTICE.md
-!third_party/koreanlm/ORIGINAL_MODEL_CARD.md
 !third_party/qwen3/
 !third_party/qwen3/LICENSE
 !third_party/qwen3/NOTICE.md

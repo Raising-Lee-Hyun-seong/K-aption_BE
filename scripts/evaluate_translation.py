@@ -8,7 +8,7 @@ from time import perf_counter
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from app.services.translation import TranslationService
+from app.main import create_translation_service
 from app.services.subtitles import group_segments
 from transcribe import TranscriptionService
 
@@ -53,20 +53,15 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--service-file', type=Path, help='비교할 서비스 구현 스냅샷')
     parser.add_argument('--media', type=Path)
     parser.add_argument('--raw-segments', action='store_true', help='과거 조각별 실행 재현용: 문장 묶기 생략')
     parser.add_argument('--context-mode', choices=('previous_source', 'previous_translation'),
                         default='previous_source', help='미디어 평가 문맥: 기본은 앞 영어 원문')
     args = parser.parse_args()
-    service_type = TranslationService
-    if args.service_file:
-        spec = importlib.util.spec_from_file_location('comparison_service', args.service_file)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        service_type = module.TranslationService
+    if args.output.exists():
+        raise FileExistsError('Choose a new output path')
     started = perf_counter()
-    service = service_type(ROOT / 'models/koreanlm-4bit', ROOT / 'templates/korean.json')
+    service = create_translation_service()
     load_seconds = perf_counter() - started
     stt_seconds = None
     if args.media:
@@ -92,6 +87,7 @@ def main():
                                       'settings': {'context_mode': args.context_mode,
                                                    'raw_segments': args.raw_segments},
                                       'results': rows},ensure_ascii=False,indent=2)+'\n')
+    service.close()
     print(json.dumps(summary,ensure_ascii=False),flush=True)
 
 

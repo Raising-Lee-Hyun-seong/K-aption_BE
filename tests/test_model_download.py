@@ -137,7 +137,7 @@ class ModelDownloadTests(unittest.TestCase):
         :return: None.
         """
         root = Path(__file__).resolve().parents[1]
-        manifest = load_manifest(root / 'docker/koreanlm-model.json')
+        manifest = load_manifest(root / 'evaluation/archive/koreanlm-model.json')
         self.assertEqual(manifest['model'], 'quantumaikr/KoreanLM')
         self.assertEqual(manifest['bytes'], 4213149728)
         self.assertEqual(manifest['sha256'], 'f4e6b85689909fa69289dd67d4c6f67ecc95fb8400eb95b77ff9be57f0eed70e')

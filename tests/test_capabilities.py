@@ -72,7 +72,7 @@ class CapabilitiesTests(unittest.IsolatedAsyncioTestCase):
         :return: None.
         """
         with patch.dict(app.state._state, {'translator': None, 'transcriber': None, 'jobs': None}), \
-                patch('app.main.TranslationService') as translator, \
+                patch('app.main.HttpTranslationService') as translator, \
                 patch('app.main.TranscriptionService') as transcriber, \
                 patch('app.main.JobManager') as manager, \
                 patch('app.main.tempfile.NamedTemporaryFile') as temporary:

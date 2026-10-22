@@ -8,6 +8,7 @@ from app.services.translation_validation import (
     generation_problem, preservation_problem, protected_symbols,
 )
 from tests import test_pipeline
+from app.services.translation import TranslationService
 
 
 class PreservationTests(unittest.TestCase):
@@ -231,7 +232,7 @@ class StreamingTests(unittest.TestCase):
             finally:
                 closed.append(attempt)
 
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=stream_generate)}):
+        with patch.object(TranslationService, '_stream_output', side_effect=stream_generate):
             result = self.translator().translate('Sentence.', 'Earlier source.', 128)
         self.assertEqual(consumed, [(0, 1), (1, 1)])
         self.assertEqual(closed, [0, 1])
@@ -256,7 +257,7 @@ class StreamingTests(unittest.TestCase):
             """
             yield SimpleNamespace(text='속도는', generation_tokens=128, finish_reason='length')
 
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=stream_generate)}):
+        with patch.object(TranslationService, '_stream_output', side_effect=stream_generate):
             with self.assertRaises(ValueError):
                 self.translator().translate('The velocity is constant.', '', 128)
 
@@ -295,7 +296,7 @@ class StreamingTests(unittest.TestCase):
             yield SimpleNamespace(text='### Instruction: translate\n### Response: 정상 문장.',
                                   generation_tokens=20, finish_reason='stop')
 
-        with patch.dict(sys.modules, {'mlx_lm': SimpleNamespace(stream_generate=stream_generate)}):
+        with patch.object(TranslationService, '_stream_output', side_effect=stream_generate):
             with self.assertRaises(ValueError):
                 self.translator().translate('Sentence.', '', 128)
 

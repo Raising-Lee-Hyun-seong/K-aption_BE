@@ -1,0 +1,111 @@
+services:
+  model-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+      target: model-init
+    image: kaption-model-init:local
+    volumes:
+      - qwen-model:/models
+    mem_limit: 256m
+    cpus: 1
+    restart: 'on-failure:3'
+
+  translator:
+    build:
+      context: .
+      dockerfile: Dockerfile.translator
+    image: kaption-translator:local
+    init: true
+    depends_on:
+      model-init:
+        condition: service_completed_successfully
+    command:
+      - --model
+      - /models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf
+      - --alias
+      - qwen3-4b-instruct-2507
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8080'
+      - --device
+      - none
+      - --n-gpu-layers
+      - '0'
+      - --no-kv-offload
+      - --no-op-offload
+      # CPU 재배치의 큰 익명 버퍼 대신 회수 가능한 mmap 가중치를 유지한다.
+      - --no-repack
+      - --ctx-size
+      - '2048'
+      - --parallel
+      - '1'
+      - --threads
+      - '${KAPTION_CPU_THREADS:-4}'
+      - --threads-batch
+      - '${KAPTION_CPU_THREADS:-4}'
+      - --batch-size
+      - '256'
+      - --ubatch-size
+      - '128'
+      - --cache-ram
+      - '0'
+      - --no-context-shift
+      - --jinja
+    volumes:
+      - qwen-model:/models:ro
+    networks:
+      - inference
+    mem_limit: 4000000000
+    memswap_limit: 4000000000
+    cpus: '${KAPTION_TRANSLATOR_CPUS:-4}'
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '--fail', '--silent', 'http://localhost:8080/health']
+      interval: 10s
+      timeout: 3s
+      start_period: 5m
+      retries: 6
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+      target: backend
+    image: kaption-backend:local
+    init: true
+    depends_on:
+      translator:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:${KAPTION_PORT:-8000}:8000'
+    environment:
+      KAPTION_TRANSLATOR_URL: http://translator:8080
+      KAPTION_TRANSLATOR_TIMEOUT: '${KAPTION_TRANSLATOR_TIMEOUT:-120}'
+      KAPTION_MAX_ACTIVE_JOBS: '2'
+      OMP_NUM_THREADS: '${KAPTION_STT_THREADS:-4}'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      HF_HUB_DISABLE_IMPLICIT_TOKEN: '1'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+    volumes:
+      - jobs:/data
+      - whisper-cache:/cache/huggingface
+    networks:
+      - default
+      - inference
+    mem_limit: 2500000000
+    memswap_limit: 2500000000
+    cpus: '${KAPTION_BACKEND_CPUS:-4}'
+    restart: unless-stopped
+    stop_grace_period: 10m
+
+networks:
+  inference:
+    internal: true
+
+volumes:
+  qwen-model:
+  whisper-cache:
+  jobs:

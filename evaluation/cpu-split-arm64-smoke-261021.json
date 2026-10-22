@@ -1,0 +1,1139 @@
+{
+  "evaluated_on": "2026-10-21",
+  "platform": "macOS Apple Silicon / Linux ARM64 Docker",
+  "input_seconds": 60,
+  "limits": [
+    "Not Windows hardware.",
+    "Host Docker overhead is not measured.",
+    "Instrumented smoke run, not the full memory/quality benchmark.",
+    "docker stats sampling stopped after a 15-second CLI timeout; samples do not establish the pipeline peak.",
+    "All returned translations still require semantic review."
+  ],
+  "samples": [
+    {
+      "seconds": 1.859994833,
+      "stats": [
+        {
+          "BlockIO": "273MB / 8.19kB",
+          "CPUPerc": "16.32%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "3.75%",
+          "MemUsage": "89.48MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "2.88MB / 41.4kB",
+          "PIDs": "21"
+        },
+        {
+          "BlockIO": "10GB / 0B",
+          "CPUPerc": "0.30%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.23%",
+          "MemUsage": "2.691GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "10.9kB / 10.3kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 6.961593917,
+      "stats": [
+        {
+          "BlockIO": "275MB / 114MB",
+          "CPUPerc": "40.50%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "4.32%",
+          "MemUsage": "103.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "146MB / 1.27MB",
+          "PIDs": "21"
+        },
+        {
+          "BlockIO": "10GB / 0B",
+          "CPUPerc": "0.16%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.35%",
+          "MemUsage": "2.695GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "11.4kB / 10.8kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 12.014943208,
+      "stats": [
+        {
+          "BlockIO": "276MB / 386MB",
+          "CPUPerc": "19.36%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "7.65%",
+          "MemUsage": "182.3MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "471MB / 4.12MB",
+          "PIDs": "21"
+        },
+        {
+          "BlockIO": "10GB / 0B",
+          "CPUPerc": "0.10%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.46%",
+          "MemUsage": "2.699GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "11.5kB / 10.8kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 16.347451167000003,
+      "stats": [
+        {
+          "BlockIO": "826MB / 488MB",
+          "CPUPerc": "390.97%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "33.43%",
+          "MemUsage": "797MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.33MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "10GB / 0B",
+          "CPUPerc": "0.02%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.22%",
+          "MemUsage": "2.69GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "11.5kB / 10.8kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 21.438272667000003,
+      "stats": [
+        {
+          "BlockIO": "1.03GB / 488MB",
+          "CPUPerc": "373.85%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "35.05%",
+          "MemUsage": "835.6MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.33MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "10.1GB / 0B",
+          "CPUPerc": "0.05%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.23%",
+          "MemUsage": "2.691GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "11.5kB / 10.8kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 26.434515917000002,
+      "stats": [
+        {
+          "BlockIO": "1.3GB / 488MB",
+          "CPUPerc": "0.69%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.42%",
+          "MemUsage": "868.4MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.34MB",
+          "PIDs": "25"
+        },
+        {
+          "BlockIO": "13.4GB / 0B",
+          "CPUPerc": "320.35%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.34%",
+          "MemUsage": "2.695GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "17.2kB / 14.6kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 34.050125625,
+      "stats": [
+        {
+          "BlockIO": "1.88GB / 488MB",
+          "CPUPerc": "2.44%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.36%",
+          "MemUsage": "867MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.34MB",
+          "PIDs": "25"
+        },
+        {
+          "BlockIO": "21.1GB / 0B",
+          "CPUPerc": "210.88%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.97%",
+          "MemUsage": "2.718GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "17.6kB / 16.5kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 40.587141792,
+      "stats": [
+        {
+          "BlockIO": "2.52GB / 488MB",
+          "CPUPerc": "1.90%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.34MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "34GB / 0B",
+          "CPUPerc": "183.84%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.48%",
+          "MemUsage": "2.7GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "18.6kB / 19.3kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 47.60994125,
+      "stats": [
+        {
+          "BlockIO": "3.34GB / 488MB",
+          "CPUPerc": "2.44%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.34MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "56.6GB / 0B",
+          "CPUPerc": "164.86%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "73.16%",
+          "MemUsage": "2.725GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "19.4kB / 23.6kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 54.418859874999995,
+      "stats": [
+        {
+          "BlockIO": "4.23GB / 488MB",
+          "CPUPerc": "1.93%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.40%",
+          "MemUsage": "867.8MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.35MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "79.8GB / 0B",
+          "CPUPerc": "158.99%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.25%",
+          "MemUsage": "2.691GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "20.4kB / 28.2kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 61.503054166999995,
+      "stats": [
+        {
+          "BlockIO": "4.98GB / 488MB",
+          "CPUPerc": "1.45%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.43%",
+          "MemUsage": "868.6MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.35MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "98.3GB / 0B",
+          "CPUPerc": "342.97%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.28%",
+          "MemUsage": "2.692GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "27.2kB / 35.9kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 69.827660167,
+      "stats": [
+        {
+          "BlockIO": "5.38GB / 488MB",
+          "CPUPerc": "1.95%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.40%",
+          "MemUsage": "867.7MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.35MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "108GB / 0B",
+          "CPUPerc": "143.32%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.18%",
+          "MemUsage": "2.689GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "28kB / 37.9kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 77.96060075,
+      "stats": [
+        {
+          "BlockIO": "6.39GB / 488MB",
+          "CPUPerc": "2.11%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.45%",
+          "MemUsage": "869MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.36MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "119GB / 0B",
+          "CPUPerc": "166.07%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.60%",
+          "MemUsage": "2.704GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "29kB / 40.4kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 84.740952208,
+      "stats": [
+        {
+          "BlockIO": "7.05GB / 488MB",
+          "CPUPerc": "2.35%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.40%",
+          "MemUsage": "867.9MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.36MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "138GB / 0B",
+          "CPUPerc": "143.74%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.84%",
+          "MemUsage": "2.713GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "29.7kB / 44kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 93.11361195799999,
+      "stats": [
+        {
+          "BlockIO": "7.91GB / 488MB",
+          "CPUPerc": "1.88%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.36MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "163GB / 0B",
+          "CPUPerc": "128.09%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "73.71%",
+          "MemUsage": "2.746GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "30.8kB / 49.3kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 101.240906208,
+      "stats": [
+        {
+          "BlockIO": "8.85GB / 488MB",
+          "CPUPerc": "2.72%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.36MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "180GB / 0B",
+          "CPUPerc": "173.66%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.70%",
+          "MemUsage": "2.708GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "31.3kB / 51.9kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 106.524312208,
+      "stats": [
+        {
+          "BlockIO": "9.38GB / 488MB",
+          "CPUPerc": "1.16%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.43%",
+          "MemUsage": "868.5MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.37MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "189GB / 0B",
+          "CPUPerc": "292.31%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.64%",
+          "MemUsage": "2.706GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "39.2kB / 58.9kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 112.7759265,
+      "stats": [
+        {
+          "BlockIO": "9.69GB / 488MB",
+          "CPUPerc": "2.41%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.37MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "196GB / 0B",
+          "CPUPerc": "179.40%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.57%",
+          "MemUsage": "2.703GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "39.4kB / 60.2kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 119.031585792,
+      "stats": [
+        {
+          "BlockIO": "10.5GB / 488MB",
+          "CPUPerc": "1.97%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.37MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "215GB / 0B",
+          "CPUPerc": "156.12%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "73.36%",
+          "MemUsage": "2.733GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "40.1kB / 63.8kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 126.597630417,
+      "stats": [
+        {
+          "BlockIO": "11.3GB / 488MB",
+          "CPUPerc": "2.10%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.43%",
+          "MemUsage": "868.6MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "25"
+        },
+        {
+          "BlockIO": "235GB / 0B",
+          "CPUPerc": "263.95%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "73.13%",
+          "MemUsage": "2.724GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "48.5kB / 73.4kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 131.68228208300002,
+      "stats": [
+        {
+          "BlockIO": "11.5GB / 488MB",
+          "CPUPerc": "1.12%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.53%",
+          "MemUsage": "870.9MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "25"
+        },
+        {
+          "BlockIO": "238GB / 0B",
+          "CPUPerc": "319.02%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.28%",
+          "MemUsage": "2.693GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "48.5kB / 73.4kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 139.630440958,
+      "stats": [
+        {
+          "BlockIO": "12.1GB / 488MB",
+          "CPUPerc": "12.23%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "247GB / 0B",
+          "CPUPerc": "168.60%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.85%",
+          "MemUsage": "2.714GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "49.4kB / 75.8kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 150.53646733300002,
+      "stats": [
+        {
+          "BlockIO": "12.9GB / 488MB",
+          "CPUPerc": "8.71%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "261GB / 0B",
+          "CPUPerc": "498.09%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "73.39%",
+          "MemUsage": "2.734GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "49.9kB / 78.7kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 160.725425083,
+      "stats": [
+        {
+          "BlockIO": "13.5GB / 488MB",
+          "CPUPerc": "2.44%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.41%",
+          "MemUsage": "868.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "272GB / 0B",
+          "CPUPerc": "213.65%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.51%",
+          "MemUsage": "2.701GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "50.3kB / 80.4kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 172.039368333,
+      "stats": [
+        {
+          "BlockIO": "14.5GB / 488MB",
+          "CPUPerc": "8.15%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.99%",
+          "MemUsage": "882MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "27"
+        },
+        {
+          "BlockIO": "283GB / 0B",
+          "CPUPerc": "187.52%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.54%",
+          "MemUsage": "2.702GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "51.3kB / 83.1kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 180.264816542,
+      "stats": [
+        {
+          "BlockIO": "15.2GB / 488MB",
+          "CPUPerc": "1.88%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.61%",
+          "MemUsage": "872.8MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "295GB / 0B",
+          "CPUPerc": "169.95%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.65%",
+          "MemUsage": "2.706GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "51.8kB / 85.4kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 188.658541125,
+      "stats": [
+        {
+          "BlockIO": "16.1GB / 488MB",
+          "CPUPerc": "1.55%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.42%",
+          "MemUsage": "868.3MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.38MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "309GB / 0B",
+          "CPUPerc": "135.91%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.56%",
+          "MemUsage": "2.703GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "59.2kB / 93.4kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 193.806791792,
+      "stats": [
+        {
+          "BlockIO": "16.5GB / 488MB",
+          "CPUPerc": "1.15%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.43%",
+          "MemUsage": "868.5MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.39MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "313GB / 0B",
+          "CPUPerc": "325.18%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "73.37%",
+          "MemUsage": "2.733GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "59.3kB / 93.6kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 204.62774050000002,
+      "stats": [
+        {
+          "BlockIO": "17.2GB / 488MB",
+          "CPUPerc": "1.91%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.62%",
+          "MemUsage": "873.1MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.39MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "325GB / 0B",
+          "CPUPerc": "163.83%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.29%",
+          "MemUsage": "2.693GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "59.7kB / 96.2kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "seconds": 217.577632208,
+      "stats": [
+        {
+          "BlockIO": "18.4GB / 488MB",
+          "CPUPerc": "2.15%",
+          "Container": "kaption-cpu-refactor-backend-1",
+          "ID": "f98ffdba0eca",
+          "MemPerc": "36.33%",
+          "MemUsage": "866.2MiB / 2.328GiB",
+          "Name": "kaption-cpu-refactor-backend-1",
+          "NetIO": "493MB / 4.39MB",
+          "PIDs": "26"
+        },
+        {
+          "BlockIO": "332GB / 0B",
+          "CPUPerc": "209.63%",
+          "Container": "kaption-cpu-refactor-translator-1",
+          "ID": "e4559d0c265d",
+          "MemPerc": "72.98%",
+          "MemUsage": "2.719GiB / 3.725GiB",
+          "Name": "kaption-cpu-refactor-translator-1",
+          "NetIO": "60.6kB / 98kB",
+          "PIDs": "16"
+        }
+      ],
+      "exit_code": 0
+    }
+  ],
+  "events": [
+    "status",
+    "status",
+    "status",
+    "status",
+    "status",
+    "status"
+  ],
+  "initial_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": false
+  },
+  "submission": {
+    "job_id": "c4b47f15e3034fee9739d5a349632193",
+    "status": "queued",
+    "stage": "queued",
+    "progress_percent": null,
+    "completed_segments": 0,
+    "total_segments": null,
+    "failed_segments": 0,
+    "created_at": "2026-10-21T14:23:56.853767Z",
+    "updated_at": "2026-10-21T14:23:56.853936Z",
+    "expires_at": null,
+    "elapsed_seconds": 0.126565,
+    "error": null
+  },
+  "final_job": {
+    "job_id": "c4b47f15e3034fee9739d5a349632193",
+    "status": "completed",
+    "stage": "completed",
+    "progress_percent": 100.0,
+    "completed_segments": 4,
+    "total_segments": 4,
+    "failed_segments": 0,
+    "created_at": "2026-10-21T14:23:56.853767Z",
+    "updated_at": "2026-10-21T14:30:08.360862Z",
+    "expires_at": "2026-10-22T14:30:08.360740Z",
+    "elapsed_seconds": 371.507095,
+    "error": null
+  },
+  "result_status": 200,
+  "result": {
+    "segments": [
+      {
+        "start": 3.6,
+        "end": 16.88,
+        "text": "We just derived this relation here, the relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket and we want to ultimately get the speed of the rocket.",
+        "translation": "여기서 우리는 로켓의 앞부분 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출했으며, 최종적으로는 로켓의 속력을 얻고자 합니다.",
+        "translation_error": null
+      },
+      {
+        "start": 17.44,
+        "end": 24.08,
+        "text": "So we have to do, we have to apply a technique called separation variables and then we want to integrate.",
+        "translation": "그래서 우리는 변수를 분리하는 기법을 적용해야 하며, 그 후 적분을 해야 합니다.",
+        "translation_error": null
+      },
+      {
+        "start": 25.56,
+        "end": 41.36,
+        "text": "What we're going to do is first we're going to divide, multiply by dt, so that falls away and we're left with mr dvr equals dmru",
+        "translation": "우리가 할 일은 먼저 나누고 dt를 곱하여 그 값이 사라지고, 그 결과로는 mR dvr = dmR u가 남는다는 것입니다.",
+        "translation_error": null
+      },
+      {
+        "start": 42.0,
+        "end": 59.96,
+        "text": "and we're going to shuffle the m onto the other side and we're left with dvr equals u is a constant, so that goes up front and then we have dmr over mr. That's an equation that we can",
+        "translation": "그리고 우리는 m을 다른 쪽으로 옮기고, 그 결과로 dvR = u입니다. u는 상수이므로 이 값이 앞으로 옵니다. 그리고 우리는 mR에 대한 dmr을 나눕니다. 이는 우리가 사용할 수 있는 방정식입니다.",
+        "translation_error": null
+      }
+    ]
+  },
+  "subtitles": {
+    "srt": {
+      "status": 200,
+      "content_disposition": "attachment; filename=\"kaption-c4b47f15e3034fee9739d5a349632193-both.srt\"",
+      "text": "1\r\n00:00:03,600 --> 00:00:16,880\r\n여기서 우리는 로켓의 앞부분 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출했으며, 최종적으로는 로켓의 속력을 얻고자 합니다.\r\nWe just derived this relation here, the relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket and we want to ultimately get the speed of the rocket.\r\n\r\n2\r\n00:00:17,440 --> 00:00:24,080\r\n그래서 우리는 변수를 분리하는 기법을 적용해야 하며, 그 후 적분을 해야 합니다.\r\nSo we have to do, we have to apply a technique called separation variables and then we want to integrate.\r\n\r\n3\r\n00:00:25,560 --> 00:00:41,360\r\n우리가 할 일은 먼저 나누고 dt를 곱하여 그 값이 사라지고, 그 결과로는 mR dvr = dmR u가 남는다는 것입니다.\r\nWhat we're going to do is first we're going to divide, multiply by dt, so that falls away and we're left with mr dvr equals dmru\r\n\r\n4\r\n00:00:42,000 --> 00:00:59,960\r\n그리고 우리는 m을 다른 쪽으로 옮기고, 그 결과로 dvR = u입니다. u는 상수이므로 이 값이 앞으로 옵니다. 그리고 우리는 mR에 대한 dmr을 나눕니다. 이는 우리가 사용할 수 있는 방정식입니다.\r\nand we're going to shuffle the m onto the other side and we're left with dvr equals u is a constant, so that goes up front and then we have dmr over mr. That's an equation that we can\r\n\r\n"
+    },
+    "vtt": {
+      "status": 200,
+      "content_disposition": "attachment; filename=\"kaption-c4b47f15e3034fee9739d5a349632193-both.vtt\"",
+      "text": "WEBVTT\n\n1\n00:00:03.600 --> 00:00:16.880\n여기서 우리는 로켓의 앞부분 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출했으며, 최종적으로는 로켓의 속력을 얻고자 합니다.\nWe just derived this relation here, the relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket and we want to ultimately get the speed of the rocket.\n\n2\n00:00:17.440 --> 00:00:24.080\n그래서 우리는 변수를 분리하는 기법을 적용해야 하며, 그 후 적분을 해야 합니다.\nSo we have to do, we have to apply a technique called separation variables and then we want to integrate.\n\n3\n00:00:25.560 --> 00:00:41.360\n우리가 할 일은 먼저 나누고 dt를 곱하여 그 값이 사라지고, 그 결과로는 mR dvr = dmR u가 남는다는 것입니다.\nWhat we're going to do is first we're going to divide, multiply by dt, so that falls away and we're left with mr dvr equals dmru\n\n4\n00:00:42.000 --> 00:00:59.960\n그리고 우리는 m을 다른 쪽으로 옮기고, 그 결과로 dvR = u입니다. u는 상수이므로 이 값이 앞으로 옵니다. 그리고 우리는 mR에 대한 dmr을 나눕니다. 이는 우리가 사용할 수 있는 방정식입니다.\nand we're going to shuffle the m onto the other side and we're left with dvr equals u is a constant, so that goes up front and then we have dmr over mr. That's an equation that we can\n\n"
+    }
+  },
+  "final_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": true
+  },
+  "http_pipeline_seconds": 372.37767299999996,
+  "backend_state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 1464,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-21T14:21:26.094395043Z",
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-10-21T14:27:18.593400594Z",
+          "End": "2026-10-21T14:27:25.032036014Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-21T14:27:56.426116306Z",
+          "End": "2026-10-21T14:28:08.362678005Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-21T14:28:43.27855559Z",
+          "End": "2026-10-21T14:28:49.120343426Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-21T14:29:19.570490926Z",
+          "End": "2026-10-21T14:29:23.995713804Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-21T14:29:55.094625846Z",
+          "End": "2026-10-21T14:29:58.441727014Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "translator_state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 1356,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-21T14:21:14.465601552Z",
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-10-21T14:28:59.568578792Z",
+          "End": "2026-10-21T14:29:01.813855626Z",
+          "ExitCode": 0,
+          "Output": "{\"status\":\"ok\"}"
+        },
+        {
+          "Start": "2026-10-21T14:29:12.307853048Z",
+          "End": "2026-10-21T14:29:19.686261802Z",
+          "ExitCode": 0,
+          "Output": "{\"status\":\"ok\"}"
+        },
+        {
+          "Start": "2026-10-21T14:29:30.601358917Z",
+          "End": "2026-10-21T14:29:34.056453419Z",
+          "ExitCode": 0,
+          "Output": "{\"status\":\"ok\"}"
+        },
+        {
+          "Start": "2026-10-21T14:29:44.952823091Z",
+          "End": "2026-10-21T14:29:47.612486384Z",
+          "ExitCode": 0,
+          "Output": "{\"status\":\"ok\"}"
+        },
+        {
+          "Start": "2026-10-21T14:29:58.202579847Z",
+          "End": "2026-10-21T14:30:00.980327001Z",
+          "ExitCode": 0,
+          "Output": "{\"status\":\"ok\"}"
+        }
+      ]
+    }
+  },
+  "timing_logs": [
+    "event=request_started request_id=c47bd27931ad segment_index=None elapsed_seconds=0.000 method=POST path=/api/v1/translations",
+    "event=translation_queue request_id=c47bd27931ad segment_index=None elapsed_seconds=0.000 status=ok",
+    "event=translation_generate request_id=c47bd27931ad segment_index=None elapsed_seconds=7.532 status=ok attempt=1 raw_output_tokens=8 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c47bd27931ad segment_index=None elapsed_seconds=7.553 status=ok attempt=1 prompt_tokens=210 max_tokens=128 raw_output_tokens=8 finish_reason=stop rejection_reason=None accepted=True",
+    "event=translation_total request_id=c47bd27931ad segment_index=None elapsed_seconds=7.553 status=ok attempts=1",
+    "event=http_request request_id=c47bd27931ad segment_index=None elapsed_seconds=7.565 method=POST path=/api/v1/translations status_code=200 status=ok error_type=None",
+    "event=request_started request_id=7b118cc90a53 segment_index=None elapsed_seconds=0.000 method=POST path=/api/v1/jobs",
+    "event=http_request request_id=7b118cc90a53 segment_index=None elapsed_seconds=0.149 method=POST path=/api/v1/jobs status_code=202 status=ok error_type=None",
+    "event=request_started request_id=e597d5076cbd segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/events",
+    "event=stt_decode request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=0.029 status=ok",
+    "event=stt_model_load request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=12.546 status=ok model=small",
+    "event=stt_queue request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=0.000 status=ok",
+    "event=stt_inference request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=8.925 status=ok audio_seconds=60.0 segment_count=11",
+    "event=stt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=21.612 status=ok segment_count=11",
+    "event=sentence_grouping request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=0.001 status=ok source_segment_count=11 sentence_count=4",
+    "event=translation_queue request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=0.000 status=ok",
+    "event=translation_generate request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=37.521 status=ok attempt=1 raw_output_tokens=51 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=37.549 status=ok attempt=1 prompt_tokens=251 max_tokens=128 raw_output_tokens=51 finish_reason=stop rejection_reason=missing_term accepted=False",
+    "event=translation_generate request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=43.698 status=ok attempt=2 raw_output_tokens=52 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=43.773 status=ok attempt=2 prompt_tokens=264 max_tokens=128 raw_output_tokens=52 finish_reason=stop rejection_reason=None accepted=True",
+    "event=translation_total request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=81.322 status=ok attempts=2",
+    "event=segment_translation request_id=c4b47f15e3034fee9739d5a349632193 segment_index=0 elapsed_seconds=81.324 status=ok",
+    "event=translation_queue request_id=c4b47f15e3034fee9739d5a349632193 segment_index=1 elapsed_seconds=0.000 status=ok",
+    "event=translation_generate request_id=c4b47f15e3034fee9739d5a349632193 segment_index=1 elapsed_seconds=20.926 status=ok attempt=1 raw_output_tokens=26 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=1 elapsed_seconds=20.981 status=ok attempt=1 prompt_tokens=314 max_tokens=128 raw_output_tokens=26 finish_reason=stop rejection_reason=None accepted=True",
+    "event=translation_total request_id=c4b47f15e3034fee9739d5a349632193 segment_index=1 elapsed_seconds=20.982 status=ok attempts=1",
+    "event=segment_translation request_id=c4b47f15e3034fee9739d5a349632193 segment_index=1 elapsed_seconds=20.987 status=ok",
+    "event=translation_queue request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=0.000 status=ok",
+    "event=translation_generate request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=64.018 status=ok attempt=1 raw_output_tokens=43 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=64.148 status=ok attempt=1 prompt_tokens=357 max_tokens=128 raw_output_tokens=43 finish_reason=stop rejection_reason=informal_speech accepted=False",
+    "event=translation_generate request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=81.607 status=ok attempt=2 raw_output_tokens=41 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=81.664 status=ok attempt=2 prompt_tokens=317 max_tokens=128 raw_output_tokens=41 finish_reason=stop rejection_reason=None accepted=True",
+    "event=translation_total request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=145.814 status=ok attempts=2",
+    "event=segment_translation request_id=c4b47f15e3034fee9739d5a349632193 segment_index=2 elapsed_seconds=145.822 status=ok",
+    "event=translation_queue request_id=c4b47f15e3034fee9739d5a349632193 segment_index=3 elapsed_seconds=0.000 status=ok",
+    "event=request_started request_id=14cb72fe3280 segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193",
+    "event=http_request request_id=14cb72fe3280 segment_index=None elapsed_seconds=0.043 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193 status_code=200 status=ok error_type=None",
+    "event=translation_generate request_id=c4b47f15e3034fee9739d5a349632193 segment_index=3 elapsed_seconds=101.579 status=ok attempt=1 raw_output_tokens=65 finish_reason=stop early_stop_reason=None",
+    "event=translation_attempt request_id=c4b47f15e3034fee9739d5a349632193 segment_index=3 elapsed_seconds=101.723 status=ok attempt=1 prompt_tokens=389 max_tokens=128 raw_output_tokens=65 finish_reason=stop rejection_reason=None accepted=True",
+    "event=translation_total request_id=c4b47f15e3034fee9739d5a349632193 segment_index=3 elapsed_seconds=101.723 status=ok attempts=1",
+    "event=segment_translation request_id=c4b47f15e3034fee9739d5a349632193 segment_index=3 elapsed_seconds=101.726 status=ok",
+    "event=translation_batch request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=349.900 status=ok source_segment_count=11 sentence_count=4 failed_segments=0",
+    "event=job_processing request_id=c4b47f15e3034fee9739d5a349632193 segment_index=None elapsed_seconds=371.526 status=ok job_id=c4b47f15e3034fee9739d5a349632193",
+    "event=http_request request_id=e597d5076cbd segment_index=None elapsed_seconds=372.049 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/events status_code=200 status=ok error_type=None",
+    "event=request_started request_id=8396034e6156 segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193",
+    "event=http_request request_id=8396034e6156 segment_index=None elapsed_seconds=0.002 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193 status_code=200 status=ok error_type=None",
+    "event=request_started request_id=7e97fd6593de segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/result",
+    "event=http_request request_id=7e97fd6593de segment_index=None elapsed_seconds=0.003 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/result status_code=200 status=ok error_type=None",
+    "event=request_started request_id=f8d3db969358 segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/subtitles",
+    "event=http_request request_id=f8d3db969358 segment_index=None elapsed_seconds=0.009 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/subtitles status_code=200 status=ok error_type=None",
+    "event=request_started request_id=b05dad729edc segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/subtitles",
+    "event=http_request request_id=b05dad729edc segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193/subtitles status_code=200 status=ok error_type=None",
+    "event=request_started request_id=9815109835e4 segment_index=None elapsed_seconds=0.000 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193",
+    "event=http_request request_id=9815109835e4 segment_index=None elapsed_seconds=0.004 method=GET path=/api/v1/jobs/c4b47f15e3034fee9739d5a349632193 status_code=200 status=ok error_type=None"
+  ],
+  "backend_cgroup_peak_bytes_since_start": 990887936,
+  "direct_translation_smoke": {
+    "text": "The velocity is constant.",
+    "translation": "속도는 상수입니다.",
+    "http_status": 200,
+    "prompt_tokens": 210,
+    "generated_tokens": 8,
+    "service_seconds": 7.552948836999974,
+    "http_seconds": 7.569718917016871
+  },
+  "translator_cgroup_peak_bytes_since_start": 3792146432,
+  "model_manifest": {
+    "schema_version": 1,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+    "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+    "quantization": "Q4_K_M",
+    "release_url": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9",
+    "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "parts": [
+      {
+        "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "bytes": 2497281120,
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597"
+      }
+    ]
+  },
+  "post_smoke_final_image_tests": {
+    "count": 20,
+    "passed": true,
+    "source_sha256": {
+      "app/services/translation_http.py": "a451a7ca37237bb9aab4dcbdcda40f09177591456ad959f321290078aaf4933a",
+      "app/services/translation.py": "bb0f74b4fde40a2f551a0f518e1d724df08a83222a43f0739ea231638790f8f0",
+      "app/services/translation_qwen.py": "cb88ed8b80183c58695a4d1e017391674e3fd52b7327794e33af179832cf0299",
+      "app/main.py": "7611b89da622d8e67575d9c5a23a89e4e2f70b590ce0d2a5011ca2dd6a03017b"
+    }
+  }
+}

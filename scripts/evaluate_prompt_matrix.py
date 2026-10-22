@@ -1,4 +1,4 @@
-"""같은 22문장으로 로컬 모델의 기준·보완 프롬프트를 비교하고 원시 결과를 저장한다."""
+"""보존된 평가 자료의 과거 프롬프트·진단을 재현하는 모델 실행 없는 도구다."""
 import argparse
 from datetime import date, datetime
 from importlib.metadata import version
@@ -16,7 +16,7 @@ if str(ROOT) not in sys.path:
 from app.services.translation import TranslationService
 from app.services.translation_validation import protected_symbols
 from scripts.evaluate_candidates import (
-    build_prompt, generate_once, inspect_output, load_cases, prepare_candidate,
+    build_prompt, inspect_output, load_cases,
     save_report, sha256_file,
 )
 
@@ -48,12 +48,43 @@ QWEN_MATH = (
 )
 
 
+class HistoricalPromptService(TranslationService):
+    """과거 프롬프트 기록의 순수 텍스트 재현만 제공하며 모델을 실행하지 않는다."""
+
+    def _build_prompt(self, text: str, context: str, retry: bool = False) -> str:
+        """영어 원문·앞 영어 문맥·필수 용어와 수식 보존 지시로 프롬프트를 구성한다.
+
+        :param text: 검사하거나 번역할 입력 텍스트.
+        :param context: 앞 영어 원문 등의 참고 문맥. 프롬프트에는 마지막 256자만 사용한다.
+        :param retry: 참이면 한국어 완결 문장으로 답하도록 재시도 지시를 추가한다.
+        :return: 번역 지시와 영어 입력이 결합된 모델 프롬프트 문자열.
+        """
+        instruction = "다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요."
+        terms = self._matching_terms(text)
+        if terms:
+            instruction += " 용어: " + "; ".join(
+                f'{entry["en"]}={entry["ko"]}' for entry in terms) + "."
+        if context:
+            instruction += f" 이전 영어 문맥: {context[-256:]} (참고만 하세요.)"
+        instruction += " 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요."
+        symbols = protected_symbols(text)
+        if symbols:
+            instruction += " 그대로 쓸 기호: " + ", ".join(symbols) + "."
+        if retry:
+            instruction += " 반드시 한글이 포함된 완전한 한국어 문장 하나만 답하세요."
+        return self.template["prompt_input"].format(
+            instruction=instruction,
+            input=text,
+        )
+
+
+
 def prompt_service() -> TranslationService:
     """모델 로딩 없이 현재 API의 프롬프트·용어 매칭 로직만 준비한다.
 
     :return: 템플릿·용어집만 설정된 실험 전용 TranslationService 객체.
     """
-    service = TranslationService.__new__(TranslationService)
+    service = HistoricalPromptService.__new__(HistoricalPromptService)
     service.template = json.loads((ROOT / 'templates/korean.json').read_text())
     service.glossary = json.loads((ROOT / 'data/physics_glossary.json').read_text())
     return service
@@ -160,105 +191,8 @@ def diagnose_output(service: TranslationService, source: str, output: str, finis
     :param service: 원문 용어 매칭과 현재 검증 로직을 제공하는 실험 객체.
     :param source: 검사 기준인 영어 원문.
     :param output: 정리하지 않은 원시 생성 텍스트.
-    :param finish_reason: MLX 생성 종료 사유.
+    :param finish_reason: 보존된 평가 출력의 생성 종료 사유.
     :return: 기본 진단과 원시 텍스트에 적용한 API 검증 사유의 사전. 의미 판정이 아니다.
     """
     return {'validation_problems': inspect_output(source, output, finish_reason),
             'raw_validator_rejection_reason': service._rejection_reason(output, source, '')}
-
-
-def main() -> None:
-    """조건 하나를 별도 프로세스에서 두 번 평가하고 중간 결과를 계속 저장한다.
-
-    :return: None.
-    :raises ValueError: CLI 생성 조건이나 모델 파일 검증이 잘못되었을 때.
-    :raises FileExistsError: 기존 평가 결과를 덮어쓰려 할 때. 새 출력 경로를 지정해야 한다.
-
-    로컬 모델만 로드하고 평가 JSON을 저장한다. API·가중치를 변경하거나 재시도하지 않는다.
-    """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--variant', choices=VARIANTS, required=True)
-    parser.add_argument('--repeats', type=int, default=2)
-    parser.add_argument('--max-tokens', type=int, default=256)
-    parser.add_argument('--output', type=Path)
-    parser.add_argument('--evaluated-on', type=date.fromisoformat,
-                        default=datetime.now(ZoneInfo('Asia/Seoul')).date())
-    args = parser.parse_args()
-    if args.repeats < 1 or args.max_tokens < 1:
-        raise ValueError('Repeats and max_tokens must be positive')
-    output = args.output or ROOT / f'evaluation/prompt-matrix-{args.variant}.json'
-    if output.exists():
-        raise FileExistsError(f'Evaluation already exists; choose a new --output: {output}')
-    service = prompt_service()
-    if args.variant.startswith('koreanlm-'):
-        directory = ROOT / 'models/koreanlm-4bit'
-        source = verify_koreanlm(directory)
-    else:
-        manifest = json.loads((ROOT / 'evaluation/model_candidates.json').read_text())
-        candidate = next(row for row in manifest['selected'] if row['original_repository'].startswith('Qwen/'))
-        directory = ROOT / candidate['local_directory']
-        source = prepare_candidate(candidate, download=False)
-    print(json.dumps({'event': 'source_verified', 'variant': args.variant}), flush=True)
-    import mlx.core as mx
-    from mlx_lm import load
-
-    mx.reset_peak_memory()
-    started = perf_counter()
-    model, tokenizer = load(str(directory), tokenizer_config={'token': False, 'local_files_only': True})
-    mx.synchronize()
-    report = {
-        'evaluated_on': args.evaluated_on.isoformat(),
-        'variant': args.variant, 'model_directory': str(directory.relative_to(ROOT)),
-        'source_verification': source, 'model_load_seconds': perf_counter() - started,
-        'platform': {'system': platform.system(), 'machine': platform.machine()},
-        'versions': {name: version(name) for name in ('mlx-lm', 'mlx', 'transformers')},
-        'settings': {'temperature': 0, 'max_tokens': args.max_tokens, 'context': False,
-                     'retries': 0, 'early_stopping_rules': False, 'output_cleaning': False,
-                     'repeats': args.repeats, 'prompt_plus_output_limit': 2048},
-        'eos_token_ids': sorted(tokenizer.eos_token_ids),
-        'input_sha256': {name: sha256_file(ROOT / name) for name in
-                         ('evaluation/mit_rocket_cases.json', 'evaluation/physics_cases.json')},
-        'implementation_sha256': {name: sha256_file(ROOT / name) for name in
-                                  ('scripts/evaluate_prompt_matrix.py', 'scripts/evaluate_candidates.py',
-                                   'app/services/translation.py', 'app/services/translation_validation.py',
-                                   'templates/korean.json', 'data/physics_glossary.json')},
-        'limits': ['Raw validator diagnostics are not semantic accuracy or the actual API retry outcome.',
-                   'Qwen glossary changes terminology and preservation instructions together.',
-                   'Current KoreanLM prompt uses no preceding context; this is not the 36-group API run.'],
-        'results': [], 'complete': False, 'semantic_review': 'pending',
-    }
-    if args.variant.endswith(('-v2', '-v3')):
-        additions = GLOSSARY_ADDITIONS_V3 if args.variant.endswith('-v3') else GLOSSARY_ADDITIONS
-        report['implementation_sha256'][str(additions.relative_to(ROOT))] = sha256_file(additions)
-        report['limits'].append(
-            'V2 prompts were developed on these known cases; this is not a held-out generalization test.')
-    report['warmup'] = generate_once(model, tokenizer, variant_prompt(
-        args.variant, tokenizer, service, 'Hello, welcome to the lecture.'), args.max_tokens)
-    save_report(output, report)
-    for repeat in range(1, args.repeats + 1):
-        for case in load_cases():
-            row = {**case, 'repeat': repeat}
-            started = perf_counter()
-            try:
-                prompt = variant_prompt(args.variant, tokenizer, service, case['text'])
-                row['prompt'] = prompt
-                if len(tokenizer.encode(prompt)) + args.max_tokens > 2048:
-                    raise ValueError('Prompt and output exceed the shared 2048-token limit')
-                row.update(generate_once(model, tokenizer, prompt, args.max_tokens))
-                row.update(diagnose_output(service, case['text'], row['translation'], row['finish_reason']))
-                row['error'] = None
-            except Exception as exc:
-                row.update(translation=None, error=type(exc).__name__ + ': ' + str(exc),
-                           elapsed_seconds=perf_counter() - started, validation_problems=['generation_error'])
-            report['results'].append(row)
-            save_report(output, report)
-            print(json.dumps({'event': 'case_complete', 'variant': args.variant, 'id': case['id'],
-                              'repeat': repeat, 'seconds': row['elapsed_seconds'],
-                              'finish_reason': row.get('finish_reason'), 'error': row['error']}), flush=True)
-    report['complete'] = True
-    report['mlx_process_peak_gb'] = mx.get_peak_memory() / 1e9
-    save_report(output, report)
-
-
-if __name__ == '__main__':
-    main()

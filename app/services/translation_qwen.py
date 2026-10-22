@@ -1,4 +1,4 @@
-"""Qwen3 Instruct에 맞는 문맥 분리·수학 번역 지시와 MLX 번역 서비스를 제공한다."""
+"""Qwen3 Instruct에 맞는 문맥 분리·수학 번역 지시와 공통 번역 검증를 제공한다."""
 
 import json
 from pathlib import Path
@@ -67,7 +67,7 @@ def render_chatml(messages: list, tokenize: bool = False,
 
 
 class QwenPromptMixin:
-    """MLX와 llama.cpp에서 같은 Qwen 번역 지시·문맥 분리·대상 검증을 공유한다."""
+    """HTTP 서비스에서 Qwen 번역 지시·문맥 분리·대상 검증을 공유한다."""
 
     def _configure_qwen(self) -> None:
         """번역용 추가 용어와 로켓·썰매 대상 보존 검사를 준비한다.
@@ -86,10 +86,8 @@ class QwenPromptMixin:
         :param text: 현재 번역할 영어 원문.
         :param context: 앞 영어 원문. 마지막 256자만 시스템 메시지에서 참고한다.
         :param retry: 참이면 완결된 한국어 번역 문장만 출력하도록 재지시한다.
-        :return: Qwen 채팅 프롬프트. 기존 KoreanLM 선택 시에는 기존 프롬프트.
+        :return: CPU 번역 서버에 전달할 Qwen 채팅 메시지의 직렬화 문자열.
         """
-        if getattr(self, 'model_family', 'koreanlm') != 'qwen3':
-            return super()._build_prompt(text, context, retry)
         instruction = INSTRUCTION
         symbols = protected_symbols(text)
         if symbols:
@@ -128,7 +126,7 @@ class QwenPromptMixin:
         :return: 첫 실패 사유 코드 또는 None. 일반적인 의미 정확도 판정은 아니다.
         """
         reason = super()._rejection_reason(translation, text, context)
-        if reason or getattr(self, 'model_family', 'koreanlm') != 'qwen3':
+        if reason:
             return reason
         if informal_ending(translation):
             return 'informal_speech'
@@ -138,24 +136,3 @@ class QwenPromptMixin:
                 if re.search(pattern, text, re.IGNORECASE) and re.search(pattern, translation, re.IGNORECASE):
                     return 'untranslated_math_operator'
         return None
-
-
-class QwenTranslationService(QwenPromptMixin, TranslationService):
-    """Qwen3 Instruct MLX 4bit를 로드하고 공통 번역 검증·재시도를 적용한다."""
-
-    def __init__(self, model_path: Path, template_path: Path, device: str = 'auto'):
-        """Qwen3 구조를 확인한 뒤 MLX 모델과 번역 용어를 준비한다.
-
-        :param model_path: 고정 Qwen3 Instruct 2507 MLX 4bit 디렉터리.
-        :param template_path: 기존 공통 설정 초기화용 템플릿 경로.
-        :param device: auto는 MLX 기본 장치, cpu는 CPU 강제 사용.
-        :return: None. 모델을 메모리에 로드한다.
-        :raises OSError: 모델 설정·가중치·공통 파일을 읽을 수 없는 경우.
-        :raises ValueError: 모델 구조·장치·양자화 설정이 지원 범위와 다른 경우.
-        """
-        config = json.loads((model_path / 'config.json').read_text(encoding='utf-8'))
-        if config.get('model_type') != 'qwen3':
-            raise ValueError('Expected a Qwen3 Instruct MLX model')
-        self.model_family = 'qwen3'
-        super().__init__(model_path, template_path, device)
-        self._configure_qwen()

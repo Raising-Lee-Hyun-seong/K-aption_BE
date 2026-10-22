@@ -1,4 +1,4 @@
-"""MLX 4bit 모델의 공통 로딩·생성·검증과 기존 KoreanLM 번역 프롬프트를 제공한다."""
+"""모델을 로드하지 않고 번역 출력 검증·직렬 처리·재시도·시간 기록을 제공한다."""
 import json
 import re
 from pathlib import Path
@@ -15,67 +15,30 @@ HANGUL_PATTERN = re.compile(r"[가-힣]")
 GLOSSARY_PATH = Path(__file__).resolve().parents[2] / "data/physics_glossary.json"
 
 
+class TranslationTransportError(ValueError):
+    """제한된 재시도 이후 번역 서버 연결·응답 처리가 실패했음을 나타낸다."""
+
+
 class TranslationService:
-    """4bit 번역 모델을 재사용하며 문맥을 반영한 번역을 직렬 생성·검증한다."""
-    def __init__(self, model_path: Path, template_path: Path, device: str = 'auto'):
-        """4bit 모델 설정을 검증하고 모델·토크나이저·샘플러·프롬프트 템플릿을 로드한다.
+    """번역 전송 구현과 분리된 출력 검증·직렬 처리·재시도 계약을 제공한다."""
+    def __init__(self, template_path: Path):
+        """용어집·프롬프트 설정과 직렬 추론 잠금을 준비한다.
 
-        :param model_path: config.json과 가중치가 있는 MLX 4bit 모델 디렉터리.
-        :param template_path: 번역 프롬프트 템플릿 JSON 경로.
-        :param device: auto는 MLX 기본 장치, cpu는 CPU 강제 사용. 기본 auto.
-        :return: None.
-        :raises FileNotFoundError: 모델 설정이나 필요한 가중치 파일이 없거나 가중치 파일이 비어 있을 때.
-        :raises ValueError: 모델 양자화 설정이 4bit가 아니거나 장치가 auto·cpu가 아닐 때.
+        :param template_path: 공통 텍스트 설정 JSON 경로.
+        :return: None. 모델이나 GPU 라이브러리는 로드하지 않는다.
+        :raises OSError: 텍스트 설정 또는 용어집 읽기 실패 시.
         """
-        if device not in ('auto', 'cpu'):
-            raise ValueError('Translation device must be auto or cpu')
-        config_path = model_path / "config.json"
-        if not config_path.is_file():
-            raise FileNotFoundError(
-                f"4bit model not found at {model_path}. Run `make model` first."
-            )
-
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        if config.get("quantization", {}).get("bits") != 4:
-            raise ValueError(f"Expected a 4bit MLX model at {model_path}")
-
-        weight_files = list(model_path.glob("model*.safetensors"))
-        index_path = model_path / "model.safetensors.index.json"
-        expected = {path.name for path in weight_files}
-        if index_path.is_file():
-            index = json.loads(index_path.read_text(encoding="utf-8"))
-            expected.update(index.get("weight_map", {}).values())
-        missing = sorted(name for name in expected
-                         if not (model_path / name).is_file()
-                         or (model_path / name).stat().st_size == 0)
-        if not weight_files or missing:
-            details = ", ".join(missing) or "model*.safetensors"
-            raise FileNotFoundError(
-                f"4bit model weights missing or empty at {model_path}: {details}. "
-                "Restore the model weights or run `make model` first."
-            )
-
-        with measure("translation_model_load"):
-            if device == 'cpu':
-                import mlx.core as mx
-                mx.set_default_device(mx.cpu)
-            from mlx_lm import load
-            from mlx_lm.sample_utils import make_sampler
-
-            self.model, self.tokenizer = load(str(model_path))
-            self.sampler = make_sampler(temp=0)
         self._configure_text(template_path)
 
     def _configure_text(self, template_path: Path) -> None:
-        """공통 프롬프트·용어집과 직렬 번역 잠금을 준비한다.
+        """공통 텍스트 설정·용어집과 직렬 번역 잠금을 준비한다.
 
-        :param template_path: 번역 프롬프트 템플릿 JSON 경로.
+        :param template_path: 공통 텍스트 설정 JSON 경로.
         :return: None.
-        :raises OSError: 템플릿 또는 용어집 파일 읽기에 실패한 경우.
-        :raises ValueError: JSON 형식이 잘못된 경우.
+        :raises OSError: 설정 또는 용어집 읽기 실패 시.
         """
-        self.template = json.loads(template_path.read_text(encoding="utf-8"))
-        self.glossary = json.loads(GLOSSARY_PATH.read_text(encoding="utf-8"))
+        self.template = json.loads(template_path.read_text(encoding='utf-8'))
+        self.glossary = json.loads(GLOSSARY_PATH.read_text(encoding='utf-8'))
         self._lock = Lock()
 
     def _matching_terms(self, text: str, glossary=None) -> list:
@@ -98,30 +61,15 @@ class TranslationService:
         return matched
 
     def _build_prompt(self, text: str, context: str, retry: bool = False) -> str:
-        """영어 원문·앞 영어 문맥·필수 용어와 수식 보존 지시로 프롬프트를 구성한다.
+        """구체적인 번역 서비스가 제공해야 하는 프롬프트 계약을 정의한다.
 
-        :param text: 검사하거나 번역할 입력 텍스트.
-        :param context: 앞 영어 원문 등의 참고 문맥. 프롬프트에는 마지막 256자만 사용한다.
-        :param retry: 참이면 한국어 완결 문장으로 답하도록 재시도 지시를 추가한다.
-        :return: 번역 지시와 영어 입력이 결합된 모델 프롬프트 문자열.
+        :param text: 현재 영어 원문.
+        :param context: 앞 영어 문맥.
+        :param retry: 문맥 없이 재시도하는지 여부.
+        :return: 직렬화된 프롬프트 문자열.
+        :raises NotImplementedError: 구체적인 프롬프트 구현 없이 호출한 경우.
         """
-        instruction = "다음 영어 원문을 한국어로 번역하세요. 설명 없이 번역문만 답하세요."
-        terms = self._matching_terms(text)
-        if terms:
-            instruction += " 용어: " + "; ".join(
-                f'{entry["en"]}={entry["ko"]}' for entry in terms) + "."
-        if context:
-            instruction += f" 이전 영어 문맥: {context[-256:]} (참고만 하세요.)"
-        instruction += " 숫자와 수식 기호를 보존하고 원문에 없는 단위를 추가하지 마세요."
-        symbols = protected_symbols(text)
-        if symbols:
-            instruction += " 그대로 쓸 기호: " + ", ".join(symbols) + "."
-        if retry:
-            instruction += " 반드시 한글이 포함된 완전한 한국어 문장 하나만 답하세요."
-        return self.template["prompt_input"].format(
-            instruction=instruction,
-            input=text,
-        )
+        raise NotImplementedError('Use the Qwen HTTP translation service')
 
     @staticmethod
     def _clean_translation(translation: str) -> str:
@@ -195,6 +143,16 @@ class TranslationService:
             return "missing_term"
         return None
 
+    def _stream_output(self, prompt: str, max_tokens: int):
+        """전송 구현이 제공해야 하는 생성 스트림 계약을 정의한다.
+
+        :param prompt: 직렬화된 번역 프롬프트.
+        :param max_tokens: 최대 생성 토큰 수.
+        :return: 생성기 구현을 요구한다.
+        :raises NotImplementedError: 구체적인 전송 서비스 없이 호출한 경우.
+        """
+        raise NotImplementedError('Use the HTTP translation service')
+
     def _generate_output(self, prompt: str, max_tokens: int) -> dict:
         """토큰 스트림을 수집하고 반복·지시문 유출을 발견하면 생성을 조기 종료한다.
 
@@ -202,10 +160,7 @@ class TranslationService:
         :param max_tokens: 한 번 생성할 최대 출력 토큰 수.
         :return: text·tokens·finish_reason·stop_reason을 담은 생성 결과 사전.
         """
-        from mlx_lm import stream_generate
-
-        stream = stream_generate(self.model, self.tokenizer, prompt=prompt,
-                                 max_tokens=max_tokens, sampler=self.sampler)
+        stream = self._stream_output(prompt=prompt, max_tokens=max_tokens)
         output, token_count, finish_reason, stop_reason = "", 0, None, None
         try:
             for response in stream:
@@ -242,13 +197,27 @@ class TranslationService:
                     metrics["attempts"] = attempt
                     with measure("translation_attempt", attempt=attempt) as attempt_metrics:
                         prompt = self._build_prompt(text, context if not retry else "", retry)
-                        prompt_tokens = len(self.tokenizer.encode(prompt))
+                        try:
+                            prompt_tokens = len(self.tokenizer.encode(prompt))
+                        except TranslationTransportError:
+                            attempt_metrics['rejection_reason'] = 'translator_unavailable'
+                            attempt_metrics['accepted'] = False
+                            if retry:
+                                raise
+                            continue
                         attempt_metrics["prompt_tokens"] = prompt_tokens
                         attempt_metrics["max_tokens"] = max_tokens
                         if prompt_tokens + max_tokens > 2_048:
                             raise ValueError("Prompt and output exceed the 2048-token model limit")
                         with measure("translation_generate", attempt=attempt) as generation_metrics:
-                            generated = self._generate_output(prompt, max_tokens)
+                            try:
+                                generated = self._generate_output(prompt, max_tokens)
+                            except TranslationTransportError:
+                                attempt_metrics['rejection_reason'] = 'translator_unavailable'
+                                attempt_metrics['accepted'] = False
+                                if retry:
+                                    raise
+                                continue
                             generation_metrics["raw_output_tokens"] = generated["tokens"]
                             generation_metrics["finish_reason"] = generated["finish_reason"]
                             generation_metrics["early_stop_reason"] = generated["stop_reason"]

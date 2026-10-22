@@ -36,19 +36,16 @@ from app.services.media import (
     copy_upload,
 )
 from app.services.transcription import TranscriptionService
-from app.services.translation import TranslationService
+from app.services.translation_http import HttpTranslationService
 from timing import measure
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_FAMILY = os.getenv('KAPTION_TRANSLATION_MODEL', 'qwen3')
-DEFAULT_MODEL = ('qwen3-4b-instruct-2507-4bit' if MODEL_FAMILY == 'qwen3' else 'koreanlm-4bit')
-MODEL_DIR = Path(os.getenv("KAPTION_MODEL_DIR", ROOT / 'models' / DEFAULT_MODEL))
 TEMPLATE_PATH = ROOT / "templates/korean.json"
 API_DESCRIPTION = """
 K-aption은 해외 대학 강의의 영어 음성을 인식하고 한국어로 번역합니다.
 
 - **Transcription**: 영상·음성 파일을 faster-whisper로 인식합니다.
-- **Translation**: 기본 Qwen3 Instruct로 영어 문장과 주변 문맥을 번역합니다. Mac은 MLX 4bit, CPU 컨테이너는 GGUF Q8_0을 사용합니다. 자동 검증 통과는 의미 정확도 보장이 아닙니다.
+- **Translation**: 기본 Qwen3 Instruct로 영어 문장과 주변 문맥을 번역합니다. 모든 플랫폼에서 별도 CPU 서버의 GGUF Q4_K_M을 사용합니다. 자동 검증 통과는 의미 정확도 보장이 아닙니다.
 
 추론 요청은 로컬 장비의 메모리 사용을 고려해 서비스별로 직렬 처리합니다.
 """
@@ -69,37 +66,20 @@ OPENAPI_TAGS = [
 ]
 
 
-def create_translation_service(model_path: Path, template_path: Path):
-    """실행 환경에 맞는 추론 엔진을 선택하고 같은 번역 계약의 서비스를 만든다.
+def create_translation_service():
+    """환경변수의 내부 HTTP 주소로 단일 CPU 번역 서비스를 구성한다.
 
-    :param model_path: mlx는 선택한 모델의 4bit 디렉터리, llama-cpp는 GGUF 파일 경로.
-    :param template_path: 공통 프롬프트 JSON 경로.
-    :return: 공통 검증·재시도를 제공하는 번역 서비스.
-    :raises ValueError: 백엔드·장치·스레드 설정 또는 모델 구조가 잘못된 경우.
-    :raises OSError: 모델이나 공통 설정 파일을 읽을 수 없는 경우.
-
-    기본 모델은 Qwen3이며 KAPTION_TRANSLATION_MODEL=koreanlm으로 기존 모델을 선택한다.
-    llama-cpp는 GPU 오프로딩 없이 GGUF 구조에 맞는 프롬프트를 사용한다.
+    :return: 모델을 직접 로드하지 않는 Qwen HTTP 번역 서비스.
+    :raises ValueError: 주소 또는 타임아웃이 유효하지 않은 경우.
     """
-    backend = os.getenv('KAPTION_TRANSLATION_BACKEND', 'mlx')
-    family = os.getenv('KAPTION_TRANSLATION_MODEL', 'qwen3')
-    if family not in ('qwen3', 'koreanlm'):
-        raise ValueError('Translation model must be qwen3 or koreanlm')
-    if backend == 'mlx':
-        from app.services.translation_qwen import QwenTranslationService
-        service = QwenTranslationService if family == 'qwen3' else TranslationService
-        return service(model_path, template_path,
-                       device=os.getenv('KAPTION_TRANSLATION_DEVICE', 'auto'))
-    if backend == 'llama-cpp':
-        from app.services.translation_llamacpp import LlamaCppTranslationService
-        return LlamaCppTranslationService(model_path, template_path,
-                                         threads=int(os.getenv('KAPTION_CPU_THREADS', '4')))
-    raise ValueError('Translation backend must be mlx or llama-cpp')
+    return HttpTranslationService(
+        os.getenv('KAPTION_TRANSLATOR_URL', 'http://localhost:8080'), TEMPLATE_PATH,
+        timeout=float(os.getenv('KAPTION_TRANSLATOR_TIMEOUT', '120')))
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """공유 모델과 단일 작업자를 시작하고 정상 종료 시 추론 종료·파일 정리를 기다린다.
+    """공유 STT 설정·HTTP 클라이언트·작업자를 시작하고 종료 시 진행 중 작업을 기다린다.
 
     :param app: 서비스를 저장할 FastAPI 또는 호출할 하위 ASGI 애플리케이션.
     :return: 비동기 컨텍스트 관리자. 진입 시 서비스 준비가 끝난 시점의 None. 컨텍스트 종료 시 앱의 서비스 참조를 해제한다.
@@ -107,7 +87,7 @@ async def lifespan(app: FastAPI):
     :raises RuntimeError: 작업 저장소를 다른 서버 작업자가 이미 사용 중일 때.
     :raises OSError: 작업 저장소 생성·복구·정리가 실패할 때.
 
-    모델을 로드하고 작업 저장소를 생성·복구한다. 정상 종료는 현재 작업을 기다리고
+    HTTP 연결과 지연 STT 설정을 준비하고 작업 저장소를 생성·복구한다. 정상 종료는 현재 작업을 기다리고
     대기 작업을 실패 처리하며 입력을 삭제한다. 같은 저장소는 서버 worker 하나만 사용한다.
     """
     manager = JobManager(
@@ -119,12 +99,13 @@ async def lifespan(app: FastAPI):
     app.state.jobs = manager
     try:
         await manager.start()
-        app.state.translator = create_translation_service(MODEL_DIR, TEMPLATE_PATH)
+        app.state.translator = create_translation_service()
         app.state.transcriber = TranscriptionService(
             model_name=os.getenv('KAPTION_STT_MODEL', 'small'),
-            device=os.getenv('KAPTION_STT_DEVICE', 'cpu'),
-            compute_type=os.getenv('KAPTION_STT_COMPUTE_TYPE', 'int8'),
+            device='cpu',
+            compute_type='int8',
         )
+        app.state.transcriber._inference_lock = app.state.translator._lock
         manager.transcriber = app.state.transcriber
         manager.translator = app.state.translator
         yield
@@ -212,9 +193,10 @@ def health(request: Request) -> HealthResponse:
     """
     translator = getattr(request.app.state, "translator", None)
     transcriber = getattr(request.app.state, "transcriber", None)
+    loaded = bool(translator and (translator.loaded() if hasattr(translator, "loaded") else True))
     return HealthResponse(
-        status="ok" if translator is not None else "starting",
-        translation_model_loaded=translator is not None,
+        status="ok" if loaded else "starting",
+        translation_model_loaded=loaded,
         transcription_model_loaded=bool(transcriber and transcriber.loaded),
     )
 

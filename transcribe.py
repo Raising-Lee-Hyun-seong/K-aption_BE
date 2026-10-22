@@ -46,19 +46,25 @@ class TranscriptionService:
     def _get_model(self):
         """동시 로딩을 방지하며 Whisper 모델을 최초 한 번 생성해 재사용한다.
 
-        :return: 한 번 로드해 재사용하는 faster_whisper.WhisperModel 인스턴스.
+        :return: FFT 임시 메모리를 제한하는 특징 추출기를 적용하고 재사용하는 WhisperModel.
+        :raises RuntimeError: 모델 가중치 로딩이나 특징 추출기 준비가 실패한 경우.
+
+        최초 호출 시 캐시에 모델이 없으면 다운로드하고 CPU 모델을 메모리에 로드한다.
         """
         if self._model is None:
             with self._load_lock:
                 if self._model is None:
                     with measure("stt_model_load", model=self.model_name):
                         from faster_whisper import WhisperModel
+                        from app.services.stt_features import MemoryBoundedFeatureExtractor
 
-                        self._model = WhisperModel(
+                        model = WhisperModel(
                             self.model_name,
                             device=self.device,
                             compute_type=self.compute_type,
                         )
+                        model.feature_extractor = MemoryBoundedFeatureExtractor(model.feature_extractor)
+                        self._model = model
         return self._model
 
     def transcribe(self, media_path: Path, language: str = "en") -> dict:

@@ -1,9 +1,5 @@
-# Linux CPU 단위 테스트 전용. MLX와 모델 가중치는 설치하지 않는다.
-# torch 2.8.0은 workflow에서 공식 CPU wheel 저장소로 별도 설치한다.
-fastapi>=0.115,<1
-python-multipart>=0.0.9,<1
--r requirements-stt.txt
+# 모델을 로드하지 않는 CPU 회귀·평가 자료 검사 전용.
+-r requirements-api.txt
 transformers==4.57.6
-safetensors>=0.7,<1
-gguf==0.18.0
-sentencepiece==0.2.2
+jinja2>=3.1,<4
+pyyaml>=6,<7

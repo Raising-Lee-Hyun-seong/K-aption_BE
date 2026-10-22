@@ -1,55 +1,33 @@
-# Windows Docker Desktop WSL2의 Linux x86_64 CPU 실행용.
-FROM python:3.11-slim-bookworm AS cpu-wheel
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends g++ cmake make pkg-config libopenblas-dev \
-    && rm -rf /var/lib/apt/lists/*
-ENV CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_AVX2=ON -DGGML_F16C=ON -DGGML_FMA=ON -DGGML_AVX512=OFF -DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS -DGGML_CUDA=OFF -DGGML_METAL=OFF -DGGML_VULKAN=OFF" \
-    CMAKE_BUILD_PARALLEL_LEVEL=2
-RUN python -m pip wheel --no-cache-dir --no-deps --no-binary=llama-cpp-python \
-    --wheel-dir /wheels llama-cpp-python==0.3.19
+# 플랫폼은 호스트의 네이티브 Linux 아키텍처를 따른다.
+FROM python:3.11-slim-bookworm AS model-init
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY scripts/download_cpu_model.py ./scripts/download_cpu_model.py
+COPY docker/qwen3-model.json ./docker/qwen3-model.json
+COPY third_party/qwen3 /licenses/qwen3
+RUN useradd --uid 10001 --create-home kaption \
+    && mkdir -p /models && chown kaption:kaption /models
+USER kaption
+CMD ["sh", "-c", "python scripts/download_cpu_model.py && cp /licenses/qwen3/LICENSE /licenses/qwen3/NOTICE.md /models/"]
 
-FROM python:3.11-slim-bookworm
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    TOKENIZERS_PARALLELISM=false \
-    KAPTION_TRANSLATION_BACKEND=llama-cpp \
-    KAPTION_TRANSLATION_MODEL=qwen3 \
-    KAPTION_MODEL_DIR=/data/models/qwen3-4b-instruct-2507-q8_0.gguf \
-    KAPTION_JOB_DIR=/data/jobs \
-    HF_HOME=/cache/huggingface
-
+FROM python:3.11-slim-bookworm AS backend
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false \
+    KAPTION_JOB_DIR=/data/jobs HF_HOME=/cache/huggingface
 WORKDIR /app
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libgomp1 libopenblas0-pthread \
+    && apt-get install -y --no-install-recommends libgomp1 \
     && rm -rf /var/lib/apt/lists/*
-
-COPY requirements-cpu.txt requirements-stt.txt ./
-COPY --from=cpu-wheel /wheels /wheels
-RUN python -m pip install --no-cache-dir /wheels/*.whl \
-    && python -m pip install --no-cache-dir -r requirements-cpu.txt \
-    && python -m pip check \
-    && rm -rf /wheels
-
+COPY requirements-api.txt requirements-stt.txt ./
+RUN python -m pip install --no-cache-dir -r requirements-api.txt && python -m pip check
 COPY app ./app
 COPY transcribe.py timing.py ./
 COPY templates/korean.json ./templates/korean.json
-COPY data/physics_glossary.json ./data/physics_glossary.json
-COPY data/qwen_translation_terms.json ./data/qwen_translation_terms.json
-COPY scripts/benchmark_cpu.py ./scripts/benchmark_cpu.py
-COPY scripts/prepare_koreanlm_gguf.py ./scripts/prepare_koreanlm_gguf.py
-COPY scripts/download_cpu_model.py ./scripts/download_cpu_model.py
-COPY docker/koreanlm-model.json ./docker/koreanlm-model.json
-COPY docker/qwen3-model.json ./docker/qwen3-model.json
-COPY third_party/koreanlm ./third_party/koreanlm
-COPY third_party/qwen3 ./third_party/qwen3
-
+COPY data/physics_glossary.json data/qwen_translation_terms.json ./data/
 RUN useradd --uid 10001 --create-home kaption \
     && mkdir -p /data/jobs /cache/huggingface \
     && chown -R kaption:kaption /data /cache
 USER kaption
-
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30m --retries=3 \
-    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).close()"]
-CMD ["sh", "-c", "python scripts/download_cpu_model.py && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD ["python", "-c", "import json,urllib.request; assert json.load(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=3))['translation_model_loaded']"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

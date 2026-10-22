@@ -1,0 +1,34 @@
+{
+  "source_revision": "339f3242c761f16c27e5ffcde1d35dcc31933a55",
+  "source_archive_sha256": "901a2a2b2eb389a08cae3fec3269914f5c03e8d39b1352db9a29cbd1886727f3",
+  "server_binary_sha256": "ebb3eab2dab4e02728339d9b609232dc5abc2911111cd968e428b81c9ba3fc83",
+  "build_flags": {
+    "GGML_ACCELERATE:BOOL": "OFF",
+    "GGML_BLAS:BOOL": "OFF",
+    "GGML_CUDA:BOOL": "OFF",
+    "GGML_METAL:BOOL": "OFF",
+    "GGML_OPENCL:BOOL": "OFF",
+    "GGML_VULKAN:BOOL": "OFF"
+  },
+  "device": "none",
+  "gpu_layers": 0,
+  "threads": 4,
+  "ctx_size": 2048,
+  "parallel": 1,
+  "batch_size": 256,
+  "ubatch_size": 128,
+  "cache_ram": 0,
+  "platform": "macOS ARM64 native CPU",
+  "host_ram_bytes": 17179869184,
+  "limits": [
+    "Not Windows hardware or Docker throughput.",
+    "Q8 and Q4 evaluated sequentially with the same binary, prompt implementation and input.",
+    "Single pass; timing is not a statistically controlled performance benchmark.",
+    "Holdout cases follow saved STT in one stream and retain preceding English context."
+  ],
+  "template_source_equal": false,
+  "rendered_prompt_equality_checked": 43,
+  "all_rendered_prompts_equal": true,
+  "all_first_attempt_token_counts_equal": true,
+  "template_difference": "Only unused assistant/reasoning branches differ; actual requests contain system and user roles only."
+}

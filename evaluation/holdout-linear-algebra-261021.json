@@ -1,0 +1,36 @@
+{
+  "source": {
+    "title": "Lecture 1: Dot Product",
+    "instructor": "Denis Auroux",
+    "publisher": "MIT OpenCourseWare",
+    "course": "18.02 Multivariable Calculus, Fall 2007",
+    "page_url": "https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/resources/lecture-1-dot-product/",
+    "caption_url": "https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/2f9ef0629b7454e091bcdb9f8c1eaa9a_PxCxlsl_YwY.vtt",
+    "license": "CC BY-NC-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "retrieved_on": "2026-10-21"
+  },
+  "limits": [
+    "New development holdout; not a blind or statistically representative quality benchmark.",
+    "Uses official caption text, not newly transcribed audio. Caption grammar is preserved.",
+    "Reference Korean translations are manual and never included in prompts."
+  ],
+  "cases": [
+    {
+      "id": "holdout-linear-0",
+      "start": 786,
+      "end": 791,
+      "text": "So, multiplication by a scalar, it's very easy.",
+      "reference_ko": "따라서 스칼라를 곱하는 것은 매우 쉽습니다.",
+      "required_terms": ["스칼라"]
+    },
+    {
+      "id": "holdout-linear-1",
+      "start": 970,
+      "end": 981,
+      "text": "Well, dot product as a way of multiplying two vectors to get a number, a scalar.",
+      "reference_ko": "내적은 두 벡터를 곱해서 하나의 수, 즉 스칼라를 얻는 방법입니다.",
+      "required_terms": ["내적", "벡터", "스칼라"]
+    }
+  ]
+}

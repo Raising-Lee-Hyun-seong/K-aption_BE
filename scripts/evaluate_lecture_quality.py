@@ -248,6 +248,8 @@ def main():
     parser.add_argument('--source', choices=('both', 'official', 'stt'), default='both',
                         help='번역 평가할 영어 입력. STT 대조는 항상 기록')
     args = parser.parse_args()
+    if args.output.exists():
+        raise FileExistsError('Choose a new output path')
     reference = json.loads((ROOT / 'evaluation/mit_rocket_reference.json').read_text(encoding='utf-8'))
     cases = json.loads((ROOT / 'evaluation/mit_rocket_cases.json').read_text(encoding='utf-8'))['cases']
     baseline = json.loads((ROOT / 'evaluation/lecture.json').read_text(encoding='utf-8'))
@@ -257,13 +259,13 @@ def main():
         'manual_reference_cases': cases, 'baseline_summary': baseline['summary'],
         'settings': {'cases_only': args.cases_only, 'context_mode': args.context_mode,
                      'input_source': args.source,
-                     'max_tokens': 128, 'model': 'models/koreanlm-4bit'},
+                     'max_tokens': 128, 'model': 'Qwen3-4B-Instruct-2507 / HTTP CPU server'},
     }
     if not args.stt_only:
-        from app.services.translation import TranslationService
+        from app.main import create_translation_service
 
         started = perf_counter()
-        service = TranslationService(ROOT / 'models/koreanlm-4bit', ROOT / 'templates/korean.json')
+        service = create_translation_service()
         output['model_load_seconds'] = perf_counter() - started
         official, stt = case_groups(cases, baseline['results']) if args.cases_only else full_groups(reference, baseline)
         if args.source in ('both', 'official'):
@@ -278,6 +280,8 @@ def main():
             'both에서는 공식을 먼저 실행해 이후 STT에 워밍업 효과가 있을 수 있다. stt 단독 실행과 조건이 다르다.',
             '이전 저장 결과와 실행 조건·문맥·출력 검증이 달라 정확도 개선율로 해석하지 않는다.',
         ]
+    if not args.stt_only:
+        service.close()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     comparison_summary = {key: value for key, value in output['stt_comparison'].items()
