@@ -92,14 +92,15 @@ class ApiContractTests(unittest.IsolatedAsyncioTestCase):
             TranscriptionResponse.model_validate(body)
 
     async def test_partial_failure_logs_request_and_batch_summary(self):
-        """실제 요청 경로에서 구간 실패 수와 HTTP 200 및 동일 요청 식별자를 기록한다.
+        """실제 요청에서 구간 실패 수·HTTP 200·초와 분 단위 총시간·요청 식별자를 기록한다.
 
         :return: None.
         :raises AssertionError: 검증 대상의 동작이 테스트 기대값과 다를 때.
         """
         translator = SimpleNamespace(translate=Mock(side_effect=ValueError('bad output')))
-        with self.assertLogs(timing_logger, level='INFO') as logs:
-            status, body = await self.upload(translator)
+        with patch('app.middleware.perf_counter', side_effect=[10.0, 135.5]):
+            with self.assertLogs(timing_logger, level='INFO') as logs:
+                status, body = await self.upload(translator)
         records = [record.timing for record in logs.records]
         self.assertEqual(status, 200)
         batch = next(record for record in records if record['event'] == 'translation_batch')
@@ -111,6 +112,9 @@ class ApiContractTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(segment['status'], 'error')
         self.assertEqual(records[-1]['event'], 'http_request')
         self.assertEqual(records[-1]['status_code'], 200)
+        self.assertEqual(records[-1]['path'], '/api/v1/transcriptions')
+        self.assertEqual(records[-1]['elapsed_seconds'], 125.5)
+        self.assertEqual(records[-1]['elapsed_minutes'], 2.092)
         self.assertEqual(len({record['request_id'] for record in records}), 1)
 
     async def test_grouped_subtitle_contract_and_timing_counts(self):

@@ -67,14 +67,18 @@ OPENAPI_TAGS = [
 
 
 def create_translation_service():
-    """환경변수의 내부 HTTP 주소로 단일 CPU 번역 서비스를 구성한다.
+    """내부 CPU 번역 서비스와 기본 공통 프롬프트 캐시를 구성한다.
 
     :return: 모델을 직접 로드하지 않는 Qwen HTTP 번역 서비스.
-    :raises ValueError: 주소 또는 타임아웃이 유효하지 않은 경우.
+    :raises ValueError: 주소·타임아웃·true/false 캐시 설정이 유효하지 않은 경우.
     """
+    cache_setting = os.getenv('KAPTION_TRANSLATOR_PROMPT_CACHE', 'true').strip().lower()
+    if cache_setting not in ('true', 'false'):
+        raise ValueError('KAPTION_TRANSLATOR_PROMPT_CACHE must be true or false')
     return HttpTranslationService(
         os.getenv('KAPTION_TRANSLATOR_URL', 'http://localhost:8080'), TEMPLATE_PATH,
-        timeout=float(os.getenv('KAPTION_TRANSLATOR_TIMEOUT', '120')))
+        timeout=float(os.getenv('KAPTION_TRANSLATOR_TIMEOUT', '120')),
+        cache_prompt=cache_setting == 'true')
 
 
 @asynccontextmanager

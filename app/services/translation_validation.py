@@ -8,8 +8,9 @@ RAW_SYMBOL_PATTERN = (
     r"(?:d[\s_]*m[\s_]*[rR][\s_]*u|d[\s_]*[mv][\s_]*[rR]|"
     r"[mMvV][\s_]+[rR]|[mv][\s_]*[rR]|[mv]_?0|d[\s_]*[tmv]|ln|[mutvg])"
 )
+SYMBOL_LEFT_BOUNDARY = r"(?<![A-Za-z_])(?<![A-Za-z]['’])"
 SYMBOL_PATTERN = re.compile(
-    r"(?<![A-Za-z_])" + RAW_SYMBOL_PATTERN + r"(?![A-Za-z0-9_])"
+    SYMBOL_LEFT_BOUNDARY + RAW_SYMBOL_PATTERN + r"(?![A-Za-z0-9_])"
 )
 SYMBOL_CANONICAL = {
     'dmr': 'dmR', 'dvr': 'dvR', 'mr': 'mR', 'vr': 'vR',
@@ -102,7 +103,8 @@ def protected_symbols(text: str) -> list[str]:
     """원문 수식의 공백·밑줄·소문자 별칭을 정규화해 등장 순서대로 중복 없이 반환한다.
 
     dmRu는 dmR과 u로 보존한다. 복합 기호 속 단일 글자를 중복 추출하지 않으며,
-    수량 뒤 m·g 단위 약자는 독립 변수로 취급하지 않는다. 원문 자체는 수정하지 않는다.
+    수량 뒤 m·g 단위 약자와 I'm·don't 같은 영어 축약형의 접미사는 독립 변수로
+    취급하지 않는다. 따옴표 안의 변수와 변수 뒤 프라임은 보존하며 원문은 수정하지 않는다.
 
     :param text: 검사하거나 번역할 입력 텍스트.
     :return: 원문에서 보존할 정규화된 수식 기호를 등장 순서로 담은 목록.
@@ -126,7 +128,7 @@ def _has_math_prime(text: str) -> bool:
     if re.search(r'(?<![A-Za-z0-9_])primes?(?![A-Za-z0-9_])|프라임|′',
                  text, re.IGNORECASE):
         return True
-    return bool(re.search(r'(?<![A-Za-z_])' + RAW_SYMBOL_PATTERN
+    return bool(re.search(SYMBOL_LEFT_BOUNDARY + RAW_SYMBOL_PATTERN
                           + r"\s*['’](?![A-Za-z0-9_])", text))
 
 

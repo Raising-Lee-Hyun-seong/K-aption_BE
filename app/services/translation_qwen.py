@@ -25,6 +25,12 @@ INSTRUCTION = (
     'not an increase in value. Prime denotes a mathematical prime mark, '
     'not a prime number. Keep variable labels rather than translating them as words.'
 )
+CONTEXT_INSTRUCTION = (
+    "Translate only the current English source in the user's message. "
+    'The previous English context below is background only. Never translate, '
+    'quote, summarize or repeat that context. Never output context labels. '
+    'Output only the Korean translation of the current source. '
+)
 
 
 def informal_ending(translation: str) -> bool:
@@ -81,14 +87,16 @@ class QwenPromptMixin:
         self.glossary = self.glossary + [entry for entry in additions if entry['en'] in ('rocket', 'sled')]
 
     def _build_prompt(self, text: str, context: str, retry: bool = False) -> str:
-        """현재 영어 원문과 참고 문맥을 분리해 Qwen 채팅 프롬프트를 만든다.
+        """고정 지시를 시스템 접두부에 두고 참고 문맥과 현재 원문을 분리한다.
 
         :param text: 현재 번역할 영어 원문.
         :param context: 앞 영어 원문. 마지막 256자만 시스템 메시지에서 참고한다.
         :param retry: 참이면 완결된 한국어 번역 문장만 출력하도록 재지시한다.
-        :return: CPU 번역 서버에 전달할 Qwen 채팅 메시지의 직렬화 문자열.
+        :return: 고정 지시·선택적 문맥 뒤에 짧은 번역 요청과 현재 원문을 둔 메시지 문자열.
         """
-        instruction = INSTRUCTION
+        instruction = (
+            'Translate the following English text into Korean. Preserve negation, numbers '
+            'and mathematical relations. Output only the translation.')
         symbols = protected_symbols(text)
         if symbols:
             instruction += ' Keep these source symbols: ' + ', '.join(symbols) + '.'
@@ -100,14 +108,9 @@ class QwenPromptMixin:
         if terms:
             instruction += ' Terminology: ' + '; '.join(
                 f'{entry["en"]}={entry["ko"]}' for entry in terms) + '.'
-        system = FORMAL_STYLE
+        system = FORMAL_STYLE + INSTRUCTION
         if context:
-            system += (
-                "Translate only the current English source in the user's message. "
-                'The previous English context below is background only. Never translate, '
-                'quote, summarize or repeat that context. Never output context labels. '
-                'Output only the Korean translation of the current source. '
-                '\nPrevious English context:\n' + context[-256:])
+            system += ' ' + CONTEXT_INSTRUCTION + '\nPrevious English context:\n' + context[-256:]
         messages = [{'role': 'system', 'content': system}]
         if retry:
             instruction += '\nReturn only complete polite Korean translation sentences ending in 합니다/입니다.'

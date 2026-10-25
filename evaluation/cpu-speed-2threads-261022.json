@@ -1,0 +1,4165 @@
+{
+  "started_at": "2026-10-22T12:31:16.074266+00:00",
+  "threads_label": 2,
+  "context": "We are deriving the rocket equation.",
+  "input_sha256": "9c99fb9fd2990cebe4202a556cfd833df18cfebd640712784950c966f0b875cf",
+  "resident_stt": true,
+  "limits": [
+    "Three short cases, one pass: not a statistical speed or general quality benchmark.",
+    "STT weights may be resident, but STT decoding/inference and pipeline peaks are excluded.",
+    "Thread count is a label; verify the actual server command separately.",
+    "VM memory is not changed; this cannot prove a benefit from increasing VM RAM."
+  ],
+  "server": {
+    "model_path": "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "model_alias": "qwen3-4b-instruct-2507",
+    "total_slots": 1
+  },
+  "implementation_sha256": {
+    "app/services/translation.py": "f9b4586454b0ee1e140c9add4f1ffe1c2f9209efff6c63a4a5de603f80c3275c",
+    "app/services/translation_qwen.py": "d1002820b97419708bf4e20cc64982e0b89065e7192ab8261883784a2c4025a5",
+    "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+    "app/services/translation_validation.py": "7b6a59b1b2785c217f382d9b57610cb0c4444ff574b75ffb333bd4e2325cee54",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "stt_model_load_seconds": 1.2723205419999886,
+  "modes": [
+    {
+      "cache_prompt": true,
+      "warmup": {
+        "translation": "가속도는 상수입니다.",
+        "prompt_tokens": 269,
+        "generated_tokens": 9,
+        "elapsed_seconds": 12.385701006000005
+      },
+      "warmup_attempts": [
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+            },
+            {
+              "role": "user",
+              "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: acceleration=가속도; constant=상수.\n\nThe acceleration is constant."
+            }
+          ],
+          "cache_prompt": false,
+          "raw_output": "가속도는 상수입니다.",
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 269,
+            "prompt_ms": 11290.386,
+            "prompt_per_token_ms": 41.97169516728625,
+            "prompt_per_second": 23.82558045402522,
+            "predicted_n": 9,
+            "predicted_ms": 1060.465,
+            "predicted_per_token_ms": 132.558125,
+            "predicted_per_second": 7.543860476300491
+          },
+          "generated_tokens": 9,
+          "finish_reason": "stop"
+        }
+      ],
+      "results": [
+        {
+          "id": "velocity",
+          "text": "The velocity is constant.",
+          "result": {
+            "translation": "속도는 상수입니다.",
+            "prompt_tokens": 268,
+            "generated_tokens": 8,
+            "elapsed_seconds": 1.9339285430000075
+          },
+          "client_seconds": 1.933981418000002,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; constant=상수.\n\nThe velocity is constant."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "속도는 상수입니다.",
+              "server_timings": {
+                "cache_n": 248,
+                "prompt_n": 20,
+                "prompt_ms": 1197.136,
+                "prompt_per_token_ms": 59.8568,
+                "prompt_per_second": 16.706539607864105,
+                "predicted_n": 8,
+                "predicted_ms": 712.787,
+                "predicted_per_token_ms": 101.82671428571429,
+                "predicted_per_second": 9.820605594658712
+              },
+              "generated_tokens": 8,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "integrate",
+          "text": "Now we can integrate the equation.",
+          "result": {
+            "translation": "이제 방정식을 적분할 수 있습니다.",
+            "prompt_tokens": 265,
+            "generated_tokens": 13,
+            "elapsed_seconds": 1.590980626000004
+          },
+          "client_seconds": 1.5910010430000057,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integrate=적분.\n\nNow we can integrate the equation."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "이제 방정식을 적분할 수 있습니다.",
+              "server_timings": {
+                "cache_n": 248,
+                "prompt_n": 17,
+                "prompt_ms": 801.38,
+                "prompt_per_token_ms": 47.14,
+                "prompt_per_second": 21.213406873143825,
+                "predicted_n": 13,
+                "predicted_ms": 778.471,
+                "predicted_per_token_ms": 64.87258333333334,
+                "predicted_per_second": 15.414832408657482
+              },
+              "generated_tokens": 13,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "mass-symbol",
+          "text": "That is the initial mass, 2 m0.",
+          "result": {
+            "translation": "그것은 초기 질량으로, 2m0입니다.",
+            "prompt_tokens": 318,
+            "generated_tokens": 15,
+            "elapsed_seconds": 3.9278639190000035
+          },
+          "client_seconds": 3.9278713359999813,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: mass=질량.\n\nThat is the initial mass, 2 m0."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "그것은 초기 질량으로, 2m0입니다.",
+              "server_timings": {
+                "cache_n": 245,
+                "prompt_n": 73,
+                "prompt_ms": 3071.371,
+                "prompt_per_token_ms": 42.07357534246575,
+                "prompt_per_second": 23.767887370167912,
+                "predicted_n": 15,
+                "predicted_ms": 844.112,
+                "predicted_per_token_ms": 60.29371428571428,
+                "predicted_per_second": 16.585476808764714
+              },
+              "generated_tokens": 15,
+              "finish_reason": "stop"
+            }
+          ]
+        }
+      ],
+      "client_seconds": 7.4528768790000015,
+      "failed_cases": 0
+    },
+    {
+      "cache_prompt": false,
+      "warmup": {
+        "translation": "가속도는 상수입니다.",
+        "prompt_tokens": 269,
+        "generated_tokens": 9,
+        "elapsed_seconds": 11.406781504000008
+      },
+      "warmup_attempts": [
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+            },
+            {
+              "role": "user",
+              "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: acceleration=가속도; constant=상수.\n\nThe acceleration is constant."
+            }
+          ],
+          "cache_prompt": false,
+          "raw_output": "가속도는 상수입니다.",
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 269,
+            "prompt_ms": 10899.767,
+            "prompt_per_token_ms": 40.519579925650554,
+            "prompt_per_second": 24.679426633615194,
+            "predicted_n": 9,
+            "predicted_ms": 501.26,
+            "predicted_per_token_ms": 62.6575,
+            "predicted_per_second": 15.959781350995492
+          },
+          "generated_tokens": 9,
+          "finish_reason": "stop"
+        }
+      ],
+      "results": [
+        {
+          "id": "velocity",
+          "text": "The velocity is constant.",
+          "result": {
+            "translation": "속도는 상수입니다.",
+            "prompt_tokens": 268,
+            "generated_tokens": 8,
+            "elapsed_seconds": 11.25097567200001
+          },
+          "client_seconds": 11.251031881000017,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: velocity=속도; constant=상수.\n\nThe velocity is constant."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "속도는 상수입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 268,
+                "prompt_ms": 10721.728,
+                "prompt_per_token_ms": 40.006447761194025,
+                "prompt_per_second": 24.995970798736924,
+                "predicted_n": 8,
+                "predicted_ms": 519.401,
+                "predicted_per_token_ms": 74.20014285714285,
+                "predicted_per_second": 13.477063001418944
+              },
+              "generated_tokens": 8,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "integrate",
+          "text": "Now we can integrate the equation.",
+          "result": {
+            "translation": "이제 방정식을 적분할 수 있습니다.",
+            "prompt_tokens": 265,
+            "generated_tokens": 13,
+            "elapsed_seconds": 11.160980004999999
+          },
+          "client_seconds": 11.161011172000002,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Terminology: integrate=적분.\n\nNow we can integrate the equation."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "이제 방정식을 적분할 수 있습니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 265,
+                "prompt_ms": 10434.029,
+                "prompt_per_token_ms": 39.373694339622645,
+                "prompt_per_second": 25.397667574050253,
+                "predicted_n": 13,
+                "predicted_ms": 713.154,
+                "predicted_per_token_ms": 59.4295,
+                "predicted_per_second": 16.82666016035807
+              },
+              "generated_tokens": 13,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "mass-symbol",
+          "text": "That is the initial mass, 2 m0.",
+          "result": {
+            "translation": "그것은 초기 질량으로, 2m0입니다.",
+            "prompt_tokens": 318,
+            "generated_tokens": 15,
+            "elapsed_seconds": 13.200617171999994
+          },
+          "client_seconds": 13.200648505999993,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": "Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: mass=질량.\n\nThat is the initial mass, 2 m0."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "그것은 초기 질량으로, 2m0입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 318,
+                "prompt_ms": 12361.256,
+                "prompt_per_token_ms": 38.87187421383648,
+                "prompt_per_second": 25.725541158600713,
+                "predicted_n": 15,
+                "predicted_ms": 832.937,
+                "predicted_per_token_ms": 59.4955,
+                "predicted_per_second": 16.807993881890226
+              },
+              "generated_tokens": 15,
+              "finish_reason": "stop"
+            }
+          ]
+        }
+      ],
+      "client_seconds": 35.61272164100001,
+      "failed_cases": 0
+    }
+  ],
+  "docker": {
+    "samples": [
+      {
+        "seconds": 0.045233208,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 143192064,
+            "working_set_bytes": 119492608,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 2742801000,
+            "memory_details": {
+              "anon": 41558016,
+              "file": 95862784,
+              "kernel": null,
+              "pgmajfault": 370,
+              "workingset_refault_file": null,
+              "pgscan": 207063,
+              "pgsteal": 187058,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 611,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 0.049470583,
+            "cpu_percent": null
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 387072000,
+            "working_set_bytes": 386924544,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1078064000,
+            "memory_details": {
+              "anon": 371994624,
+              "file": 11251712,
+              "kernel": null,
+              "pgmajfault": 20,
+              "workingset_refault_file": null,
+              "pgscan": 0,
+              "pgsteal": 0,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 90,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 0.05294887499999999,
+            "cpu_percent": null
+          }
+        }
+      },
+      {
+        "seconds": 1.0536825829999998,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 627372032,
+            "working_set_bytes": 434393088,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3340890000,
+            "memory_details": {
+              "anon": 262299648,
+              "file": 357105664,
+              "kernel": null,
+              "pgmajfault": 496,
+              "workingset_refault_file": null,
+              "pgscan": 215950,
+              "pgsteal": 193870,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 621,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 1.09210525,
+            "cpu_percent": 57.36323747232548
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 386945024,
+            "working_set_bytes": 375746560,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1079589000,
+            "memory_details": {
+              "anon": 372043776,
+              "file": 11247616,
+              "kernel": null,
+              "pgmajfault": 20,
+              "workingset_refault_file": null,
+              "pgscan": 1,
+              "pgsteal": 1,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 92,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 1.0954815,
+            "cpu_percent": 0.146278395843967
+          }
+        }
+      },
+      {
+        "seconds": 2.100565291,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 913428480,
+            "working_set_bytes": 603983872,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3929162000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 315592704,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 318140,
+              "pgsteal": 279924,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 628,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 2.135667666,
+            "cpu_percent": 56.371520378710166
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 779259904,
+            "working_set_bytes": 419459072,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 1969257000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 393474048,
+              "kernel": null,
+              "pgmajfault": 62,
+              "workingset_refault_file": null,
+              "pgscan": 127,
+              "pgsteal": 123,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 101,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 2.139039958,
+            "cpu_percent": 85.25329780806585
+          }
+        }
+      },
+      {
+        "seconds": 3.139882083,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 913428480,
+            "working_set_bytes": 603983872,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3930258000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 315592704,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 318140,
+              "pgsteal": 279924,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 630,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 3.14477325,
+            "cpu_percent": 0.10861103311464777
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 1151844352,
+            "working_set_bytes": 792043520,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 3916617000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 765063168,
+              "kernel": null,
+              "pgmajfault": 72,
+              "workingset_refault_file": null,
+              "pgscan": 127,
+              "pgsteal": 123,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 111,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 3.150200083,
+            "cpu_percent": 192.5867082624525
+          }
+        }
+      },
+      {
+        "seconds": 4.155271166,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 913428480,
+            "working_set_bytes": 603983872,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3931384000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 315592704,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 318140,
+              "pgsteal": 279924,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 632,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 4.1602025000000005,
+            "cpu_percent": 0.11088906489546171
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 1555443712,
+            "working_set_bytes": 1195642880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 5870354000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 1167261696,
+              "kernel": null,
+              "pgmajfault": 86,
+              "workingset_refault_file": null,
+              "pgscan": 127,
+              "pgsteal": 123,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 121,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 4.162927916,
+            "cpu_percent": 192.91826849593465
+          }
+        }
+      },
+      {
+        "seconds": 5.168435416,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 913428480,
+            "working_set_bytes": 603983872,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3932075000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 315592704,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 318140,
+              "pgsteal": 279924,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 634,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 5.174686958000001,
+            "cpu_percent": 0.06811341411402874
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 1987084288,
+            "working_set_bytes": 1627283456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 7824306000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 1597636608,
+              "kernel": null,
+              "pgmajfault": 100,
+              "workingset_refault_file": null,
+              "pgscan": 127,
+              "pgsteal": 123,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 131,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 5.18181575,
+            "cpu_percent": 191.7730229763446
+          }
+        }
+      },
+      {
+        "seconds": 6.18687625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 913428480,
+            "working_set_bytes": 603983872,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3932659000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 315592704,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 318140,
+              "pgsteal": 279924,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 634,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 6.192785666000001,
+            "cpu_percent": 0.05736182507757391
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2411450368,
+            "working_set_bytes": 2051649536,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 9786415000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2021081088,
+              "kernel": null,
+              "pgmajfault": 114,
+              "workingset_refault_file": null,
+              "pgscan": 127,
+              "pgsteal": 123,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 141,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 6.196603250000001,
+            "cpu_percent": 193.35171156522907
+          }
+        }
+      },
+      {
+        "seconds": 7.19720725,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 819101696,
+            "working_set_bytes": 616632320,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3933304000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 221265920,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 343466,
+              "pgsteal": 302953,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 636,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 7.230915166,
+            "cpu_percent": 0.06213097691569312
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2784759808,
+            "working_set_bytes": 513138688,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 11736374000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2393575424,
+              "kernel": null,
+              "pgmajfault": 137,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 152,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 7.235639916,
+            "cpu_percent": 187.66989306612217
+          }
+        }
+      },
+      {
+        "seconds": 8.240708332999999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 783212544,
+            "working_set_bytes": 616632320,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3934007000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 185376768,
+              "kernel": null,
+              "pgmajfault": 508,
+              "workingset_refault_file": null,
+              "pgscan": 352228,
+              "pgsteal": 311715,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 636,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 8.2466565,
+            "cpu_percent": 0.06921053387003341
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2804174848,
+            "working_set_bytes": 531984384,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 13783839000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2412855296,
+              "kernel": null,
+              "pgmajfault": 173,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 162,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 8.249672540999999,
+            "cpu_percent": 201.91312878123628
+          }
+        }
+      },
+      {
+        "seconds": 9.253240625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 786161664,
+            "working_set_bytes": 619581440,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3935717000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 188338176,
+              "kernel": null,
+              "pgmajfault": 511,
+              "workingset_refault_file": null,
+              "pgscan": 352228,
+              "pgsteal": 311715,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 639,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 9.257440416,
+            "cpu_percent": 0.16917562427853286
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2804174848,
+            "working_set_bytes": 531984384,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 15803817000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2412855296,
+              "kernel": null,
+              "pgmajfault": 173,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 172,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 9.259896290999999,
+            "cpu_percent": 199.9535251472756
+          }
+        }
+      },
+      {
+        "seconds": 10.264841791,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 786161664,
+            "working_set_bytes": 619581440,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3936226000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 188338176,
+              "kernel": null,
+              "pgmajfault": 511,
+              "workingset_refault_file": null,
+              "pgscan": 352228,
+              "pgsteal": 311715,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 640,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 10.268352625,
+            "cpu_percent": 0.05035056412104324
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2804174848,
+            "working_set_bytes": 531984384,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 17825811000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2412855296,
+              "kernel": null,
+              "pgmajfault": 173,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 182,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 10.274923874999999,
+            "cpu_percent": 199.20581783913366
+          }
+        }
+      },
+      {
+        "seconds": 11.278238833,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 786161664,
+            "working_set_bytes": 619581440,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3938091000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 188338176,
+              "kernel": null,
+              "pgmajfault": 511,
+              "workingset_refault_file": null,
+              "pgscan": 352228,
+              "pgsteal": 311715,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 644,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 11.285487916,
+            "cpu_percent": 0.18335810550496395
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2804174848,
+            "working_set_bytes": 531984384,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 19861564000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2412855296,
+              "kernel": null,
+              "pgmajfault": 173,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 192,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 11.289528583,
+            "cpu_percent": 200.6449392505677
+          }
+        }
+      },
+      {
+        "seconds": 12.294055291,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 781967360,
+            "working_set_bytes": 619581440,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3938967000,
+            "memory_details": {
+              "anon": 588783616,
+              "file": 184143872,
+              "kernel": null,
+              "pgmajfault": 511,
+              "workingset_refault_file": null,
+              "pgscan": 353252,
+              "pgsteal": 312739,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 646,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 12.299342541,
+            "cpu_percent": 0.08640291994525345
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2816950272,
+            "working_set_bytes": 544759808,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 21871215000,
+            "memory_details": {
+              "anon": 380870656,
+              "file": 2425556992,
+              "kernel": null,
+              "pgmajfault": 176,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 203,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 12.302450833,
+            "cpu_percent": 198.40130868879604
+          }
+        }
+      },
+      {
+        "seconds": 13.302913208,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 715538432,
+            "working_set_bytes": 624603136,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3943830000,
+            "memory_details": {
+              "anon": 589221888,
+              "file": 117276672,
+              "kernel": null,
+              "pgmajfault": 511,
+              "workingset_refault_file": null,
+              "pgscan": 370624,
+              "pgsteal": 329064,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 649,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 13.3110305,
+            "cpu_percent": 0.4806818107044409
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925133824,
+            "working_set_bytes": 652943360,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 23774418000,
+            "memory_details": {
+              "anon": 382676992,
+              "file": 2531577856,
+              "kernel": null,
+              "pgmajfault": 187,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 213,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 13.31667525,
+            "cpu_percent": 187.65107288873335
+          }
+        }
+      },
+      {
+        "seconds": 14.321775707999999,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 715538432,
+            "working_set_bytes": 624603136,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 3972353000,
+            "memory_details": {
+              "anon": 589221888,
+              "file": 117276672,
+              "kernel": null,
+              "pgmajfault": 511,
+              "workingset_refault_file": null,
+              "pgscan": 370624,
+              "pgsteal": 329064,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 658,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 14.328775708,
+            "cpu_percent": 2.8025678505577374
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925330432,
+            "working_set_bytes": 653139968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 25709926000,
+            "memory_details": {
+              "anon": 382676992,
+              "file": 2531577856,
+              "kernel": null,
+              "pgmajfault": 187,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 223,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 14.3334355,
+            "cpu_percent": 190.36031355474395
+          }
+        }
+      },
+      {
+        "seconds": 15.338497708,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4165346000,
+            "memory_details": {
+              "anon": 589246464,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 663,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 15.34445775,
+            "cpu_percent": 19.00132049395829
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925330432,
+            "working_set_bytes": 653139968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 27725280000,
+            "memory_details": {
+              "anon": 382676992,
+              "file": 2531577856,
+              "kernel": null,
+              "pgmajfault": 187,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 233,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 15.3489955,
+            "cpu_percent": 198.4475560282014
+          }
+        }
+      },
+      {
+        "seconds": 16.353976166000002,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4178237000,
+            "memory_details": {
+              "anon": 589246464,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 669,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 16.362603250000003,
+            "cpu_percent": 1.2661255193879448
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925330432,
+            "working_set_bytes": 653139968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 29680326000,
+            "memory_details": {
+              "anon": 382828544,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 243,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 16.366850958,
+            "cpu_percent": 192.07501267827368
+          }
+        }
+      },
+      {
+        "seconds": 17.3714695,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4181025000,
+            "memory_details": {
+              "anon": 589246464,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 672,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 17.377013208,
+            "cpu_percent": 0.2748395732921231
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925273088,
+            "working_set_bytes": 653082624,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 31692770000,
+            "memory_details": {
+              "anon": 382976000,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 253,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 17.381101666000003,
+            "cpu_percent": 198.4168198381968
+          }
+        }
+      },
+      {
+        "seconds": 18.383292583000003,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4185852000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 675,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 18.3884465,
+            "cpu_percent": 0.47724353530573743
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925273088,
+            "working_set_bytes": 653082624,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 33687209000,
+            "memory_details": {
+              "anon": 383115264,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 263,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 18.391589791,
+            "cpu_percent": 197.37381871756318
+          }
+        }
+      },
+      {
+        "seconds": 19.396651791,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4186485000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 676,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 19.400814916,
+            "cpu_percent": 0.06252664445035387
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925273088,
+            "working_set_bytes": 653082624,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 35712160000,
+            "memory_details": {
+              "anon": 383115264,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 274,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 19.403463541,
+            "cpu_percent": 200.1189377627398
+          }
+        }
+      },
+      {
+        "seconds": 20.407171541,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4187290000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 677,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 20.412232833,
+            "cpu_percent": 0.0795912338974316
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925273088,
+            "working_set_bytes": 653082624,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 37734695000,
+            "memory_details": {
+              "anon": 383115264,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 284,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 20.414781208,
+            "cpu_percent": 199.9900788838884
+          }
+        }
+      },
+      {
+        "seconds": 21.419873333,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686297088,
+            "working_set_bytes": 632979456,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4190645000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 87986176,
+              "kernel": null,
+              "pgmajfault": 543,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 683,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 21.424516083,
+            "cpu_percent": 0.3314289750423117
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925535232,
+            "working_set_bytes": 653344768,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 39731525000,
+            "memory_details": {
+              "anon": 383115264,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 294,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 21.428132875000003,
+            "cpu_percent": 197.05202695442907
+          }
+        }
+      },
+      {
+        "seconds": 22.432019458000003,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 686264320,
+            "working_set_bytes": 632946688,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4194481000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 88051712,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 380235,
+              "pgsteal": 338243,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 688,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 22.436625541,
+            "cpu_percent": 0.379010389605508
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925793280,
+            "working_set_bytes": 653602816,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 41742413000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 304,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 22.439250541,
+            "cpu_percent": 198.87774367103245
+          }
+        }
+      },
+      {
+        "seconds": 23.444314416,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 642166784,
+            "working_set_bytes": 634523648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4195435000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 43954176,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 391364,
+              "pgsteal": 349009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 690,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 23.4506875,
+            "cpu_percent": 0.09407709179237643
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925793280,
+            "working_set_bytes": 653602816,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 43770373000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 314,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 23.453696708000003,
+            "cpu_percent": 199.90809428530224
+          }
+        }
+      },
+      {
+        "seconds": 24.458663625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 642166784,
+            "working_set_bytes": 634523648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4196174000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 43954176,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 391364,
+              "pgsteal": 349009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 692,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 24.472782625,
+            "cpu_percent": 0.0723024679332073
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925793280,
+            "working_set_bytes": 653602816,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 45816342000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 324,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 24.475822125,
+            "cpu_percent": 200.16809737547146
+          }
+        }
+      },
+      {
+        "seconds": 25.480884791,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 642166784,
+            "working_set_bytes": 634523648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4196781000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 43954176,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 391364,
+              "pgsteal": 349009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 692,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 25.485006875,
+            "cpu_percent": 0.059966949023400745
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925793280,
+            "working_set_bytes": 653602816,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 47840260000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 334,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 25.487929375,
+            "cpu_percent": 199.9707046856942
+          }
+        }
+      },
+      {
+        "seconds": 26.491332125,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 642166784,
+            "working_set_bytes": 634523648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4197449000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 43954176,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 391364,
+              "pgsteal": 349009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 694,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 26.496029625000002,
+            "cpu_percent": 0.06607170807976365
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2925793280,
+            "working_set_bytes": 653602816,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 49862125000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2531799040,
+              "kernel": null,
+              "pgmajfault": 188,
+              "workingset_refault_file": null,
+              "pgscan": 2590,
+              "pgsteal": 2536,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 345,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 26.49889975,
+            "cpu_percent": 199.99250719883867
+          }
+        }
+      },
+      {
+        "seconds": 27.503408916,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4198010000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 694,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 27.507190583,
+            "cpu_percent": 0.055480781329771356
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905686016,
+            "working_set_bytes": 672595968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 51914040000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2512125952,
+              "kernel": null,
+              "pgmajfault": 198,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 355,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 27.518666041000003,
+            "cpu_percent": 201.21424076371957
+          }
+        }
+      },
+      {
+        "seconds": 28.523728833,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4198750000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 698,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 28.527457125,
+            "cpu_percent": 0.07253006636377564
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905686016,
+            "working_set_bytes": 672595968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 53938016000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2512125952,
+              "kernel": null,
+              "pgmajfault": 198,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 365,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 28.530387791000003,
+            "cpu_percent": 200.0526330485631
+          }
+        }
+      },
+      {
+        "seconds": 29.534905875,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4199440000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 698,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 29.540838791000002,
+            "cpu_percent": 0.0680888576486245
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905686016,
+            "working_set_bytes": 672595968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 55965999000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2512125952,
+              "kernel": null,
+              "pgmajfault": 198,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 375,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 29.543875666,
+            "cpu_percent": 200.0993845140971
+          }
+        }
+      },
+      {
+        "seconds": 30.546412666000002,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4200766000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 700,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 30.550200833,
+            "cpu_percent": 0.1313701075357063
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905686016,
+            "working_set_bytes": 672595968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 57983980000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2512125952,
+              "kernel": null,
+              "pgmajfault": 198,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 385,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 30.553004083,
+            "cpu_percent": 199.9726661150997
+          }
+        }
+      },
+      {
+        "seconds": 31.553153416,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4201674000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 700,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 31.557036333000003,
+            "cpu_percent": 0.09018355034163962
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905686016,
+            "working_set_bytes": 672595968,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 59997880000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2512125952,
+              "kernel": null,
+              "pgmajfault": 198,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 395,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 31.559609916000003,
+            "cpu_percent": 200.06838168202788
+          }
+        }
+      },
+      {
+        "seconds": 32.562617415999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4203811000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 704,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 32.567909457999995,
+            "cpu_percent": 0.21140140608644709
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920931328,
+            "working_set_bytes": 687841280,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 61961134000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2527371264,
+              "kernel": null,
+              "pgmajfault": 203,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 405,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 32.571096041,
+            "cpu_percent": 194.0959892059819
+          }
+        }
+      },
+      {
+        "seconds": 33.574355458,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4208637000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 709,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 33.577833125,
+            "cpu_percent": 0.47785789735334405
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2921193472,
+            "working_set_bytes": 688103424,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 63951158000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2527371264,
+              "kernel": null,
+              "pgmajfault": 203,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 415,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 33.580391041,
+            "cpu_percent": 197.16970756815368
+          }
+        }
+      },
+      {
+        "seconds": 34.584455790999996,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639086592,
+            "working_set_bytes": 613494784,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4209394000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40873984,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392334,
+              "pgsteal": 349761,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 711,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 34.588863124999996,
+            "cpu_percent": 0.07487413825504698
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2921193472,
+            "working_set_bytes": 688103424,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 65973145000,
+            "memory_details": {
+              "anon": 383250432,
+              "file": 2527371264,
+              "kernel": null,
+              "pgmajfault": 203,
+              "workingset_refault_file": null,
+              "pgscan": 12120,
+              "pgsteal": 9147,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 425,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 34.593715040999996,
+            "cpu_percent": 199.54002865815923
+          }
+        }
+      },
+      {
+        "seconds": 35.598776208,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4210160000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 711,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 35.603931165999995,
+            "cpu_percent": 0.07546292160330172
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2897182720,
+            "working_set_bytes": 703217664,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 68002853000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2503360512,
+              "kernel": null,
+              "pgmajfault": 203,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 436,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 35.606911915999994,
+            "cpu_percent": 200.32710819405193
+          }
+        }
+      },
+      {
+        "seconds": 36.611980249999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4210745000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 713,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 36.616552915999996,
+            "cpu_percent": 0.05777083101365337
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2897182720,
+            "working_set_bytes": 703217664,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 70026822000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2503360512,
+              "kernel": null,
+              "pgmajfault": 203,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 446,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 36.618891208,
+            "cpu_percent": 200.00102927007194
+          }
+        }
+      },
+      {
+        "seconds": 37.623956958,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4211537000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 716,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 37.628848083,
+            "cpu_percent": 0.07823805010816536
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2897244160,
+            "working_set_bytes": 703279104,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 72067485000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2503360512,
+              "kernel": null,
+              "pgmajfault": 203,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 456,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 37.631811125,
+            "cpu_percent": 201.46340947109684
+          }
+        }
+      },
+      {
+        "seconds": 38.636629332999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4212222000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 717,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 38.640801165999996,
+            "cpu_percent": 0.06769088523049677
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905800704,
+            "working_set_bytes": 711835648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 74082966000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2512056320,
+              "kernel": null,
+              "pgmajfault": 207,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 466,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 38.643243583,
+            "cpu_percent": 199.26995461322213
+          }
+        }
+      },
+      {
+        "seconds": 39.648312333,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4212824000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 719,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 39.652203707999995,
+            "cpu_percent": 0.05952130581059984
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905800704,
+            "working_set_bytes": 711835648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 76104967000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2512056320,
+              "kernel": null,
+              "pgmajfault": 207,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 476,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 39.655095290999995,
+            "cpu_percent": 199.831752421177
+          }
+        }
+      },
+      {
+        "seconds": 40.658638208,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4213486000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 719,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 40.662718541,
+            "cpu_percent": 0.06551116108159084
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905800704,
+            "working_set_bytes": 711835648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 78124865000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2512056320,
+              "kernel": null,
+              "pgmajfault": 207,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 486,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 40.66496675,
+            "cpu_percent": 200.01535660787442
+          }
+        }
+      },
+      {
+        "seconds": 41.670127875,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4216161000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 722,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 41.676551374999995,
+            "cpu_percent": 0.26385020392819547
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905800704,
+            "working_set_bytes": 711835648,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 80156127000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2512056320,
+              "kernel": null,
+              "pgmajfault": 207,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 496,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 41.68092875,
+            "cpu_percent": 199.93484008260117
+          }
+        }
+      },
+      {
+        "seconds": 42.681153124999994,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 638251008,
+            "working_set_bytes": 613498880,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4216947000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 40038400,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392539,
+              "pgsteal": 349965,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 723,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 42.686429041,
+            "cpu_percent": 0.07783120931005905
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2905776128,
+            "working_set_bytes": 711811072,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 82172030000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2512056320,
+              "kernel": null,
+              "pgmajfault": 207,
+              "workingset_refault_file": null,
+              "pgscan": 21656,
+              "pgsteal": 15009,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 506,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 42.689490332999995,
+            "cpu_percent": 199.87901918727056
+          }
+        }
+      },
+      {
+        "seconds": 43.689828,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 636813312,
+            "working_set_bytes": 614170624,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4219265000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 38600704,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 392997,
+              "pgsteal": 350316,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 726,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 43.6958695,
+            "cpu_percent": 0.22963216694289357
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2908397568,
+            "working_set_bytes": 863473664,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 84160602000,
+            "memory_details": {
+              "anon": 383262720,
+              "file": 2514182144,
+              "kernel": null,
+              "pgmajfault": 231,
+              "workingset_refault_file": null,
+              "pgscan": 56013,
+              "pgsteal": 24366,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 517,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 43.700830665999995,
+            "cpu_percent": 196.6273800335026
+          }
+        }
+      },
+      {
+        "seconds": 44.701324541,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 636579840,
+            "working_set_bytes": 598872064,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4227424000,
+            "memory_details": {
+              "anon": 589254656,
+              "file": 38371328,
+              "kernel": null,
+              "pgmajfault": 544,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 731,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 44.705372166,
+            "cpu_percent": 0.8082197575890337
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920161280,
+            "working_set_bytes": 914444288,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 86107426000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2526400512,
+              "kernel": null,
+              "pgmajfault": 244,
+              "workingset_refault_file": null,
+              "pgscan": 65549,
+              "pgsteal": 29161,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 527,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 44.717451999999994,
+            "cpu_percent": 191.49942411104274
+          }
+        }
+      },
+      {
+        "seconds": 45.718820083,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639508480,
+            "working_set_bytes": 600002560,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4361935000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 735,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 45.722850957999995,
+            "cpu_percent": 13.220029848052125
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2902777856,
+            "working_set_bytes": 936439808,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 88141762000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2509017088,
+              "kernel": null,
+              "pgmajfault": 244,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 537,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 45.72533925,
+            "cpu_percent": 201.84162464601013
+          }
+        }
+      },
+      {
+        "seconds": 46.725585666,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4362597000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 737,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 46.73055125,
+            "cpu_percent": 0.06569413597034049
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2902777856,
+            "working_set_bytes": 936439808,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 90158529000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2509017088,
+              "kernel": null,
+              "pgmajfault": 244,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 547,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 46.733451249999995,
+            "cpu_percent": 200.0538630628349
+          }
+        }
+      },
+      {
+        "seconds": 47.737717208,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4363228000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 739,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 47.74173975,
+            "cpu_percent": 0.062401817267502366
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2903216128,
+            "working_set_bytes": 936853504,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 92193080000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2509381632,
+              "kernel": null,
+              "pgmajfault": 272,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 557,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 47.744173083,
+            "cpu_percent": 201.29682901586133
+          }
+        }
+      },
+      {
+        "seconds": 48.747869375,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4363702000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 739,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 48.751978957999995,
+            "cpu_percent": 0.04691958065440701
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2903175168,
+            "working_set_bytes": 936812544,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 94215587000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2509381632,
+              "kernel": null,
+              "pgmajfault": 272,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 567,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 48.754832,
+            "cpu_percent": 200.11766244575654
+          }
+        }
+      },
+      {
+        "seconds": 49.756946625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4364392000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 741,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 49.761170166,
+            "cpu_percent": 0.0683715825633706
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2908008448,
+            "working_set_bytes": 941645824,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 96232052000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2514210816,
+              "kernel": null,
+              "pgmajfault": 276,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 577,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 49.764271332999996,
+            "cpu_percent": 199.7608904348101
+          }
+        }
+      },
+      {
+        "seconds": 50.766655582999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4365858000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 742,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 50.776662666,
+            "cpu_percent": 0.14436344926230368
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2908196864,
+            "working_set_bytes": 941834240,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 98274504000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2514210816,
+              "kernel": null,
+              "pgmajfault": 276,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 587,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 50.786594208,
+            "cpu_percent": 199.78541515076626
+          }
+        }
+      },
+      {
+        "seconds": 51.791204457999996,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4366899000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 745,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 51.794984082999996,
+            "cpu_percent": 0.10222705548772765
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2908196864,
+            "working_set_bytes": 941834240,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 100300483000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2514210816,
+              "kernel": null,
+              "pgmajfault": 276,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 597,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 51.797398957999995,
+            "cpu_percent": 200.43227932991047
+          }
+        }
+      },
+      {
+        "seconds": 52.80246125,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4367459000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 747,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 52.806290083,
+            "cpu_percent": 0.05537394220938048
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2908196864,
+            "working_set_bytes": 941834240,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 102322447000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2514210816,
+              "kernel": null,
+              "pgmajfault": 276,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 608,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 52.808781415999995,
+            "cpu_percent": 199.92080977936047
+          }
+        }
+      },
+      {
+        "seconds": 53.809590541,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639442944,
+            "working_set_bytes": 599937024,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4368041000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 747,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 53.813638915999995,
+            "cpu_percent": 0.05777541810087182
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2908196864,
+            "working_set_bytes": 941834240,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 104336419000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2514210816,
+              "kernel": null,
+              "pgmajfault": 276,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 618,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 53.816319332999996,
+            "cpu_percent": 199.89044243582538
+          }
+        }
+      },
+      {
+        "seconds": 54.816675665999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4370003000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 749,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 54.823854290999996,
+            "cpu_percent": 0.19421601062050728
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920792064,
+            "working_set_bytes": 954429440,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 106333490000,
+            "memory_details": {
+              "anon": 383266816,
+              "file": 2526765056,
+              "kernel": null,
+              "pgmajfault": 278,
+              "workingset_refault_file": null,
+              "pgscan": 74767,
+              "pgsteal": 33405,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 628,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 54.827690874999995,
+            "cpu_percent": 197.46165647994886
+          }
+        }
+      },
+      {
+        "seconds": 55.831964166,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4374658000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 756,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 55.834771249999996,
+            "cpu_percent": 0.4604730347589315
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2906034176,
+            "working_set_bytes": 979107840,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 108317725000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2512007168,
+              "kernel": null,
+              "pgmajfault": 278,
+              "workingset_refault_file": null,
+              "pgscan": 83433,
+              "pgsteal": 37008,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 638,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 55.837861124999996,
+            "cpu_percent": 196.42580050243973
+          }
+        }
+      },
+      {
+        "seconds": 56.842935749999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4375335000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 758,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 56.847005708,
+            "cpu_percent": 0.06688173818323015
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2906292224,
+            "working_set_bytes": 979365888,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 110338507000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2512220160,
+              "kernel": null,
+              "pgmajfault": 282,
+              "workingset_refault_file": null,
+              "pgscan": 83433,
+              "pgsteal": 37008,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 648,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 56.849605583,
+            "cpu_percent": 199.7324506224273
+          }
+        }
+      },
+      {
+        "seconds": 57.854676208,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4375923000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 760,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 57.85881025,
+            "cpu_percent": 0.058113990953007594
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2906308608,
+            "working_set_bytes": 979357696,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 112372072000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2512244736,
+              "kernel": null,
+              "pgmajfault": 282,
+              "workingset_refault_file": null,
+              "pgscan": 83433,
+              "pgsteal": 37008,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 658,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 57.861429791,
+            "cpu_percent": 200.98006985023625
+          }
+        }
+      },
+      {
+        "seconds": 58.865875374999995,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4376402000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 760,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 58.869426333,
+            "cpu_percent": 0.04739683130492977
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2906308608,
+            "working_set_bytes": 979357696,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 114393912000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2512244736,
+              "kernel": null,
+              "pgmajfault": 282,
+              "workingset_refault_file": null,
+              "pgscan": 83433,
+              "pgsteal": 37008,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 668,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 58.872615499999995,
+            "cpu_percent": 199.94744605315702
+          }
+        }
+      },
+      {
+        "seconds": 59.877681541,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4377099000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 762,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 59.881752875,
+            "cpu_percent": 0.06885130153981503
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2906378240,
+            "working_set_bytes": 979427328,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 116419372000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2512809984,
+              "kernel": null,
+              "pgmajfault": 290,
+              "workingset_refault_file": null,
+              "pgscan": 83433,
+              "pgsteal": 37008,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 678,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 59.884354291,
+            "cpu_percent": 200.19594168155083
+          }
+        }
+      },
+      {
+        "seconds": 60.884822166,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4377706000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 762,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 60.888843458,
+            "cpu_percent": 0.060272631900878365
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920628224,
+            "working_set_bytes": 445366272,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 118427634000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 688,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 60.89190225,
+            "cpu_percent": 199.32172777097549
+          }
+        }
+      },
+      {
+        "seconds": 61.895976415999996,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4378591000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 764,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 61.8998175,
+            "cpu_percent": 0.08753933961046245
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920620032,
+            "working_set_bytes": 445358080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 120449625000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 699,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 61.902432291,
+            "cpu_percent": 200.09212175415269
+          }
+        }
+      },
+      {
+        "seconds": 62.906942582999996,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4379291000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 766,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 62.911106665999995,
+            "cpu_percent": 0.06921857996054136
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920620032,
+            "working_set_bytes": 445358080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 122471603000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 709,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 62.913514375,
+            "cpu_percent": 199.98158725162384
+          }
+        }
+      },
+      {
+        "seconds": 63.918576957999996,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4380270000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 768,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 63.922367916,
+            "cpu_percent": 0.09680980063262545
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920620032,
+            "working_set_bytes": 445358080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 124493387000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 719,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 63.924829583,
+            "cpu_percent": 199.91630542156364
+          }
+        }
+      },
+      {
+        "seconds": 64.928604916,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4380952000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 768,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 64.932771541,
+            "cpu_percent": 0.06749777842493422
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920620032,
+            "working_set_bytes": 445358080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 126513308000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 729,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 64.935164875,
+            "cpu_percent": 199.9258083919332
+          }
+        }
+      },
+      {
+        "seconds": 65.935960375,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4381641000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 770,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 65.943359958,
+            "cpu_percent": 0.06817810182758056
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920620032,
+            "working_set_bytes": 445358080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 128534651000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 739,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 65.946845,
+            "cpu_percent": 199.8006039705489
+          }
+        }
+      },
+      {
+        "seconds": 66.951961625,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639705088,
+            "working_set_bytes": 600199168,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4382312000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 772,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 66.957334166,
+            "cpu_percent": 0.06617525324667868
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920620032,
+            "working_set_bytes": 445358080,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 130558385000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526740480,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 749,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 66.959979375,
+            "cpu_percent": 199.7498110751583
+          }
+        }
+      },
+      {
+        "seconds": 67.964535875,
+        "containers": {
+          "kaption-cpu-refactor-backend-1": {
+            "cgroup_bytes": 639438848,
+            "working_set_bytes": 599932928,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 2499997696,
+            "cpu_total_ns": 4384069000,
+            "memory_details": {
+              "anon": 589271040,
+              "file": 41070592,
+              "kernel": null,
+              "pgmajfault": 548,
+              "workingset_refault_file": null,
+              "pgscan": 393082,
+              "pgsteal": 350373,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 774,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 67.969987125,
+            "cpu_percent": 0.17350465274253812
+          },
+          "kaption-cpu-refactor-translator-1": {
+            "cgroup_bytes": 2920615936,
+            "working_set_bytes": 445349888,
+            "cgroup_max_bytes": null,
+            "limit_bytes": 3999997952,
+            "cpu_total_ns": 132581989000,
+            "memory_details": {
+              "anon": 383283200,
+              "file": 2526765056,
+              "kernel": null,
+              "pgmajfault": 305,
+              "workingset_refault_file": null,
+              "pgscan": 84976,
+              "pgsteal": 37342,
+              "pswpin": null,
+              "pswpout": null
+            },
+            "cpu_throttling": {
+              "periods": 759,
+              "throttled_periods": 0,
+              "throttled_time": 0
+            },
+            "sampled_seconds": 67.97388833299999,
+            "cpu_percent": 199.58438911435525
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "initial_states": {
+      "kaption-cpu-refactor-backend-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      },
+      "kaption-cpu-refactor-translator-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      }
+    },
+    "final_states": {
+      "kaption-cpu-refactor-backend-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      },
+      "kaption-cpu-refactor-translator-1": {
+        "oom_killed": false,
+        "restart_count": 0
+      }
+    },
+    "oom_or_restart": false,
+    "sampled_combined_working_set_peak_bytes": 2655633408,
+    "complete": true,
+    "host_memory_goal": "unverified",
+    "limits": [
+      "Sampled container working sets exclude Docker/VM host overhead.",
+      "Containers are queried sequentially within each sampling round, not atomically.",
+      "Sampling can miss short peaks; separate host measurement is required."
+    ]
+  },
+  "benchmark_sha256": "caf02998a7d06ceff6d775834573ae180a1519cbf971032e17760f69975b44de",
+  "actual_server_command": [
+    "--model",
+    "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "--alias",
+    "qwen3-4b-instruct-2507",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080",
+    "--device",
+    "none",
+    "--n-gpu-layers",
+    "0",
+    "--no-kv-offload",
+    "--no-op-offload",
+    "--no-repack",
+    "--ctx-size",
+    "2048",
+    "--parallel",
+    "1",
+    "--threads",
+    "2",
+    "--threads-batch",
+    "2",
+    "--batch-size",
+    "256",
+    "--ubatch-size",
+    "128",
+    "--cache-ram",
+    "0",
+    "--no-context-shift",
+    "--jinja"
+  ],
+  "target_platform": "Native Linux ARM64 Docker on macOS; not Windows",
+  "docker_vm_memory_bytes": 4106604544,
+  "context_mode": "fixed",
+  "metadata_note": "Context-mode label added after the run: all three cases used the recorded fixed CONTEXT; outputs and timings unchanged."
+}

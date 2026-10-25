@@ -1,0 +1,57 @@
+{
+  "started_at": "2026-10-22T12:37:51.158530+00:00",
+  "endpoint": "/api/v1/translations",
+  "kind": "Three short live FastAPI requests; no video or STT processing",
+  "results": [
+    {
+      "id": "velocity",
+      "text": "The velocity is constant.",
+      "context": "We are deriving the rocket equation.",
+      "status": 200,
+      "client_seconds": 5.064566708,
+      "response": {
+        "translation": "속도는 상수입니다.",
+        "prompt_tokens": 268,
+        "generated_tokens": 8,
+        "elapsed_seconds": 5.055859419000058
+      }
+    },
+    {
+      "id": "integrate",
+      "text": "Now we can integrate the equation.",
+      "context": "The velocity is constant.",
+      "status": 200,
+      "client_seconds": 4.711833374999999,
+      "response": {
+        "translation": "이제 방정식을 적분할 수 있습니다.",
+        "prompt_tokens": 263,
+        "generated_tokens": 13,
+        "elapsed_seconds": 4.7082702940000445
+      }
+    },
+    {
+      "id": "mass-symbol",
+      "text": "That is the initial mass, 2 m0.",
+      "context": "Now we can integrate the equation.",
+      "status": 200,
+      "client_seconds": 5.961093042,
+      "response": {
+        "translation": "그것은 초기 질량으로, 2m0입니다.",
+        "prompt_tokens": 318,
+        "generated_tokens": 15,
+        "elapsed_seconds": 5.95878446100005
+      }
+    }
+  ],
+  "prior_attempt": "cpu-speed-api-smoke-261022.json used the wrong URL and returned 404; it is not a passing API test.",
+  "actual_cache_environment": "true",
+  "implementation_sha256": {
+    "app/main.py": "ea3a968ac4bc1f43fd8e32d770c81aee07178493cf4f1657d3692f6bb354e7d3",
+    "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+    "compose.yaml": "696349c7a311a121ca2145f101dc8382a3d272751c7c4acefa80d49d554600d9"
+  },
+  "limits": [
+    "Default-cache API smoke on native ARM64 Docker; not a Windows or full lecture benchmark."
+  ],
+  "succeeded": true
+}

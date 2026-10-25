@@ -1,0 +1,399 @@
+{
+  "started_at": "2026-10-24T01:32:40.241641+00:00",
+  "threads_label": 4,
+  "context": "We are deriving the rocket equation.",
+  "context_mode": "rolling",
+  "input_sha256": "9c99fb9fd2990cebe4202a556cfd833df18cfebd640712784950c966f0b875cf",
+  "resident_stt": true,
+  "limits": [
+    "Three short cases, one pass: not a statistical speed or general quality benchmark.",
+    "STT weights may be resident, but STT decoding/inference and pipeline peaks are excluded.",
+    "Thread count is a label; verify the actual server command separately.",
+    "VM memory is not changed; this cannot prove a benefit from increasing VM RAM."
+  ],
+  "server": {
+    "model_path": "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "model_alias": "qwen3-4b-instruct-2507",
+    "total_slots": 1
+  },
+  "implementation_sha256": {
+    "app/services/translation.py": "f9b4586454b0ee1e140c9add4f1ffe1c2f9209efff6c63a4a5de603f80c3275c",
+    "app/services/translation_qwen.py": "a24b4fe59526671277e1b2e62b4f13f1be197fa406d39e4fc6435b90ccd13fe0",
+    "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+    "app/services/translation_validation.py": "bcd8f9b9b5ba3c7daa1a7447c775062a8125063d67fad5521e6dd1eb0efaa367",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "stt_model_load_seconds": 1.2781994999999995,
+  "modes": [
+    {
+      "cache_prompt": false,
+      "warmup": {
+        "translation": "가속도는 상수입니다.",
+        "prompt_tokens": 269,
+        "generated_tokens": 9,
+        "elapsed_seconds": 6.290679169000015
+      },
+      "warmup_attempts": [
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+            },
+            {
+              "role": "user",
+              "content": " Terminology: acceleration=가속도; constant=상수.\n\nThe acceleration is constant."
+            }
+          ],
+          "cache_prompt": false,
+          "raw_output": "가속도는 상수입니다.",
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 269,
+            "prompt_ms": 5908.162,
+            "prompt_per_token_ms": 21.96342750929368,
+            "prompt_per_second": 45.53023427590509,
+            "predicted_n": 9,
+            "predicted_ms": 359.035,
+            "predicted_per_token_ms": 44.879375,
+            "predicted_per_second": 22.281950227693677
+          },
+          "generated_tokens": 9,
+          "finish_reason": "stop"
+        }
+      ],
+      "results": [
+        {
+          "id": "velocity",
+          "text": "The velocity is constant.",
+          "context": "We are deriving the rocket equation.",
+          "result": {
+            "translation": "속도는 상수입니다.",
+            "prompt_tokens": 268,
+            "generated_tokens": 8,
+            "elapsed_seconds": 5.988314502000009
+          },
+          "client_seconds": 5.988338793999986,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": " Terminology: velocity=속도; constant=상수.\n\nThe velocity is constant."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "속도는 상수입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 268,
+                "prompt_ms": 5665.802,
+                "prompt_per_token_ms": 21.14105223880597,
+                "prompt_per_second": 47.301335274335386,
+                "predicted_n": 8,
+                "predicted_ms": 314.573,
+                "predicted_per_token_ms": 44.939,
+                "predicted_per_second": 22.25238656845947
+              },
+              "generated_tokens": 8,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "integrate",
+          "text": "Now we can integrate the equation.",
+          "context": "The velocity is constant.",
+          "result": {
+            "translation": "이제 방정식을 적분할 수 있습니다 합니다.",
+            "prompt_tokens": 219,
+            "generated_tokens": 14,
+            "elapsed_seconds": 14.232171507000004
+          },
+          "client_seconds": 14.232207007,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThe velocity is constant."
+                },
+                {
+                  "role": "user",
+                  "content": " Terminology: integrate=적분.\n\nNow we can integrate the equation."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "용어:",
+              "server_timings": null,
+              "generated_tokens": 3,
+              "finish_reason": null
+            },
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words."
+                },
+                {
+                  "role": "user",
+                  "content": " Terminology: integrate=적분.\nReturn only complete polite Korean translation sentences ending in 합니다/입니다.\n\nNow we can integrate the equation."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "이제 방정식을 적분할 수 있습니다 합니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 219,
+                "prompt_ms": 6257.288,
+                "prompt_per_token_ms": 28.572091324200912,
+                "prompt_per_second": 34.99918814668592,
+                "predicted_n": 14,
+                "predicted_ms": 2128.32,
+                "predicted_per_token_ms": 163.71692307692308,
+                "predicted_per_second": 6.108104044504585
+              },
+              "generated_tokens": 14,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "mass-symbol",
+          "text": "That is the initial mass, 2 m0.",
+          "context": "Now we can integrate the equation.",
+          "result": {
+            "translation": "그것은 초기 질량으로, 2 m0입니다.",
+            "prompt_tokens": 318,
+            "generated_tokens": 15,
+            "elapsed_seconds": 8.653046045999986
+          },
+          "client_seconds": 8.653086462000005,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nNow we can integrate the equation."
+                },
+                {
+                  "role": "user",
+                  "content": " Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: mass=질량.\n\nThat is the initial mass, 2 m0."
+                }
+              ],
+              "cache_prompt": false,
+              "raw_output": "그것은 초기 질량으로, 2 m0입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 318,
+                "prompt_ms": 8048.451,
+                "prompt_per_token_ms": 25.30959433962264,
+                "prompt_per_second": 39.51070833381479,
+                "predicted_n": 15,
+                "predicted_ms": 586.605,
+                "predicted_per_token_ms": 41.900357142857146,
+                "predicted_per_second": 23.866145020925494
+              },
+              "generated_tokens": 15,
+              "finish_reason": "stop"
+            }
+          ]
+        }
+      ],
+      "client_seconds": 28.873697139,
+      "failed_cases": 0
+    },
+    {
+      "cache_prompt": true,
+      "warmup": {
+        "translation": "가속도는 상수입니다.",
+        "prompt_tokens": 269,
+        "generated_tokens": 9,
+        "elapsed_seconds": 6.495700544999977
+      },
+      "warmup_attempts": [
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+            },
+            {
+              "role": "user",
+              "content": " Terminology: acceleration=가속도; constant=상수.\n\nThe acceleration is constant."
+            }
+          ],
+          "cache_prompt": false,
+          "raw_output": "가속도는 상수입니다.",
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 269,
+            "prompt_ms": 6134.538,
+            "prompt_per_token_ms": 22.804973977695166,
+            "prompt_per_second": 43.85008292393005,
+            "predicted_n": 9,
+            "predicted_ms": 345.12,
+            "predicted_per_token_ms": 43.14,
+            "predicted_per_second": 23.180343069077423
+          },
+          "generated_tokens": 9,
+          "finish_reason": "stop"
+        }
+      ],
+      "results": [
+        {
+          "id": "velocity",
+          "text": "The velocity is constant.",
+          "context": "We are deriving the rocket equation.",
+          "result": {
+            "translation": "속도는 상수입니다.",
+            "prompt_tokens": 268,
+            "generated_tokens": 8,
+            "elapsed_seconds": 0.9106068760000028
+          },
+          "client_seconds": 0.9106152089999853,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nWe are deriving the rocket equation."
+                },
+                {
+                  "role": "user",
+                  "content": " Terminology: velocity=속도; constant=상수.\n\nThe velocity is constant."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "속도는 상수입니다.",
+              "server_timings": {
+                "cache_n": 248,
+                "prompt_n": 20,
+                "prompt_ms": 553.13,
+                "prompt_per_token_ms": 27.6565,
+                "prompt_per_second": 36.15786523963625,
+                "predicted_n": 8,
+                "predicted_ms": 352.8,
+                "predicted_per_token_ms": 50.4,
+                "predicted_per_second": 19.841269841269842
+              },
+              "generated_tokens": 8,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "integrate",
+          "text": "Now we can integrate the equation.",
+          "context": "The velocity is constant.",
+          "result": {
+            "translation": "이제 방정식을 적분할 수 있습니다 합니다.",
+            "prompt_tokens": 219,
+            "generated_tokens": 14,
+            "elapsed_seconds": 2.4246216680000146
+          },
+          "client_seconds": 2.4246290009999996,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nThe velocity is constant."
+                },
+                {
+                  "role": "user",
+                  "content": " Terminology: integrate=적분.\n\nNow we can integrate the equation."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "용어:",
+              "server_timings": null,
+              "generated_tokens": 3,
+              "finish_reason": null
+            },
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words."
+                },
+                {
+                  "role": "user",
+                  "content": " Terminology: integrate=적분.\nReturn only complete polite Korean translation sentences ending in 합니다/입니다.\n\nNow we can integrate the equation."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "이제 방정식을 적분할 수 있습니다 합니다.",
+              "server_timings": {
+                "cache_n": 181,
+                "prompt_n": 38,
+                "prompt_ms": 914.695,
+                "prompt_per_token_ms": 24.07092105263158,
+                "prompt_per_second": 41.54390261234619,
+                "predicted_n": 14,
+                "predicted_ms": 556.555,
+                "predicted_per_token_ms": 42.81192307692307,
+                "predicted_per_second": 23.35797899578658
+              },
+              "generated_tokens": 14,
+              "finish_reason": "stop"
+            }
+          ]
+        },
+        {
+          "id": "mass-symbol",
+          "text": "That is the initial mass, 2 m0.",
+          "context": "Now we can integrate the equation.",
+          "result": {
+            "translation": "그것은 초기 질량으로, 2m0입니다.",
+            "prompt_tokens": 318,
+            "generated_tokens": 15,
+            "elapsed_seconds": 3.9699850849999905
+          },
+          "client_seconds": 3.9699892919999797,
+          "attempts": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \nPrevious English context:\nNow we can integrate the equation."
+                },
+                {
+                  "role": "user",
+                  "content": " Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: mass=질량.\n\nThat is the initial mass, 2 m0."
+                }
+              ],
+              "cache_prompt": true,
+              "raw_output": "그것은 초기 질량으로, 2m0입니다.",
+              "server_timings": {
+                "cache_n": 181,
+                "prompt_n": 137,
+                "prompt_ms": 3294.523,
+                "prompt_per_token_ms": 24.04761313868613,
+                "prompt_per_second": 41.58416863382043,
+                "predicted_n": 15,
+                "predicted_ms": 670.864,
+                "predicted_per_token_ms": 47.91885714285714,
+                "predicted_per_second": 20.86861122373536
+              },
+              "generated_tokens": 15,
+              "finish_reason": "stop"
+            }
+          ]
+        }
+      ],
+      "client_seconds": 7.305245210999999,
+      "failed_cases": 0
+    }
+  ],
+  "audit": {
+    "candidate": "fixed instructions moved to system without short user translation request",
+    "adopted": false,
+    "reason": "Observed prompt_leak retries and duplicated Korean endings; superseded by the final candidate. Original attempts and outputs are preserved."
+  }
+}

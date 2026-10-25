@@ -6,7 +6,7 @@ from timing import log_duration, request_id, segment_index
 
 
 class TimingMiddleware:
-    """동시 요청과 스레드풀 추론 로그를 연결하고 API 요청의 HTTP 상태·시간을 기록한다."""
+    """동시 요청과 추론 로그를 연결하고 API의 HTTP 상태·초 및 분 단위 시간을 기록한다."""
 
     def __init__(self, app):
         """시간을 측정할 하위 ASGI 애플리케이션을 저장한다.
@@ -17,14 +17,15 @@ class TimingMiddleware:
         self.app = app
 
     async def __call__(self, scope, receive, send):
-        """API 요청을 실행하고 오류가 나도 요청 시간을 기록한 뒤 문맥 변수를 복구한다.
+        """본문 수신부터 응답 전송까지 초·분 단위 시간을 기록하고 요청 문맥을 복구한다.
 
         :param scope: 요청 종류·경로·헤더 등을 담은 ASGI 문맥.
         :param receive: ASGI 요청 이벤트를 비동기로 수신하는 함수.
         :param send: ASGI 응답 이벤트를 비동기로 전송하는 함수.
         :return: None.
 
-        하위 앱의 예외·취소를 시간 기록과 문맥 복구 후 그대로 전파한다.
+        성공·오류·취소 모두 경과 시간을 기록한다. 하위 앱의 예외·취소는
+        시간 기록과 문맥 복구 후 그대로 전파한다.
         """
         if scope["type"] != "http" or not scope["path"].startswith("/api/"):
             await self.app(scope, receive, send)
@@ -54,14 +55,16 @@ class TimingMiddleware:
             raise
         finally:
             try:
+                elapsed_seconds = perf_counter() - started
                 log_duration(
                     "http_request",
-                    perf_counter() - started,
+                    elapsed_seconds,
                     method=scope["method"],
                     path=scope["path"],
                     status_code=status_code,
                     status="error" if error_type or status_code >= 400 else "ok",
                     error_type=error_type,
+                    elapsed_minutes=round(elapsed_seconds / 60, 3),
                 )
             finally:
                 segment_index.reset(segment_token)

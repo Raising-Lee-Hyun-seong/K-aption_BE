@@ -10,7 +10,7 @@ from unittest.mock import Mock, patch
 
 from app.main import create_translation_service
 from app.services.translation_http import HttpTranslationService
-from app.services.translation_qwen import informal_ending, render_chatml
+from app.services.translation_qwen import INSTRUCTION, informal_ending, render_chatml
 from scripts.download_cpu_model import load_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -64,6 +64,41 @@ class QwenTranslationTests(unittest.TestCase):
         self.assertEqual(service._generate_output.call_count, 2)
         self.assertIn('Earlier English.', service._generate_output.call_args_list[0].args[0])
         self.assertNotIn('Earlier English.', service._generate_output.call_args_list[1].args[0])
+
+    def test_common_instructions_precede_changing_context_and_terms(self):
+        """문맥·용어·변수가 달라도 고정 지시는 같은 접두부에 한 번만 넣는다.
+
+        :return: None.
+        """
+        service = self.service()
+        prefixes = []
+        for source, context in (('The rocket mass is constant.', 'Earlier source.'),
+                                ('And then we have dmR over mR.', 'Different source.')):
+            prompt = service._build_prompt(source, context)
+            messages = service.tokenizer.apply_chat_template.call_args.args[0]
+            system, user = (message['content'] for message in messages)
+            self.assertIn(INSTRUCTION, system)
+            self.assertNotIn(INSTRUCTION, user)
+            self.assertLess(system.index(INSTRUCTION), system.index(context))
+            self.assertNotIn(context, user)
+            self.assertTrue(user.startswith('Translate the following English text into Korean.'))
+            self.assertTrue(user.endswith(source))
+            self.assertEqual(prompt.count(INSTRUCTION), 1)
+            prefixes.append(system.split('Previous English context:')[0])
+        self.assertEqual(prefixes[0], prefixes[1])
+
+    def test_contraction_translation_does_not_retry_or_request_fake_symbols(self):
+        """축약형을 가진 정상 존댓말 번역은 가짜 변수 지시나 추가 생성 없이 반환한다.
+
+        :return: None.
+        """
+        service = self.service()
+        service._generate_output = Mock(return_value={
+            'text': '그럴 필요는 없습니다.', 'tokens': 8, 'finish_reason': 'stop', 'stop_reason': None})
+        result = service.translate("We don't have to.", 'Earlier English.', 128)
+        self.assertEqual(result['translation'], '그럴 필요는 없습니다.')
+        self.assertEqual(service._generate_output.call_count, 1)
+        self.assertNotIn('Keep these source symbols:', service._generate_output.call_args.args[0])
 
 
     def test_spoken_math_operators_cannot_remain_untranslated(self):

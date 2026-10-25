@@ -61,21 +61,26 @@ class ServerTokenizer:
 class HttpTranslationService(QwenPromptMixin, TranslationService):
     """Qwen 프롬프트와 검증을 유지하며 원격 CPU 서버에서만 생성한다."""
 
-    def __init__(self, base_url: str, template_path: Path, timeout: float = 120):
+    def __init__(self, base_url: str, template_path: Path, timeout: float = 120,
+                 cache_prompt: bool = False):
         """제한된 HTTP 연결 풀과 공통 텍스트 설정을 초기화한다.
 
         :param base_url: 신뢰하는 llama.cpp 서버의 http 또는 https 기본 주소.
         :param template_path: 공통 텍스트 설정 파일 경로.
         :param timeout: HTTP 연결·읽기·쓰기 제한 초. 양의 유한값.
+        :param cache_prompt: 같은 슬롯의 공통 입력 KV를 재사용할지 여부. 기본 False.
         :return: None. Qwen 가중치나 토크나이저를 로컬에 로드하지 않는다.
         :raises ValueError: 주소·타임아웃 설정이 유효하지 않은 경우.
         :raises OSError: 공통 텍스트 설정을 읽지 못한 경우.
         """
+        if type(cache_prompt) is not bool:
+            raise ValueError('Prompt cache setting must be boolean')
         url = urlsplit(base_url)
         if (url.scheme not in ('http', 'https') or not url.hostname or url.username or url.password
                 or url.path not in ('', '/') or url.query or url.fragment
                 or not math.isfinite(timeout) or timeout <= 0):
             raise ValueError('Translator URL must be an HTTP origin and timeout must be positive')
+        self.cache_prompt = cache_prompt
         super().__init__(template_path)
         self._configure_qwen()
         self.client = httpx.Client(base_url=base_url.rstrip('/'), trust_env=False,
@@ -106,7 +111,7 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
         :param prompt: 원문과 문맥을 구분한 메시지 JSON.
         :param max_tokens: 최대 출력 토큰 수. 서버 컨텍스트 상한은 별도로 검사한다.
         :return: HTTP 응답을 수명 동안 관리하는 생성기.
-        :yield: text·generation_tokens·finish_reason 속성을 가진 생성 조각.
+        :yield: text·generation_tokens·finish_reason·선택적 server_timings 속성을 가진 생성 조각.
         :raises TranslationTransportError: 연결·시간 초과·빈 응답·손상 응답·조기 종료 시.
 
         생성기 종료 시 HTTP 응답을 닫아 반복 감지나 취소 이후 서버 생성을 중단한다.
@@ -114,7 +119,7 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
         payload = {'model': 'qwen3-4b-instruct-2507', 'messages': json.loads(prompt),
                    'temperature': 0, 'top_k': 1, 'top_p': 1, 'repeat_penalty': 1.0,
                    'seed': 0, 'max_tokens': max_tokens, 'stream': True,
-                   'stream_options': {'include_usage': True}, 'cache_prompt': False}
+                   'stream_options': {'include_usage': True}, 'cache_prompt': self.cache_prompt}
         count, ended, last_finish = 0, False, None
         try:
             with self.client.stream('POST', '/v1/chat/completions', json=payload) as response:
@@ -136,7 +141,8 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
                     choices = event.get('choices') or []
                     if not choices:
                         if usage:
-                            yield SimpleNamespace(text='', generation_tokens=count, finish_reason=last_finish)
+                            yield SimpleNamespace(text='', generation_tokens=count, finish_reason=last_finish,
+                                                  server_timings=event.get('timings'))
                         continue
                     choice = choices[0]
                     text = choice.get('delta', {}).get('content') or ''
@@ -146,7 +152,8 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
                     if finish:
                         ended = True
                         last_finish = finish
-                    yield SimpleNamespace(text=text, generation_tokens=count, finish_reason=finish)
+                    yield SimpleNamespace(text=text, generation_tokens=count, finish_reason=finish,
+                                          server_timings=event.get('timings'))
                 if not ended:
                     raise ValueError('Generation ended without a finish reason')
         except (httpx.HTTPError, ValueError, KeyError, TypeError, AttributeError, IndexError) as exc:

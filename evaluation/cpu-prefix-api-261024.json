@@ -1,0 +1,39 @@
+{
+  "started_at": "2026-10-24T01:39:36.560780+00:00",
+  "endpoint": "POST /api/v1/translations",
+  "rows": [
+    {
+      "text": "We don't have to.",
+      "context": "We are discussing vectors.",
+      "status": 200,
+      "client_seconds": 1.803916209,
+      "response": {
+        "translation": "우리는 그런 필요가 없습니다.",
+        "prompt_tokens": 276,
+        "generated_tokens": 8,
+        "elapsed_seconds": 1.7978178340000568
+      }
+    },
+    {
+      "text": "And then we have dmR over mR.",
+      "context": "We are deriving the rocket equation.",
+      "status": 200,
+      "client_seconds": 5.804334416,
+      "response": {
+        "translation": "그리고 그 다음에 dmR / mR입니다.",
+        "prompt_tokens": 308,
+        "generated_tokens": 14,
+        "elapsed_seconds": 5.800976794000007
+      }
+    }
+  ],
+  "limits": [
+    "Two selected translation API calls; no whole-video/STT inference or Windows test."
+  ],
+  "initial_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": false
+  },
+  "succeeded": true
+}

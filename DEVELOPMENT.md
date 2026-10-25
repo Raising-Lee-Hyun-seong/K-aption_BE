@@ -64,6 +64,7 @@ backend는 서버의 실제 채팅 템플릿과 토크나이저로 입력+출력
 | KAPTION_BACKEND_CPUS | 4 | backend CPU 코어 한도 |
 | KAPTION_STT_THREADS | 4 | backend OpenMP 스레드 |
 | KAPTION_TRANSLATOR_TIMEOUT | 120 | 번역 서버 HTTP 읽기·쓰기 제한 초, 연결은 최대 10초 |
+| KAPTION_TRANSLATOR_PROMPT_CACHE | true | 같은 슬롯의 공통 프롬프트 KV 재사용. false로 비활성화 가능 |
 | KAPTION_PORT | 8000 | localhost backend 공개 포트 |
 | KAPTION_TRANSLATOR_URL | http://translator:8080 | backend 내부 서버 주소. Compose에서 고정 |
 | KAPTION_MAX_ACTIVE_JOBS | 2 | 업로드·대기·실행을 합친 미완료 작업 한도 |
@@ -111,6 +112,33 @@ Swagger는 `/swagger`, OpenAPI는 `/openapi.json`입니다.
 자막은 실패 구간에 영어를 사용합니다. 작업 취소는 진행 중 STT·현재 번역 호출이 끝나는 경계에서 처리합니다.
 서버 health 실패는 `/health`의 준비 상태에 반영합니다. 컨테이너 재시작 시 진행 중 작업은 기존 복구 정책을 따릅니다.
 용어·형식 검사 통과는 의미·전공 수식·맞춤법 정확도를 보장하지 않습니다.
+
+## 요청 처리 시간 로그
+
+기본 INFO 로그 설정에서 API 요청 시작은 `event=request_started`, 응답 전송 완료는 `event=http_request`로 기록됩니다. 같은 `request_id`로 해당 요청의 단계별 로그를 연결할 수 있습니다. 성공·HTTP 오류·예외·취소 모두 종료까지 관측한 시간이 남습니다.
+
+```bash
+docker compose logs -f backend
+```
+
+PowerShell에서 동기 파일 처리의 전체 시간만 보려면 다음과 같이 필터링합니다.
+
+```powershell
+docker compose logs -f backend | Select-String 'event=http_request.*path=/api/v1/transcriptions'
+```
+
+완료 로그 예시(실제 측정 결과가 아닌 형식 예시):
+
+```text
+event=http_request request_id=ab12cd34ef56 segment_index=None elapsed_seconds=814.565 method=POST path=/api/v1/transcriptions status_code=200 status=ok error_type=None elapsed_minutes=13.576
+```
+
+- `elapsed_seconds`: 서버의 요청 처리 시작부터 마지막 응답 조각 전송까지의 전체 소요 초입니다. 본문 업로드 수신·요청 검증·임시 파일 저장·STT·번역·재시도·정리·응답 직렬화 및 전송을 포함합니다. 클라이언트의 네트워크 왕복 시간과는 다릅니다.
+- `elapsed_minutes`: 같은 전체 시간을 분으로 환산하고 소수 셋째 자리까지 반올림한 값입니다.
+- `event=stt`: 해당 요청의 STT 전체 시간입니다. 첫 호출이면 STT 모델 로딩도 포함합니다.
+- `event=translation_batch`: 문장 묶기 이후 전체 번역·검증·재시도 시간이며 `failed_segments`로 실패 구간 수를 확인합니다.
+
+`/api/v1/transcriptions`는 STT 이후 번역까지 처리하므로 전체 시간을 STT 추론 시간으로 해석하지 않습니다. 일부 번역 실패가 있어도 HTTP 200이므로 `http_request status=ok`만으로 모든 구간 번역 성공을 판단하지 않습니다. 비동기 `/api/v1/jobs`의 HTTP 접수 시간은 작업 완료 시간이 아니며, 작업 처리 시간은 작업의 `elapsed_seconds`와 `event=job_processing` 로그로 확인합니다.
 
 ## 메모리 설정과 측정
 
@@ -171,6 +199,23 @@ Windows는 WSL 내부 Python에서 Docker Unix 소켓 접근이 가능한 환경
 Mac에서는 `ps -axo pid=,rss=,comm=`에서 `com.apple.Virtualization.VirtualMachine` PID를 찾고, 위 시험 명령에 `--macos-vm-pid PID`를 추가할 수 있습니다.
 도구는 `lsof`에서 해당 VM이 Docker의 `Docker.raw`를 연 것을 확인한 뒤 Docker 프로세스와 VM의 현재 물리 footprint를 `footprint`로 수집합니다. 명령 인자·환경변수·파일 내용은 읽지 않습니다.
 이 값은 RSS나 컨테이너 working set과 별도인 `host_macos`에 저장됩니다. 특권 helper처럼 조회할 수 없는 PID는 null·오류로 남기고 관측 합계에서 제외합니다. 누락·커널 귀속 한계·공유 메모리 중복·표본 사이 peak 때문에 7GB 목표를 자동 합격 처리하지 않습니다. Windows 측정도 대신하지 않습니다.
+
+## 짧은 번역 설정 비교
+
+`scripts/benchmark_translation_settings.py`는 고정한 문장 3개로 캐시 끔·켬을 비교합니다. 기본 rolling 모드는 운영 파이프라인처럼 직전 영어 원문으로 다음 문맥을 갱신하며 두 캐시 조건에는 동일한 입력·문맥을 적용합니다. `--context-mode fixed`는 배경 고정 조건의 비교입니다. 매 조건의 워밍업은 측정 시간에서 제외하고 실제 서버의 `cache_n`·입력 평가 시간·출력 생성 시간, 원시 출력·재시도·검증 실패도 남깁니다. 캐시 요청만 보냈다고 재사용이 성공했다고 판단하지 않습니다.
+
+```bash
+# 별도로 실행한 로컬 CPU 비교 서버 대상. 기본 Compose는 8080을 공개하지 않습니다.
+.venv-api/bin/python scripts/benchmark_translation_settings.py --base-url http://127.0.0.1:8080 --threads-label 4 --output evaluation/new-short-speed.json
+```
+
+`--threads-label`은 외부에서 적용한 서버 설정을 기록하는 라벨이며 서버 스레드를 바꾸지 않습니다. 실제 실행 명령을 별도로 확인합니다. `--cache-order on-first`로 순서를 바꿀 수 있습니다. `--resident-stt`는 Small CPU INT8 가중치만 로드해 유지하고 STT 디코딩·추론은 실행하지 않습니다.
+운영 기본 캐시는 true입니다. 통제된 과거 Q4/Q8 비교를 재현하는 직접 서비스 생성자는 기본 false를 유지합니다. 캐시 재사용은 프롬프트 평가를 줄이지만 생성 계산을 없애지 않으며, 부동소수 연산 경로 때문에 출력이 달라질 수 있어 속도와 품질을 함께 비교해야 합니다. 3개 문장 단일 시험은 전체 강의 처리 속도·일반 의미 정확도·Windows 성능 검증이 아닙니다.
+
+Qwen의 공통 번역·수식 보존 지시는 시스템 메시지 맨 앞에 두고, 그 뒤에 직전 영어 문맥의 마지막 256자를 넣습니다. 사용자 메시지에는 짧은 번역 요청, 원문별 기호·용어 지시와 현재 원문을 넣습니다. 문맥이 바뀌어도 앞의 고정 지시를 재사용할 수 있도록 순서를 유지합니다. 영어 축약형의 접미사(`I'm`의 `m`, `don't`의 `t`)는 수식 변수에서 제외하며 따옴표 안의 실제 변수와 프라임 표기는 계속 검사합니다.
+
+캐시를 끄려면 PowerShell에서 `$env:KAPTION_TRANSLATOR_PROMPT_CACHE="false"`를 설정한 뒤 `docker compose up -d`를 실행합니다. Mac 셸은 `KAPTION_TRANSLATOR_PROMPT_CACHE=false docker compose up -d`입니다. Compose 환경변수가 바뀌면 backend가 재생성되므로 진행 중인 작업이 없는 때 적용합니다.
+[짧은 실제 비교 결과와 적용 범위](evaluation/cpu-speed-comparison-261022.md)를 참고하세요. 기본 서버의 `--cache-ram 0`은 유지하며 현재 슬롯의 공통 입력 KV 재사용과 구분합니다.
 
 ## 관련 테스트만 실행
 

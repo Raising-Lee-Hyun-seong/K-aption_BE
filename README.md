@@ -52,6 +52,9 @@ VTT는 `format=vtt`, 한영 자막은 `language=both`로 바꿉니다.
 지원 형식은 MP4·MOV·MKV·WEBM·WAV·MP3·M4A이며 최대 1GiB·90분입니다.
 번역 실패 구간은 영어로 남습니다. 숫자·수식·의미 오류가 있을 수 있어 결과 검토가 필요합니다.
 
+`POST /api/v1/transcriptions`의 처리 시간은 `docker compose logs -f backend`에서 확인합니다.
+요청이 끝나면 `event=http_request`·`path=/api/v1/transcriptions` 로그에 전체 소요 초(`elapsed_seconds`)와 분(`elapsed_minutes`)이 표시됩니다. STT뿐 아니라 번역·재시도까지 포함한 시간입니다. [단계별 시간 확인](DEVELOPMENT.md#요청-처리-시간-로그)도 참고하세요.
+
 ## 4. 종료·다시 실행·업데이트
 
 ```bash

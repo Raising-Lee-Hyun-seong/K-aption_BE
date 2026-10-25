@@ -30,6 +30,8 @@ class CpuConfigurationTests(unittest.TestCase):
         self.assertIn('--no-kv-offload', args)
         self.assertIn('--no-op-offload', args)
         self.assertIn('--no-repack', args)
+        self.assertEqual(config['services']['backend']['environment']['KAPTION_TRANSLATOR_PROMPT_CACHE'],
+                         '${KAPTION_TRANSLATOR_PROMPT_CACHE:-true}')
 
     def test_decimal_memory_budget_and_health_dependency(self):
         """GB 예산을 정확한 bytes로 제한하고 모델 준비 뒤에 backend를 시작한다.

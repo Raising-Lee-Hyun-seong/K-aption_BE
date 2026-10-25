@@ -1,7 +1,7 @@
 """실제 모델 실행 없이 작업 시간·오류 로그와 동시 API 요청의 문맥 격리를 검증한다."""
 import asyncio
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from starlette.concurrency import run_in_threadpool
 
@@ -161,6 +161,7 @@ class TimingMiddlewareTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(observed[0][1], None)
             self.assertEqual(end['request_id'], start['request_id'])
             self.assertEqual(end['elapsed_seconds'], 2.5)
+            self.assertEqual(end['elapsed_minutes'], 0.042)
             self.assertEqual(end['status_code'], 422)
             self.assertEqual(end['status'], 'error')
         finally:
@@ -197,6 +198,7 @@ class TimingMiddlewareTests(unittest.IsolatedAsyncioTestCase):
             metadata = logs.records[-1].timing
             self.assertEqual(metadata['status_code'], 500)
             self.assertEqual(metadata['elapsed_seconds'], 2.0)
+            self.assertEqual(metadata['elapsed_minutes'], 0.033)
             self.assertEqual(metadata['error_type'], 'RuntimeError')
             self.assertNotIn('private', repr(metadata))
             self.assertNotIn('private', logs.records[-1].getMessage())
@@ -205,6 +207,41 @@ class TimingMiddlewareTests(unittest.IsolatedAsyncioTestCase):
         finally:
             timing.segment_index.reset(segment_token)
             timing.request_id.reset(request_token)
+
+    async def test_duration_includes_upload_and_last_response_chunk(self):
+        """업로드·처리·분할 응답 전송을 모두 포함한 전체 초·분 시간을 한 번 기록한다.
+
+        :return: None.
+        """
+        clock = Mock(return_value=10.0)
+
+        async def app(scope, receive, send):
+            """모의 시각을 진행시키며 업로드 수신과 두 조각의 응답 전송을 수행한다.
+
+            :param scope: 시간 측정 대상 요청의 ASGI 문맥.
+            :param receive: 업로드 요청 이벤트를 수신하는 비동기 함수.
+            :param send: HTTP 응답 이벤트를 전송하는 비동기 함수.
+            :return: None.
+            """
+            await receive()
+            clock.return_value = 130.0
+            await send({'type': 'http.response.start', 'status': 200, 'headers': []})
+            clock.return_value = 160.0
+            await send({'type': 'http.response.body', 'body': b'first', 'more_body': True})
+            clock.return_value = 175.125
+            await send({'type': 'http.response.body', 'body': b'last', 'more_body': False})
+
+        with patch('app.middleware.perf_counter', clock):
+            with self.assertLogs(timing.logger, level='INFO') as logs:
+                messages = await self.run_request(TimingMiddleware(app))
+        completed = [record.timing for record in logs.records
+                     if record.timing['event'] == 'http_request']
+        self.assertEqual(len(completed), 1)
+        self.assertEqual(completed[0]['path'], '/api/v1/transcriptions')
+        self.assertEqual(completed[0]['status_code'], 200)
+        self.assertEqual(completed[0]['elapsed_seconds'], 165.125)
+        self.assertEqual(completed[0]['elapsed_minutes'], 2.752)
+        self.assertEqual(messages[-1]['body'], b'last')
 
     async def test_concurrent_requests_keep_distinct_ids_and_segments(self):
         """동시 요청과 추론 스레드풀에서 식별자·구간 번호가 섞이지 않고 문맥이 유지된다.

@@ -13,6 +13,25 @@ from app.services.translation import TranslationService
 
 class PreservationTests(unittest.TestCase):
     """실제 강의에서 관찰된 수식 삭제·수치 변경·단위 첨가를 검증한다."""
+    def test_contractions_are_not_variables_but_quoted_and_primed_symbols_are(self):
+        """영어 축약형의 접미사를 제외하면서 따옴표·프라임·혼합 문장의 실제 변수는 보존한다.
+
+        :return: None.
+        """
+        for source in ("I'm sure it doesn't matter and we don't have to.",
+                       'I’m sure it doesn’t matter and we don’t have to.',
+                       "Maybe I shouldn't spoil it for those who haven't answered."):
+            with self.subTest(source=source):
+                self.assertEqual(protected_symbols(source), [])
+                self.assertIsNone(preservation_problem(source, '그럴 필요는 없습니다.'))
+        self.assertEqual(protected_symbols("'m', ‘u’, t', v’ and g′"), ['m', 'u', 't', 'v', 'g'])
+        self.assertEqual(protected_symbols("I'm using t and don't change mR."), ['t', 'mR'])
+        self.assertEqual(preservation_problem("I'm using t.", '사용하고 있습니다.'),
+                         'missing_math_symbol')
+        self.assertEqual(preservation_problem('u prime', "don't use u입니다."),
+                         'missing_math_prime')
+        self.assertIsNone(preservation_problem('u prime', "u'입니다."))
+
     def test_symbols_match_whole_identifiers_with_korean_particles(self):
         """수식 식별자는 한국어 조사와 붙어도 인식하고 다른 식별자의 일부와 혼동하지 않는다.
 

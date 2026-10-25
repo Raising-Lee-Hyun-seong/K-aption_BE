@@ -12,7 +12,7 @@ import httpx
 from app.services.translation import TranslationTransportError
 from app.services.translation_http import HttpTranslationService
 from app.services.translation_qwen import render_chatml
-from app.main import app, health, lifespan
+from app.main import app, health, lifespan, create_translation_service
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -20,11 +20,12 @@ ROOT = Path(__file__).resolve().parents[1]
 class HttpTranslationTests(unittest.TestCase):
     """실제 HTTP 전송 형식을 대역 서버로 확인하며 모델은 로드하지 않는다."""
 
-    def service(self, answers: list, token_count: int = 100):
+    def service(self, answers: list, token_count: int = 100, cache_prompt: bool = False):
         """템플릿·토큰화·채팅 엔드포인트를 가진 HTTP 전송 대역을 구성한다.
 
         :param answers: 생성 결과 문자열 또는 HTTP 오류 응답·예외 목록.
         :param token_count: 토큰화 엔드포인트가 반환할 입력 토큰 수.
+        :param cache_prompt: 공통 입력 KV를 재사용하도록 요청할지 여부.
         :return: 서비스와 요청 기록 목록. 테스트 종료 시 연결을 닫는다.
         """
         requests = []
@@ -52,11 +53,13 @@ class HttpTranslationTests(unittest.TestCase):
             events = [
                 {'choices': [{'delta': {'content': answer}, 'finish_reason': None}]},
                 {'choices': [{'delta': {}, 'finish_reason': 'stop'}]},
-                {'choices': [], 'usage': {'completion_tokens': 17}}]
+                {'choices': [], 'usage': {'completion_tokens': 17},
+                 'timings': {'cache_n': 80 if payload['cache_prompt'] else 0, 'prompt_ms': 3}}]
             body = ''.join('data: ' + json.dumps(event, ensure_ascii=False) + '\n\n' for event in events)
             return httpx.Response(200, text=body + 'data: [DONE]\n\n')
 
-        service = HttpTranslationService('http://translator:8080', ROOT / 'templates/korean.json')
+        service = HttpTranslationService('http://translator:8080', ROOT / 'templates/korean.json',
+                                         cache_prompt=cache_prompt)
         service.client.close()
         service.client = httpx.Client(base_url='http://translator:8080', transport=httpx.MockTransport(handle))
         service.tokenizer.client = service.client
@@ -94,6 +97,53 @@ class HttpTranslationTests(unittest.TestCase):
         chats = [body for path, body in requests if path == '/v1/chat/completions']
         self.assertEqual(len(chats), 2)
         self.assertNotIn('Earlier English.', json.dumps(chats[1]))
+
+    def test_cache_is_opt_in_and_keeps_server_timing_evidence(self):
+        """선택적 캐시를 실제 요청에 전달하고 사용량 이벤트의 재사용 토큰 근거를 보존한다.
+
+        :return: None.
+        """
+        service, requests = self.service(['속도는 일정합니다.'], cache_prompt=True)
+        prompt = service._build_prompt('The velocity is constant.', '')
+        parts = list(service._stream_output(prompt, 128))
+        self.assertTrue(requests[-1][1]['cache_prompt'])
+        self.assertEqual(parts[-1].server_timings['cache_n'], 80)
+        self.assertEqual(parts[-1].generation_tokens, 17)
+
+    def test_factory_rejects_ambiguous_cache_flags(self):
+        """문자열 false를 참으로 오해하지 않고 true·false만 설정으로 수락한다.
+
+        :return: None.
+        """
+        for value, expected in (('false', False), ('true', True), (' FALSE ', False)):
+            with patch.dict('os.environ', {'KAPTION_TRANSLATOR_PROMPT_CACHE': value}):
+                service = create_translation_service()
+                self.addCleanup(service.close)
+                self.assertIs(service.cache_prompt, expected)
+        with patch.dict('os.environ', {'KAPTION_TRANSLATOR_PROMPT_CACHE': 'yes'}):
+            with self.assertRaises(ValueError):
+                create_translation_service()
+        with self.assertRaises(ValueError):
+            HttpTranslationService('http://translator', ROOT / 'templates/korean.json', cache_prompt='false')
+
+    def test_application_factory_enables_prompt_cache_by_default(self):
+        """환경변수 미지정 시 운영 서비스에서 공통 프롬프트 캐시를 활성화한다.
+
+        :return: None.
+        """
+        def defaults(name, default=None):
+            """실제 환경값 대신 호출부의 기본값을 제공한다.
+
+            :param name: 조회할 환경변수 이름.
+            :param default: 환경변수 미지정 시 사용할 값.
+            :return: 전달받은 기본값.
+            """
+            return default
+
+        with patch('app.main.os.getenv', side_effect=defaults):
+            service = create_translation_service()
+        self.addCleanup(service.close)
+        self.assertTrue(service.cache_prompt)
 
     def test_timeout_and_bad_gateway_have_bounded_retry(self):
         """시간 초과·HTTP 장애는 한 번만 재시도하고 기존 부분 실패 계약으로 전달한다.

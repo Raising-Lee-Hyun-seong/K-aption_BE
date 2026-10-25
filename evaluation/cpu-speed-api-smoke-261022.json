@@ -1,0 +1,48 @@
+{
+  "started_at": "2026-10-22T12:37:19.086104+00:00",
+  "kind": "Three short live FastAPI requests; no video or STT processing",
+  "results": [
+    {
+      "id": "velocity",
+      "text": "The velocity is constant.",
+      "context": "We are deriving the rocket equation.",
+      "status": 404,
+      "client_seconds": 0.007224750000000002,
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "id": "integrate",
+      "text": "Now we can integrate the equation.",
+      "context": "The velocity is constant.",
+      "status": 404,
+      "client_seconds": 0.0016999160000000096,
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "id": "mass-symbol",
+      "text": "That is the initial mass, 2 m0.",
+      "context": "Now we can integrate the equation.",
+      "status": 404,
+      "client_seconds": 0.001018540999999984,
+      "response": {
+        "detail": "Not Found"
+      }
+    }
+  ],
+  "actual_cache_environment": "true",
+  "implementation_sha256": {
+    "app/main.py": "ea3a968ac4bc1f43fd8e32d770c81aee07178493cf4f1657d3692f6bb354e7d3",
+    "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+    "compose.yaml": "696349c7a311a121ca2145f101dc8382a3d272751c7c4acefa80d49d554600d9"
+  },
+  "limits": [
+    "Default-cache API smoke on native ARM64 Docker; not a Windows or full lecture benchmark."
+  ],
+  "endpoint": "/api/v1/translate",
+  "succeeded": false,
+  "failure_reason": "The harness used the wrong URL. This route does not exist; all responses were 404. See corrected report for /api/v1/translations."
+}
