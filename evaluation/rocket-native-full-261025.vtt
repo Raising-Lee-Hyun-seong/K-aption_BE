@@ -1,0 +1,129 @@
+WEBVTT
+
+1
+00:00:03.600 --> 00:00:07.280
+여기서 우리는 이 관계를 도출했습니다.
+We just derived this relation here.
+
+2
+00:00:07.280 --> 00:00:14.440
+로켓의 앞쪽 속력의 미분과 로켓의 질량의 미분 사이의 관계입니다.
+The relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.
+
+3
+00:00:14.440 --> 00:00:17.760
+그리고 우리는 결국 로켓의 속력을 얻고자 합니다.
+And we want to ultimately get the speed of the rocket.
+
+4
+00:00:17.760 --> 00:00:23.000
+그래서 우리는 변수 분리 기법을 적용해야 합니다.
+So we have to apply a technique called separation variables.
+
+5
+00:00:23.000 --> 00:00:25.960
+그리고 그 후에 우리는 적분을 해야 합니다.
+And then we want to integrate.
+
+6
+00:00:25.960 --> 00:00:33.320
+우리가 할 일은 먼저 dt를 곱하는 것입니다. 이렇게 하면 그 값이 사라집니다.
+What we're going to do is, first, we're going to multiply by dt, so that falls away.
+
+7
+00:00:33.320 --> 00:00:42.320
+그리고 우리는 mR dvR = dmR u 를 얻습니다.
+And we're left with mR dvR equals dmRu.
+
+8
+00:00:42.320 --> 00:00:47.000
+그리고 우리는 m을 다른 쪽으로 옮기게 됩니다.
+And we're going to shuffle the m onto the other side.
+
+9
+00:00:47.000 --> 00:00:58.560
+그리고 우리는 m을 다른 쪽으로 옮깁니다. 그러면 dvR = u가 상수입니다. 따라서 이 것이 앞쪽으로 옵니다. 그리고 우리는 dmR / mR을 가집니다.
+And we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.
+
+10
+00:00:58.560 --> 00:01:01.680
+이것은 이제 적분할 수 있는 방정식입니다.
+That's an equation that we can integrate now.
+
+11
+00:01:01.680 --> 00:01:05.760
+그것을 할 수 있습니다.
+And we can do that.
+
+12
+00:01:05.760 --> 00:01:10.960
+그리고 어려운 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.
+And the tricky bit is that we need to take care of the integration limits here.
+
+13
+00:01:10.960 --> 00:01:16.400
+우리는 vR을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.
+We have vR, and actually these now are all primes.
+
+14
+00:01:16.400 --> 00:01:34.120
+따라서 vR은 v0에서 시작합니다. 이는 여기서의 초기 조건입니다. 2vR' of t입니다.
+So we have vR going from v0. That is our initial condition here. 2 vR prime of t.
+
+15
+00:01:34.120 --> 00:01:51.600
+질량에 대해서는 mR'이 m0에 등록됩니다. 실제로는 m0이 아니라 2m0입니다. 이 경우 초기 질량은 건조 질량과 연료 질량을 합한 것이므로 2m0입니다.
+And for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.
+
+16
+00:01:51.600 --> 00:01:56.400
+따라서 이것은 초기 질량입니다.
+So this is the initial mass.
+
+17
+00:01:56.400 --> 00:02:04.920
+And then we go to mR prime equals m of vR.
+
+18
+00:02:04.920 --> 00:02:07.400
+좋아요, 그래서 그걸 해봅시다.
+All right, so let's do that.
+
+19
+00:02:07.400 --> 00:02:21.320
+We're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.
+
+20
+00:02:21.320 --> 00:02:32.810
+그리고 그 후에 바로 여기서 2m0 과 나누어 줄 수 있습니다.
+And then we can immediately do this here over 2 m0.
+
+21
+00:02:32.810 --> 00:02:36.890
+그리고 우리는 결국 이것이 되기를 원합니다.
+And we ultimately want this.
+
+22
+00:02:36.890 --> 00:02:51.650
+So this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.
+
+23
+00:02:51.650 --> 00:02:56.780
+그리고 이것이 우리의 방정식입니다.
+And that is our equation.
+
+24
+00:02:56.780 --> 00:02:59.580
+그러면 이 방정식은 우리에게 무엇을 알려주나요?
+So what does this equation tell us?
+
+25
+00:02:59.580 --> 00:03:14.460
+질량 mR의 로켓은 이전과 비교하여 이후에 작아지며, 이로 인해 여기서 나타나는 항은 0보다 작아집니다.
+mR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,
+
+26
+00:03:14.460 --> 00:03:29.900
+즉, 속도는 초기 속도에서 어떤 값이 빠진 것이므로 속도가 감소한다는 의미이며, 따라서 내 썰매는 결국 멈추게 됩니다.
+which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.
+

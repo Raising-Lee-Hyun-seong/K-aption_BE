@@ -40,7 +40,7 @@ class QwenTranslationTests(unittest.TestCase):
         """
         service = self.service()
         context = 'old context ' * 40
-        source = 'And then we have dmR over mR.'
+        source = 'This is the initial mass.'
         prompt = service._build_prompt(source, context)
         messages = service.tokenizer.apply_chat_template.call_args.args[0]
         self.assertEqual([message['role'] for message in messages], ['system', 'user'])
@@ -59,7 +59,7 @@ class QwenTranslationTests(unittest.TestCase):
         service._generate_output = Mock(side_effect=[
             {'text': '슬라이드는 결국 멈춥니다.', 'tokens': 10, 'finish_reason': 'stop', 'stop_reason': None},
             {'text': '썰매는 결국 멈춥니다.', 'tokens': 10, 'finish_reason': 'stop', 'stop_reason': None}])
-        result = service.translate('The sled will eventually come to a stop.', 'Earlier English.', 128)
+        result = service.translate('This sled will eventually come to a stop.', 'Earlier English.', 128)
         self.assertEqual(result['translation'], '썰매는 결국 멈춥니다.')
         self.assertEqual(service._generate_output.call_count, 2)
         self.assertIn('Earlier English.', service._generate_output.call_args_list[0].args[0])
@@ -72,8 +72,8 @@ class QwenTranslationTests(unittest.TestCase):
         """
         service = self.service()
         prefixes = []
-        for source, context in (('The rocket mass is constant.', 'Earlier source.'),
-                                ('And then we have dmR over mR.', 'Different source.')):
+        for source, context in (('This rocket mass is constant.', 'Earlier source.'),
+                                ('That is the velocity.', 'Different source.')):
             prompt = service._build_prompt(source, context)
             messages = service.tokenizer.apply_chat_template.call_args.args[0]
             system, user = (message['content'] for message in messages)
@@ -113,6 +113,27 @@ class QwenTranslationTests(unittest.TestCase):
         self.assertIsNone(service._rejection_reason('그리고 dmR / mR입니다.', source, ''))
         self.assertIsNone(service._rejection_reason('그리고 dmR을 mR로 나눕니다.', source, ''))
         self.assertIsNone(service._rejection_reason('적분하면 ln을 얻습니다.', 'Integrated gives us an ln.', ''))
+
+    def test_function_relation_guides_both_attempts_and_rejects_multiplication(self):
+        """수식 표식을 잃은 곱셈 오역을 거부하고 복원한 함수·등식 관계만 반환한다.
+
+        :return: None.
+        """
+        service = self.service()
+        service._generate_output = Mock(side_effect=[
+            {'text': 'mR 프라임은 m에 vR을 곱한 값입니다.', 'tokens': 20,
+             'finish_reason': 'stop', 'stop_reason': None},
+            {'text': '이제 [MATH_A]입니다.', 'tokens': 15,
+             'finish_reason': 'stop', 'stop_reason': None}])
+        result = service.translate('mR prime equals m of vr.', 'Earlier English.', 128)
+        self.assertEqual(result['translation'], '이제 mR′ = m(vR)입니다.')
+        self.assertEqual(service._generate_output.call_count, 2)
+        for call in service._generate_output.call_args_list:
+            self.assertIn('[MATH_A]', call.args[0])
+            self.assertNotIn('m of vr', call.args[0])
+        prompt = service._build_prompt('v0 plus u ln mr over 2m0.', '')
+        self.assertNotIn('[MATH_A]', prompt)
+        self.assertIn('mR/(2m0)', prompt)
 
     def test_formal_style_is_requested_in_first_attempt_and_retry(self):
         """첫 생성과 재시도 모두 존댓말을 지시하고 원문의 질문·진술을 보존한다.

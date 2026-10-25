@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import unittest
 
-from app.services.subtitles import group_segments, merge_math_groups
+from app.services.subtitles import group_segments, merge_math_groups, merge_incomplete_math_groups
 
 
 class MathGroupingTests(unittest.TestCase):
@@ -130,3 +130,45 @@ class MathGroupingTests(unittest.TestCase):
             if group.get('merge_reasons'):
                 self.assertLessEqual(group['end'] - group['start'], 18)
                 self.assertLessEqual(len(group['text']), 350)
+
+    def test_provided_api_fragments_keep_constants_and_initial_velocity_together(self):
+        """사용자 제공 API 결과의 끊긴 세 수식 발언을 원문·시각 손실 없이 묶는다.
+
+        :return: None.
+        """
+        path = Path(__file__).resolve().parents[1] / 'evaluation/rocket-api-result-261025.json'
+        source = json.loads(path.read_text())['segments']
+        original = deepcopy(source)
+        groups = merge_incomplete_math_groups(group_segments(source, merge_math=True))
+        self.assertEqual(len(groups), 17)
+        for indices in ([3, 4, 5], [14, 15], [19, 20]):
+            group = next(item for item in groups if item['source_indices'] == indices)
+            self.assertEqual(group['text'], ' '.join(source[i]['text'] for i in indices))
+            self.assertEqual(group['start'], source[indices[0]]['start'])
+            self.assertEqual(group['end'], source[indices[-1]]['end'])
+            self.assertLessEqual(group['end'] - group['start'], 36)
+            self.assertLessEqual(len(group['text']), 350)
+        self.assertEqual([i for item in groups for i in item['source_indices']], list(range(21)))
+        self.assertEqual(source, original)
+
+    def test_incomplete_math_still_respects_complete_sentences_questions_and_caps(self):
+        """미완성 수식만 잇고 문장 종결·질문·무음·시간·문자 상한은 유지한다.
+
+        :return: None.
+        """
+        for texts in (['We have dvR equals u.', 'So that goes up front.'],
+                      ['We have dvR equals', 'What is mR?'],
+                      ['We are left with', 'the next topic.']):
+            groups = group_segments(self.segments(texts), max_duration=3)
+            self.assertEqual(len(merge_incomplete_math_groups(groups)), 2)
+        groups = group_segments(self.segments(['We have dvR equals u is a', 'constant.']), max_duration=3)
+        original = deepcopy(groups)
+        self.assertEqual(len(merge_incomplete_math_groups(groups)), 1)
+        self.assertEqual(groups, original)
+        for caps in ({'max_duration': 5}, {'max_chars': 10}):
+            self.assertEqual(len(merge_incomplete_math_groups(groups, **caps)), 2)
+        groups[1].update(start=5.1, end=8)
+        self.assertEqual(len(merge_incomplete_math_groups(groups)), 2)
+        self.assertEqual(merge_incomplete_math_groups([]), [])
+        with self.assertRaises(ValueError):
+            merge_incomplete_math_groups([], max_duration=0)

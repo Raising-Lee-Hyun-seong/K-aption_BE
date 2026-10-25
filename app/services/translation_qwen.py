@@ -5,7 +5,9 @@ from pathlib import Path
 import re
 
 from app.services.translation import TranslationService
-from app.services.translation_validation import protected_symbols
+from app.services.translation_inputs import protect_math, restore_math, select_context
+from app.services.translation_normalization import has_math_operator_words, normalize_math_operators
+from app.services.translation_validation import protected_symbols, spoken_math_relations
 
 ROOT = Path(__file__).resolve().parents[2]
 FORMAL_STYLE = 'Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. '
@@ -87,27 +89,43 @@ class QwenPromptMixin:
         self.glossary = self.glossary + [entry for entry in additions if entry['en'] in ('rocket', 'sled')]
 
     def _build_prompt(self, text: str, context: str, retry: bool = False) -> str:
-        """고정 지시를 시스템 접두부에 두고 참고 문맥과 현재 원문을 분리한다.
+        """기존 고정 지시를 유지하며 의존 문맥과 수식 보호 입력을 나눠 구성한다.
 
         :param text: 현재 번역할 영어 원문.
-        :param context: 앞 영어 원문. 마지막 256자만 시스템 메시지에서 참고한다.
+        :param context: 앞 영어 원문. 의존 단서가 있을 때 마지막 256자만 시스템에서 참고한다.
         :param retry: 참이면 완결된 한국어 번역 문장만 출력하도록 재지시한다.
-        :return: 고정 지시·선택적 문맥 뒤에 짧은 번역 요청과 현재 원문을 둔 메시지 문자열.
+        :return: 고정 지시·선택적 문맥과 모델용 수식 보호 입력을 둔 메시지 문자열.
         """
+        source, replacements = protect_math(text)
+        context = select_context(text, context)
         instruction = (
             'Translate the following English text into Korean. Preserve negation, numbers '
             'and mathematical relations. Output only the translation.')
-        symbols = protected_symbols(text)
+        if replacements:
+            instruction += (' Copy each [MATH_*] placeholder exactly once, in order. '
+                            'Use a complete Korean sentence around it.')
+        symbols = protected_symbols(source)
         if symbols:
             instruction += ' Keep these source symbols: ' + ', '.join(symbols) + '.'
             instruction += (
                 ' Render spoken arithmetic operators as symbols: plus as +, minus as -, '
                 'equals as =, and over as /. Do not leave English operator words. '
                 'Use Korean prose around the expression rather than a formula alone.')
-        terms = self._matching_terms(text, self.prompt_glossary)
+        terms = self._matching_terms(source, self.prompt_glossary)
         if terms:
             instruction += ' Terminology: ' + '; '.join(
                 f'{entry["en"]}={entry["ko"]}' for entry in terms) + '.'
+        relations = spoken_math_relations(source)
+        if relations:
+            examples = []
+            for operator, left, right in relations:
+                if operator == 'of':
+                    examples.append(f'{left}({right}) (function value, not multiplication)')
+                elif left:
+                    examples.append(f'{left}/({right})')
+                else:
+                    examples.append(f'division by {right} (do not infer the numerator)')
+            instruction += ' Preserve these source relations: ' + '; '.join(examples) + '.'
         system = FORMAL_STYLE + INSTRUCTION
         if context:
             system += ' ' + CONTEXT_INSTRUCTION + '\nPrevious English context:\n' + context[-256:]
@@ -117,8 +135,20 @@ class QwenPromptMixin:
             if symbols:
                 instruction += (' Start with Korean words and then give the expression; '
                                 'a formula alone is not a complete Korean translation.')
-        messages.append({'role': 'user', 'content': instruction + '\n\n' + text})
+        messages.append({'role': 'user', 'content': (instruction.strip() + '\n\n' + source).lstrip()})
         return self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+    def _restore_translation(self, translation: str, text: str) -> tuple:
+        """수식 표식을 복원하고 원문으로 확인한 연산어만 정규화해 기존 검증에 전달한다.
+
+        :param translation: 일반 출력 표식을 정리한 번역 후보.
+        :param text: API에 보존된 보호 전 영어 원문.
+        :return: 복원·정규화한 후보와 표식 실패 사유 또는 None. 검증 수락 여부는 별도로 판정한다.
+        """
+        restored, problem = restore_math(translation, text)
+        if problem:
+            return restored, problem
+        return normalize_math_operators(restored, text), None
 
     def _rejection_reason(self, translation: str, text: str, context: str):
         """공통 검증과 함께 반말 종결형·번역되지 않은 영어 수학 연산어를 검사한다.
@@ -134,6 +164,8 @@ class QwenPromptMixin:
         if informal_ending(translation):
             return 'informal_speech'
         if protected_symbols(text):
+            if has_math_operator_words(translation, text):
+                return 'untranslated_math_operator'
             for operator in ('over', 'plus', 'minus', 'equals'):
                 pattern = r'\b' + operator + r'\b'
                 if re.search(pattern, text, re.IGNORECASE) and re.search(pattern, translation, re.IGNORECASE):

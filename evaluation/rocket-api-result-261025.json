@@ -1,0 +1,151 @@
+{
+  "segments": [
+    {
+      "start": 3.6,
+      "end": 7.28,
+      "text": "We just derived this relation here.",
+      "translation": "여기서 우리는 이 관계를 도출했습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 7.28,
+      "end": 17.76,
+      "text": "The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket.",
+      "translation": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+      "translation_error": null
+    },
+    {
+      "start": 17.76,
+      "end": 25.96,
+      "text": "So we have to apply a technique called separation variables, and then we want to integrate.",
+      "translation": "따라서 우리는 변수 분리 기법을 적용해야 하며, 그 후 적분을 수행해야 합니다.",
+      "translation_error": null
+    },
+    {
+      "start": 25.96,
+      "end": 35.12,
+      "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away, and we're left with",
+      "translation": "무엇을 할지 말하자면, 먼저 dt를 곱해줍니다. 그러면 그 값이 사라지고, 그 결과로 우리는",
+      "translation_error": null
+    },
+    {
+      "start": 35.12,
+      "end": 49.92,
+      "text": "mr dvr equals dmru, and we're going to shuffle the m onto the other side, and we're left with dvr equals u is a",
+      "translation": "mR dvR = dmR u이고, 우리는 m을 다른 쪽으로 옮기고, 결과적으로 dvr = u가 됩니다.",
+      "translation_error": null
+    },
+    {
+      "start": 49.92,
+      "end": 58.56,
+      "text": "constant, so that goes up front, and then we have dmr over mr.",
+      "translation": null,
+      "translation_error": "translation_failed"
+    },
+    {
+      "start": 58.56,
+      "end": 67.2,
+      "text": "That's an equation that we can integrate now, and we can do that.",
+      "translation": "그것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 67.2,
+      "end": 70.96,
+      "text": "The tricky bit is that we need to take care of the integration limits here.",
+      "translation": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 70.96,
+      "end": 76.4,
+      "text": "We have vr, and actually these now are all primes.",
+      "translation": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 76.4,
+      "end": 94.12,
+      "text": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+      "translation": "그래서 우리는 vR이 v0에서 시작하여 vR이 t에 대한 vR(t)로 변화한다는 것을 가집니다. 이는 여기서의 초기 조건입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 94.12,
+      "end": 99.32,
+      "text": "And for the mass, we have mr prime equals m0.",
+      "translation": "질량에 대해서는, mr 프라임은 m0입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 99.32,
+      "end": 116.48,
+      "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 116.48,
+      "end": 125,
+      "text": "And then we go to mr prime equals m of vr.",
+      "translation": "그리고 우리는 mR 프라임이 m에 vr를 곱한 값에 해당한다는 것을 얻습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 125,
+      "end": 127.44,
+      "text": "All right, so let's do that.",
+      "translation": "좋아요, 그래서 그걸 해봅시다.",
+      "translation_error": null
+    },
+    {
+      "start": 127.44,
+      "end": 142.2,
+      "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can",
+      "translation": "우리는 vr 빼기 v0이 m에 대한 u1을 적분하여 ln을 얻습니다. 따라서 ln이고, 그 후에 우리는",
+      "translation_error": null
+    },
+    {
+      "start": 142.2,
+      "end": 152.85,
+      "text": "immediately do this here over 2m0.",
+      "translation": "즉시 여기서 2m0에 대해 수행합니다.",
+      "translation_error": null
+    },
+    {
+      "start": 152.85,
+      "end": 169.65,
+      "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+      "translation": null,
+      "translation_error": "translation_failed"
+    },
+    {
+      "start": 171.53,
+      "end": 176.7,
+      "text": "And that is our equation.",
+      "translation": "그리고 이것이 우리의 방정식입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 176.7,
+      "end": 179.5,
+      "text": "So what does this equation tell us?",
+      "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+      "translation_error": null
+    },
+    {
+      "start": 179.5,
+      "end": 197.3,
+      "text": "mr, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial",
+      "translation": "mr, 즉 로켓의 질량은 이전보다 나중에 줄어들며, 이는 여기서 나타나는 항목이 0보다 작다는 것을 의미합니다. 따라서 속도는 초기값입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 197.3,
+      "end": 208.46,
+      "text": "velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "translation": "속도에서 어떤 값이 빠져나간다는 뜻이므로 속도가 감소한다는 의미이며, 내 썰매는 결국 멈추게 됩니다.",
+      "translation_error": null
+    }
+  ]
+}

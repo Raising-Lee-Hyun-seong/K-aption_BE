@@ -55,7 +55,7 @@ Q4_K_M 파일은 약 2.50GB이며 Q8_0 약 4.28GB보다 작습니다. Windows 16
 메모리 매핑은 llama.cpp 기본 동작을 사용하고 메모리 잠금은 사용하지 않습니다.
 `--no-repack`으로 CPU 가중치 재배치를 비활성화해 가중치를 회수 가능한 파일 매핑으로 유지합니다. 약 4.11GB ARM64 Docker VM의 5분 시험에서 기본 재배치는 OOM을 일으켰으며, 비활성화한 비교는 OOM·재시작 없이 끝났지만 번역 4구간이 실패했습니다. CPU 커널·파일 재접근에 따라 속도와 수치 결과가 달라질 수 있어 x86 성능 향상으로 해석하지 않습니다.
 backend는 서버의 실제 채팅 템플릿과 토크나이저로 입력+출력 2048토큰 상한을 검사합니다.
-참고 영어 문맥은 마지막 256자로 제한합니다. 생성은 temperature 0·top_k 1·top_p 1·repeat_penalty 1·seed 0입니다.
+참고 영어 문맥은 지시어·대명사·앞 연산을 이어가는 단서가 있는 발언에만 전달하며 마지막 256자로 제한합니다. 명시적인 독립 문장은 문맥을 생략하고 정정·대조 발언은 유지합니다. 이는 문자열 휴리스틱으로 모든 문장의 문맥 의존성을 판별하지는 못합니다. 생성은 temperature 0·top_k 1·top_p 1·repeat_penalty 1·seed 0입니다.
 
 | 환경변수 | 기본값 | 의미 |
 | --- | --- | --- |
@@ -84,6 +84,14 @@ Qwen 모델·Q4 파일·CPU 실행은 기본 배포에서 고정되며 환경변
 
 기본 물리 용어집 28개와 Qwen 추가 용어 8개를 프롬프트에 사용합니다. 기본 용어와 rocket·sled는 지정 번역 포함 여부도 검사합니다.
 존댓말 지시·원문 문맥 분리·문장 및 수식 연결 결합·한글 형식·문맥 복사·반복·숫자·변수·영어 연산어 검증을 유지합니다.
+기본 문장 묶음은 18초·350자 안에서 구성합니다. `is a / constant`, `our initial / velocity`처럼 상한에서 끊긴 명확한 미완성 수학 발언은 후속 단계에서 최대 36초·350자 안에서 연결합니다. 종결 문장·다음 질문·2초 초과 무음은 연결하지 않으며, 입력 원문과 첫 시작·마지막 종료 시각을 유지합니다. 따라서 일부 자막 구간이 이전보다 길어질 수 있습니다.
+수식 보호 대상에서 제외한 발언은 기존처럼 지원 기호의 `m of vR`·`dmR over mR`에 대해 프롬프트에서 함수·분수 표기도 안내합니다. 검증기는 함수 이름·인수와 분수의 항·방향을 확인하며, `m(vR)`·슬래시·LaTeX 분수·`분의`·분모를 앞이나 뒤에 둔 한국어 나누기 표현을 허용합니다. 일반 수식 해석기나 STT 오류 복원기는 아니며 불명확한 로그의 분자·적분 결과를 추론하지 않습니다. 이 검사를 통과해도 전체 수식 의미의 정확성을 보장하지 않습니다. [수식 회귀 확인](evaluation/rocket-math-regression-261025.md)을 참고하세요.
+
+번역 입력 준비 단계에서는 발언에 있는 수식을 모두 표현할 수 있는 명확한 단순 함수·분수·원자 등식만 `[MATH_A]` 같은 표식으로 보호합니다. 보호 뒤 다른 지원 기호·영어 연산어가 남으면 발언 전체를 기존 번역 처리에 남깁니다. 복합 설명의 일부 수식만 가리면 다른 항과의 관계가 끊길 수 있기 때문입니다. 예를 들어 `mR prime equals m of vR`는 복원 시 `mR′ = m(vR)`로 표기합니다. 모델이 표식을 한 번씩 같은 순서로 보존했는지 확인하고 복원한 뒤, **보호 전 원문**을 기준으로 기존 숫자·변수·용어·관계·존댓말 검증을 모두 수행합니다. 표식의 누락·변경·중복·순서 역전은 `math_placeholder_mismatch`로 재시도하고, 최종 실패의 API 형식은 기존 `translation_failed`입니다. 원문에 예약 표식이 있으면 충돌을 피하기 위해 수식 보호를 생략합니다. API의 영어 원문·시각은 바꾸지 않습니다.
+
+연쇄 연산·괄호식·중단된 등식은 전체 식으로 확정하지 않습니다. `dvR equals u is a constant`를 완성된 등식으로 보호하지 않고, 로그나 적분 범위·불명확한 `u1`을 추론하지 않습니다. 수식 보호는 일반적인 수학 파서나 정확도 보증 기능이 아닙니다. 기존 시스템·사용자 번역 지시는 유지합니다. 지시를 줄인 후보는 문장 품질이 나빠져 채택하지 않았습니다. STT 설정·모델·CPU 제한·시도 상한·출력 토큰 한도는 이 변경으로 바뀌지 않습니다.
+
+[수식 보호·문맥 선택 검증](evaluation/translation-inputs-analysis-261025.md)에 전체 영상·선택 입력 교차 비교와 기각 후보를 보존했습니다. 선택 입력에서는 시간·실패가 감소했지만 전체 영상의 속도 개선은 검증되지 않았습니다.
 검증 실패나 서버 장애는 최대 2회 시도하며 재시도에서는 이전 문맥을 제거합니다. 토큰 상한 종료·빈 응답·불완전 SSE 종료를 성공으로 처리하지 않습니다.
 STT 추론과 번역은 공유 잠금으로 동시 실행을 막고 작업자는 하나입니다. 오디오 디코딩과 모델 준비는 추론 잠금 바깥에 있어 메모리 경쟁이 완전히 사라지는 것은 아닙니다.
 Whisper는 지연 로드하고 재사용합니다. Qwen은 translator에서 한 번 로드돼 STT 중에도 메모리를 차지합니다.
@@ -218,6 +226,75 @@ Qwen의 공통 번역·수식 보존 지시는 시스템 메시지 맨 앞에 �
 [짧은 실제 비교 결과와 적용 범위](evaluation/cpu-speed-comparison-261022.md)를 참고하세요. 기본 서버의 `--cache-ram 0`은 유지하며 현재 슬롯의 공통 입력 KV 재사용과 구분합니다.
 
 ## 관련 테스트만 실행
+
+### 수식 연산어 정규화와 CPU8 실행
+
+`app/services/translation_normalization.py`는 원문에서 같은 피연산자 쌍과 연산을 확인한
+수식의 `plus`·`minus`·`times`·`equals`·`over`만 기호로 바꿉니다.
+원문의 `u ln`처럼 단일 항과 ln이 나란히 있는 경우만 그 사이 `times`를 암묵 곱으로 허용합니다.
+출력 ln 인수는 이미 존재하는, 길이 256자·중첩 8단계 이내의 지원 소괄호식이어야 합니다.
+수식을 계산하거나 로그 범위·괄호·변수·숫자를 새로 만들지 않습니다.
+일반 시간·빈도 표현, 같은 항에 서로 다른 연산이 있는 원문, 천 단위 숫자와 불명확한 계수 분모는 건너뜁니다.
+
+Qwen 결과 처리는 기존 표식 복원 → 연산어 정규화 → 기존 숫자·기호·용어·함수·분수·존댓말 검증 순서입니다.
+표식 손상은 정규화로 우회하지 않습니다. 확인할 수 없는 영어 수식 연산어는 거부하며
+최대 2회 생성·재시도 제한과 기존 API 응답 형식을 유지합니다. 정규화는 의미 정확도 판정기가 아닙니다.
+프롬프트·STT·용어집·모델·SHA256 검증·추론 서버 의존성은 변경하지 않았습니다.
+
+```bash
+docker compose --env-file docker/cpu8.defaults up -d --build
+```
+
+공개 CPU8 설정은 `KAPTION_TRANSLATOR_CPUS=8`과 `KAPTION_CPU_THREADS=8`만 지정합니다.
+실제 컨테이너 CPU 제한과 `--threads`·`--threads-batch`가 모두 8인지 확인하며,
+Docker VM에 최소 8 vCPU를 할당해야 합니다. 메모리와 STT CPU는 기존 값을 유지합니다.
+같은 옵션을 계속 사용해야 다음 Compose 실행에서 4 CPU 기본값으로 되돌아가지 않습니다.
+4 CPU 선택지는 `--env-file docker/cpu.defaults`입니다.
+
+[실패 사례·실제 출력·측정과 한계](evaluation/math-operator-analysis-261025.md)를 참고하세요.
+Windows amd64의 CPU8 성능이나 일반 번역 실패율을 이번 Mac 결과로 검증 완료 처리하지 않습니다.
+
+Qwen CPU 제한과 추론 스레드 4·6·8개 비교 도구는
+`scripts/evaluate_cpu_translation_threads.py`입니다.
+준비된 Compose 서비스와 Docker VM의 최소 8 vCPU가 필요합니다.
+진행 중인 작업이 있으면 시작하지 않으며, 설정 전환 중 translator를 재시작합니다.
+명시한 공개 `docker/cpu.defaults`를 사용하므로 `.env`를 읽지 않습니다.
+
+```bash
+.venv-api/bin/python scripts/evaluate_cpu_translation_threads.py control --directory /private/tmp/kaption-new-thread-comparison
+```
+
+새 디렉터리를 사용해야 합니다. 대표 4개 입력을 4→6→8→8→6→4 순서로 측정하며,
+평균 시간이 4 CPU보다 5% 이상 짧은 후보가 있으면 같은 19개 전체 입력도 비교합니다.
+매 조건에서 컨테이너 CPU 제한과 `--threads`·`--threads-batch`를 함께 바꿉니다.
+이미지·모델 경로·나머지 실행 명령·메모리 제한은 같아야 측정을 계속합니다.
+같은 캐시 비활성 워밍업 이후 캐시를 켜고, 원문·문맥·검증·최대 2회 시도를 유지합니다.
+조건별 서버 상태·원시 생성·서버 입력/출력 시간·실패를 저장하고 정상 종료나 Python 예외 발생 시
+기존 4 CPU 설정으로 복구합니다. 강제 프로세스 종료나 Docker 장애까지 복구를 보장하지 않으므로
+그 경우 실제 서버 명령과 CPU 제한을 확인합니다.
+
+이 도구는 이 프로젝트의 기존 4 CPU 구성과 고정 개발 사례를 위한 평가 도구입니다.
+STT·업로드·자막 생성 시간은 포함하지 않으며, Mac의 최적 스레드 수를 Windows 권장값으로 확정하지 않습니다.
+[2026-10-25 실제 CPU 비교 결과](evaluation/cpu-threads-analysis-261025.md)를 참고하세요.
+
+CPU STT 탐색 폭·도메인 힌트와 번역 전용 모델의 분리 평가는
+[2026-10-25 CPU 후보 비교](evaluation/cpu-candidates-analysis-261025.md)에 있습니다.
+이 시험에서는 운영 기본값을 변경하지 않았습니다. STT는 빨라져도 자막 차이가 늘었고,
+M2M100은 전공 오역 때문에 미채택했습니다. 새 설정의 전체 API 시간이나 Windows 검증 결과가 아닙니다.
+
+`scripts/evaluate_cpu_stt_options.py --media <영상> --reference <기준 JSON> --output <새 JSON>`은
+기존 내부 Small CPU INT8 모델로 기본·beam 1·물리 용어 힌트 조건을 비교합니다.
+물리 힌트는 로켓 강의용 평가 조건이며 API의 기본 설정에 적용하지 않습니다.
+
+`docker build -f docker/Dockerfile.translation-eval -t kaption-translation-eval:261025 .`은
+기존 `kaption-backend:local`에서 파생된 **평가 전용** 이미지를 만듭니다. 운영 Compose에서 사용하지 않습니다.
+M2M100 비교에는 별도로 준비한 로컬 CTranslate2 INT8 모델과 토크나이저가 필요합니다.
+고정 원본 리비전·해시·변환 명령은 위 보고서와 연결된 JSON에 있습니다. 모델 다운로드·변환 시간은 번역 시간과 구분합니다.
+`scripts/evaluate_cpu_translation_models.py --mode m2m --model-dir <변환 모델> --output <새 JSON>`으로
+기존 저장 입력 19개를 재생하며, `--protect-math --beam 5`로 보호 조건을 비교합니다.
+`--mode qwen --translator-url http://translator:8080`은 기존 Qwen 서버를 사용하므로
+Compose의 내부 inference 네트워크에서 실행합니다. `--beam`은 M2M100에만 적용됩니다.
+두 스크립트는 기존 결과를 덮어쓰지 않으므로 출력 경로와 같은 접두사의 조건별 파일도 새 경로를 사용합니다.
 
 ```bash
 .venv-api/bin/python scripts/run_changed_tests.py --files app/services/translation_http.py compose.yaml scripts/benchmark_cpu.py

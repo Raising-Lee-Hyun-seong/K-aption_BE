@@ -17,6 +17,16 @@ SYMBOL_CANONICAL = {
     'm0': 'm0', 'v0': 'v0', 'dt': 'dt', 'dm': 'dm', 'dv': 'dv',
     'ln': 'ln', 'm': 'm', 'u': 'u', 't': 't', 'v': 'v', 'g': 'g',
 }
+RELATION_NUMBER = r'[-−]?\s*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)'
+RELATION_ATOM = (
+    r'(?:(?:' + RELATION_NUMBER + r')\s*)?(?:' + RAW_SYMBOL_PATTERN
+    + r'|u\d+)|' + RELATION_NUMBER
+)
+SPOKEN_RELATION = re.compile(
+    SYMBOL_LEFT_BOUNDARY + r'(?<![0-9.,])(?P<left>' + RELATION_ATOM
+    + r')\s+(?P<operator>(?i:over|of))\s+(?P<right>' + RELATION_ATOM
+    + r')(?![A-Za-z0-9_])'
+)
 NUMBER_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_.])[-−]?\s*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)"
     r"(?=$|[^A-Za-z0-9_]|(?:" + RAW_SYMBOL_PATTERN
@@ -119,6 +129,117 @@ def protected_symbols(text: str) -> list[str]:
     return list(dict.fromkeys(symbols))
 
 
+def _canonical_relation_atom(text: str) -> str:
+    """관계식의 단일 기호·수치 계수에서 공백·밑줄 별칭을 정규화한다.
+
+    :param text: 원문에서 추출한 지원 기호·숫자 또는 수치 계수와 기호.
+    :return: 수치를 유지하고 mR·vR 등의 표기만 정규화한 문자열.
+    """
+    compact = re.sub(r'[\s_,]+', '', text).replace('−', '-')
+    number = re.match(RELATION_NUMBER, compact)
+    coefficient = number.group() if number else ''
+    symbol = compact[len(coefficient):]
+    if coefficient:
+        value = Decimal(coefficient)
+        coefficient = format(value.normalize(), 'f') if value else '0'
+    return coefficient + SYMBOL_CANONICAL.get(symbol.lower(), symbol)
+
+
+def spoken_math_relations(text: str) -> list[tuple[str, str, str]]:
+    """지원하는 기호의 over 나눗셈과 of 함수 관계를 원문에서 보수적으로 추출한다.
+
+    :param text: 관계를 보존할 영어 원문. 내용을 수정하거나 수식을 풀지 않는다.
+    :return: (over 또는 of, 왼쪽 항, 오른쪽 항) 튜플 목록. ln 뒤 분모만 있으면 왼쪽 항은 빈 문자열.
+
+    단위 약자와 일반 영어 구문은 제외한다. 지원 기호·숫자·u1 형태만 다루며
+    일반 수식 파서나 STT 오류 복원기가 아니다. ln이 있는 발언의 고립된 over는
+    분자·로그 범위를 추론하지 않고 분모 보존 단서만 반환한다.
+    """
+    relations, spans = [], []
+    for match in SPOKEN_RELATION.finditer(text):
+        left, right = match['left'], match['right']
+        atoms = (left, right)
+        if any(not (protected_symbols(atom) or re.fullmatch(RELATION_NUMBER, atom)
+                    or re.fullmatch(r'u\d+', atom)) for atom in atoms):
+            continue
+        operator = match['operator'].lower()
+        if operator == 'of' and not protected_symbols(left):
+            continue
+        relations.append((operator, _canonical_relation_atom(left), _canonical_relation_atom(right)))
+        spans.append(match.span())
+    if 'ln' in protected_symbols(text):
+        for match in re.finditer(r'\b(?i:over)\s+(' + RELATION_ATOM + r')(?![A-Za-z0-9_])', text):
+            if (not any(start <= match.start() < end for start, end in spans)
+                    and protected_symbols(match[1])):
+                relations.append(('over', '', _canonical_relation_atom(match[1])))
+    return list(dict.fromkeys(relations))
+
+
+def _relation_atom_pattern(atom: str) -> str:
+    """알려진 관계 항의 공백을 허용하는 표기 정규식을 만든다.
+
+    :param atom: 정규화된 숫자·기호 항.
+    :return: 항 내부 공백을 허용하고 각 문자를 이스케이프한 정규식.
+    """
+    return r'\s*'.join(re.escape(char) for char in atom.lower())
+
+
+def math_relation_problem(source: str, translation: str) -> Optional[str]:
+    """명시적인 나눗셈의 항·방향과 함수의 인수 관계가 출력에 남는지 검사한다.
+
+    :param source: 지원 기호로 된 over·of 관계를 포함할 수 있는 영어 원문.
+    :param translation: 기호·숫자·언어 검사와 별도로 확인할 번역 후보.
+    :return: missing_math_division 또는 missing_math_function. 지원 관계가 보존되거나 없으면 None.
+
+    슬래시·분수 명령·분의·나누기와 함수 괄호·명시적 한국어 함수 표현을
+    허용한다. 영문 over 보존은 관계 검사만 통과하며 기존 영어 연산어 검사에서
+    별도로 거부한다. 일반 의미 정확도나 임의 대수적 동치까지 판정하지 않는다.
+    """
+    def normalize_atom(match):
+        """출력의 지원 관계 항에서 같은 값의 소수·천 단위·기호 별칭을 정규화한다.
+
+        :param match: 정규식이 찾은 단일 관계 항의 매치 객체.
+        :return: 비교에만 사용할 정규화된 항. 실제 번역문은 수정하지 않는다.
+        """
+        return _canonical_relation_atom(match.group())
+
+    output = re.sub(SYMBOL_LEFT_BOUNDARY + r'(?<![0-9.,])(?:' + RELATION_ATOM
+                    + r')(?![A-Za-z0-9_])', normalize_atom, translation)
+    output = output.lower().replace('_', '').replace('−', '-')
+    for operator, left, right in spoken_math_relations(source):
+        a, b = _relation_atom_pattern(left), _relation_atom_pattern(right)
+        start, end = r'(?<![a-z0-9])', r'(?![a-z0-9])'
+        wrapped_a = r'[([{]*\s*' + a + r'\s*[)\]}]*'
+        wrapped_b = r'[([{]*\s*' + b + r'\s*[)\]}]*'
+        if operator == 'of':
+            forms = (
+                start + a + r"\s*\(\s*" + b + r'\s*\)',
+                start + b + r'\s*(?:의|에서의|에\s*대한)\s*' + a + end,
+                start + a + r'\s*(?:은|는)?\s*' + b + r'\s*(?:의|에\s*대한)\s*함수',
+            )
+            reason = 'missing_math_function'
+        elif left:
+            forms = (
+                start + wrapped_a + r'\s*(?:/|over)\s*' + wrapped_b + end,
+                r'\\(?:d?frac)\s*\{\s*' + a + r'\s*\}\s*\{\s*' + b + r'\s*\}',
+                start + b + r'\s*분의\s*' + a + end,
+                start + a + r'\s*(?:을|를)?\s*' + b + r'\s*(?:으)?로\s*(?:나누|나눈|나눕|나눠)',
+                start + b + r'\s*(?:으)?로\s*(?:나눈|나누어진|나누어\s*진|나뉜)\s*' + a + end,
+            )
+            reason = 'missing_math_division'
+        else:
+            forms = (
+                r'(?:/|\bover)\s*' + wrapped_b + end,
+                start + b + r'\s*분의',
+                start + b + r'\s*(?:으)?로\s*(?:나누|나눈|나눕|나눠)',
+                r'\\(?:d?frac)\s*\{[^{}]+\}\s*\{\s*' + b + r'\s*\}',
+            )
+            reason = 'missing_math_division'
+        if not any(re.search(form, output) for form in forms):
+            return reason
+    return None
+
+
 def _has_math_prime(text: str) -> bool:
     """프라임의 영문·한글·전용 기호 또는 변수 뒤 아포스트로피가 있는지 확인한다.
 
@@ -149,7 +270,7 @@ def generation_problem(output: str) -> Optional[str]:
 
 
 def preservation_problem(source: str, translation: str) -> Optional[str]:
-    """수식·숫자·단위 보존과 원문에 없는 연속 외국 문자 혼입을 검사한다.
+    """기호·숫자·단위·지원 함수와 분수 보존 및 원문에 없는 외국 문자 혼입을 검사한다.
 
     키릴·가나·한자 문자가 두 자 이상 이어지면 원문에도 같은 문자열이 있는지
     확인한다. 한글 바로 뒤 괄호의 한자 병기는 허용한다. 단일 수식 문자·그리스
@@ -191,4 +312,4 @@ def preservation_problem(source: str, translation: str) -> Optional[str]:
         return "invented_number"
     if not _units(translation, include_korean=True).issubset(_units(source)):
         return "invented_unit"
-    return None
+    return math_relation_problem(source, translation)

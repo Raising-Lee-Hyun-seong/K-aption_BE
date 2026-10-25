@@ -1,0 +1,1955 @@
+{
+  "source": "evaluation/cpu-threads-comparison-261025.json",
+  "source_sha256": "66c116a08e923fde471139d5bb44bc437a9d1000d0bad44c4477e351b6dfb715",
+  "results": [
+    {
+      "run": "pilot-1-4",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-1-4",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-1-4",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지므로, 여기서 나타나는 항은 0보다 작아지며, 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지므로, 여기서 나타나는 항은 0보다 작아지며, 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-1-4",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-2-6",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-2-6",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-2-6",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간다는 의미이며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간다는 의미이며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-2-6",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-3-8",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-3-8",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-3-8",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 나중에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 나중에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-3-8",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-4-8",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-4-8",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-4-8",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 나중에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 나중에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-4-8",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-5-6",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-5-6",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-5-6",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간다는 의미이며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간다는 의미이며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-5-6",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-6-4",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-6-4",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-6-4",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지므로, 여기서 나타나는 항은 0보다 작아지며, 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지므로, 여기서 나타나는 항은 0보다 작아지며, 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "pilot-6-4",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "normalized_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+          "normalized_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-3",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 그러면 dt가 사라지고, mr dvr = dmru가 남습니다. 이후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞쪽으로 올라가며, dmr / mr가 남습니다.",
+          "normalized_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 그러면 dt가 사라지고, mr dvr = dmru가 남습니다. 이후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞쪽으로 올라가며, dmr / mr가 남습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-4",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "normalized_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-5",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "normalized_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-6",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "normalized_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-7",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "normalized_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-8",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+          "normalized_output": "그리고 질량에 대해서는 mR′ = m0입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-9",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+          "normalized_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-11",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 그래서 그걸 해봅시다.",
+          "normalized_output": "좋아요, 그래서 그걸 해봅시다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-12",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "normalized_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-13",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+          "old_rejection": "untranslated_math_operator",
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": true
+        },
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-14",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 이것이 우리의 방정식입니다.",
+          "normalized_output": "그리고 이것이 우리의 방정식입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-15",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "normalized_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 나중에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 것을 의미합니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 나중에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 것을 의미합니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "holdout-linear-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "normalized_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-6",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "normalized_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+          "normalized_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-3",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "normalized_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-4",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "normalized_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-5",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "normalized_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-6",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "normalized_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-7",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "normalized_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-8",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+          "normalized_output": "그리고 질량에 대해서는 mR′ = m0입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-9",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "normalized_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-11",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 그래서 그걸 해봅시다.",
+          "normalized_output": "좋아요, 그래서 그걸 해봅시다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-12",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "normalized_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-13",
+      "old_accepted": false,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+          "old_rejection": "untranslated_math_operator",
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": true
+        },
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이것이므로, 이는 t에 대한 vR입니다. 물론, 그 후에 v0 plus u ln mR over 2m0입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이것이므로, 이는 t에 대한 vR입니다. 물론, 그 후에 v0 + u ln mR over 2m0입니다.",
+          "old_rejection": "untranslated_math_operator",
+          "new_rejection": "untranslated_math_operator",
+          "changed": true,
+          "operator_changed": true
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-14",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 이것이 우리의 방정식입니다.",
+          "normalized_output": "그리고 이것이 우리의 방정식입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-15",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "normalized_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "holdout-linear-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "normalized_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-8",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "normalized_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+          "normalized_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-3",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "normalized_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-4",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "normalized_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-5",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "normalized_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-6",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "normalized_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-7",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "normalized_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-8",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+          "normalized_output": "그리고 질량에 대해서는 mR′ = m0입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-9",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "normalized_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-11",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 그래서 그걸 해봅시다.",
+          "normalized_output": "좋아요, 그래서 그걸 해봅시다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-12",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "normalized_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-13",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+          "old_rejection": "untranslated_math_operator",
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": true
+        },
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-14",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 이것이 우리의 방정식입니다.",
+          "normalized_output": "그리고 이것이 우리의 방정식입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-15",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "normalized_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "holdout-linear-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "normalized_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "full-4",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "normalized_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+          "normalized_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-3",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 그러면 dt가 사라지고, mr dvr = dmru가 남습니다. 이후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞쪽으로 올라가며, dmr / mr가 남습니다.",
+          "normalized_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 그러면 dt가 사라지고, mr dvr = dmru가 남습니다. 이후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞쪽으로 올라가며, dmr / mr가 남습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-4",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "normalized_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-5",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "normalized_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-6",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "normalized_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-7",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "normalized_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-8",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+          "normalized_output": "그리고 질량에 대해서는 mR′ = m0입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-9",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+          "normalized_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 됩니다. 따라서 이는 초기 질량입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-11",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 그래서 그걸 해봅시다.",
+          "normalized_output": "좋아요, 그래서 그걸 해봅시다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-12",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "normalized_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-13",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+          "old_rejection": "untranslated_math_operator",
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": true
+        },
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-14",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 이것이 우리의 방정식입니다.",
+          "normalized_output": "그리고 이것이 우리의 방정식입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-15",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "normalized_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 나중에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 것을 의미합니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 나중에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 것을 의미합니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "holdout-linear-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "normalized_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-6",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "normalized_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+          "normalized_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-2",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "normalized_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-3",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "normalized_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-4",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "normalized_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-5",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "normalized_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-6",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "normalized_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-7",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "normalized_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-8",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+          "normalized_output": "그리고 질량에 대해서는 mR′ = m0입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-9",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "normalized_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-10",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "normalized_output": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-11",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 그래서 그걸 해봅시다.",
+          "normalized_output": "좋아요, 그래서 그걸 해봅시다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-12",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "normalized_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-13",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+          "old_rejection": "untranslated_math_operator",
+          "new_rejection": null,
+          "changed": true,
+          "operator_changed": true
+        },
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "normalized_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-14",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그리고 이것이 우리의 방정식입니다.",
+          "normalized_output": "그리고 이것이 우리의 방정식입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-15",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "normalized_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "rocket-16",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "normalized_output": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "holdout-linear-0",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "normalized_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    },
+    {
+      "run": "confirm-4",
+      "id": "holdout-linear-1",
+      "old_accepted": true,
+      "new_first_accepted": true,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "normalized_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "old_rejection": null,
+          "new_rejection": null,
+          "changed": false,
+          "operator_changed": false
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Offline replay of recorded outputs, not a new model generation or timing benchmark.",
+    "Same heuristic checks, not an independent semantic quality assessment."
+  ],
+  "changed_note": "changed includes placeholder restoration; operator_changed compares only after placeholder restoration."
+}

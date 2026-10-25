@@ -1,0 +1,3383 @@
+{
+  "model": "small",
+  "device": "cpu",
+  "compute_type": "int8",
+  "platform": "Linux-7.0.14-linuxkit-aarch64-with-glibc2.36",
+  "architecture": "aarch64",
+  "packages": {
+    "faster-whisper": "1.2.1",
+    "ctranslate2": "4.8.3",
+    "numpy": "1.26.4"
+  },
+  "media_sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+  "driver_sha256": "d7a1a3361a274062e724f8ad22f1dd9ecec14876cefaab5efe68ed3a67da69b9",
+  "model_load_seconds": 3.408325168000374,
+  "decode_seconds": 0.23676466699998855,
+  "audio_seconds": 212.5866875,
+  "order": [
+    "baseline",
+    "beam1",
+    "beam1_hints",
+    "beam5_hints",
+    "beam1_hints",
+    "baseline"
+  ],
+  "runs": [
+    {
+      "condition": "baseline",
+      "beam_size": 5,
+      "initial_prompt": null,
+      "hotwords": null,
+      "seconds": 33.00739084899942,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 7.28,
+          "text": "We just derived this relation here."
+        },
+        {
+          "start": 7.28,
+          "end": 10.08,
+          "text": "The relation between the differential of the speed of"
+        },
+        {
+          "start": 10.08,
+          "end": 13.24,
+          "text": "the rocket sled and the differential of the mass of"
+        },
+        {
+          "start": 13.24,
+          "end": 16.44,
+          "text": "the rocket, and we want to ultimately get the speed of"
+        },
+        {
+          "start": 16.44,
+          "end": 17.76,
+          "text": "the rocket."
+        },
+        {
+          "start": 17.76,
+          "end": 21.64,
+          "text": "So we have to apply a technique called separation"
+        },
+        {
+          "start": 21.64,
+          "end": 25.96,
+          "text": "variables, and then we want to integrate."
+        },
+        {
+          "start": 25.96,
+          "end": 29.8,
+          "text": "What we're going to do is, first, we're going to"
+        },
+        {
+          "start": 29.8,
+          "end": 35.12,
+          "text": "multiply by dt, so that falls away, and we're left with"
+        },
+        {
+          "start": 35.12,
+          "end": 44.8,
+          "text": "mr dvr equals dmru, and we're going to shuffle the m onto"
+        },
+        {
+          "start": 44.8,
+          "end": 49.92,
+          "text": "the other side, and we're left with dvr equals u is a"
+        },
+        {
+          "start": 49.92,
+          "end": 55.72,
+          "text": "constant, so that goes up front, and then we have dmr"
+        },
+        {
+          "start": 55.72,
+          "end": 58.56,
+          "text": "over mr."
+        },
+        {
+          "start": 58.56,
+          "end": 64.0,
+          "text": "That's an equation that we can integrate now, and we can do"
+        },
+        {
+          "start": 64.0,
+          "end": 67.2,
+          "text": "that."
+        },
+        {
+          "start": 67.2,
+          "end": 69.16,
+          "text": "The tricky bit is that we need to take care of the"
+        },
+        {
+          "start": 69.16,
+          "end": 70.96,
+          "text": "integration limits here."
+        },
+        {
+          "start": 70.96,
+          "end": 76.4,
+          "text": "We have vr, and actually these now are all primes."
+        },
+        {
+          "start": 76.4,
+          "end": 80.84,
+          "text": "So we have vr going from v0."
+        },
+        {
+          "start": 80.84,
+          "end": 94.12,
+          "text": "That is our initial condition here, to vr equal vr of t."
+        },
+        {
+          "start": 94.12,
+          "end": 99.32,
+          "text": "And for the mass, we have mr prime equals m0."
+        },
+        {
+          "start": 99.32,
+          "end": 104.72,
+          "text": "Actually, not quite m0, it's 2m0, because the initial"
+        },
+        {
+          "start": 104.72,
+          "end": 108.92,
+          "text": "mass of this is the dry mass, and the fuel mass, so"
+        },
+        {
+          "start": 108.92,
+          "end": 116.48,
+          "text": "that's 2m0, so this is the initial mass."
+        },
+        {
+          "start": 116.48,
+          "end": 125.0,
+          "text": "And then we go to mr prime equals m of vr."
+        },
+        {
+          "start": 125.0,
+          "end": 127.44,
+          "text": "All right, so let's do that."
+        },
+        {
+          "start": 127.44,
+          "end": 137.04,
+          "text": "We're going to get vr minus v0 equals u1 over m"
+        },
+        {
+          "start": 137.04,
+          "end": 142.2,
+          "text": "integrated gives us an ln, so ln, and then we can"
+        },
+        {
+          "start": 142.2,
+          "end": 152.85,
+          "text": "immediately do this here over 2m0."
+        },
+        {
+          "start": 152.85,
+          "end": 158.61,
+          "text": "And we ultimately want this, so this is vr of t, of"
+        },
+        {
+          "start": 158.61,
+          "end": 169.65,
+          "text": "course, and then we get v0 plus u ln mr over 2m0."
+        },
+        {
+          "start": 171.53,
+          "end": 176.7,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.7,
+          "end": 179.5,
+          "text": "So what does this equation tell us?"
+        },
+        {
+          "start": 179.5,
+          "end": 186.34,
+          "text": "mr, the mass of the rocket, is less later on than it was"
+        },
+        {
+          "start": 186.34,
+          "end": 192.82,
+          "text": "before, which means this term here is going to be less"
+        },
+        {
+          "start": 192.82,
+          "end": 197.3,
+          "text": "than 0, which means the velocity is our initial"
+        },
+        {
+          "start": 197.3,
+          "end": 204.02,
+          "text": "velocity minus something, which means we have a decrease in"
+        },
+        {
+          "start": 204.02,
+          "end": 207.58,
+          "text": "velocity, which means my sled will eventually"
+        },
+        {
+          "start": 207.58,
+          "end": 208.46,
+          "text": "come to a stop."
+        }
+      ],
+      "language_probability": 1,
+      "caption_comparison": {
+        "reference_words": 369,
+        "hypothesis_words": 343,
+        "substitutions": 23,
+        "deletions": 27,
+        "insertions": 1,
+        "word_errors": 51,
+        "word_error_rate": 0.13821138211382114,
+        "sequence_match_ratio": 0.8960674157303371,
+        "differences": [
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              2,
+              3
+            ],
+            "stt_word_range": [
+              2,
+              3
+            ],
+            "reference": "arrived",
+            "stt": "derived"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              47,
+              48
+            ],
+            "stt_word_range": [
+              47,
+              47
+            ],
+            "reference": "of",
+            "stt": ""
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              65,
+              66
+            ],
+            "stt_word_range": [
+              64,
+              64
+            ],
+            "reference": "divide",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              74,
+              76
+            ],
+            "stt_word_range": [
+              72,
+              73
+            ],
+            "reference": "we are",
+            "stt": "we're"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              78,
+              83
+            ],
+            "stt_word_range": [
+              75,
+              77
+            ],
+            "reference": "m r d v r",
+            "stt": "mr dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              84,
+              88
+            ],
+            "stt_word_range": [
+              78,
+              79
+            ],
+            "reference": "d m r u",
+            "stt": "dmru"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              103,
+              106
+            ],
+            "stt_word_range": [
+              94,
+              95
+            ],
+            "reference": "d v r",
+            "stt": "dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              120,
+              123
+            ],
+            "stt_word_range": [
+              109,
+              110
+            ],
+            "reference": "d m r",
+            "stt": "dmr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              124,
+              126
+            ],
+            "stt_word_range": [
+              111,
+              112
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              139,
+              140
+            ],
+            "stt_word_range": [
+              125,
+              125
+            ],
+            "reference": "and",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              157,
+              159
+            ],
+            "stt_word_range": [
+              142,
+              143
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              169,
+              171
+            ],
+            "stt_word_range": [
+              153,
+              154
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              180,
+              183
+            ],
+            "stt_word_range": [
+              163,
+              165
+            ],
+            "reference": "2vr prime of",
+            "stt": "to vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              193,
+              195
+            ],
+            "stt_word_range": [
+              175,
+              176
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              232,
+              234
+            ],
+            "stt_word_range": [
+              213,
+              214
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              253,
+              255
+            ],
+            "stt_word_range": [
+              233,
+              234
+            ],
+            "reference": "u 1",
+            "stt": "u1"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              260,
+              261
+            ],
+            "stt_word_range": [
+              239,
+              241
+            ],
+            "reference": "lm",
+            "stt": "an ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              262,
+              263
+            ],
+            "stt_word_range": [
+              242,
+              243
+            ],
+            "reference": "lm",
+            "stt": "ln"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              274,
+              275
+            ],
+            "stt_word_range": [
+              254,
+              254
+            ],
+            "reference": "well",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              282,
+              284
+            ],
+            "stt_word_range": [
+              261,
+              262
+            ],
+            "reference": "the r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              291,
+              292
+            ],
+            "stt_word_range": [
+              269,
+              270
+            ],
+            "reference": "got",
+            "stt": "get"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              295,
+              299
+            ],
+            "stt_word_range": [
+              273,
+              275
+            ],
+            "reference": "l n m r",
+            "stt": "ln mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              300,
+              302
+            ],
+            "stt_word_range": [
+              276,
+              277
+            ],
+            "reference": "2 m0",
+            "stt": "2m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              314,
+              316
+            ],
+            "stt_word_range": [
+              289,
+              290
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          }
+        ],
+        "official_caption_uncertainties": [
+          {
+            "source_cue_indices": [
+              0
+            ],
+            "text": "arrived",
+            "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+          },
+          {
+            "source_cue_indices": [
+              19,
+              20
+            ],
+            "text": "2vr prime of equal vr of t",
+            "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              25
+            ],
+            "text": "m of vr",
+            "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              28
+            ],
+            "text": "lm",
+            "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              31
+            ],
+            "text": "the r of t",
+            "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+          }
+        ],
+        "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+      }
+    },
+    {
+      "condition": "beam1",
+      "beam_size": 1,
+      "initial_prompt": null,
+      "hotwords": null,
+      "seconds": 16.267400425000233,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 7.28,
+          "text": "We just derived this relation here."
+        },
+        {
+          "start": 7.28,
+          "end": 10.08,
+          "text": "The relation between the differential of the speed of"
+        },
+        {
+          "start": 10.08,
+          "end": 13.32,
+          "text": "the rocket's lead and the differential of the mass of the"
+        },
+        {
+          "start": 13.32,
+          "end": 14.44,
+          "text": "rocket."
+        },
+        {
+          "start": 14.44,
+          "end": 17.76,
+          "text": "And we want to ultimately get the speed of the rocket."
+        },
+        {
+          "start": 17.76,
+          "end": 21.64,
+          "text": "So we have to apply a technique called separation"
+        },
+        {
+          "start": 21.64,
+          "end": 23.0,
+          "text": "variables."
+        },
+        {
+          "start": 23.0,
+          "end": 25.96,
+          "text": "And then we want to integrate."
+        },
+        {
+          "start": 25.96,
+          "end": 29.8,
+          "text": "What we're going to do is first we're going to"
+        },
+        {
+          "start": 29.8,
+          "end": 31.4,
+          "text": "multiply by dt."
+        },
+        {
+          "start": 31.4,
+          "end": 33.32,
+          "text": "So that falls away."
+        },
+        {
+          "start": 33.32,
+          "end": 42.32,
+          "text": "And we're left with mr dvr equals dmru."
+        },
+        {
+          "start": 42.32,
+          "end": 47.0,
+          "text": "And we're going to shuffle the m onto the other side."
+        },
+        {
+          "start": 47.0,
+          "end": 51.12,
+          "text": "And we're left with dvr equals u is a constant."
+        },
+        {
+          "start": 51.12,
+          "end": 53.24,
+          "text": "So that goes up front."
+        },
+        {
+          "start": 53.24,
+          "end": 58.56,
+          "text": "And then we have dmr over mr."
+        },
+        {
+          "start": 58.56,
+          "end": 61.68,
+          "text": "That's an equation that we can integrate now."
+        },
+        {
+          "start": 61.68,
+          "end": 65.76,
+          "text": "And we can do that."
+        },
+        {
+          "start": 65.76,
+          "end": 69.2,
+          "text": "And the tricky bit is that we need to take care of the"
+        },
+        {
+          "start": 69.2,
+          "end": 70.96,
+          "text": "integration limits here."
+        },
+        {
+          "start": 70.96,
+          "end": 72.92,
+          "text": "We have vr."
+        },
+        {
+          "start": 72.92,
+          "end": 76.44,
+          "text": "And actually these now are all primes."
+        },
+        {
+          "start": 76.44,
+          "end": 80.84,
+          "text": "So we have vr going from v0."
+        },
+        {
+          "start": 80.84,
+          "end": 83.48,
+          "text": "That is our initial condition here."
+        },
+        {
+          "start": 83.48,
+          "end": 94.12,
+          "text": "2 vr prime of t."
+        },
+        {
+          "start": 94.12,
+          "end": 99.32,
+          "text": "And for the mass we have mr prime equals m0."
+        },
+        {
+          "start": 99.32,
+          "end": 100.8,
+          "text": "Actually not quite m0."
+        },
+        {
+          "start": 100.8,
+          "end": 103.32,
+          "text": "It's 2 m0."
+        },
+        {
+          "start": 103.32,
+          "end": 108.0,
+          "text": "Because the initial mass of this is the dry mass and the"
+        },
+        {
+          "start": 108.0,
+          "end": 108.72,
+          "text": "fuel mass."
+        },
+        {
+          "start": 108.72,
+          "end": 111.6,
+          "text": "So that's 2 m0."
+        },
+        {
+          "start": 111.6,
+          "end": 116.4,
+          "text": "So this is the initial mass."
+        },
+        {
+          "start": 116.4,
+          "end": 124.92,
+          "text": "And then we go to mr prime equals m of vr."
+        },
+        {
+          "start": 124.92,
+          "end": 125.48,
+          "text": "All right."
+        },
+        {
+          "start": 125.48,
+          "end": 127.4,
+          "text": "So let's do that."
+        },
+        {
+          "start": 127.4,
+          "end": 136.96,
+          "text": "We're going to get vr minus v0 equals u1 over m."
+        },
+        {
+          "start": 136.96,
+          "end": 139.56,
+          "text": "Integrated gives us an ln."
+        },
+        {
+          "start": 139.56,
+          "end": 141.32,
+          "text": "So ln."
+        },
+        {
+          "start": 141.32,
+          "end": 152.81,
+          "text": "And then we can immediately do this here over 2 m0."
+        },
+        {
+          "start": 152.81,
+          "end": 156.89,
+          "text": "And we ultimately want this."
+        },
+        {
+          "start": 156.89,
+          "end": 159.01,
+          "text": "So this is vrt, of course."
+        },
+        {
+          "start": 159.01,
+          "end": 171.65,
+          "text": "And then we get v0 plus u ln mr over 2 m0."
+        },
+        {
+          "start": 171.65,
+          "end": 176.78,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.78,
+          "end": 179.58,
+          "text": "So what does this equation tell us?"
+        },
+        {
+          "start": 179.58,
+          "end": 186.42,
+          "text": "mr, the mass of the rocket, is less later on than it was"
+        },
+        {
+          "start": 186.42,
+          "end": 193.06,
+          "text": "before, which means this term here is going to be less than"
+        },
+        {
+          "start": 193.06,
+          "end": 199.74,
+          "text": "0, which means the velocity is our initial velocity minus"
+        },
+        {
+          "start": 199.74,
+          "end": 205.66,
+          "text": "something, which means we have a decrease in velocity, which"
+        },
+        {
+          "start": 205.66,
+          "end": 208.58,
+          "text": "means my sled will eventually come to a stop."
+        }
+      ],
+      "language_probability": 1,
+      "caption_comparison": {
+        "reference_words": 369,
+        "hypothesis_words": 345,
+        "substitutions": 30,
+        "deletions": 27,
+        "insertions": 3,
+        "word_errors": 60,
+        "word_error_rate": 0.16260162601626016,
+        "sequence_match_ratio": 0.8795518207282913,
+        "differences": [
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              2,
+              3
+            ],
+            "stt_word_range": [
+              2,
+              3
+            ],
+            "reference": "arrived",
+            "stt": "derived"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              16,
+              18
+            ],
+            "stt_word_range": [
+              16,
+              18
+            ],
+            "reference": "rocket sled",
+            "stt": "rocket's lead"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              47,
+              48
+            ],
+            "stt_word_range": [
+              47,
+              47
+            ],
+            "reference": "of",
+            "stt": ""
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              65,
+              66
+            ],
+            "stt_word_range": [
+              64,
+              64
+            ],
+            "reference": "divide",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              74,
+              76
+            ],
+            "stt_word_range": [
+              72,
+              73
+            ],
+            "reference": "we are",
+            "stt": "we're"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              78,
+              83
+            ],
+            "stt_word_range": [
+              75,
+              77
+            ],
+            "reference": "m r d v r",
+            "stt": "mr dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              84,
+              88
+            ],
+            "stt_word_range": [
+              78,
+              79
+            ],
+            "reference": "d m r u",
+            "stt": "dmru"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              103,
+              106
+            ],
+            "stt_word_range": [
+              94,
+              95
+            ],
+            "reference": "d v r",
+            "stt": "dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              120,
+              123
+            ],
+            "stt_word_range": [
+              109,
+              110
+            ],
+            "reference": "d m r",
+            "stt": "dmr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              124,
+              126
+            ],
+            "stt_word_range": [
+              111,
+              112
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              157,
+              159
+            ],
+            "stt_word_range": [
+              143,
+              144
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              169,
+              171
+            ],
+            "stt_word_range": [
+              154,
+              155
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              180,
+              181
+            ],
+            "stt_word_range": [
+              164,
+              166
+            ],
+            "reference": "2vr",
+            "stt": "2 vr"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              182,
+              185
+            ],
+            "stt_word_range": [
+              167,
+              167
+            ],
+            "reference": "of equal vr",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              193,
+              195
+            ],
+            "stt_word_range": [
+              175,
+              176
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              203,
+              204
+            ],
+            "stt_word_range": [
+              184,
+              186
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              220,
+              221
+            ],
+            "stt_word_range": [
+              202,
+              204
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              232,
+              234
+            ],
+            "stt_word_range": [
+              215,
+              216
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              253,
+              255
+            ],
+            "stt_word_range": [
+              235,
+              236
+            ],
+            "reference": "u 1",
+            "stt": "u1"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              260,
+              261
+            ],
+            "stt_word_range": [
+              241,
+              243
+            ],
+            "reference": "lm",
+            "stt": "an ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              262,
+              263
+            ],
+            "stt_word_range": [
+              244,
+              245
+            ],
+            "reference": "lm",
+            "stt": "ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              272,
+              273
+            ],
+            "stt_word_range": [
+              254,
+              256
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              274,
+              275
+            ],
+            "stt_word_range": [
+              257,
+              257
+            ],
+            "reference": "well",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              282,
+              286
+            ],
+            "stt_word_range": [
+              264,
+              265
+            ],
+            "reference": "the r of t",
+            "stt": "vrt"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              291,
+              292
+            ],
+            "stt_word_range": [
+              270,
+              271
+            ],
+            "reference": "got",
+            "stt": "get"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              295,
+              299
+            ],
+            "stt_word_range": [
+              274,
+              276
+            ],
+            "reference": "l n m r",
+            "stt": "ln mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              314,
+              316
+            ],
+            "stt_word_range": [
+              291,
+              292
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          }
+        ],
+        "official_caption_uncertainties": [
+          {
+            "source_cue_indices": [
+              0
+            ],
+            "text": "arrived",
+            "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+          },
+          {
+            "source_cue_indices": [
+              19,
+              20
+            ],
+            "text": "2vr prime of equal vr of t",
+            "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              25
+            ],
+            "text": "m of vr",
+            "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              28
+            ],
+            "text": "lm",
+            "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              31
+            ],
+            "text": "the r of t",
+            "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+          }
+        ],
+        "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+      }
+    },
+    {
+      "condition": "beam1_hints",
+      "beam_size": 1,
+      "initial_prompt": "A university physics lecture about a rocket sled, velocity, mass, and integration.",
+      "hotwords": "rocket sled, differential, separation of variables, integration limits, prime, natural logarithm, dry mass, fuel mass, mR, vR, m0, v0, dt, dmR, dvR",
+      "seconds": 21.58489709300011,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 11.1,
+          "text": "We just derived this relation here, the relation between the differential of the speed of the rocket sled"
+        },
+        {
+          "start": 11.1,
+          "end": 17.6,
+          "text": "and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket."
+        },
+        {
+          "start": 17.6,
+          "end": 25.6,
+          "text": "So we have to do, we have to apply a technique called separation of variables, and then we want to integrate."
+        },
+        {
+          "start": 25.6,
+          "end": 33.1,
+          "text": "What we're going to do is first we're going to divide, multiply by dt, so that falls away,"
+        },
+        {
+          "start": 33.1,
+          "end": 46.6,
+          "text": "and we're left with mR, dvR equals dmRu, and we're going to shuffle the m onto the other side,"
+        },
+        {
+          "start": 46.6,
+          "end": 58.6,
+          "text": "and we're left with dvR equals u is a constant, so that goes up front, and then we have dmR over mR."
+        },
+        {
+          "start": 58.6,
+          "end": 65.6,
+          "text": "That's an equation that we can integrate now, and we can do that."
+        },
+        {
+          "start": 65.6,
+          "end": 70.6,
+          "text": "And the tricky bit is that we need to take care of the integration limits here."
+        },
+        {
+          "start": 70.6,
+          "end": 80.6,
+          "text": "We have vR, and actually these now are all primes, so we have vR going from v0,"
+        },
+        {
+          "start": 80.6,
+          "end": 93.6,
+          "text": "that is our initial condition here, to vR prime of, oops, equal vR of t."
+        },
+        {
+          "start": 93.6,
+          "end": 102.6,
+          "text": "And for the mass we have mR prime equals m0, actually not quite m0, it's 2 m0,"
+        },
+        {
+          "start": 102.6,
+          "end": 111.6,
+          "text": "because the initial mass of this is the dry mass, and the fuel mass, so that's 2 m0,"
+        },
+        {
+          "start": 111.6,
+          "end": 124.6,
+          "text": "so this is the initial mass, and then we go to mR prime equals m of vR."
+        },
+        {
+          "start": 124.6,
+          "end": 136.6,
+          "text": "Alright, so let's do that. We're going to get vR minus v0 equals u1 over m,"
+        },
+        {
+          "start": 136.6,
+          "end": 150.71,
+          "text": "integrated gives us an ln, so ln, and then we can immediately do this here over 2 m0."
+        },
+        {
+          "start": 153.09,
+          "end": 170.09,
+          "text": "And, well we ultimately want this, so this is vR of t of course, and then we get v0 plus u ln mR over 2 m0."
+        },
+        {
+          "start": 170.09,
+          "end": 176.94,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.94,
+          "end": 187.94,
+          "text": "So what does this equation tell us? mR, the mass of the rocket, is less later on than it was before,"
+        },
+        {
+          "start": 187.94,
+          "end": 200.94,
+          "text": "which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something,"
+        },
+        {
+          "start": 200.94,
+          "end": 208.94,
+          "text": "which means we have a decrease in velocity, which means my sled will eventually come to a stop."
+        }
+      ],
+      "language_probability": 1,
+      "caption_comparison": {
+        "reference_words": 369,
+        "hypothesis_words": 357,
+        "substitutions": 25,
+        "deletions": 22,
+        "insertions": 10,
+        "word_errors": 57,
+        "word_error_rate": 0.15447154471544716,
+        "sequence_match_ratio": 0.8870523415977961,
+        "differences": [
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              2,
+              3
+            ],
+            "stt_word_range": [
+              2,
+              3
+            ],
+            "reference": "arrived",
+            "stt": "derived"
+          },
+          {
+            "operation": "insert",
+            "reference_word_range": [
+              42,
+              42
+            ],
+            "stt_word_range": [
+              42,
+              46
+            ],
+            "reference": "",
+            "stt": "do we have to"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              74,
+              76
+            ],
+            "stt_word_range": [
+              78,
+              79
+            ],
+            "reference": "we are",
+            "stt": "we're"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              78,
+              83
+            ],
+            "stt_word_range": [
+              81,
+              83
+            ],
+            "reference": "m r d v r",
+            "stt": "mr dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              84,
+              88
+            ],
+            "stt_word_range": [
+              84,
+              85
+            ],
+            "reference": "d m r u",
+            "stt": "dmru"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              103,
+              106
+            ],
+            "stt_word_range": [
+              100,
+              101
+            ],
+            "reference": "d v r",
+            "stt": "dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              120,
+              123
+            ],
+            "stt_word_range": [
+              115,
+              116
+            ],
+            "reference": "d m r",
+            "stt": "dmr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              124,
+              126
+            ],
+            "stt_word_range": [
+              117,
+              118
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              157,
+              159
+            ],
+            "stt_word_range": [
+              149,
+              150
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              169,
+              171
+            ],
+            "stt_word_range": [
+              160,
+              161
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              180,
+              181
+            ],
+            "stt_word_range": [
+              170,
+              172
+            ],
+            "reference": "2vr",
+            "stt": "to vr"
+          },
+          {
+            "operation": "insert",
+            "reference_word_range": [
+              183,
+              183
+            ],
+            "stt_word_range": [
+              174,
+              175
+            ],
+            "reference": "",
+            "stt": "oops"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              193,
+              195
+            ],
+            "stt_word_range": [
+              185,
+              186
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              203,
+              204
+            ],
+            "stt_word_range": [
+              194,
+              196
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              220,
+              221
+            ],
+            "stt_word_range": [
+              212,
+              214
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              232,
+              234
+            ],
+            "stt_word_range": [
+              225,
+              226
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              239,
+              241
+            ],
+            "stt_word_range": [
+              231,
+              232
+            ],
+            "reference": "all right",
+            "stt": "alright"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              253,
+              255
+            ],
+            "stt_word_range": [
+              244,
+              245
+            ],
+            "reference": "u 1",
+            "stt": "u1"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              260,
+              261
+            ],
+            "stt_word_range": [
+              250,
+              252
+            ],
+            "reference": "lm",
+            "stt": "an ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              262,
+              263
+            ],
+            "stt_word_range": [
+              253,
+              254
+            ],
+            "reference": "lm",
+            "stt": "ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              272,
+              273
+            ],
+            "stt_word_range": [
+              263,
+              265
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              282,
+              284
+            ],
+            "stt_word_range": [
+              274,
+              275
+            ],
+            "reference": "the r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              291,
+              292
+            ],
+            "stt_word_range": [
+              282,
+              283
+            ],
+            "reference": "got",
+            "stt": "get"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              295,
+              299
+            ],
+            "stt_word_range": [
+              286,
+              288
+            ],
+            "reference": "l n m r",
+            "stt": "ln mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              314,
+              316
+            ],
+            "stt_word_range": [
+              303,
+              304
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          }
+        ],
+        "official_caption_uncertainties": [
+          {
+            "source_cue_indices": [
+              0
+            ],
+            "text": "arrived",
+            "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+          },
+          {
+            "source_cue_indices": [
+              19,
+              20
+            ],
+            "text": "2vr prime of equal vr of t",
+            "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              25
+            ],
+            "text": "m of vr",
+            "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              28
+            ],
+            "text": "lm",
+            "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              31
+            ],
+            "text": "the r of t",
+            "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+          }
+        ],
+        "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+      }
+    },
+    {
+      "condition": "beam5_hints",
+      "beam_size": 5,
+      "initial_prompt": "A university physics lecture about a rocket sled, velocity, mass, and integration.",
+      "hotwords": "rocket sled, differential, separation of variables, integration limits, prime, natural logarithm, dry mass, fuel mass, mR, vR, m0, v0, dt, dmR, dvR",
+      "seconds": 29.9237006809999,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 7.28,
+          "text": "We just derived this relation here."
+        },
+        {
+          "start": 7.28,
+          "end": 10.16,
+          "text": "The relation between the differential of the speed of the"
+        },
+        {
+          "start": 10.16,
+          "end": 14.44,
+          "text": "rocket sled and the differential of the mass of the rocket."
+        },
+        {
+          "start": 14.44,
+          "end": 17.76,
+          "text": "And we want to ultimately get the speed of the rocket."
+        },
+        {
+          "start": 17.76,
+          "end": 23.0,
+          "text": "So we have to apply a technique called separation of variables."
+        },
+        {
+          "start": 23.0,
+          "end": 25.96,
+          "text": "And then we want to integrate."
+        },
+        {
+          "start": 25.96,
+          "end": 31.4,
+          "text": "What we're going to do is first we're going to multiply by dt."
+        },
+        {
+          "start": 31.4,
+          "end": 33.32,
+          "text": "So that falls away."
+        },
+        {
+          "start": 33.32,
+          "end": 42.32,
+          "text": "And we're left with mR dvR equals dmRu."
+        },
+        {
+          "start": 42.32,
+          "end": 47.0,
+          "text": "And we're going to shuffle the m onto the other side."
+        },
+        {
+          "start": 47.0,
+          "end": 51.12,
+          "text": "And we're left with dvR equals u is a constant."
+        },
+        {
+          "start": 51.12,
+          "end": 53.24,
+          "text": "So that goes up front."
+        },
+        {
+          "start": 53.24,
+          "end": 58.56,
+          "text": "And then we have dmR over mR."
+        },
+        {
+          "start": 58.56,
+          "end": 61.68,
+          "text": "That's an equation that we can integrate now."
+        },
+        {
+          "start": 61.68,
+          "end": 65.8,
+          "text": "And we can do that."
+        },
+        {
+          "start": 65.8,
+          "end": 69.2,
+          "text": "And the tricky bit is that we need to take care of the"
+        },
+        {
+          "start": 69.2,
+          "end": 70.96,
+          "text": "integration limits here."
+        },
+        {
+          "start": 70.96,
+          "end": 76.44,
+          "text": "We have vR, and actually these now are all primes."
+        },
+        {
+          "start": 76.44,
+          "end": 80.84,
+          "text": "So we have vR going from v0."
+        },
+        {
+          "start": 80.84,
+          "end": 83.48,
+          "text": "That is our initial condition here."
+        },
+        {
+          "start": 83.48,
+          "end": 94.12,
+          "text": "2 vR prime of, oops, equal vR of t."
+        },
+        {
+          "start": 94.12,
+          "end": 99.32,
+          "text": "And for the mass, we have mR prime equals m0."
+        },
+        {
+          "start": 99.32,
+          "end": 100.8,
+          "text": "Actually, not quite m0."
+        },
+        {
+          "start": 100.8,
+          "end": 107.76,
+          "text": "It's 2 m0, because the initial mass of this is the dry mass"
+        },
+        {
+          "start": 107.76,
+          "end": 108.72,
+          "text": "and the fuel mass."
+        },
+        {
+          "start": 108.72,
+          "end": 111.6,
+          "text": "So that's 2 m0."
+        },
+        {
+          "start": 111.6,
+          "end": 116.44,
+          "text": "So this is the initial mass."
+        },
+        {
+          "start": 116.44,
+          "end": 125.0,
+          "text": "And then we go to mR prime equals m of vR."
+        },
+        {
+          "start": 125.0,
+          "end": 127.44,
+          "text": "All right, so let's do that."
+        },
+        {
+          "start": 127.44,
+          "end": 137.04,
+          "text": "We're going to get vR minus v0 equals u1 over m"
+        },
+        {
+          "start": 137.04,
+          "end": 139.6,
+          "text": "integrated gives us an ln."
+        },
+        {
+          "start": 139.6,
+          "end": 141.32,
+          "text": "So ln."
+        },
+        {
+          "start": 141.32,
+          "end": 152.77,
+          "text": "And then we can immediately do this here over 2 m0."
+        },
+        {
+          "start": 152.77,
+          "end": 156.89,
+          "text": "And well, we ultimately want this."
+        },
+        {
+          "start": 156.89,
+          "end": 159.01,
+          "text": "So this is vR of t, of course."
+        },
+        {
+          "start": 159.01,
+          "end": 171.65,
+          "text": "And then we got v0 plus u ln mR over 2 m0."
+        },
+        {
+          "start": 171.65,
+          "end": 176.78,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.78,
+          "end": 179.58,
+          "text": "So what does this equation tell us?"
+        },
+        {
+          "start": 179.58,
+          "end": 186.42,
+          "text": "mR, the mass of the rocket, is less later on than it was"
+        },
+        {
+          "start": 186.42,
+          "end": 193.06,
+          "text": "before, which means this term here is going to be less than"
+        },
+        {
+          "start": 193.06,
+          "end": 199.76,
+          "text": "0, which means the velocity is our initial velocity minus"
+        },
+        {
+          "start": 199.76,
+          "end": 212.5866875,
+          "text": "something, which means we have a decrease in velocity, which"
+        }
+      ],
+      "language_probability": 1,
+      "caption_comparison": {
+        "reference_words": 369,
+        "hypothesis_words": 344,
+        "substitutions": 23,
+        "deletions": 31,
+        "insertions": 6,
+        "word_errors": 60,
+        "word_error_rate": 0.16260162601626016,
+        "sequence_match_ratio": 0.8835904628330996,
+        "differences": [
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              2,
+              3
+            ],
+            "stt_word_range": [
+              2,
+              3
+            ],
+            "reference": "arrived",
+            "stt": "derived"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              65,
+              66
+            ],
+            "stt_word_range": [
+              65,
+              65
+            ],
+            "reference": "divide",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              74,
+              76
+            ],
+            "stt_word_range": [
+              73,
+              74
+            ],
+            "reference": "we are",
+            "stt": "we're"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              78,
+              83
+            ],
+            "stt_word_range": [
+              76,
+              78
+            ],
+            "reference": "m r d v r",
+            "stt": "mr dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              84,
+              88
+            ],
+            "stt_word_range": [
+              79,
+              80
+            ],
+            "reference": "d m r u",
+            "stt": "dmru"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              103,
+              106
+            ],
+            "stt_word_range": [
+              95,
+              96
+            ],
+            "reference": "d v r",
+            "stt": "dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              120,
+              123
+            ],
+            "stt_word_range": [
+              110,
+              111
+            ],
+            "reference": "d m r",
+            "stt": "dmr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              124,
+              126
+            ],
+            "stt_word_range": [
+              112,
+              113
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              157,
+              159
+            ],
+            "stt_word_range": [
+              144,
+              145
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              169,
+              171
+            ],
+            "stt_word_range": [
+              155,
+              156
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              180,
+              181
+            ],
+            "stt_word_range": [
+              165,
+              167
+            ],
+            "reference": "2vr",
+            "stt": "2 vr"
+          },
+          {
+            "operation": "insert",
+            "reference_word_range": [
+              183,
+              183
+            ],
+            "stt_word_range": [
+              169,
+              170
+            ],
+            "reference": "",
+            "stt": "oops"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              193,
+              195
+            ],
+            "stt_word_range": [
+              180,
+              181
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              203,
+              204
+            ],
+            "stt_word_range": [
+              189,
+              191
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              220,
+              221
+            ],
+            "stt_word_range": [
+              207,
+              209
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              232,
+              234
+            ],
+            "stt_word_range": [
+              220,
+              221
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              253,
+              255
+            ],
+            "stt_word_range": [
+              240,
+              241
+            ],
+            "reference": "u 1",
+            "stt": "u1"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              260,
+              261
+            ],
+            "stt_word_range": [
+              246,
+              248
+            ],
+            "reference": "lm",
+            "stt": "an ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              262,
+              263
+            ],
+            "stt_word_range": [
+              249,
+              250
+            ],
+            "reference": "lm",
+            "stt": "ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              272,
+              273
+            ],
+            "stt_word_range": [
+              259,
+              261
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              282,
+              284
+            ],
+            "stt_word_range": [
+              270,
+              271
+            ],
+            "reference": "the r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              295,
+              299
+            ],
+            "stt_word_range": [
+              282,
+              284
+            ],
+            "reference": "l n m r",
+            "stt": "ln mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              314,
+              316
+            ],
+            "stt_word_range": [
+              299,
+              300
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              360,
+              369
+            ],
+            "stt_word_range": [
+              344,
+              344
+            ],
+            "reference": "means my sled will eventually come to a stop",
+            "stt": ""
+          }
+        ],
+        "official_caption_uncertainties": [
+          {
+            "source_cue_indices": [
+              0
+            ],
+            "text": "arrived",
+            "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+          },
+          {
+            "source_cue_indices": [
+              19,
+              20
+            ],
+            "text": "2vr prime of equal vr of t",
+            "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              25
+            ],
+            "text": "m of vr",
+            "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              28
+            ],
+            "text": "lm",
+            "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              31
+            ],
+            "text": "the r of t",
+            "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+          }
+        ],
+        "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+      }
+    },
+    {
+      "condition": "beam1_hints",
+      "beam_size": 1,
+      "initial_prompt": "A university physics lecture about a rocket sled, velocity, mass, and integration.",
+      "hotwords": "rocket sled, differential, separation of variables, integration limits, prime, natural logarithm, dry mass, fuel mass, mR, vR, m0, v0, dt, dmR, dvR",
+      "seconds": 18.493486507999478,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 11.1,
+          "text": "We just derived this relation here, the relation between the differential of the speed of the rocket sled"
+        },
+        {
+          "start": 11.1,
+          "end": 17.6,
+          "text": "and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket."
+        },
+        {
+          "start": 17.6,
+          "end": 25.6,
+          "text": "So we have to do, we have to apply a technique called separation of variables, and then we want to integrate."
+        },
+        {
+          "start": 25.6,
+          "end": 33.1,
+          "text": "What we're going to do is first we're going to divide, multiply by dt, so that falls away,"
+        },
+        {
+          "start": 33.1,
+          "end": 46.6,
+          "text": "and we're left with mR, dvR equals dmRu, and we're going to shuffle the m onto the other side,"
+        },
+        {
+          "start": 46.6,
+          "end": 58.6,
+          "text": "and we're left with dvR equals u is a constant, so that goes up front, and then we have dmR over mR."
+        },
+        {
+          "start": 58.6,
+          "end": 65.6,
+          "text": "That's an equation that we can integrate now, and we can do that."
+        },
+        {
+          "start": 65.6,
+          "end": 70.6,
+          "text": "And the tricky bit is that we need to take care of the integration limits here."
+        },
+        {
+          "start": 70.6,
+          "end": 80.6,
+          "text": "We have vR, and actually these now are all primes, so we have vR going from v0,"
+        },
+        {
+          "start": 80.6,
+          "end": 93.6,
+          "text": "that is our initial condition here, to vR prime of, oops, equal vR of t."
+        },
+        {
+          "start": 93.6,
+          "end": 102.6,
+          "text": "And for the mass we have mR prime equals m0, actually not quite m0, it's 2 m0,"
+        },
+        {
+          "start": 102.6,
+          "end": 111.6,
+          "text": "because the initial mass of this is the dry mass, and the fuel mass, so that's 2 m0,"
+        },
+        {
+          "start": 111.6,
+          "end": 124.6,
+          "text": "so this is the initial mass, and then we go to mR prime equals m of vR."
+        },
+        {
+          "start": 124.6,
+          "end": 136.6,
+          "text": "Alright, so let's do that. We're going to get vR minus v0 equals u1 over m,"
+        },
+        {
+          "start": 136.6,
+          "end": 150.71,
+          "text": "integrated gives us an ln, so ln, and then we can immediately do this here over 2 m0."
+        },
+        {
+          "start": 153.09,
+          "end": 170.09,
+          "text": "And, well we ultimately want this, so this is vR of t of course, and then we get v0 plus u ln mR over 2 m0."
+        },
+        {
+          "start": 170.09,
+          "end": 176.94,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.94,
+          "end": 187.94,
+          "text": "So what does this equation tell us? mR, the mass of the rocket, is less later on than it was before,"
+        },
+        {
+          "start": 187.94,
+          "end": 200.94,
+          "text": "which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something,"
+        },
+        {
+          "start": 200.94,
+          "end": 208.94,
+          "text": "which means we have a decrease in velocity, which means my sled will eventually come to a stop."
+        }
+      ],
+      "language_probability": 1,
+      "caption_comparison": {
+        "reference_words": 369,
+        "hypothesis_words": 357,
+        "substitutions": 25,
+        "deletions": 22,
+        "insertions": 10,
+        "word_errors": 57,
+        "word_error_rate": 0.15447154471544716,
+        "sequence_match_ratio": 0.8870523415977961,
+        "differences": [
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              2,
+              3
+            ],
+            "stt_word_range": [
+              2,
+              3
+            ],
+            "reference": "arrived",
+            "stt": "derived"
+          },
+          {
+            "operation": "insert",
+            "reference_word_range": [
+              42,
+              42
+            ],
+            "stt_word_range": [
+              42,
+              46
+            ],
+            "reference": "",
+            "stt": "do we have to"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              74,
+              76
+            ],
+            "stt_word_range": [
+              78,
+              79
+            ],
+            "reference": "we are",
+            "stt": "we're"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              78,
+              83
+            ],
+            "stt_word_range": [
+              81,
+              83
+            ],
+            "reference": "m r d v r",
+            "stt": "mr dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              84,
+              88
+            ],
+            "stt_word_range": [
+              84,
+              85
+            ],
+            "reference": "d m r u",
+            "stt": "dmru"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              103,
+              106
+            ],
+            "stt_word_range": [
+              100,
+              101
+            ],
+            "reference": "d v r",
+            "stt": "dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              120,
+              123
+            ],
+            "stt_word_range": [
+              115,
+              116
+            ],
+            "reference": "d m r",
+            "stt": "dmr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              124,
+              126
+            ],
+            "stt_word_range": [
+              117,
+              118
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              157,
+              159
+            ],
+            "stt_word_range": [
+              149,
+              150
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              169,
+              171
+            ],
+            "stt_word_range": [
+              160,
+              161
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              180,
+              181
+            ],
+            "stt_word_range": [
+              170,
+              172
+            ],
+            "reference": "2vr",
+            "stt": "to vr"
+          },
+          {
+            "operation": "insert",
+            "reference_word_range": [
+              183,
+              183
+            ],
+            "stt_word_range": [
+              174,
+              175
+            ],
+            "reference": "",
+            "stt": "oops"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              193,
+              195
+            ],
+            "stt_word_range": [
+              185,
+              186
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              203,
+              204
+            ],
+            "stt_word_range": [
+              194,
+              196
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              220,
+              221
+            ],
+            "stt_word_range": [
+              212,
+              214
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              232,
+              234
+            ],
+            "stt_word_range": [
+              225,
+              226
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              239,
+              241
+            ],
+            "stt_word_range": [
+              231,
+              232
+            ],
+            "reference": "all right",
+            "stt": "alright"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              253,
+              255
+            ],
+            "stt_word_range": [
+              244,
+              245
+            ],
+            "reference": "u 1",
+            "stt": "u1"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              260,
+              261
+            ],
+            "stt_word_range": [
+              250,
+              252
+            ],
+            "reference": "lm",
+            "stt": "an ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              262,
+              263
+            ],
+            "stt_word_range": [
+              253,
+              254
+            ],
+            "reference": "lm",
+            "stt": "ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              272,
+              273
+            ],
+            "stt_word_range": [
+              263,
+              265
+            ],
+            "reference": "2m0",
+            "stt": "2 m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              282,
+              284
+            ],
+            "stt_word_range": [
+              274,
+              275
+            ],
+            "reference": "the r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              291,
+              292
+            ],
+            "stt_word_range": [
+              282,
+              283
+            ],
+            "reference": "got",
+            "stt": "get"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              295,
+              299
+            ],
+            "stt_word_range": [
+              286,
+              288
+            ],
+            "reference": "l n m r",
+            "stt": "ln mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              314,
+              316
+            ],
+            "stt_word_range": [
+              303,
+              304
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          }
+        ],
+        "official_caption_uncertainties": [
+          {
+            "source_cue_indices": [
+              0
+            ],
+            "text": "arrived",
+            "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+          },
+          {
+            "source_cue_indices": [
+              19,
+              20
+            ],
+            "text": "2vr prime of equal vr of t",
+            "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              25
+            ],
+            "text": "m of vr",
+            "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              28
+            ],
+            "text": "lm",
+            "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              31
+            ],
+            "text": "the r of t",
+            "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+          }
+        ],
+        "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+      }
+    },
+    {
+      "condition": "baseline",
+      "beam_size": 5,
+      "initial_prompt": null,
+      "hotwords": null,
+      "seconds": 28.077093304999835,
+      "segments": [
+        {
+          "start": 3.6,
+          "end": 7.28,
+          "text": "We just derived this relation here."
+        },
+        {
+          "start": 7.28,
+          "end": 10.08,
+          "text": "The relation between the differential of the speed of"
+        },
+        {
+          "start": 10.08,
+          "end": 13.24,
+          "text": "the rocket sled and the differential of the mass of"
+        },
+        {
+          "start": 13.24,
+          "end": 16.44,
+          "text": "the rocket, and we want to ultimately get the speed of"
+        },
+        {
+          "start": 16.44,
+          "end": 17.76,
+          "text": "the rocket."
+        },
+        {
+          "start": 17.76,
+          "end": 21.64,
+          "text": "So we have to apply a technique called separation"
+        },
+        {
+          "start": 21.64,
+          "end": 25.96,
+          "text": "variables, and then we want to integrate."
+        },
+        {
+          "start": 25.96,
+          "end": 29.8,
+          "text": "What we're going to do is, first, we're going to"
+        },
+        {
+          "start": 29.8,
+          "end": 35.12,
+          "text": "multiply by dt, so that falls away, and we're left with"
+        },
+        {
+          "start": 35.12,
+          "end": 44.8,
+          "text": "mr dvr equals dmru, and we're going to shuffle the m onto"
+        },
+        {
+          "start": 44.8,
+          "end": 49.92,
+          "text": "the other side, and we're left with dvr equals u is a"
+        },
+        {
+          "start": 49.92,
+          "end": 55.72,
+          "text": "constant, so that goes up front, and then we have dmr"
+        },
+        {
+          "start": 55.72,
+          "end": 58.56,
+          "text": "over mr."
+        },
+        {
+          "start": 58.56,
+          "end": 64.0,
+          "text": "That's an equation that we can integrate now, and we can do"
+        },
+        {
+          "start": 64.0,
+          "end": 67.2,
+          "text": "that."
+        },
+        {
+          "start": 67.2,
+          "end": 69.16,
+          "text": "The tricky bit is that we need to take care of the"
+        },
+        {
+          "start": 69.16,
+          "end": 70.96,
+          "text": "integration limits here."
+        },
+        {
+          "start": 70.96,
+          "end": 76.4,
+          "text": "We have vr, and actually these now are all primes."
+        },
+        {
+          "start": 76.4,
+          "end": 80.84,
+          "text": "So we have vr going from v0."
+        },
+        {
+          "start": 80.84,
+          "end": 94.12,
+          "text": "That is our initial condition here, to vr equal vr of t."
+        },
+        {
+          "start": 94.12,
+          "end": 99.32,
+          "text": "And for the mass, we have mr prime equals m0."
+        },
+        {
+          "start": 99.32,
+          "end": 104.72,
+          "text": "Actually, not quite m0, it's 2m0, because the initial"
+        },
+        {
+          "start": 104.72,
+          "end": 108.92,
+          "text": "mass of this is the dry mass, and the fuel mass, so"
+        },
+        {
+          "start": 108.92,
+          "end": 116.48,
+          "text": "that's 2m0, so this is the initial mass."
+        },
+        {
+          "start": 116.48,
+          "end": 125.0,
+          "text": "And then we go to mr prime equals m of vr."
+        },
+        {
+          "start": 125.0,
+          "end": 127.44,
+          "text": "All right, so let's do that."
+        },
+        {
+          "start": 127.44,
+          "end": 137.04,
+          "text": "We're going to get vr minus v0 equals u1 over m"
+        },
+        {
+          "start": 137.04,
+          "end": 142.2,
+          "text": "integrated gives us an ln, so ln, and then we can"
+        },
+        {
+          "start": 142.2,
+          "end": 152.85,
+          "text": "immediately do this here over 2m0."
+        },
+        {
+          "start": 152.85,
+          "end": 158.61,
+          "text": "And we ultimately want this, so this is vr of t, of"
+        },
+        {
+          "start": 158.61,
+          "end": 169.65,
+          "text": "course, and then we get v0 plus u ln mr over 2m0."
+        },
+        {
+          "start": 171.53,
+          "end": 176.7,
+          "text": "And that is our equation."
+        },
+        {
+          "start": 176.7,
+          "end": 179.5,
+          "text": "So what does this equation tell us?"
+        },
+        {
+          "start": 179.5,
+          "end": 186.34,
+          "text": "mr, the mass of the rocket, is less later on than it was"
+        },
+        {
+          "start": 186.34,
+          "end": 192.82,
+          "text": "before, which means this term here is going to be less"
+        },
+        {
+          "start": 192.82,
+          "end": 197.3,
+          "text": "than 0, which means the velocity is our initial"
+        },
+        {
+          "start": 197.3,
+          "end": 204.02,
+          "text": "velocity minus something, which means we have a decrease in"
+        },
+        {
+          "start": 204.02,
+          "end": 207.58,
+          "text": "velocity, which means my sled will eventually"
+        },
+        {
+          "start": 207.58,
+          "end": 208.46,
+          "text": "come to a stop."
+        }
+      ],
+      "language_probability": 1,
+      "caption_comparison": {
+        "reference_words": 369,
+        "hypothesis_words": 343,
+        "substitutions": 23,
+        "deletions": 27,
+        "insertions": 1,
+        "word_errors": 51,
+        "word_error_rate": 0.13821138211382114,
+        "sequence_match_ratio": 0.8960674157303371,
+        "differences": [
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              2,
+              3
+            ],
+            "stt_word_range": [
+              2,
+              3
+            ],
+            "reference": "arrived",
+            "stt": "derived"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              47,
+              48
+            ],
+            "stt_word_range": [
+              47,
+              47
+            ],
+            "reference": "of",
+            "stt": ""
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              65,
+              66
+            ],
+            "stt_word_range": [
+              64,
+              64
+            ],
+            "reference": "divide",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              74,
+              76
+            ],
+            "stt_word_range": [
+              72,
+              73
+            ],
+            "reference": "we are",
+            "stt": "we're"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              78,
+              83
+            ],
+            "stt_word_range": [
+              75,
+              77
+            ],
+            "reference": "m r d v r",
+            "stt": "mr dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              84,
+              88
+            ],
+            "stt_word_range": [
+              78,
+              79
+            ],
+            "reference": "d m r u",
+            "stt": "dmru"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              103,
+              106
+            ],
+            "stt_word_range": [
+              94,
+              95
+            ],
+            "reference": "d v r",
+            "stt": "dvr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              120,
+              123
+            ],
+            "stt_word_range": [
+              109,
+              110
+            ],
+            "reference": "d m r",
+            "stt": "dmr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              124,
+              126
+            ],
+            "stt_word_range": [
+              111,
+              112
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              139,
+              140
+            ],
+            "stt_word_range": [
+              125,
+              125
+            ],
+            "reference": "and",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              157,
+              159
+            ],
+            "stt_word_range": [
+              142,
+              143
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              169,
+              171
+            ],
+            "stt_word_range": [
+              153,
+              154
+            ],
+            "reference": "v r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              180,
+              183
+            ],
+            "stt_word_range": [
+              163,
+              165
+            ],
+            "reference": "2vr prime of",
+            "stt": "to vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              193,
+              195
+            ],
+            "stt_word_range": [
+              175,
+              176
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              232,
+              234
+            ],
+            "stt_word_range": [
+              213,
+              214
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              253,
+              255
+            ],
+            "stt_word_range": [
+              233,
+              234
+            ],
+            "reference": "u 1",
+            "stt": "u1"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              260,
+              261
+            ],
+            "stt_word_range": [
+              239,
+              241
+            ],
+            "reference": "lm",
+            "stt": "an ln"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              262,
+              263
+            ],
+            "stt_word_range": [
+              242,
+              243
+            ],
+            "reference": "lm",
+            "stt": "ln"
+          },
+          {
+            "operation": "delete",
+            "reference_word_range": [
+              274,
+              275
+            ],
+            "stt_word_range": [
+              254,
+              254
+            ],
+            "reference": "well",
+            "stt": ""
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              282,
+              284
+            ],
+            "stt_word_range": [
+              261,
+              262
+            ],
+            "reference": "the r",
+            "stt": "vr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              291,
+              292
+            ],
+            "stt_word_range": [
+              269,
+              270
+            ],
+            "reference": "got",
+            "stt": "get"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              295,
+              299
+            ],
+            "stt_word_range": [
+              273,
+              275
+            ],
+            "reference": "l n m r",
+            "stt": "ln mr"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              300,
+              302
+            ],
+            "stt_word_range": [
+              276,
+              277
+            ],
+            "reference": "2 m0",
+            "stt": "2m0"
+          },
+          {
+            "operation": "replace",
+            "reference_word_range": [
+              314,
+              316
+            ],
+            "stt_word_range": [
+              289,
+              290
+            ],
+            "reference": "m r",
+            "stt": "mr"
+          }
+        ],
+        "official_caption_uncertainties": [
+          {
+            "source_cue_indices": [
+              0
+            ],
+            "text": "arrived",
+            "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+          },
+          {
+            "source_cue_indices": [
+              19,
+              20
+            ],
+            "text": "2vr prime of equal vr of t",
+            "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              25
+            ],
+            "text": "m of vr",
+            "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              28
+            ],
+            "text": "lm",
+            "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+          },
+          {
+            "source_cue_indices": [
+              31
+            ],
+            "text": "the r of t",
+            "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+          }
+        ],
+        "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+      }
+    }
+  ],
+  "limits": [
+    "STT only; excludes upload, grouping, translation and subtitle generation.",
+    "Baseline and combined option repeated twice; ablations once; not statistical proof.",
+    "One reused model and decoded audio, fixed order; CPU frequency/load not controlled.",
+    "Caption WER includes known caption errors; not a semantic accuracy score.",
+    "Lecture-specific hints contain no reference sentences or equations.",
+    "No production settings changed; no Windows amd64 measurement."
+  ]
+}

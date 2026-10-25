@@ -1,0 +1,170 @@
+{
+  "adopted_implementation": "Conservative math protection + selective context, original translation instructions preserved.",
+  "baseline": {
+    "elapsed_seconds": 119.434404708,
+    "stages": {
+      "stt": 28.55,
+      "translation_batch": 90.209
+    },
+    "returned": 16,
+    "failed": 1,
+    "attempt_count": 19,
+    "prompt_tokens": 6679,
+    "output_tokens": 637,
+    "pipeline_succeeded": false,
+    "oom_or_restart": false
+  },
+  "candidate": {
+    "elapsed_seconds": 137.55237725,
+    "stages": {
+      "stt": 31.774,
+      "translation_batch": 104.723
+    },
+    "returned": 17,
+    "failed": 0,
+    "attempt_count": 18,
+    "prompt_tokens": 5988,
+    "output_tokens": 612,
+    "pipeline_succeeded": true,
+    "oom_or_restart": false
+  },
+  "same_source_text_and_timestamps": true,
+  "paired_three_inputs_mean_seconds": {
+    "baseline": 19.045691571999896,
+    "candidate": 6.222617191000154
+  },
+  "paired_observed_reduction_percent": 67.32795358217204,
+  "paired_failures": {
+    "baseline": [
+      1,
+      1
+    ],
+    "candidate": [
+      0,
+      0
+    ]
+  },
+  "preparation": [
+    {
+      "index": 0,
+      "protected": {},
+      "context_retained": false
+    },
+    {
+      "index": 1,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 2,
+      "protected": {},
+      "context_retained": false
+    },
+    {
+      "index": 3,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 4,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 5,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 6,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 7,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 8,
+      "protected": {
+        "[MATH_A]": "mR′ = m0"
+      },
+      "context_retained": false
+    },
+    {
+      "index": 9,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 10,
+      "protected": {
+        "[MATH_A]": "mR′ = m(vR)"
+      },
+      "context_retained": false
+    },
+    {
+      "index": 11,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 12,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 13,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 14,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 15,
+      "protected": {},
+      "context_retained": true
+    },
+    {
+      "index": 16,
+      "protected": {},
+      "context_retained": true
+    }
+  ],
+  "related_unit_tests": {
+    "count": 95,
+    "result": "passed",
+    "full_suite_run": false
+  },
+  "manual_review": {
+    "function_index_10": "mR′ = m(vR) preserved, now returned.",
+    "simple_equality_index_8": "mR′ = m0 preserved.",
+    "other_prompts": "14 of 17 exactly equal to baseline.",
+    "remaining_problems": [
+      "dvR = u가 상수 in long source remains semantically incomplete.",
+      "u1 and the full integral/logarithm scope in STT are uncertain.",
+      "Independent linear algebra smoke outputs still contain awkward Korean (쉬습니다) and a dot-product synonym 점곱.",
+      "No independent human semantic accuracy score."
+    ]
+  },
+  "limits": [
+    "Full-video candidate took 137.552 seconds versus baseline 119.434; end-to-end speed improvement is NOT verified.",
+    "Paired ABBA replay covers only the three changed grouped inputs; it excludes STT/upload/subtitles and cannot be extrapolated to whole-video time.",
+    "Two passes per implementation, shared server with fixed warmup; not a statistically conclusive benchmark.",
+    "Input preparation reduction is established, but full-run throughput varied; exact cause was not isolated.",
+    "Mac ARM64 Docker only; Windows x86_64 and host total-RAM budget not verified."
+  ],
+  "artifact_sha256": {
+    "rocket-docker-full-261025.json": "fe59e9311860aaa7b7c84f332086378bb4794d6346c45199993f6dfa2a2cca65",
+    "rocket-docker-inputs-v4-full-261025.json": "bea27086b2487ad199561a46aa477b0b44f547c2f10a3dcea34253216b6c9d22",
+    "translation-inputs-v4-environment-261025.json": "6953a1fc4a67b9e3adba0c8d09a7cc97985ed43a0ab8f4d4887f089035ea6e4f",
+    "translation-inputs-v4-server-261025.json": "d437b69ea5e95d5a0c009d7ea9f91718e9e562eef3e5d2d8191bc30ff30d20fb",
+    "translation-inputs-paired-261025.json": "edb7b0f2f9e109da49213c6a53f5dc9077aaccefc18786db806204a9dc08335c",
+    "translation-inputs-v4-smoke-261025.json": "2f407765ffa41af4c4b7bb9ee448049e694742b0128689a22d987279d075d601",
+    "translation-inputs-v4-prompt-audit-261025.json": "fc6bec3b7f5b090e1185aad111856d48447be14d75472b35f4eb4641952b97be"
+  }
+}

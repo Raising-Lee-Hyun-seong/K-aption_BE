@@ -1,0 +1,216 @@
+{
+  "evaluated_on": "2026-10-25",
+  "adopted": false,
+  "production_settings_changed": false,
+  "windows_amd64_tested": false,
+  "docker": {
+    "arch": "aarch64",
+    "cpus": 8,
+    "memory": 6210043904
+  },
+  "containers_after": [
+    {
+      "name": "/k-aption_be-backend-1",
+      "image": "sha256:8b07e8e6d54536cfede63d9bde6e29cbe1b4d1a9f0aad9a4dd9409a78fc56437",
+      "memory": 2500000000,
+      "memory_swap": 2500000000,
+      "nano_cpus": 4000000000,
+      "restart_count": 0,
+      "oom_killed": false,
+      "health": "healthy"
+    },
+    {
+      "name": "/k-aption_be-translator-1",
+      "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+      "memory": 4000000000,
+      "memory_swap": 4000000000,
+      "nano_cpus": 4000000000,
+      "restart_count": 0,
+      "oom_killed": false,
+      "health": "healthy"
+    }
+  ],
+  "evaluation_image": "sha256:eb869ef04c81449df695091e607227151e29325de472d67f1cb9550a67db7f89",
+  "evaluation_container_limits": {
+    "cpu": 4,
+    "memory_bytes": 2500000000,
+    "memory_and_swap_bytes": 2500000000
+  },
+  "stt": {
+    "baseline": {
+      "passes": 2,
+      "mean_seconds": 30.542242076999628,
+      "seconds": [
+        33.00739084899942,
+        28.077093304999835
+      ],
+      "word_errors": [
+        51,
+        51
+      ],
+      "caption_wer": [
+        0.13821138211382114,
+        0.13821138211382114
+      ]
+    },
+    "beam1": {
+      "passes": 1,
+      "mean_seconds": 16.267400425000233,
+      "seconds": [
+        16.267400425000233
+      ],
+      "word_errors": [
+        60
+      ],
+      "caption_wer": [
+        0.16260162601626016
+      ]
+    },
+    "beam1_hints": {
+      "passes": 2,
+      "mean_seconds": 20.039191800499793,
+      "seconds": [
+        21.58489709300011,
+        18.493486507999478
+      ],
+      "word_errors": [
+        57,
+        57
+      ],
+      "caption_wer": [
+        0.15447154471544716,
+        0.15447154471544716
+      ]
+    },
+    "beam5_hints": {
+      "passes": 1,
+      "mean_seconds": 29.9237006809999,
+      "seconds": [
+        29.9237006809999
+      ],
+      "word_errors": [
+        60
+      ],
+      "caption_wer": [
+        0.16260162601626016
+      ]
+    }
+  },
+  "models": {
+    "qwen-replay": {
+      "seconds": 89.3621274590023,
+      "accepted": 19,
+      "case_count": 19,
+      "rocket_seconds": 86.01529295800174,
+      "memory": {
+        "process_max_rss_kib": 33308,
+        "memory.peak": "45387776",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    },
+    "m2m-raw-beam1": {
+      "seconds": 8.107440376999875,
+      "accepted": 4,
+      "case_count": 19,
+      "rocket_seconds": 7.4092734179994295,
+      "memory": {
+        "process_max_rss_kib": 792496,
+        "memory.peak": "1340461056",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      },
+      "offline_fallback_seconds": 91.46372054100175,
+      "fallback_count": 15
+    },
+    "m2m-protected-beam5": {
+      "seconds": 14.803674089000197,
+      "accepted": 5,
+      "case_count": 19,
+      "rocket_seconds": 13.50802742200085,
+      "memory": {
+        "process_max_rss_kib": 868220,
+        "memory.peak": "1391628288",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      },
+      "offline_fallback_seconds": 95.85278062700218,
+      "fallback_count": 14
+    }
+  },
+  "converted_model_files": [
+    {
+      "file": "config.json",
+      "bytes": 223,
+      "sha256": "8f6496adfc930cbfecbe8281112197705c488fab47d34b4829b06d7f478909af"
+    },
+    {
+      "file": "model.bin",
+      "bytes": 490667752,
+      "sha256": "137949450f9cf691f3c92084f14123e82d05ecb23ac3cd688308ce1a95214572"
+    },
+    {
+      "file": "sentencepiece.bpe.model",
+      "bytes": 2423393,
+      "sha256": "d8f7c76ed2a5e0822be39f0a4f95a55eb19c78f4593ce609e2edbc2aea4d380a"
+    },
+    {
+      "file": "shared_vocabulary.json",
+      "bytes": 2796509,
+      "sha256": "7eb5d0ff184c6095c7c10f9911c0aea492250abd12854f9c3d787c64b1c6397e"
+    },
+    {
+      "file": "special_tokens_map.json",
+      "bytes": 1140,
+      "sha256": "c1a4f86c3874d279ae1b2a05162858db5dd6c61665d84223ed886cbcff08fda6"
+    },
+    {
+      "file": "tokenizer_config.json",
+      "bytes": 298,
+      "sha256": "a53e6aa83da0b82565ed90c3849056307a9453843322ac5b8439ec4b9497fe48"
+    },
+    {
+      "file": "vocab.json",
+      "bytes": 3708092,
+      "sha256": "b6e77e474aeea8f441363aca7614317c06381f3eacfe10fb9856d5081d1074cc"
+    }
+  ],
+  "model_conversion": {
+    "runtime": "CPU int8_float32",
+    "weights_quantization": "int8",
+    "source_ctranslate2": "4.8.2",
+    "runtime_ctranslate2": "4.8.3",
+    "source_transformers": "4.57.6",
+    "arguments": [
+      "ct2-transformers-converter",
+      "--model",
+      "/private/tmp/kaption-m2m100-418m-261025",
+      "--output_dir",
+      "/private/tmp/kaption-m2m100-ct2-int8-261025",
+      "--quantization",
+      "int8",
+      "--copy_files",
+      "tokenizer_config.json",
+      "special_tokens_map.json",
+      "sentencepiece.bpe.model",
+      "vocab.json"
+    ]
+  },
+  "raw_report_note": "Qwen raw JSON beam=1 and math_protection=false were unused M2M CLI defaults. Effective Qwen uses existing HTTP service, its sampling config, math protection, context, glossary and up to two attempts. The driver metadata was corrected after these measurements; exact executed sources are archived separately.",
+  "offline_fallback_limit": "Sum of measured M2M time plus Qwen case times on rejected outputs; not an actual hybrid execution or end-to-end measurement. Accepted M2M outputs can still be semantically wrong.",
+  "source_sha256": {
+    "transcribe.py": "4f467be1e9ec5c78744110ea9f296aa91940f1b54ea77135a37131718243fe3a",
+    "app/services/stt_features.py": "303723aa1eabfe8ac56f4419a32fd34cec3422e014e482820837234b0b8ce0f8",
+    "app/services/translation.py": "e85c57a9165896d3850a517e1d3fa932d0aa4b993d386f8b372aec38a89882e6",
+    "app/services/translation_qwen.py": "24f7ea3c1d0d772a4915277a45a41e851aa8763ac2937d552c8256179704ed70",
+    "app/services/translation_inputs.py": "f38fcc7cadf3d9d901276a6de97e9b74650c71b1584a663fe3d0401c3cfcdcf1",
+    "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+    "app/services/translation_validation.py": "4e4daf57bd338bff592e9d4b8e507b847dc77cd3518f5e300bcf9d261108981b",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "artifact_sha256": {
+    "cpu-candidates-stt-261025.json": "4776e7ffd81400a5a3a1fd13fa7a8fb746e1061e99ffe596662d10b76b2d87c6",
+    "cpu-candidates-m2m-beam1-261025.json": "0a080585084fad746622a2f1183de08c1c9f7260328243762c5143a8301f2bdc",
+    "cpu-candidates-m2m-protected-beam5-261025.json": "a9c07a99f7fe9c9ad1fec6ab69d7013304c4ab1d4809335a165f91caa8bbf2d7",
+    "cpu-candidates-qwen-261025.json": "8521c6f7964f6c0426ae88f7ad179a25c993ddac031847fee52c14dcdeada183",
+    "cpu-candidates-model-261025.json": "262100bd0b91d70498bcdc92cfab908cf90cf85f2ed7f5093d90baeb31c4b0d5"
+  }
+}

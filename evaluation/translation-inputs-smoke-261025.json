@@ -1,0 +1,71 @@
+{
+  "runtime": "ARM64 CPU Docker 6GB",
+  "cases": [
+    {
+      "id": "function",
+      "text": "And then we go to mR prime equals m of vR.",
+      "context": "This is the initial mass.",
+      "status": 200,
+      "client_seconds": 1.786349334,
+      "response": {
+        "translation": "그리고 그 후에 우리는 mR′ = m(vR)로 가요.",
+        "prompt_tokens": 220,
+        "generated_tokens": 17,
+        "elapsed_seconds": 1.7823042929999247
+      }
+    },
+    {
+      "id": "fraction",
+      "text": "And then we have dmR over mR.",
+      "context": "Move the m to the other side.",
+      "status": 200,
+      "client_seconds": 0.8941775000000001,
+      "response": {
+        "translation": "그리고 그 후에 우리는 dmR/(mR)를 가집니다.",
+        "prompt_tokens": 219,
+        "generated_tokens": 18,
+        "elapsed_seconds": 0.8918882509999548
+      }
+    },
+    {
+      "id": "holdout-linear-0",
+      "start": 786,
+      "end": 791,
+      "text": "So, multiplication by a scalar, it's very easy.",
+      "reference_ko": "따라서 스칼라를 곱하는 것은 매우 쉽습니다.",
+      "required_terms": [
+        "스칼라"
+      ],
+      "context": "",
+      "status": 200,
+      "client_seconds": 1.062325333,
+      "response": {
+        "translation": "그래서 스칼라에 의해 곱하는 것은 매우 쉬워요.",
+        "prompt_tokens": 203,
+        "generated_tokens": 18,
+        "elapsed_seconds": 1.0603439999999864
+      }
+    },
+    {
+      "id": "holdout-linear-1",
+      "start": 970,
+      "end": 981,
+      "text": "Well, dot product as a way of multiplying two vectors to get a number, a scalar.",
+      "reference_ko": "내적은 두 벡터를 곱해서 하나의 수, 즉 스칼라를 얻는 방법입니다.",
+      "required_terms": [
+        "내적",
+        "벡터",
+        "스칼라"
+      ],
+      "context": "",
+      "status": 200,
+      "client_seconds": 1.6980094580000005,
+      "response": {
+        "translation": "좋아요, 두 벡터를 곱하여 숫자, 즉 스칼라를 얻는 방법으로 점곱이 있습니다.",
+        "prompt_tokens": 210,
+        "generated_tokens": 32,
+        "elapsed_seconds": 1.69574058399985
+      }
+    }
+  ]
+}

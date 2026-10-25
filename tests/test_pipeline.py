@@ -118,6 +118,27 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response.segments[0].end, 9)
         self.assertNotIn('merge_reasons', response.segments[0].model_dump())
 
+    async def test_initial_velocity_fragment_is_translated_with_its_subtraction(self):
+        """18초 경계를 넘은 초기 속도·감소 설명을 한 번 번역하고 원문 시각을 유지한다.
+
+        :return: None.
+        """
+        segments = [
+            {'start': 179.5, 'end': 197.3,
+             'text': 'mR is less than before, which means the velocity is our initial'},
+            {'start': 197.3, 'end': 208.46,
+             'text': 'velocity minus something, so my sled will eventually come to a stop.'},
+        ]
+        stt = SimpleNamespace(transcribe=Mock(return_value={'segments': segments}))
+        translator = SimpleNamespace(translate=Mock(return_value={
+            'translation': 'mR이 줄어 속도는 초기 속도보다 작아지며 썰매는 결국 멈춥니다.'}))
+        response = await self.run_upload(stt, translator)
+        translator.translate.assert_called_once_with(' '.join(s['text'] for s in segments), '', 128)
+        self.assertEqual(len(response.segments), 1)
+        self.assertEqual(response.segments[0].start, 179.5)
+        self.assertEqual(response.segments[0].end, 208.46)
+        self.assertNotIn('source_indices', response.segments[0].model_dump())
+
     async def test_errors_cleanup_upload_and_temp_file(self):
         """STT 검증 오류와 예기치 않은 번역 오류에서도 파일이 정리되는지 확인한다.
 

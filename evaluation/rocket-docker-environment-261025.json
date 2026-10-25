@@ -1,0 +1,135 @@
+{
+  "captured_at": "2026-10-25T07:56:23.239361+00:00",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "vm": {
+    "configured_memory_mib": 6144,
+    "memory_bytes": 6210043904,
+    "cpus": 8,
+    "architecture": "aarch64"
+  },
+  "media": "/Users/macbookair/Desktop/K-aption_BE/MIT8_01F16_W06PS01-2_360p.mp4",
+  "media_sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+  "media_bytes": 21729088,
+  "duration_seconds": 212.586667,
+  "model_manifest": {
+    "schema_version": 1,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+    "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+    "quantization": "Q4_K_M",
+    "release_url": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9",
+    "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "parts": [
+      {
+        "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "bytes": 2497281120,
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597"
+      }
+    ]
+  },
+  "model_sha256_verified": true,
+  "containers": {
+    "k-aption_be-backend-1": {
+      "id": "6d640aa1c5ea0336ff40f405d17e4b5d1f81486213edcb683ae20ca21de8c6a0",
+      "image": "sha256:452ee9062f95bfd3603513b1fbbea6da40747ac2ec044e398fd4a48a9b6c5d38",
+      "command": [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--workers",
+        "1"
+      ],
+      "memory_limit_bytes": 2500000000,
+      "memory_swap_limit_bytes": 2500000000,
+      "nano_cpus": 4000000000,
+      "architecture": "arm64",
+      "safe_runtime_settings": {
+        "KAPTION_TRANSLATOR_URL": "http://translator:8080",
+        "KAPTION_TRANSLATOR_PROMPT_CACHE": "true",
+        "KAPTION_TRANSLATOR_TIMEOUT": "120",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "4"
+      }
+    },
+    "k-aption_be-translator-1": {
+      "id": "2ef729d1cb378a6e7d32a5ada2f3da57f913d133138d9acae903c311ba57410f",
+      "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+      "command": [
+        "--model",
+        "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "--alias",
+        "qwen3-4b-instruct-2507",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8080",
+        "--device",
+        "none",
+        "--n-gpu-layers",
+        "0",
+        "--no-kv-offload",
+        "--no-op-offload",
+        "--no-repack",
+        "--ctx-size",
+        "2048",
+        "--parallel",
+        "1",
+        "--threads",
+        "4",
+        "--threads-batch",
+        "4",
+        "--batch-size",
+        "256",
+        "--ubatch-size",
+        "128",
+        "--cache-ram",
+        "0",
+        "--no-context-shift",
+        "--jinja"
+      ],
+      "memory_limit_bytes": 4000000000,
+      "memory_swap_limit_bytes": 4000000000,
+      "nano_cpus": 4000000000,
+      "architecture": "arm64",
+      "safe_runtime_settings": {}
+    }
+  },
+  "runtime": {
+    "source_sha256": {
+      "app/main.py": "ea3a968ac4bc1f43fd8e32d770c81aee07178493cf4f1657d3692f6bb354e7d3",
+      "app/services/pipeline.py": "0c102b8df0a80baa15fdfbc8d09cc52de38dbe1d4a8e47b515acf0e23a04add1",
+      "app/services/subtitles.py": "869db07be8fb0d4a08358949746f68c095d365f4e6400b8341f4e7339eb32079",
+      "app/services/translation.py": "f9b4586454b0ee1e140c9add4f1ffe1c2f9209efff6c63a4a5de603f80c3275c",
+      "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+      "app/services/translation_qwen.py": "cbdedfb61ec220dc05667a8f3086cd14daab45c42df94f98d4c768edbb402372",
+      "app/services/translation_validation.py": "4e4daf57bd338bff592e9d4b8e507b847dc77cd3518f5e300bcf9d261108981b",
+      "transcribe.py": "4f467be1e9ec5c78744110ea9f296aa91940f1b54ea77135a37131718243fe3a",
+      "app/services/stt_features.py": "303723aa1eabfe8ac56f4419a32fd34cec3422e014e482820837234b0b8ce0f8",
+      "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+      "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+    },
+    "python_version": "3.11.17 (main, Oct 21 2026, 01:17:54) [GCC 12.2.0]",
+    "package_versions": {
+      "faster-whisper": "1.2.1",
+      "ctranslate2": "4.8.3",
+      "numpy": "1.26.4",
+      "httpx": "0.28.1",
+      "uvicorn": "0.54.0",
+      "fastapi": "0.157.0"
+    }
+  },
+  "source_and_input_match_native_test": true,
+  "initial_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": false
+  },
+  "native_reference": "rocket-native-full-261025.json",
+  "instrumentation": "Unmodified backend image; benchmark script records job/SSE, timings and Docker samples. No raw-generation observer injected."
+}

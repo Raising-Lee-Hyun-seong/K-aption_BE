@@ -1,0 +1,173 @@
+{
+  "source": "\"\"\"원본 강의의 짧은 오디오로 CPU8 작업 API·SSE·자막 다운로드를 확인한다.\"\"\"\nimport hashlib,json,sys\nfrom pathlib import Path\nfrom time import monotonic\nimport httpx\nsys.path.insert(0,'/Users/macbookair/Desktop/K-aption_BE')\nfrom scripts.benchmark_cpu import run_media,pipeline_succeeded\nfrom scripts.evaluate_cpu_stt_options import save_new\nfrom scripts.evaluate_cpu_translation_threads import server_state\nmedia=Path('/private/tmp/kaption-operator-subtitle-smoke-261025.m4a')\nout=Path('/private/tmp/kaption-operator-api-261025')\nreport={'source':Path(__file__).read_text(),'media_sha256':hashlib.sha256(media.read_bytes()).hexdigest(),'source_video':'MIT8_01F16_W06PS01-2_360p.mp4','clip_command':'ffmpeg -i <source> -t 25.96 -vn -c:a copy <new.m4a>','server':server_state(),'limits':['Short derived audio smoke, not whole-video SSE/export timing.','STT and translation models are already loaded after full transcription API test.']}\nassert report['server']['nano_cpus']==8_000_000_000\nstart=monotonic()\ntry:\n run_media('http://127.0.0.1:8000',media,180,report)\n report['client_total_seconds']=monotonic()-start\n report['pipeline_succeeded']=pipeline_succeeded(report)\n with httpx.Client(trust_env=False,timeout=10) as client:\n  for fmt in ('srt','vtt'):\n   response=client.get(f\"http://127.0.0.1:8000/api/v1/jobs/{report['job_id']}/subtitles\",params={'format':fmt,'language':'both'})\n   response.raise_for_status()\n   (out/f'job-smoke.{fmt}').write_bytes(response.content)\n assert report['pipeline_succeeded']\nfinally:\n save_new(out/'job-smoke.json',report)\nprint(json.dumps({'seconds':report['client_total_seconds'],'pipeline_succeeded':report['pipeline_succeeded'],'segments':len(report['result']['segments'])}),flush=True)\n",
+  "media_sha256": "28d9f18bc2347f0ef25326c64f220ed7dbbb71402de0cc95612d1d00873159fa",
+  "source_video": "MIT8_01F16_W06PS01-2_360p.mp4",
+  "clip_command": "ffmpeg -i <source> -t 25.96 -vn -c:a copy <new.m4a>",
+  "server": {
+    "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+    "cmd": [
+      "--model",
+      "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+      "--alias",
+      "qwen3-4b-instruct-2507",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8080",
+      "--device",
+      "none",
+      "--n-gpu-layers",
+      "0",
+      "--no-kv-offload",
+      "--no-op-offload",
+      "--no-repack",
+      "--ctx-size",
+      "2048",
+      "--parallel",
+      "1",
+      "--threads",
+      "8",
+      "--threads-batch",
+      "8",
+      "--batch-size",
+      "256",
+      "--ubatch-size",
+      "128",
+      "--cache-ram",
+      "0",
+      "--no-context-shift",
+      "--jinja"
+    ],
+    "nano_cpus": 8000000000,
+    "memory": 4000000000,
+    "memory_swap": 4000000000,
+    "oom": false,
+    "restart_count": 0,
+    "id": "8b4bee8f95e7dec118fc93cd4c9ea30a7230b80210743cf00a9a4f637260e9a5"
+  },
+  "limits": [
+    "Short derived audio smoke, not whole-video SSE/export timing.",
+    "STT and translation models are already loaded after full transcription API test."
+  ],
+  "events": [
+    {
+      "seconds": 0.078585708,
+      "state": {
+        "job_id": "4062e3d00b534ca3b1cf4bed4f7740f4",
+        "status": "running",
+        "stage": "transcribing",
+        "progress_percent": null,
+        "completed_segments": 0,
+        "total_segments": null,
+        "failed_segments": 0,
+        "created_at": "2026-10-25T11:44:23.814042Z",
+        "updated_at": "2026-10-25T11:44:23.821835Z",
+        "expires_at": null,
+        "elapsed_seconds": 0.009549,
+        "error": null
+      }
+    },
+    {
+      "seconds": 4.0843978750000005,
+      "state": {
+        "job_id": "4062e3d00b534ca3b1cf4bed4f7740f4",
+        "status": "running",
+        "stage": "translating",
+        "progress_percent": 0.0,
+        "completed_segments": 0,
+        "total_segments": 2,
+        "failed_segments": 0,
+        "created_at": "2026-10-25T11:44:23.814042Z",
+        "updated_at": "2026-10-25T11:44:27.465115Z",
+        "expires_at": null,
+        "elapsed_seconds": 4.014015,
+        "error": null
+      }
+    },
+    {
+      "seconds": 14.086794790999999,
+      "state": {
+        "job_id": "4062e3d00b534ca3b1cf4bed4f7740f4",
+        "status": "running",
+        "stage": "translating",
+        "progress_percent": 50.0,
+        "completed_segments": 1,
+        "total_segments": 2,
+        "failed_segments": 0,
+        "created_at": "2026-10-25T11:44:23.814042Z",
+        "updated_at": "2026-10-25T11:44:37.177272Z",
+        "expires_at": null,
+        "elapsed_seconds": 14.018041,
+        "error": null
+      }
+    },
+    {
+      "seconds": 16.090373208,
+      "state": {
+        "job_id": "4062e3d00b534ca3b1cf4bed4f7740f4",
+        "status": "completed",
+        "stage": "completed",
+        "progress_percent": 100.0,
+        "completed_segments": 2,
+        "total_segments": 2,
+        "failed_segments": 0,
+        "created_at": "2026-10-25T11:44:23.814042Z",
+        "updated_at": "2026-10-25T11:44:39.526301Z",
+        "expires_at": "2026-10-26T11:44:39.526290Z",
+        "elapsed_seconds": 15.712259,
+        "error": null
+      }
+    }
+  ],
+  "job_id": "4062e3d00b534ca3b1cf4bed4f7740f4",
+  "initial_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": true
+  },
+  "final_job": {
+    "job_id": "4062e3d00b534ca3b1cf4bed4f7740f4",
+    "status": "completed",
+    "stage": "completed",
+    "progress_percent": 100.0,
+    "completed_segments": 2,
+    "total_segments": 2,
+    "failed_segments": 0,
+    "created_at": "2026-10-25T11:44:23.814042Z",
+    "updated_at": "2026-10-25T11:44:39.526301Z",
+    "expires_at": "2026-10-26T11:44:39.526290Z",
+    "elapsed_seconds": 15.712259,
+    "error": null
+  },
+  "elapsed_seconds": 16.097482499999998,
+  "result": {
+    "segments": [
+      {
+        "start": 3.6,
+        "end": 16.88,
+        "text": "We just derived this relation here, the relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket and we want to ultimately get the speed of the rocket.",
+        "translation": "여기서 우리는 로켓의 앞쪽 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출했으며, 최종적으로는 로켓의 속력을 얻고자 합니다.",
+        "translation_error": null
+      },
+      {
+        "start": 17.44,
+        "end": 24.08,
+        "text": "So we have to do, we have to apply a technique called separation variables and then we want to integrate.",
+        "translation": "그래서 우리는 해야 할 것이며, 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+        "translation_error": null
+      }
+    ]
+  },
+  "subtitles": {
+    "srt": {
+      "status": 200,
+      "download": "attachment; filename=\"kaption-4062e3d00b534ca3b1cf4bed4f7740f4-both.srt\""
+    },
+    "vtt": {
+      "status": 200,
+      "download": "attachment; filename=\"kaption-4062e3d00b534ca3b1cf4bed4f7740f4-both.vtt\""
+    }
+  },
+  "client_total_seconds": 16.111229334,
+  "pipeline_succeeded": true
+}

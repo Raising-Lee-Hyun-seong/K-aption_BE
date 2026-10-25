@@ -1,0 +1,10 @@
+1
+00:00:03,600 --> 00:00:16,880
+여기서 우리는 로켓의 앞쪽 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출했으며, 최종적으로는 로켓의 속력을 얻고자 합니다.
+We just derived this relation here, the relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket and we want to ultimately get the speed of the rocket.
+
+2
+00:00:17,440 --> 00:00:24,080
+그래서 우리는 해야 할 것이며, 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.
+So we have to do, we have to apply a technique called separation variables and then we want to integrate.
+

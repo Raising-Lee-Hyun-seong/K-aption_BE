@@ -153,6 +153,15 @@ class TranslationService:
         """
         raise NotImplementedError('Use the HTTP translation service')
 
+    def _restore_translation(self, translation: str, text: str) -> tuple:
+        """구체 서비스의 입력 보호 복원 지점을 제공하며 기본 구현은 후보를 유지한다.
+
+        :param translation: 일반 출력 표식을 정리한 번역 후보.
+        :param text: 보호 전 현재 영어 원문.
+        :return: 번역 후보와 선택적 복원 실패 사유 코드. 기본값은 (후보, None).
+        """
+        return translation, None
+
     def _generate_output(self, prompt: str, max_tokens: int) -> dict:
         """토큰 스트림을 수집하고 반복·지시문 유출을 발견하면 생성을 조기 종료한다.
 
@@ -178,7 +187,7 @@ class TranslationService:
                 "stop_reason": stop_reason}
 
     def translate(self, text: str, context: str, max_tokens: int) -> dict:
-        """번역을 검증·재시도하고 대기·생성·전체 시간을 기록해 결과와 통계를 반환한다.
+        """입력 보호를 복원한 번역을 검증·재시도하고 대기·생성·전체 시간을 기록한다.
 
         :param text: 검사하거나 번역할 입력 텍스트.
         :param context: 앞 영어 원문 등의 참고 문맥. 프롬프트에는 마지막 256자만 사용한다.
@@ -222,7 +231,8 @@ class TranslationService:
                             generation_metrics["finish_reason"] = generated["finish_reason"]
                             generation_metrics["early_stop_reason"] = generated["stop_reason"]
                         translation = self._clean_translation(generated["text"])
-                        reason = generated["stop_reason"]
+                        translation, restoration_problem = self._restore_translation(translation, text)
+                        reason = generated["stop_reason"] or restoration_problem
                         if not reason and generated["finish_reason"] == "length":
                             reason = "token_limit"
                         reason = reason or self._rejection_reason(translation, text, context)

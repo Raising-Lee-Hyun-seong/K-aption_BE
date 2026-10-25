@@ -1,0 +1,144 @@
+{
+  "api_report": "rocket-docker-inputs-v4-full-261025.json",
+  "api_report_sha256": "bea27086b2487ad199561a46aa477b0b44f547c2f10a3dcea34253216b6c9d22",
+  "server_tasks": [
+    {
+      "task_id": 0,
+      "prompt_seconds": 5.70332,
+      "prompt_tokens": 220,
+      "generation_seconds": 0.52265,
+      "generation_tokens": 13
+    },
+    {
+      "task_id": 14,
+      "prompt_seconds": 4.300949999999999,
+      "prompt_tokens": 152,
+      "generation_seconds": 2.0996799999999998,
+      "generation_tokens": 46
+    },
+    {
+      "task_id": 61,
+      "prompt_seconds": 1.44349,
+      "prompt_tokens": 58,
+      "generation_seconds": 1.04553,
+      "generation_tokens": 25
+    },
+    {
+      "task_id": 87,
+      "prompt_seconds": 6.4766,
+      "prompt_tokens": 258,
+      "generation_seconds": 3.87434,
+      "generation_tokens": 75
+    },
+    {
+      "task_id": 164,
+      "prompt_seconds": 4.4475,
+      "prompt_tokens": 126,
+      "generation_seconds": 1.53927,
+      "generation_tokens": 23
+    },
+    {
+      "task_id": 188,
+      "prompt_seconds": 2.12664,
+      "prompt_tokens": 75,
+      "generation_seconds": 1.44578,
+      "generation_tokens": 27
+    },
+    {
+      "task_id": 216,
+      "prompt_seconds": 9.86224,
+      "prompt_tokens": 118,
+      "generation_seconds": 3.24019,
+      "generation_tokens": 18
+    },
+    {
+      "task_id": 235,
+      "prompt_seconds": 3.78121,
+      "prompt_tokens": 148,
+      "generation_seconds": 1.52156,
+      "generation_tokens": 33
+    },
+    {
+      "task_id": 269,
+      "prompt_seconds": 1.90533,
+      "prompt_tokens": 74,
+      "generation_seconds": 0.61753,
+      "generation_tokens": 16
+    },
+    {
+      "task_id": 286,
+      "prompt_seconds": 7.6267700000000005,
+      "prompt_tokens": 215,
+      "generation_seconds": 2.68798,
+      "generation_tokens": 54
+    },
+    {
+      "task_id": 341,
+      "prompt_seconds": 1.64823,
+      "prompt_tokens": 64,
+      "generation_seconds": 0.72991,
+      "generation_tokens": 18
+    },
+    {
+      "task_id": 360,
+      "prompt_seconds": 2.4263000000000003,
+      "prompt_tokens": 105,
+      "generation_seconds": 0.51977,
+      "generation_tokens": 13
+    },
+    {
+      "task_id": 374,
+      "prompt_seconds": 3.91352,
+      "prompt_tokens": 168,
+      "generation_seconds": 1.8622999999999998,
+      "generation_tokens": 46
+    },
+    {
+      "task_id": 421,
+      "prompt_seconds": 4.74865,
+      "prompt_tokens": 188,
+      "generation_seconds": 1.9795399999999999,
+      "generation_tokens": 45
+    },
+    {
+      "task_id": 467,
+      "prompt_seconds": 4.88839,
+      "prompt_tokens": 184,
+      "generation_seconds": 2.04496,
+      "generation_tokens": 45
+    },
+    {
+      "task_id": 513,
+      "prompt_seconds": 2.81689,
+      "prompt_tokens": 122,
+      "generation_seconds": 0.6781,
+      "generation_tokens": 11
+    },
+    {
+      "task_id": 525,
+      "prompt_seconds": 1.05619,
+      "prompt_tokens": 45,
+      "generation_seconds": 0.73077,
+      "generation_tokens": 18
+    },
+    {
+      "task_id": 544,
+      "prompt_seconds": 4.24547,
+      "prompt_tokens": 174,
+      "generation_seconds": 3.91128,
+      "generation_tokens": 86
+    }
+  ],
+  "server_task_count_matches": true,
+  "prompt_seconds": 73.41769,
+  "generation_seconds": 31.051140000000004,
+  "processed_prompt_tokens": 2494,
+  "srt": {
+    "path": "rocket-docker-inputs-v4-full-261025.srt",
+    "sha256": "0c898262bcd94a52d939084378115a7301ffbee7031c898f730f170c91b24045"
+  },
+  "vtt": {
+    "path": "rocket-docker-inputs-v4-full-261025.vtt",
+    "sha256": "34d69ba52e14b91a7b92e8ede6f87c71fb99fa964ee37641eb298d80ddb3c602"
+  }
+}

@@ -1,0 +1,992 @@
+{
+  "mode": "qwen",
+  "math_protection": false,
+  "beam": 1,
+  "architecture": "aarch64",
+  "platform": "Linux-7.0.14-linuxkit-aarch64-with-glibc2.36",
+  "driver_sha256": "fe77a680c355f01eebbe08f2980e85a340a3ebf8f3538a3a6042cdce5b43b6a4",
+  "cases_sha256": "b243f80d9951ce4f796b72695fdb02923613f1904932be5c10b241ec3a955697",
+  "results": [
+    {
+      "id": "rocket-0",
+      "suite": "rocket",
+      "text": "We just derived this relation here.",
+      "context": "",
+      "translation": "여기서 우리는 이 관계를 도출했습니다.",
+      "accepted": true,
+      "response": {
+        "translation": "여기서 우리는 이 관계를 도출했습니다.",
+        "prompt_tokens": 220,
+        "generated_tokens": 13,
+        "elapsed_seconds": 0.9007877920003011
+      },
+      "seconds": 0.9009418340001503,
+      "attempts": [
+        {
+          "raw_output": "여기서 우리는 이 관계를 도출했습니다.",
+          "server_timings": {
+            "cache_n": 207,
+            "prompt_n": 13,
+            "prompt_ms": 297.872,
+            "prompt_per_token_ms": 22.913230769230772,
+            "prompt_per_second": 43.64290702046517,
+            "predicted_n": 13,
+            "predicted_ms": 589.382,
+            "predicted_per_token_ms": 49.11516666666666,
+            "predicted_per_second": 20.360309612441508
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 0.9007326669998292,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 220,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-1",
+      "suite": "rocket",
+      "text": "The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket.",
+      "context": "We just derived this relation here.",
+      "translation": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+      "accepted": true,
+      "response": {
+        "translation": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+        "prompt_tokens": 333,
+        "generated_tokens": 46,
+        "elapsed_seconds": 6.21009321099973
+      },
+      "seconds": 6.2104667939993305,
+      "attempts": [
+        {
+          "raw_output": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 최종적으로 로켓의 속력을 얻고자 합니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 152,
+            "prompt_ms": 3361.085,
+            "prompt_per_token_ms": 22.112401315789473,
+            "prompt_per_second": 45.223491818862065,
+            "predicted_n": 46,
+            "predicted_ms": 2816.884,
+            "predicted_per_token_ms": 62.59742222222222,
+            "predicted_per_second": 15.975098726110126
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 6.209665835999658,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 333,
+          "max_tokens": 128,
+          "raw_output_tokens": 46,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-2",
+      "suite": "rocket",
+      "text": "So we have to apply a technique called separation variables, and then we want to integrate.",
+      "context": "The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket.",
+      "translation": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+        "prompt_tokens": 239,
+        "generated_tokens": 25,
+        "elapsed_seconds": 5.367332126999827
+      },
+      "seconds": 5.367669293999825,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 58,
+            "prompt_ms": 2093.753,
+            "prompt_per_token_ms": 36.09918965517242,
+            "prompt_per_second": 27.701452845679505,
+            "predicted_n": 25,
+            "predicted_ms": 3247.727,
+            "predicted_per_token_ms": 135.32195833333333,
+            "predicted_per_second": 7.389783685636139
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 5.367243169000176,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 239,
+          "max_tokens": 128,
+          "raw_output_tokens": 25,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-3",
+      "suite": "rocket",
+      "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away, and we're left with mr dvr equals dmru, and we're going to shuffle the m onto the other side, and we're left with dvr equals u is a constant, so that goes up front, and then we have dmr over mr.",
+      "context": "So we have to apply a technique called separation variables, and then we want to integrate.",
+      "translation": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+      "accepted": true,
+      "response": {
+        "translation": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+        "prompt_tokens": 439,
+        "generated_tokens": 75,
+        "elapsed_seconds": 9.447654671000237
+      },
+      "seconds": 9.447811213000023,
+      "attempts": [
+        {
+          "raw_output": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 258,
+            "prompt_ms": 6119.745,
+            "prompt_per_token_ms": 23.719941860465116,
+            "prompt_per_second": 42.1586193542378,
+            "predicted_n": 75,
+            "predicted_ms": 3297.184,
+            "predicted_per_token_ms": 44.556540540540546,
+            "predicted_per_second": 22.443394120558636
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 9.447590921000483,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 439,
+          "max_tokens": 128,
+          "raw_output_tokens": 75,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-4",
+      "suite": "rocket",
+      "text": "That's an equation that we can integrate now, and we can do that.",
+      "context": "is, first, we're going to multiply by dt, so that falls away, and we're left with mr dvr equals dmru, and we're going to shuffle the m onto the other side, and we're left with dvr equals u is a constant, so that goes up front, and then we have dmr over mr.",
+      "translation": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+      "accepted": true,
+      "response": {
+        "translation": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+        "prompt_tokens": 359,
+        "generated_tokens": 23,
+        "elapsed_seconds": 4.794281168999987
+      },
+      "seconds": 4.794507835000331,
+      "attempts": [
+        {
+          "raw_output": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 126,
+            "prompt_ms": 3315.16,
+            "prompt_per_token_ms": 26.31079365079365,
+            "prompt_per_second": 38.0072153380229,
+            "predicted_n": 23,
+            "predicted_ms": 1470.273,
+            "predicted_per_token_ms": 66.8305909090909,
+            "predicted_per_second": 14.963207513162523
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.79422475299998,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 359,
+          "max_tokens": 128,
+          "raw_output_tokens": 23,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-5",
+      "suite": "rocket",
+      "text": "The tricky bit is that we need to take care of the integration limits here.",
+      "context": "That's an equation that we can integrate now, and we can do that.",
+      "translation": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+        "prompt_tokens": 308,
+        "generated_tokens": 27,
+        "elapsed_seconds": 3.136640876000456
+      },
+      "seconds": 3.1369821270000102,
+      "attempts": [
+        {
+          "raw_output": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 75,
+            "prompt_ms": 1938.68,
+            "prompt_per_token_ms": 25.84906666666667,
+            "prompt_per_second": 38.686116326572716,
+            "predicted_n": 27,
+            "predicted_ms": 1176.078,
+            "predicted_per_token_ms": 45.23376923076923,
+            "predicted_per_second": 22.107377231782248
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.136413459999858,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 308,
+          "max_tokens": 128,
+          "raw_output_tokens": 27,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-6",
+      "suite": "rocket",
+      "text": "We have vr, and actually these now are all primes.",
+      "context": "The tricky bit is that we need to take care of the integration limits here.",
+      "translation": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+        "prompt_tokens": 351,
+        "generated_tokens": 18,
+        "elapsed_seconds": 4.01062075199934
+      },
+      "seconds": 4.010853127000701,
+      "attempts": [
+        {
+          "raw_output": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 118,
+            "prompt_ms": 3217.214,
+            "prompt_per_token_ms": 27.264525423728813,
+            "prompt_per_second": 36.67769691416238,
+            "predicted_n": 18,
+            "predicted_ms": 769.502,
+            "predicted_per_token_ms": 45.264823529411764,
+            "predicted_per_second": 22.092210286652925
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.010495543000616,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 351,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-7",
+      "suite": "rocket",
+      "text": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+      "context": "We have vr, and actually these now are all primes.",
+      "translation": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+        "prompt_tokens": 381,
+        "generated_tokens": 33,
+        "elapsed_seconds": 4.926927502999206
+      },
+      "seconds": 4.927066377000301,
+      "attempts": [
+        {
+          "raw_output": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 148,
+            "prompt_ms": 3565.401,
+            "prompt_per_token_ms": 24.090547297297295,
+            "prompt_per_second": 41.510057353997496,
+            "predicted_n": 33,
+            "predicted_ms": 1346.748,
+            "predicted_per_token_ms": 42.085875,
+            "predicted_per_second": 23.76094117087978
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 4.9268660439993255,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 381,
+          "max_tokens": 128,
+          "raw_output_tokens": 33,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-8",
+      "suite": "rocket",
+      "text": "And for the mass, we have mr prime equals m0.",
+      "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+      "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+        "prompt_tokens": 255,
+        "generated_tokens": 16,
+        "elapsed_seconds": 2.4803980010001396
+      },
+      "seconds": 2.4805110850002166,
+      "attempts": [
+        {
+          "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 74,
+            "prompt_ms": 1791.642,
+            "prompt_per_token_ms": 24.211378378378377,
+            "prompt_per_second": 41.30289421659015,
+            "predicted_n": 16,
+            "predicted_ms": 679.409,
+            "predicted_per_token_ms": 45.293933333333335,
+            "predicted_per_second": 22.0780119191827
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.480362377000347,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 255,
+          "max_tokens": 128,
+          "raw_output_tokens": 16,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-9",
+      "suite": "rocket",
+      "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "context": "And for the mass, we have mr prime equals m0.",
+      "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+      "accepted": true,
+      "response": {
+        "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+        "prompt_tokens": 396,
+        "generated_tokens": 54,
+        "elapsed_seconds": 7.269084669999756
+      },
+      "seconds": 7.269191837000108,
+      "attempts": [
+        {
+          "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 215,
+            "prompt_ms": 5075.08,
+            "prompt_per_token_ms": 23.605023255813954,
+            "prompt_per_second": 42.363864214948336,
+            "predicted_n": 54,
+            "predicted_ms": 2186.514,
+            "predicted_per_token_ms": 41.25498113207547,
+            "predicted_per_second": 24.23949720879903
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 7.2690314609999405,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 396,
+          "max_tokens": 128,
+          "raw_output_tokens": 54,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-10",
+      "suite": "rocket",
+      "text": "And then we go to mr prime equals m of vr.",
+      "context": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "translation": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+        "prompt_tokens": 245,
+        "generated_tokens": 18,
+        "elapsed_seconds": 2.3071145849999084
+      },
+      "seconds": 2.3071736259998943,
+      "attempts": [
+        {
+          "raw_output": "그리고 그 후에 우리는 [MATH_A]로 갑니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 64,
+            "prompt_ms": 1545.163,
+            "prompt_per_token_ms": 24.143171875,
+            "prompt_per_second": 41.41957838752287,
+            "predicted_n": 18,
+            "predicted_ms": 754.865,
+            "predicted_per_token_ms": 44.40382352941177,
+            "predicted_per_second": 22.520583150629584
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 2.30706500100041,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 245,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-11",
+      "suite": "rocket",
+      "text": "All right, so let's do that.",
+      "context": "And then we go to mr prime equals m of vr.",
+      "translation": "좋아요, 그래서 그걸 해봅시다.",
+      "accepted": true,
+      "response": {
+        "translation": "좋아요, 그래서 그걸 해봅시다.",
+        "prompt_tokens": 286,
+        "generated_tokens": 13,
+        "elapsed_seconds": 3.011244710000028
+      },
+      "seconds": 3.0112990019997596,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 그래서 그걸 해봅시다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 105,
+            "prompt_ms": 2502.655,
+            "prompt_per_token_ms": 23.834809523809525,
+            "prompt_per_second": 41.95544331919501,
+            "predicted_n": 13,
+            "predicted_ms": 503.231,
+            "predicted_per_token_ms": 41.935916666666664,
+            "predicted_per_second": 23.84590774415726
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.011196585000107,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 286,
+          "max_tokens": 128,
+          "raw_output_tokens": 13,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-12",
+      "suite": "rocket",
+      "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+      "context": "All right, so let's do that.",
+      "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+        "prompt_tokens": 401,
+        "generated_tokens": 46,
+        "elapsed_seconds": 5.85329937700044
+      },
+      "seconds": 5.853420711000581,
+      "attempts": [
+        {
+          "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 168,
+            "prompt_ms": 4003.573,
+            "prompt_per_token_ms": 23.830791666666666,
+            "prompt_per_second": 41.962516981706095,
+            "predicted_n": 46,
+            "predicted_ms": 1840.63,
+            "predicted_per_token_ms": 40.90288888888889,
+            "predicted_per_second": 24.44815090485323
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 5.853231836000305,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 401,
+          "max_tokens": 128,
+          "raw_output_tokens": 46,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-13",
+      "suite": "rocket",
+      "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+      "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+      "translation": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+        "prompt_tokens": 365,
+        "generated_tokens": 45,
+        "elapsed_seconds": 13.847796256000038
+      },
+      "seconds": 13.847954547999507,
+      "attempts": [
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 188,
+            "prompt_ms": 5549.724,
+            "prompt_per_token_ms": 29.5198085106383,
+            "prompt_per_second": 33.875558496242334,
+            "predicted_n": 45,
+            "predicted_ms": 1909.798,
+            "predicted_per_token_ms": 43.4045,
+            "predicted_per_second": 23.039085809075093
+          }
+        },
+        {
+          "raw_output": "그리고 결국 우리가 원하는 것은 바로 이것입니다. 따라서 이는 t에 대한 vR의 값이며, 물론 v0에 u ln(mR / 2m0)를 더한 값입니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 184,
+            "prompt_ms": 4340.056,
+            "prompt_per_token_ms": 23.587260869565217,
+            "prompt_per_second": 42.395766321909214,
+            "predicted_n": 45,
+            "predicted_ms": 2028.147,
+            "predicted_per_token_ms": 46.094249999999995,
+            "predicted_per_second": 21.6946799221161
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 7.469573628000035,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 421,
+          "max_tokens": 128,
+          "raw_output_tokens": 45,
+          "finish_reason": "stop",
+          "rejection_reason": "untranslated_math_operator",
+          "accepted": false
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 6.37813700300012,
+          "status": "ok",
+          "attempt": 2,
+          "prompt_tokens": 365,
+          "max_tokens": 128,
+          "raw_output_tokens": 45,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-14",
+      "suite": "rocket",
+      "text": "And that is our equation.",
+      "context": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+      "translation": "그리고 이것이 우리의 방정식입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그리고 이것이 우리의 방정식입니다.",
+        "prompt_tokens": 303,
+        "generated_tokens": 11,
+        "elapsed_seconds": 3.2089456679996147
+      },
+      "seconds": 3.2090614180006014,
+      "attempts": [
+        {
+          "raw_output": "그리고 이것이 우리의 방정식입니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 122,
+            "prompt_ms": 2776.702,
+            "prompt_per_token_ms": 22.759852459016397,
+            "prompt_per_second": 43.937015927528414,
+            "predicted_n": 11,
+            "predicted_ms": 424.034,
+            "predicted_per_token_ms": 42.4034,
+            "predicted_per_second": 23.583014569586403
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 3.2088996259999476,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 303,
+          "max_tokens": 128,
+          "raw_output_tokens": 11,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-15",
+      "suite": "rocket",
+      "text": "So what does this equation tell us?",
+      "context": "And that is our equation.",
+      "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+      "accepted": true,
+      "response": {
+        "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+        "prompt_tokens": 279,
+        "generated_tokens": 18,
+        "elapsed_seconds": 1.7580158350001511
+      },
+      "seconds": 1.7580709599997135,
+      "attempts": [
+        {
+          "raw_output": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+          "server_timings": {
+            "cache_n": 234,
+            "prompt_n": 45,
+            "prompt_ms": 1064.134,
+            "prompt_per_token_ms": 23.64742222222222,
+            "prompt_per_second": 42.28790735001419,
+            "predicted_n": 18,
+            "predicted_ms": 687.691,
+            "predicted_per_token_ms": 40.452411764705886,
+            "predicted_per_second": 24.7204049493159
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.7579709600004207,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 279,
+          "max_tokens": 128,
+          "raw_output_tokens": 18,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "rocket-16",
+      "suite": "rocket",
+      "text": "mr, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+      "context": "So what does this equation tell us?",
+      "translation": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+      "accepted": true,
+      "response": {
+        "translation": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+        "prompt_tokens": 407,
+        "generated_tokens": 86,
+        "elapsed_seconds": 7.48227808700085
+      },
+      "seconds": 7.482311170000685,
+      "attempts": [
+        {
+          "raw_output": "mr, 즉 로켓의 질량은 이전보다 이후에 줄어들며, 이 경우의 항은 0보다 작아지게 됩니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같아지고, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+          "server_timings": {
+            "cache_n": 233,
+            "prompt_n": 174,
+            "prompt_ms": 3989.42,
+            "prompt_per_token_ms": 22.92770114942529,
+            "prompt_per_second": 43.61536263416737,
+            "predicted_n": 86,
+            "predicted_ms": 3483.81,
+            "predicted_per_token_ms": 40.986,
+            "predicted_per_second": 24.398575123212805
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 7.482234294999216,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 407,
+          "max_tokens": 128,
+          "raw_output_tokens": 86,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "holdout-linear-0",
+      "suite": "linear_algebra",
+      "text": "So, multiplication by a scalar, it's very easy.",
+      "context": "",
+      "translation": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+      "accepted": true,
+      "response": {
+        "translation": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+        "prompt_tokens": 225,
+        "generated_tokens": 17,
+        "elapsed_seconds": 1.7258830430000671
+      },
+      "seconds": 1.725915167000494,
+      "attempts": [
+        {
+          "raw_output": "그러므로 스칼라에 의해 곱하는 것은 매우 쉽습니다.",
+          "server_timings": {
+            "cache_n": 181,
+            "prompt_n": 44,
+            "prompt_ms": 1090.18,
+            "prompt_per_token_ms": 24.776818181818182,
+            "prompt_per_second": 40.36030747216056,
+            "predicted_n": 17,
+            "predicted_ms": 631.098,
+            "predicted_per_token_ms": 39.443625,
+            "predicted_per_second": 25.35263936821223
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.7258429169996816,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 225,
+          "max_tokens": 128,
+          "raw_output_tokens": 17,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "id": "holdout-linear-1",
+      "suite": "linear_algebra",
+      "text": "Well, dot product as a way of multiplying two vectors to get a number, a scalar.",
+      "context": "",
+      "translation": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+      "accepted": true,
+      "response": {
+        "translation": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+        "prompt_tokens": 232,
+        "generated_tokens": 28,
+        "elapsed_seconds": 1.6208791669996572
+      },
+      "seconds": 1.6209193340000638,
+      "attempts": [
+        {
+          "raw_output": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+          "server_timings": {
+            "cache_n": 208,
+            "prompt_n": 24,
+            "prompt_ms": 553.907,
+            "prompt_per_token_ms": 23.079458333333335,
+            "prompt_per_second": 43.328573208137826,
+            "predicted_n": 28,
+            "predicted_ms": 1056.405,
+            "predicted_per_token_ms": 39.12611111111111,
+            "predicted_per_second": 25.558379598733442
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "event": "translation_attempt",
+          "request_id": "-",
+          "segment_index": null,
+          "elapsed_seconds": 1.6208363339992502,
+          "status": "ok",
+          "attempt": 1,
+          "prompt_tokens": 232,
+          "max_tokens": 128,
+          "raw_output_tokens": 28,
+          "finish_reason": "stop",
+          "rejection_reason": null,
+          "accepted": true
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Saved STT replay only; excludes upload, STT, grouping and subtitles.",
+    "Development lecture and two previously inspected different-lecture sentences.",
+    "One warm pass per model option; not a statistically controlled speed comparison.",
+    "M2M has no preceding context, glossary enforcement or politeness instruction.",
+    "M2M gets the same post-generation checks; no retry or manual output repair.",
+    "Passing heuristic checks does not imply semantic correctness.",
+    "Container memory excludes the separate Qwen server and existing API process.",
+    "Mac ARM64 Docker only; Windows amd64 is untested."
+  ],
+  "warmup": {
+    "translation": "이것은 초기 질량입니다.",
+    "accepted": true,
+    "response": {
+      "translation": "이것은 초기 질량입니다.",
+      "prompt_tokens": 227,
+      "generated_tokens": 9,
+      "elapsed_seconds": 10.675351505000435
+    },
+    "seconds": 10.675472296999942,
+    "attempts": [
+      {
+        "raw_output": "이것은 초기 질량입니다.",
+        "server_timings": {
+          "cache_n": 0,
+          "prompt_n": 227,
+          "prompt_ms": 10011.022,
+          "prompt_per_token_ms": 44.10141850220265,
+          "prompt_per_second": 22.675007606615985,
+          "predicted_n": 9,
+          "predicted_ms": 579.277,
+          "predicted_per_token_ms": 72.409625,
+          "predicted_per_second": 13.810318724893271
+        }
+      }
+    ],
+    "decisions": [
+      {
+        "event": "translation_attempt",
+        "request_id": "-",
+        "segment_index": null,
+        "elapsed_seconds": 10.675266713999918,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 227,
+        "max_tokens": 128,
+        "raw_output_tokens": 9,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    ]
+  },
+  "seconds": 89.3621274590023,
+  "accepted": 19,
+  "memory": {
+    "process_max_rss_kib": 33308,
+    "memory.peak": "45387776",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+  }
+}

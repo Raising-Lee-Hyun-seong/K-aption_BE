@@ -1,0 +1,4 @@
+# 공개 CPU 8 실행 설정. Docker에 최소 8 vCPU를 할당한 환경에서 사용한다.
+# 모델·메모리·STT·검증·GPU 설정은 공통 Compose를 그대로 따른다.
+KAPTION_TRANSLATOR_CPUS=8
+KAPTION_CPU_THREADS=8

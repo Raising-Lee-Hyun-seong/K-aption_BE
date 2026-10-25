@@ -1,0 +1,70 @@
+{
+  "results": [
+    {
+      "id": "8",
+      "text": "And for the mass, we have mr prime equals m0.",
+      "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+      "status": 200,
+      "seconds": 2.304527167,
+      "response": {
+        "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+        "prompt_tokens": 255,
+        "generated_tokens": 16,
+        "elapsed_seconds": 2.296851417999733
+      }
+    },
+    {
+      "id": "10",
+      "text": "And then we go to mr prime equals m of vr.",
+      "context": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+      "status": 200,
+      "seconds": 1.0234152499999998,
+      "response": {
+        "translation": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+        "prompt_tokens": 245,
+        "generated_tokens": 18,
+        "elapsed_seconds": 1.020919834000324
+      }
+    },
+    {
+      "id": "holdout-linear-0",
+      "start": 786,
+      "end": 791,
+      "text": "So, multiplication by a scalar, it's very easy.",
+      "reference_ko": "따라서 스칼라를 곱하는 것은 매우 쉽습니다.",
+      "required_terms": [
+        "스칼라"
+      ],
+      "context": "",
+      "status": 200,
+      "seconds": 1.0398230829999995,
+      "response": {
+        "translation": "그래서 스칼라에 의해 곱하는 것은 매우 쉬습니다.",
+        "prompt_tokens": 225,
+        "generated_tokens": 17,
+        "elapsed_seconds": 1.037683958999878
+      }
+    },
+    {
+      "id": "holdout-linear-1",
+      "start": 970,
+      "end": 981,
+      "text": "Well, dot product as a way of multiplying two vectors to get a number, a scalar.",
+      "reference_ko": "내적은 두 벡터를 곱해서 하나의 수, 즉 스칼라를 얻는 방법입니다.",
+      "required_terms": [
+        "내적",
+        "벡터",
+        "스칼라"
+      ],
+      "context": "",
+      "status": 200,
+      "seconds": 1.6707803749999997,
+      "response": {
+        "translation": "좋아요, 두 벡터를 곱하여 숫자, 스칼라를 얻는 점곱입니다.",
+        "prompt_tokens": 232,
+        "generated_tokens": 28,
+        "elapsed_seconds": 1.668583916999978
+      }
+    }
+  ]
+}

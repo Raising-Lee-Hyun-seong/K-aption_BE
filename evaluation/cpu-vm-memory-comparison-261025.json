@@ -1,0 +1,247 @@
+{
+  "test_date": "2026-10-25",
+  "platform": "Apple Silicon Mac ARM64; physical RAM 16 GiB",
+  "method": "One run per setting, 4096 MiB then 6144 MiB; Docker Desktop stopped/started before each. Same existing containers, images, commands, source hashes, input, CPU and container limits. No image rebuild.",
+  "api": "POST /api/v1/jobs + SSE completion + result + SRT/VTT HTTP downloads; shared STT/translation pipeline; not a direct synchronous /api/v1/transcriptions timing.",
+  "input_provenance": {
+    "input": "/private/tmp/kaption-memory-60s-261025.m4a",
+    "input_sha256": "d88a441fa189c34d46455fa032dde024551e6ae0c21f598b0e3967c89ecab69d",
+    "source_5min_sha256": "e3f54c825fbdfb2b6f6cc486ed5467706601b0cc381dcf72b65df4515f6f08d0",
+    "extraction": "ffmpeg first 60 seconds audio stream copy; official MIT 18.02 source documented in cpu-long-media-provenance-261022.json",
+    "ffprobe": {
+      "filename": "/private/tmp/kaption-memory-60s-261025.m4a",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "60.000998",
+      "size": "616722",
+      "bit_rate": "82228",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "M4A ",
+        "minor_version": "512",
+        "compatible_brands": "M4A isomiso2",
+        "title": "Lecture 01: Dot product",
+        "artist": "Denis Auroux",
+        "album_artist": "MIT OpenCourseWare",
+        "composer": "Denis Auroux",
+        "album": "MIT OCW: 18.02 Multivariable Calculus, Fall 2007",
+        "date": "2007-09-05T21:00:00Z",
+        "encoder": "Lavf61.7.100",
+        "comment": "http://ocw.mit.edu; Creative Commons Attribution-NonCommercial-ShareAlike 3.0; http://ocw.mit.edu/terms",
+        "genre": "MIT Faculty Lectures",
+        "copyright": "http://ocw.mit.edu; Creative Commons Attribution-NonCommercial-ShareAlike 3.0; http://ocw.mit.edu/terms",
+        "episode_id": "000",
+        "media_type": "9"
+      }
+    }
+  },
+  "runtime": {
+    "containers": {
+      "k-aption_be-backend-1": {
+        "id": "b66d7081afd455c347f825c9d1d93978486aeec26ab41892f061a5fdf9d24ae6",
+        "image": "sha256:e7b32f8531e8384aefd7a07ca259a598e90662f62aaa18db6fa6728f924f7cf5",
+        "command": [
+          "uvicorn",
+          "app.main:app",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "8000",
+          "--workers",
+          "1"
+        ],
+        "memory_limit_bytes": 2500000000,
+        "cpu_limit_nanocpus": 4000000000,
+        "restart_policy": {
+          "Name": "unless-stopped",
+          "MaximumRetryCount": 0
+        }
+      },
+      "k-aption_be-translator-1": {
+        "id": "2ef729d1cb378a6e7d32a5ada2f3da57f913d133138d9acae903c311ba57410f",
+        "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+        "command": [
+          "--model",
+          "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+          "--alias",
+          "qwen3-4b-instruct-2507",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "8080",
+          "--device",
+          "none",
+          "--n-gpu-layers",
+          "0",
+          "--no-kv-offload",
+          "--no-op-offload",
+          "--no-repack",
+          "--ctx-size",
+          "2048",
+          "--parallel",
+          "1",
+          "--threads",
+          "4",
+          "--threads-batch",
+          "4",
+          "--batch-size",
+          "256",
+          "--ubatch-size",
+          "128",
+          "--cache-ram",
+          "0",
+          "--no-context-shift",
+          "--jinja"
+        ],
+        "memory_limit_bytes": 4000000000,
+        "cpu_limit_nanocpus": 4000000000,
+        "restart_policy": {
+          "Name": "unless-stopped",
+          "MaximumRetryCount": 0
+        }
+      }
+    },
+    "source_sha256": {
+      "app/main.py": "ea3a968ac4bc1f43fd8e32d770c81aee07178493cf4f1657d3692f6bb354e7d3",
+      "app/services/pipeline.py": "f1dccbadca0d21491de1042d2d4880f1448166b568c96e390a07762deab93685",
+      "app/services/translation.py": "f9b4586454b0ee1e140c9add4f1ffe1c2f9209efff6c63a4a5de603f80c3275c",
+      "app/services/translation_qwen.py": "076f834ec452d168da23105ae3141ac1bb5352d6152166c6c537a354098b3e82",
+      "app/services/translation_validation.py": "bcd8f9b9b5ba3c7daa1a7447c775062a8125063d67fad5521e6dd1eb0efaa367",
+      "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+      "transcribe.py": "4f467be1e9ec5c78744110ea9f296aa91940f1b54ea77135a37131718243fe3a",
+      "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+      "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+    },
+    "same_after_memory_change": true,
+    "model": "Qwen3-4B-Instruct-2507 Q4_K_M GGUF CPU; existing running image; pending math changes not applied"
+  },
+  "setting_change": {
+    "before_memory_mib": 4096,
+    "after_memory_mib": 6144,
+    "only_memory_numeric_value_changed": true
+  },
+  "cases": {
+    "4": {
+      "report": "cpu-vm-4gb-60s-261025.json",
+      "report_sha256": "f5054a58d88d82e272c9a15d40521a219e2f166335f99c2a1ef34d4bbe6011cb",
+      "configured_memory_mib": 4096,
+      "vm": {
+        "memory_bytes": 4106604544,
+        "cpus": 8
+      },
+      "elapsed_seconds": 33.207661458,
+      "job_elapsed_seconds": 32.416223,
+      "stage_seconds": {
+        "stt_model_load": 0.934,
+        "stt_inference": 5.622,
+        "stt": 6.721,
+        "translation_batch": 25.59,
+        "job_processing": 32.313
+      },
+      "attempts": 7,
+      "generated_tokens": 193,
+      "sampled_combined_working_set_peak_bytes": 3518091264,
+      "sample_counter_deltas": {
+        "k-aption_be-backend-1": {
+          "anon": 822874112,
+          "file": -42803200,
+          "kernel": null,
+          "pgmajfault": 349,
+          "workingset_refault_file": null,
+          "pgscan": 242544,
+          "pgsteal": 214732,
+          "pswpin": null,
+          "pswpout": null
+        },
+        "k-aption_be-translator-1": {
+          "anon": 12726272,
+          "file": -54808576,
+          "kernel": null,
+          "pgmajfault": 4297,
+          "workingset_refault_file": null,
+          "pgscan": 5861973,
+          "pgsteal": 1314671,
+          "pswpin": null,
+          "pswpout": null
+        }
+      },
+      "pipeline_succeeded": true,
+      "sampler_complete": true,
+      "oom_or_restart": false,
+      "initial_health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": false
+      }
+    },
+    "6": {
+      "report": "cpu-vm-6gb-60s-261025.json",
+      "report_sha256": "035d89865103f1434fb8d7a65ec10bd8dff7811a9318bc7a941bb6c7e08d90e9",
+      "configured_memory_mib": 6144,
+      "vm": {
+        "memory_bytes": 6210043904,
+        "cpus": 8
+      },
+      "elapsed_seconds": 32.214284125,
+      "job_elapsed_seconds": 31.521767,
+      "stage_seconds": {
+        "stt_model_load": 1.206,
+        "stt_inference": 5.912,
+        "stt": 7.284,
+        "translation_batch": 24.113,
+        "job_processing": 31.402
+      },
+      "attempts": 7,
+      "generated_tokens": 193,
+      "sampled_combined_working_set_peak_bytes": 4037324800,
+      "sample_counter_deltas": {
+        "k-aption_be-backend-1": {
+          "anon": 822902784,
+          "file": 686817280,
+          "kernel": null,
+          "pgmajfault": 117,
+          "workingset_refault_file": null,
+          "pgscan": 0,
+          "pgsteal": 0,
+          "pswpin": null,
+          "pswpout": null
+        },
+        "k-aption_be-translator-1": {
+          "anon": 12894208,
+          "file": 0,
+          "kernel": null,
+          "pgmajfault": 0,
+          "workingset_refault_file": null,
+          "pgscan": 0,
+          "pgsteal": 0,
+          "pswpin": null,
+          "pswpout": null
+        }
+      },
+      "pipeline_succeeded": true,
+      "sampler_complete": true,
+      "oom_or_restart": false,
+      "initial_health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": false
+      }
+    }
+  },
+  "full_results_identical": true,
+  "observed_elapsed_reduction_seconds": 0.993377332999998,
+  "observed_elapsed_reduction_percent": 2.9914100824485645,
+  "limits": [
+    "Single trial per condition; order and macOS file cache/host load are not controlled; small time difference may be run-to-run variation.",
+    "Job/SSE timing includes approximately one-second polling granularity; server stage times are also recorded.",
+    "Translation model startup occurs before API readiness and is excluded. STT model load is included.",
+    "Major page faults and reclaim counters are per-container deltas during sampling; faults alone do not identify a particular file or exact I/O time.",
+    "Container working sets exclude VM/host overhead. Host memory/swap and RAM-16GB budget compliance were not measured.",
+    "Swap counters unavailable are null, not zero. No Windows/x86_64, user rocket video or full five-minute run in this test.",
+    "Pipeline success indicates all translations returned and downloads succeeded, not semantic translation accuracy."
+  ]
+}

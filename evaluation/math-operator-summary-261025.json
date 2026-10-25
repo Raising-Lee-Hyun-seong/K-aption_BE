@@ -1,0 +1,100 @@
+{
+  "evaluated_on": "2026-10-25",
+  "runtime_cpu": 8,
+  "common_compose_default_cpu": 4,
+  "cpu8_profile": "docker/cpu8.defaults",
+  "platform": "Mac ARM64 Docker",
+  "windows_amd64_tested": false,
+  "model": "Qwen3-4B-Instruct-2507 Q4_K_M GGUF",
+  "gpu_used": false,
+  "new_dependencies": false,
+  "unit_tests_passed": 80,
+  "offline_cases": 119,
+  "offline_old_final_accepted": 118,
+  "offline_new_first_accepted": 119,
+  "cpu_replay": {
+    "4": {
+      "seconds": [
+        122.15640072499627,
+        96.89634366600512
+      ],
+      "mean_seconds": 109.5263721955007,
+      "failed": [
+        0,
+        0
+      ]
+    },
+    "8": {
+      "seconds": [
+        117.51779238899871,
+        81.23469445500268
+      ],
+      "mean_seconds": 99.3762434220007,
+      "failed": [
+        0,
+        0
+      ]
+    }
+  },
+  "cpu_replay_mean_reduction_percent": 9.267292041210295,
+  "api": [
+    {
+      "cpu": 4,
+      "client_seconds": 133.9752345,
+      "stt_seconds": 41.923,
+      "translation_seconds": 91.894,
+      "http_log_seconds": 133.97,
+      "attempts": 17,
+      "segments": 17,
+      "failed": 0
+    },
+    {
+      "cpu": 8,
+      "client_seconds": 110.26378129100002,
+      "stt_seconds": 36.386,
+      "translation_seconds": 73.742,
+      "http_log_seconds": 110.257,
+      "attempts": 17,
+      "segments": 17,
+      "failed": 0
+    }
+  ],
+  "api_single_pass_reduction_percent": 17.698385300456398,
+  "sse_export_smoke": {
+    "client_total_seconds": 16.111229334,
+    "segments": 2,
+    "pipeline_succeeded": true,
+    "formats": [
+      "srt",
+      "vtt"
+    ]
+  },
+  "full_subtitle_origin": "Local production render_subtitles on full actual API result; the full-video subtitle files were not fetched through Jobs API. Short smoke subtitle files were downloaded from Jobs API.",
+  "final_source_sha256": {
+    "app/services/translation_normalization.py": "f650924fb3f817e684b482da23c1e25ebabcdc63bd423fb9d3153da9507daa68",
+    "app/services/translation_qwen.py": "0286013dfee45cd2dad48afdc770f6513cedf033a6ed975c8206de0b7fc2afce",
+    "tests/test_translation_normalization.py": "7dface812f2c1ed6ce97eefbe364966c8786a070f324afc4a9705eaa88f488bd",
+    "tests/test_http_translation.py": "0c7d9c60705c0dbe29dc52ce2e545c0fbbe271927f15b3253fc66993c381b3d3",
+    "docker/cpu8.defaults": "55401641b18924780275156a2077e53c97663584a86a0b6a27edd543cf43e773",
+    "README.md": "a5a84d7cc1f2859269d2a56d7b2d29a255d100a68b31d067e55035592f8844e9",
+    "DEVELOPMENT.md": "48be83c7c96154f61926524cb560bf0a470bed34e1b91c4f9e82de8333bcbc52"
+  },
+  "artifact_sha256": {
+    "math-operator-cpu-261025.json": "764e05ce14adcb661b7e91f3fe5d9d644ef1d94e0f4d199a746b31c27b3527e3",
+    "math-operator-api-261025.json": "6ba4cfc2740451ddc7c72df9b4ae465745edf88ed144799baa3685ef11f7f1c7",
+    "math-operator-job-261025.json": "ce954258da2f8e8e042cb7bee5ec8fb6e70bc28f1f29a8789305b96bbb5531eb",
+    "math-operator-full-261025.srt": "2aa8ccf61b1ec03e1e626b0d8962df276892847b027888ba1d05b459f4930f0d",
+    "math-operator-job-261025.srt": "50d0ce5d582340f0eb06bb6e41cb58781c3fe2bd4c1a61ad139705824da0cecc",
+    "math-operator-full-261025.vtt": "278e395090ba6815f8c0ff70aba0ec852235c6c091b336ef25725355aeff96e6",
+    "math-operator-job-261025.vtt": "ffd2e5d8541a4fd50509d265dce4e58634bd47df4d68f8c01a4836000a959583",
+    "math-operator-offline-261025.json": "2f6bd5350ad2edfc54d33867764222b0a8001b6c2b3321cde060f255f3f30154",
+    "math-operator-sources-261025.json": "79063a0f5e483a4e6b20edca89f2a05b434f1a47c24cbb94c0170824ea01db97"
+  },
+  "limits": [
+    "No universal zero-failure or semantic accuracy guarantee.",
+    "Two replay passes per CPU; substantial time variation.",
+    "Full video API one pass per CPU, fixed 4 then 8 order; STT also varied despite unchanged settings.",
+    "Prototype replay timings precede conservative guard hardening; normalized output equivalence verified. Final API uses hardened code.",
+    "Windows amd64, 5-minute clip, long concurrent load and full host RAM budget unverified."
+  ]
+}

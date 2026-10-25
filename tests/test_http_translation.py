@@ -72,7 +72,7 @@ class HttpTranslationTests(unittest.TestCase):
         :return: None.
         """
         service, requests = self.service(['로켓의 질량은 일정합니다.'])
-        result = service.translate('The rocket mass is constant.', 'Earlier English.', 128)
+        result = service.translate('This rocket mass is constant.', 'Earlier English.', 128)
         self.assertEqual(result['prompt_tokens'], 100)
         self.assertEqual(result['generated_tokens'], 17)
         apply = requests[0][1]['messages']
@@ -85,6 +85,58 @@ class HttpTranslationTests(unittest.TestCase):
         self.assertFalse(chat['cache_prompt'])
         self.assertFalse(requests[1][1]['add_special'])
         self.assertTrue(requests[1][1]['parse_special'])
+
+    def test_independent_source_omits_context_and_math_is_restored_before_validation(self):
+        """독립 문장의 문맥은 보내지 않고 HTTP 생성 표식은 원문 수식으로 복원한다.
+
+        :return: None.
+        """
+        service, requests = self.service(['이제 [MATH_A]입니다.'])
+        result = service.translate('mR prime equals m of vR.', 'Private earlier context.', 128)
+        self.assertEqual(result['translation'], '이제 mR′ = m(vR)입니다.')
+        chat = requests[-1][1]
+        self.assertNotIn('Private earlier context.', json.dumps(chat))
+        self.assertIn('[MATH_A]', chat['messages'][1]['content'])
+        self.assertNotIn('[MATH_A]', result['translation'])
+
+    def test_missing_math_marker_has_bounded_retry(self):
+        """수식 표식이 사라진 두 응답은 한 번만 재시도한 뒤 기존 실패 계약으로 전달한다.
+
+        :return: None.
+        """
+        service, requests = self.service(['함수입니다.', '함수입니다.'])
+        with self.assertRaises(ValueError):
+            service.translate('m of vR.', '', 128)
+        self.assertEqual(sum(path == '/v1/chat/completions' for path, _ in requests), 2)
+
+    def test_recorded_math_operator_output_returns_without_second_generation(self):
+        """실제 8 CPU 실패 출력은 연산어만 정리하고 기존 검증 후 첫 생성으로 반환한다.
+
+        :return: None.
+        """
+        source = ('And we ultimately want this, so this is vr of t, of course, '
+                  'and then we get v0 plus u ln mr over 2m0.')
+        raw = ('이는 t에 대한 vr의 값이며, 그 결과는 '
+               'v0 plus u times ln(mR / 2m0)입니다.')
+        service, requests = self.service([raw])
+        result = service.translate(source, 'Earlier English.', 128)
+        self.assertEqual(result['translation'], raw.replace('plus', '+').replace('times', '×'))
+        self.assertEqual(sum(path == '/v1/chat/completions' for path, _ in requests), 1)
+
+    def test_normalized_bad_numbers_and_wrong_operators_keep_bounded_failure(self):
+        """정규화로 부정확한 숫자·원문과 다른 연산·반말을 수락하지 않고 두 번으로 제한한다.
+
+        :return: None.
+        """
+        source = 'We get v0 plus u ln mR over 2m0.'
+        for raw in ('이 값은 v0 plus u times ln(mR / 3m0)입니다.',
+                    '이 값은 v0 minus u times ln(mR / 2m0)입니다.',
+                    '이 값은 v0 plus u times ln(mR / 2m0)이다.'):
+            with self.subTest(raw=raw):
+                service, requests = self.service([raw, raw])
+                with self.assertRaises(ValueError):
+                    service.translate(source, '', 128)
+                self.assertEqual(sum(path == '/v1/chat/completions' for path, _ in requests), 2)
 
     def test_invalid_output_retries_without_context(self):
         """반말은 재시도하고 이전 문맥을 제거한 존댓말 결과만 반환한다.

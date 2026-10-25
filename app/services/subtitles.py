@@ -6,6 +6,11 @@ from app.services.translation_validation import protected_symbols
 
 SENTENCE_END = re.compile(r"[.!?][\"'’”\)\]]*$")
 MAX_GAP_SECONDS = 2.0
+INCOMPLETE_MATH_END = re.compile(
+    r"\b(?:with|equals|plus|minus|over|of|from|to|is an?|(?:our|the|its) initial|"
+    r"(?:we|you|they|I)(?: (?:can|will|would|should|must))?)\s*[,;:]*$",
+    re.IGNORECASE,
+)
 
 
 def _math_link_reason(left: str, right: str) -> Optional[str]:
@@ -83,6 +88,45 @@ def merge_math_groups(groups: list[dict], max_duration: float = 18.0,
                 previous['text'] += ' ' + current['text']
                 previous['source_indices'] += current['source_indices']
                 previous['merge_reasons'] = [*previous.get('merge_reasons', []), reason]
+                continue
+        merged.append(current)
+    return merged
+
+
+def merge_incomplete_math_groups(groups: list[dict], max_duration: float = 36.0,
+                                 max_chars: int = 350) -> list[dict]:
+    """상한에서 끊긴 명확한 미완성 수학 발언을 다음 구간과 제한 안에서 연결한다.
+
+    :param groups: start·end·text·source_indices를 가진 기존 문장 묶음 목록.
+    :param max_duration: 미완성 발언을 이어 붙일 때의 최대 시간(초). 기본 36초.
+    :param max_chars: 공백을 포함한 최대 원문 길이. 기본 350자.
+    :return: 원문·시각·인덱스를 보존하고 결합 사유를 담은 새 묶음 목록.
+    :raises ValueError: 시간·문자 상한이 양수가 아닐 때.
+
+    수식 기호와 명확한 미완성 어미가 함께 있는 경우만 연결한다. 문장 종결,
+    다음 질문, 2초 초과 무음과 상한을 넘어서는 결합은 하지 않는다.
+    기존 긴 단일 묶음은 자르지 않으며 수식을 풀거나 원문을 보정하지 않는다.
+    """
+    if max_duration <= 0 or max_chars <= 0:
+        raise ValueError('Continuation limits must be positive')
+    merged = []
+    for group in groups:
+        current = {**group, 'source_indices': list(group['source_indices'])}
+        if merged:
+            previous = merged[-1]
+            left, right = previous['text'], current['text']
+            if (not SENTENCE_END.search(left)
+                    and not re.search(r'[?!]["\'’”\)\]]*$', right)
+                    and INCOMPLETE_MATH_END.search(left)
+                    and (protected_symbols(left) or protected_symbols(right))
+                    and current['start'] - previous['end'] <= MAX_GAP_SECONDS
+                    and current['end'] - previous['start'] <= max_duration
+                    and len(left) + 1 + len(right) <= max_chars):
+                previous['end'] = current['end']
+                previous['text'] = left + ' ' + right
+                previous['source_indices'] += current['source_indices']
+                previous['merge_reasons'] = [*previous.get('merge_reasons', []),
+                                             'incomplete_math_continuation']
                 continue
         merged.append(current)
     return merged

@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from app.services.translation_validation import (
-    generation_problem, preservation_problem, protected_symbols,
+    generation_problem, preservation_problem, protected_symbols, spoken_math_relations,
 )
 from tests import test_pipeline
 from app.services.translation import TranslationService
@@ -31,6 +31,57 @@ class PreservationTests(unittest.TestCase):
         self.assertEqual(preservation_problem('u prime', "don't use u입니다."),
                          'missing_math_prime')
         self.assertIsNone(preservation_problem('u prime', "u'입니다."))
+
+    def test_division_operands_order_and_common_renderings_are_preserved(self):
+        """분수 항의 손실·역전을 거부하고 슬래시·LaTeX·분의·나누기 표기는 허용한다.
+
+        :return: None.
+        """
+        source = 'v0 plus u ln mr over 2m0.'
+        for output in ('v0 + u ln(mR / (2 m0))입니다.',
+                       r'v0 + u ln \frac{m_R}{2m_0}입니다.',
+                       'v0 + u ln(2m0분의 mR)입니다.',
+                       'v0 + u ln(mR을 2m0로 나눈 값)입니다.',
+                       'v0 + u ln(2 m0으로 나눈 mR)입니다.'):
+            with self.subTest(output=output):
+                self.assertIsNone(preservation_problem(source, output))
+        for output in ('v0 + u ln mR이며 2m0에 대해 계산합니다.',
+                       'v0 + u ln(2m0/mR)입니다.'):
+            self.assertEqual(preservation_problem(source, output), 'missing_math_division')
+        self.assertIsNone(preservation_problem('d m r over m_r', 'dmR을 mR로 나눕니다.'))
+        self.assertIsNone(preservation_problem('u1 over m', 'm으로 나눈 u1입니다.'))
+        self.assertIsNone(preservation_problem('u1 over m', 'm으로 나누어진 u1입니다.'))
+        self.assertEqual(preservation_problem('u1 over m', 'u1으로 나눈 m입니다.'),
+                         'missing_math_division')
+        self.assertIsNone(preservation_problem('mR over 2m0', 'mR/(2.0m0)입니다.'))
+        self.assertIsNone(preservation_problem('.5 over mR', '0.50/mR입니다.'))
+        self.assertIsNone(preservation_problem('1,000 over mR', '1000/mR입니다.'))
+        self.assertIsNone(preservation_problem('- 1 over mR', '-1/mR입니다.'))
+
+    def test_function_values_cannot_be_replaced_by_multiplication(self):
+        """of로 말한 함수의 인수를 보존하고 기호만 남긴 곱셈 오역은 거부한다.
+
+        :return: None.
+        """
+        source = 'm of vr'
+        for output in ('m(vR)입니다.', 'vR의 m입니다.', 'm은 vR의 함수입니다.'):
+            self.assertIsNone(preservation_problem(source, output))
+        self.assertEqual(preservation_problem(source, 'm에 vr를 곱한 값입니다.'),
+                         'missing_math_function')
+        self.assertEqual(preservation_problem(source, 'vR(m)입니다.'), 'missing_math_function')
+        self.assertEqual(spoken_math_relations('The mass of the rocket went over 2 m.'), [])
+        self.assertEqual(spoken_math_relations('Two of them are here.'), [])
+
+    def test_unknown_logarithm_numerator_is_not_invented(self):
+        """분자가 불명확한 로그 설명은 나눗셈만 요구하며 새로운 분자는 만들어내지 않는다.
+
+        :return: None.
+        """
+        source = 'So ln, then we can do this here over 2m0.'
+        self.assertEqual(spoken_math_relations(source), [('over', '', '2m0')])
+        self.assertEqual(preservation_problem(source, 'ln은 2m0에 대해 계산합니다.'),
+                         'missing_math_division')
+        self.assertIsNone(preservation_problem(source, 'ln에서 2m0로 나눕니다.'))
 
     def test_symbols_match_whole_identifiers_with_korean_particles(self):
         """수식 식별자는 한국어 조사와 붙어도 인식하고 다른 식별자의 일부와 혼동하지 않는다.

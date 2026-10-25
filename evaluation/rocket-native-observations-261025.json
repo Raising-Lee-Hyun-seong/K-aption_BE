@@ -1,0 +1,3783 @@
+{
+  "metadata": {
+    "date": "2026-10-25",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu_count": 10,
+    "physical_memory_bytes": 17179869184,
+    "media": "/Users/macbookair/Desktop/K-aption_BE/MIT8_01F16_W06PS01-2_360p.mp4",
+    "media_sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+    "media_bytes": 21729088,
+    "model_manifest": {
+      "schema_version": 1,
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+      "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+      "quantization": "Q4_K_M",
+      "release_url": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9",
+      "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+      "bytes": 2497281120,
+      "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+      "parts": [
+        {
+          "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+          "bytes": 2497281120,
+          "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597"
+        }
+      ]
+    },
+    "model_verified": true,
+    "runtime_source_sha256": {
+      "app/main.py": "ea3a968ac4bc1f43fd8e32d770c81aee07178493cf4f1657d3692f6bb354e7d3",
+      "app/services/pipeline.py": "0c102b8df0a80baa15fdfbc8d09cc52de38dbe1d4a8e47b515acf0e23a04add1",
+      "app/services/subtitles.py": "869db07be8fb0d4a08358949746f68c095d365f4e6400b8341f4e7339eb32079",
+      "app/services/translation.py": "f9b4586454b0ee1e140c9add4f1ffe1c2f9209efff6c63a4a5de603f80c3275c",
+      "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+      "app/services/translation_qwen.py": "cbdedfb61ec220dc05667a8f3086cd14daab45c42df94f98d4c768edbb402372",
+      "app/services/translation_validation.py": "4e4daf57bd338bff592e9d4b8e507b847dc77cd3518f5e300bcf9d261108981b",
+      "transcribe.py": "4f467be1e9ec5c78744110ea9f296aa91940f1b54ea77135a37131718243fe3a",
+      "app/services/stt_features.py": "303723aa1eabfe8ac56f4419a32fd34cec3422e014e482820837234b0b8ce0f8",
+      "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+      "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+    },
+    "native_binary": "/private/tmp/kaption-llama-cpu-build/bin/llama-server",
+    "llama_source_revision": "339f3242c761f16c27e5ffcde1d35dcc31933a55",
+    "gpu_build_flags": {
+      "GGML_METAL": false,
+      "GGML_CUDA": false,
+      "GGML_VULKAN": false
+    },
+    "runtime": "native CPU, Docker unavailable; not a Docker 6GB run",
+    "runtime_flags": {
+      "threads": 4,
+      "threads_batch": 4,
+      "ctx_size": 2048,
+      "parallel": 1,
+      "batch_size": 256,
+      "ubatch_size": 128,
+      "gpu_layers": 0,
+      "device": "none",
+      "kv_offload": false,
+      "op_offload": false,
+      "repack": false,
+      "cache_ram": 0,
+      "prompt_cache": true
+    },
+    "python_version": "3.9.6 (default, Nov 11 2024, 03:15:38) \n[Clang 16.0.0 (clang-1600.0.26.6)]",
+    "package_versions": {
+      "faster-whisper": "1.2.1",
+      "ctranslate2": "4.8.2",
+      "numpy": "1.26.4",
+      "httpx": "0.28.1",
+      "uvicorn": "0.39.0",
+      "fastapi": "0.128.8"
+    }
+  },
+  "api_report": "rocket-native-full-261025.json",
+  "api_report_sha256": "61540f7c2d1cde883c61a408aebd9fd17843b0b5146e51736ccdde55e814265a",
+  "summary": {
+    "external_elapsed_seconds": 120.4062825,
+    "job_elapsed_seconds": 120.189395,
+    "stage_seconds": {
+      "stt_decode": 0.170214541,
+      "stt_model_load": 0.7831468330000035,
+      "stt_features": 0.02761708399999918,
+      "stt_inference": 20.573719417,
+      "stt": 21.644842916,
+      "sentence_grouping": 0.0014998750000003724,
+      "translation_batch": 98.318322209,
+      "job_processing": 119.97176945800001
+    },
+    "raw_stt_segments": 45,
+    "grouped_segments": 26,
+    "translated_segments": 23,
+    "failed_segment_indices": [
+      16,
+      18,
+      21
+    ],
+    "attempt_count": 30,
+    "retry_count": 4,
+    "retry_attempt_seconds": 15.615220457999996,
+    "rejection_counts": {
+      "accepted": 23,
+      "informal_speech": 1,
+      "missing_math_function": 2,
+      "untranslated_math_operator": 3,
+      "missing_math_division": 1
+    },
+    "prompt_tokens": 9872,
+    "generated_tokens": 727,
+    "server_prefill_seconds": 69.148815,
+    "server_generation_seconds": 28.971937,
+    "server_cached_tokens": 6297,
+    "server_uncached_tokens": 3575,
+    "server_timing_count": 30,
+    "stt_caption_comparison": {
+      "reference_words": 369,
+      "hypothesis_words": 348,
+      "substitutions": 30,
+      "deletions": 24,
+      "insertions": 3,
+      "word_errors": 57,
+      "word_error_rate": 0.15447154471544716,
+      "sequence_match_ratio": 0.8842398884239888,
+      "differences": [
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            2,
+            3
+          ],
+          "stt_word_range": [
+            2,
+            3
+          ],
+          "reference": "arrived",
+          "stt": "derived"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            16,
+            18
+          ],
+          "stt_word_range": [
+            16,
+            18
+          ],
+          "reference": "rocket sled",
+          "stt": "rocket's lead"
+        },
+        {
+          "operation": "delete",
+          "reference_word_range": [
+            47,
+            48
+          ],
+          "stt_word_range": [
+            47,
+            47
+          ],
+          "reference": "of",
+          "stt": ""
+        },
+        {
+          "operation": "delete",
+          "reference_word_range": [
+            65,
+            66
+          ],
+          "stt_word_range": [
+            64,
+            64
+          ],
+          "reference": "divide",
+          "stt": ""
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            74,
+            76
+          ],
+          "stt_word_range": [
+            72,
+            73
+          ],
+          "reference": "we are",
+          "stt": "we're"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            78,
+            83
+          ],
+          "stt_word_range": [
+            75,
+            77
+          ],
+          "reference": "m r d v r",
+          "stt": "mr dvr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            84,
+            88
+          ],
+          "stt_word_range": [
+            78,
+            79
+          ],
+          "reference": "d m r u",
+          "stt": "dmru"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            103,
+            106
+          ],
+          "stt_word_range": [
+            94,
+            95
+          ],
+          "reference": "d v r",
+          "stt": "dvr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            120,
+            123
+          ],
+          "stt_word_range": [
+            109,
+            110
+          ],
+          "reference": "d m r",
+          "stt": "dmr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            124,
+            126
+          ],
+          "stt_word_range": [
+            111,
+            112
+          ],
+          "reference": "m r",
+          "stt": "mr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            157,
+            159
+          ],
+          "stt_word_range": [
+            143,
+            144
+          ],
+          "reference": "v r",
+          "stt": "vr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            169,
+            171
+          ],
+          "stt_word_range": [
+            154,
+            155
+          ],
+          "reference": "v r",
+          "stt": "vr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            180,
+            181
+          ],
+          "stt_word_range": [
+            164,
+            166
+          ],
+          "reference": "2vr",
+          "stt": "2 vr"
+        },
+        {
+          "operation": "delete",
+          "reference_word_range": [
+            182,
+            185
+          ],
+          "stt_word_range": [
+            167,
+            167
+          ],
+          "reference": "of equal vr",
+          "stt": ""
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            193,
+            195
+          ],
+          "stt_word_range": [
+            175,
+            176
+          ],
+          "reference": "m r",
+          "stt": "mr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            203,
+            204
+          ],
+          "stt_word_range": [
+            184,
+            186
+          ],
+          "reference": "2m0",
+          "stt": "2 m0"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            220,
+            221
+          ],
+          "stt_word_range": [
+            202,
+            204
+          ],
+          "reference": "2m0",
+          "stt": "2 m0"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            232,
+            234
+          ],
+          "stt_word_range": [
+            215,
+            216
+          ],
+          "reference": "m r",
+          "stt": "mr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            253,
+            255
+          ],
+          "stt_word_range": [
+            235,
+            236
+          ],
+          "reference": "u 1",
+          "stt": "u1"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            260,
+            261
+          ],
+          "stt_word_range": [
+            241,
+            243
+          ],
+          "reference": "lm",
+          "stt": "an ln"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            262,
+            263
+          ],
+          "stt_word_range": [
+            244,
+            245
+          ],
+          "reference": "lm",
+          "stt": "ln"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            272,
+            273
+          ],
+          "stt_word_range": [
+            254,
+            256
+          ],
+          "reference": "2m0",
+          "stt": "2 m0"
+        },
+        {
+          "operation": "delete",
+          "reference_word_range": [
+            274,
+            275
+          ],
+          "stt_word_range": [
+            257,
+            257
+          ],
+          "reference": "well",
+          "stt": ""
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            282,
+            284
+          ],
+          "stt_word_range": [
+            264,
+            266
+          ],
+          "reference": "the r",
+          "stt": "a vr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            295,
+            299
+          ],
+          "stt_word_range": [
+            277,
+            279
+          ],
+          "reference": "l n m r",
+          "stt": "ln mr"
+        },
+        {
+          "operation": "replace",
+          "reference_word_range": [
+            314,
+            316
+          ],
+          "stt_word_range": [
+            294,
+            295
+          ],
+          "reference": "m r",
+          "stt": "mr"
+        }
+      ],
+      "official_caption_uncertainties": [
+        {
+          "source_cue_indices": [
+            0
+          ],
+          "text": "arrived",
+          "note": "STT는 derived로 인식한다. 공식 자막의 오기 가능성이 있으나 음성 재판정 없이 그대로 보존한다."
+        },
+        {
+          "source_cue_indices": [
+            19,
+            20
+          ],
+          "text": "2vr prime of equal vr of t",
+          "note": "숫자 2 또는 전치사 to와 변수 표기가 불명확하다. 정답 수식으로 사용하지 않는다."
+        },
+        {
+          "source_cue_indices": [
+            25
+          ],
+          "text": "m of vr",
+          "note": "의도한 함수 인자가 불명확하다. m(t) 등으로 임의 보정하지 않는다."
+        },
+        {
+          "source_cue_indices": [
+            28
+          ],
+          "text": "lm",
+          "note": "문맥상 ln m일 가능성이 있지만 자막의 표기를 임의 보정하지 않는다."
+        },
+        {
+          "source_cue_indices": [
+            31
+          ],
+          "text": "the r of t",
+          "note": "v_r(t)일 가능성이 있으나 자막만으로 확정하지 않는다."
+        }
+      ],
+      "interpretation": "공식 자막 대비 표기 차이의 대리지표이며 음성 인식 정확도가 아니다. 공식 자막의 오기와 수식 띄어쓰기 차이도 오류 수에 포함된다."
+    }
+  },
+  "observations": [
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "stt_decode",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 0.170214541,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "stt_model_load",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 0.7831468330000035,
+        "status": "ok",
+        "model": "small"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "stt_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 1.6249999958972694e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "stt_features",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 0.02761708399999918,
+        "status": "ok",
+        "audio_seconds": 200.0,
+        "block_frames": 3000,
+        "feature_frames": 20001
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "stt_inference",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 20.573719417,
+        "status": "ok",
+        "audio_seconds": 212.5866875,
+        "segment_count": 45
+      }
+    },
+    {
+      "kind": "stt_result",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "result": {
+        "language": "en",
+        "language_probability": 1,
+        "segments": [
+          {
+            "start": 3.6,
+            "end": 7.28,
+            "text": "We just derived this relation here."
+          },
+          {
+            "start": 7.28,
+            "end": 10.08,
+            "text": "The relation between the differential of the speed of"
+          },
+          {
+            "start": 10.08,
+            "end": 13.24,
+            "text": "the rocket's lead and the differential of the mass of"
+          },
+          {
+            "start": 13.24,
+            "end": 14.44,
+            "text": "the rocket."
+          },
+          {
+            "start": 14.44,
+            "end": 17.76,
+            "text": "And we want to ultimately get the speed of the rocket."
+          },
+          {
+            "start": 17.76,
+            "end": 21.64,
+            "text": "So we have to apply a technique called separation"
+          },
+          {
+            "start": 21.64,
+            "end": 23.0,
+            "text": "variables."
+          },
+          {
+            "start": 23.0,
+            "end": 25.96,
+            "text": "And then we want to integrate."
+          },
+          {
+            "start": 25.96,
+            "end": 29.8,
+            "text": "What we're going to do is, first, we're going to"
+          },
+          {
+            "start": 29.8,
+            "end": 33.32,
+            "text": "multiply by dt, so that falls away."
+          },
+          {
+            "start": 33.32,
+            "end": 42.32,
+            "text": "And we're left with mR dvR equals dmRu."
+          },
+          {
+            "start": 42.32,
+            "end": 47.0,
+            "text": "And we're going to shuffle the m onto the other side."
+          },
+          {
+            "start": 47.0,
+            "end": 51.16,
+            "text": "And we're left with dvR equals u is a constant."
+          },
+          {
+            "start": 51.16,
+            "end": 53.24,
+            "text": "So that goes up front."
+          },
+          {
+            "start": 53.24,
+            "end": 58.56,
+            "text": "And then we have dmR over mR."
+          },
+          {
+            "start": 58.56,
+            "end": 61.68,
+            "text": "That's an equation that we can integrate now."
+          },
+          {
+            "start": 61.68,
+            "end": 65.76,
+            "text": "And we can do that."
+          },
+          {
+            "start": 65.76,
+            "end": 69.2,
+            "text": "And the tricky bit is that we need to take care of the"
+          },
+          {
+            "start": 69.2,
+            "end": 70.96,
+            "text": "integration limits here."
+          },
+          {
+            "start": 70.96,
+            "end": 76.4,
+            "text": "We have vR, and actually these now are all primes."
+          },
+          {
+            "start": 76.4,
+            "end": 80.84,
+            "text": "So we have vR going from v0."
+          },
+          {
+            "start": 80.84,
+            "end": 83.48,
+            "text": "That is our initial condition here."
+          },
+          {
+            "start": 83.48,
+            "end": 94.12,
+            "text": "2 vR prime of t."
+          },
+          {
+            "start": 94.12,
+            "end": 99.32,
+            "text": "And for the mass, we have mR prime equals m0."
+          },
+          {
+            "start": 99.32,
+            "end": 100.8,
+            "text": "Actually, not quite m0."
+          },
+          {
+            "start": 100.8,
+            "end": 107.76,
+            "text": "It's 2 m0, because the initial mass of this is the dry mass"
+          },
+          {
+            "start": 107.76,
+            "end": 108.68,
+            "text": "and the fuel mass."
+          },
+          {
+            "start": 108.68,
+            "end": 111.6,
+            "text": "So that's 2 m0."
+          },
+          {
+            "start": 111.6,
+            "end": 116.4,
+            "text": "So this is the initial mass."
+          },
+          {
+            "start": 116.4,
+            "end": 124.92,
+            "text": "And then we go to mR prime equals m of vR."
+          },
+          {
+            "start": 124.92,
+            "end": 127.4,
+            "text": "All right, so let's do that."
+          },
+          {
+            "start": 127.4,
+            "end": 136.96,
+            "text": "We're going to get vR minus v0 equals u1 over m."
+          },
+          {
+            "start": 136.96,
+            "end": 139.56,
+            "text": "Integrated gives us an ln."
+          },
+          {
+            "start": 139.56,
+            "end": 141.32,
+            "text": "So ln."
+          },
+          {
+            "start": 141.32,
+            "end": 152.81,
+            "text": "And then we can immediately do this here over 2 m0."
+          },
+          {
+            "start": 152.81,
+            "end": 156.89,
+            "text": "And we ultimately want this."
+          },
+          {
+            "start": 156.89,
+            "end": 159.01,
+            "text": "So this is a vR of t, of course."
+          },
+          {
+            "start": 159.01,
+            "end": 171.65,
+            "text": "And then we got v0 plus u ln mR over 2 m0."
+          },
+          {
+            "start": 171.65,
+            "end": 176.78,
+            "text": "And that is our equation."
+          },
+          {
+            "start": 176.78,
+            "end": 179.58,
+            "text": "So what does this equation tell us?"
+          },
+          {
+            "start": 179.58,
+            "end": 188.14,
+            "text": "mR, the mass of the rocket, is less later on than it was before,"
+          },
+          {
+            "start": 188.14,
+            "end": 194.46,
+            "text": "which means this term here is going to be less than 0,"
+          },
+          {
+            "start": 194.46,
+            "end": 199.74,
+            "text": "which means the velocity is our initial velocity minus"
+          },
+          {
+            "start": 199.74,
+            "end": 205.66,
+            "text": "something, which means we have a decrease in velocity, which"
+          },
+          {
+            "start": 205.66,
+            "end": 209.9,
+            "text": "means my sled will eventually come to a stop."
+          }
+        ],
+        "elapsed_seconds": 20.575381458000003
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "stt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 21.644842916,
+        "status": "ok",
+        "segment_count": 45
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "sentence_grouping",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 0.0014998750000003724,
+        "status": "ok",
+        "source_segment_count": 45,
+        "sentence_count": 26
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 0,
+        "elapsed_seconds": 8.750000048962647e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 220,
+        "prompt_ms": 4232.236,
+        "prompt_per_token_ms": 19.237436363636363,
+        "prompt_per_second": 51.98197832067966,
+        "predicted_n": 13,
+        "predicted_ms": 512.771,
+        "predicted_per_token_ms": 42.730916666666666,
+        "predicted_per_second": 23.402259488153582
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nWe just derived this relation here.\"}]",
+      "result": {
+        "text": "여기서 우리는 이 관계를 도출했습니다.",
+        "tokens": 13,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 0,
+        "elapsed_seconds": 4.748239875000003,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 13,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 0,
+        "elapsed_seconds": 4.759138665999998,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 220,
+        "max_tokens": 128,
+        "raw_output_tokens": 13,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 0,
+        "elapsed_seconds": 4.759345708000005,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 0,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 0,
+        "elapsed_seconds": 4.759647416,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 5.829999878415038e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 132,
+        "prompt_ms": 2246.781,
+        "prompt_per_token_ms": 17.02106818181818,
+        "prompt_per_second": 58.75071936250129,
+        "predicted_n": 27,
+        "predicted_ms": 1014.25,
+        "predicted_per_token_ms": 39.00961538461539,
+        "predicted_per_second": 25.634705447374905
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nWe just derived this relation here.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: rocket=로켓; speed=속력; mass=질량.\\n\\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.\"}]",
+      "result": {
+        "text": "로켓의 앞쪽 속력의 미분과 로켓의 질량의 미분 사이의 관계이다.",
+        "tokens": 27,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 3.262821083999995,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 27,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 3.266466792000003,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 313,
+        "max_tokens": 128,
+        "raw_output_tokens": 27,
+        "finish_reason": "stop",
+        "rejection_reason": "informal_speech",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 86,
+        "prompt_ms": 1773.786,
+        "prompt_per_token_ms": 20.625418604651163,
+        "prompt_per_second": 48.483864457155484,
+        "predicted_n": 27,
+        "predicted_ms": 1018.26,
+        "predicted_per_token_ms": 39.16384615384615,
+        "predicted_per_second": 25.533753658201245
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: rocket=로켓; speed=속력; mass=질량.\\nReturn only complete polite Korean translation sentences ending in 합니다/입니다.\\n\\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.\"}]",
+      "result": {
+        "text": "로켓의 앞쪽 속력의 미분과 로켓의 질량의 미분 사이의 관계입니다.",
+        "tokens": 27,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 2.7940453750000103,
+        "status": "ok",
+        "attempt": 2,
+        "raw_output_tokens": 27,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 2.7974373329999906,
+        "status": "ok",
+        "attempt": 2,
+        "prompt_tokens": 267,
+        "max_tokens": 128,
+        "raw_output_tokens": 27,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 6.0644349579999925,
+        "status": "ok",
+        "attempts": 2
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 1,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 1,
+        "elapsed_seconds": 6.064713541000003,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 2,
+        "elapsed_seconds": 1.2080000004743852e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 132,
+        "prompt_ms": 2470.597,
+        "prompt_per_token_ms": 18.71664393939394,
+        "prompt_per_second": 53.42838188502616,
+        "predicted_n": 18,
+        "predicted_ms": 676.684,
+        "predicted_per_token_ms": 39.804941176470585,
+        "predicted_per_second": 25.122509177104824
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nThe relation between the differential of the speed of the rocket's lead and the differential of the mass of the rocket.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: rocket=로켓; speed=속력.\\n\\nAnd we want to ultimately get the speed of the rocket.\"}]",
+      "result": {
+        "text": "그리고 우리는 결국 로켓의 속력을 얻고자 합니다.",
+        "tokens": 18,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 2,
+        "elapsed_seconds": 3.1504184580000043,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 18,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 2,
+        "elapsed_seconds": 3.1539049579999983,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 313,
+        "max_tokens": 128,
+        "raw_output_tokens": 18,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 2,
+        "elapsed_seconds": 3.154432,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 2,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 2,
+        "elapsed_seconds": 3.1548510410000006,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 3,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 55,
+        "prompt_ms": 1160.827,
+        "prompt_per_token_ms": 21.105945454545456,
+        "prompt_per_second": 47.38001442075348,
+        "predicted_n": 14,
+        "predicted_ms": 498.414,
+        "predicted_per_token_ms": 38.33953846153846,
+        "predicted_per_second": 26.082734433623457
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd we want to ultimately get the speed of the rocket.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nSo we have to apply a technique called separation variables.\"}]",
+      "result": {
+        "text": "그래서 우리는 변수 분리 기법을 적용해야 합니다.",
+        "tokens": 14,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 3,
+        "elapsed_seconds": 1.660878291000003,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 14,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 3,
+        "elapsed_seconds": 1.6634940419999964,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 288,
+        "max_tokens": 128,
+        "raw_output_tokens": 14,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 3,
+        "elapsed_seconds": 1.6636816670000059,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 3,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 3,
+        "elapsed_seconds": 1.6642918339999966,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 4,
+        "elapsed_seconds": 4.159999917874302e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 58,
+        "prompt_ms": 1220.821,
+        "prompt_per_token_ms": 21.04863793103448,
+        "prompt_per_second": 47.50901237773597,
+        "predicted_n": 15,
+        "predicted_ms": 550.266,
+        "predicted_per_token_ms": 39.30471428571428,
+        "predicted_per_second": 25.44224066178903
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nSo we have to apply a technique called separation variables.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: integrate=적분.\\n\\nAnd then we want to integrate.\"}]",
+      "result": {
+        "text": "그리고 그 후에 우리는 적분을 해야 합니다.",
+        "tokens": 15,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 4,
+        "elapsed_seconds": 1.7726629160000016,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 15,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 4,
+        "elapsed_seconds": 1.7750694580000044,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 291,
+        "max_tokens": 128,
+        "raw_output_tokens": 15,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 4,
+        "elapsed_seconds": 1.7752254589999978,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 4,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 4,
+        "elapsed_seconds": 1.775442083999991,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 5,
+        "elapsed_seconds": 4.1700000963373896e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 110,
+        "prompt_ms": 1997.428,
+        "prompt_per_token_ms": 18.158436363636365,
+        "prompt_per_second": 55.07082107590361,
+        "predicted_n": 26,
+        "predicted_ms": 969.235,
+        "predicted_per_token_ms": 38.7694,
+        "predicted_per_second": 25.79353820280943
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd then we want to integrate.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: dt. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\\n\\nWhat we're going to do is, first, we're going to multiply by dt, so that falls away.\"}]",
+      "result": {
+        "text": "우리가 할 일은 먼저 dt를 곱하는 것입니다. 이렇게 하면 그 값이 사라집니다.",
+        "tokens": 26,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 5,
+        "elapsed_seconds": 2.968387000000007,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 26,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 5,
+        "elapsed_seconds": 2.9713062080000014,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 343,
+        "max_tokens": 128,
+        "raw_output_tokens": 26,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 5,
+        "elapsed_seconds": 2.9714734169999986,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 5,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 5,
+        "elapsed_seconds": 2.9717138329999955,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 6,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 125,
+        "prompt_ms": 2781.185,
+        "prompt_per_token_ms": 22.24948,
+        "prompt_per_second": 44.94487062169543,
+        "predicted_n": 20,
+        "predicted_ms": 808.954,
+        "predicted_per_token_ms": 42.57652631578947,
+        "predicted_per_second": 23.487120404868513
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nWhat we're going to do is, first, we're going to multiply by dt, so that falls away.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: mR, dvR, dmR, u. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\\n\\nAnd we're left with mR dvR equals dmRu.\"}]",
+      "result": {
+        "text": "그리고 우리는 mR dvR = dmR u 를 얻습니다.",
+        "tokens": 20,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 6,
+        "elapsed_seconds": 3.592034459000004,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 20,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 6,
+        "elapsed_seconds": 3.5949523750000054,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 358,
+        "max_tokens": 128,
+        "raw_output_tokens": 20,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 6,
+        "elapsed_seconds": 3.5951333329999926,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 6,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 6,
+        "elapsed_seconds": 3.5953662080000015,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 7,
+        "elapsed_seconds": 4.160000059982849e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 106,
+        "prompt_ms": 2438.468,
+        "prompt_per_token_ms": 23.00441509433962,
+        "prompt_per_second": 43.469916357319434,
+        "predicted_n": 19,
+        "predicted_ms": 1802.974,
+        "predicted_per_token_ms": 100.16522222222221,
+        "predicted_per_second": 9.983505031131898
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd we're left with mR dvR equals dmRu.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: m. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\\n\\nAnd we're going to shuffle the m onto the other side.\"}]",
+      "result": {
+        "text": "그리고 우리는 m을 다른 쪽으로 옮기게 됩니다.",
+        "tokens": 19,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 7,
+        "elapsed_seconds": 4.244036416,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 7,
+        "elapsed_seconds": 4.248617082999999,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 339,
+        "max_tokens": 128,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 7,
+        "elapsed_seconds": 4.248856124999989,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 7,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 7,
+        "elapsed_seconds": 4.249281749999994,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 8,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "timings": {
+        "cache_n": 236,
+        "prompt_n": 147,
+        "prompt_ms": 2903.921,
+        "prompt_per_token_ms": 19.75456462585034,
+        "prompt_per_second": 50.62121180293816,
+        "predicted_n": 49,
+        "predicted_ms": 1932.359,
+        "predicted_per_token_ms": 40.25747916666666,
+        "predicted_per_second": 24.840104763141838
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd we're going to shuffle the m onto the other side.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: dvR, u, dmR, mR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: constant=상수. Preserve these source relations: dmR/(mR).\\n\\nAnd we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.\"}]",
+      "result": {
+        "text": "그리고 우리는 m을 다른 쪽으로 옮깁니다. 그러면 dvR = u가 상수입니다. 따라서 이 것이 앞쪽으로 옵니다. 그리고 우리는 dmR / mR을 가집니다.",
+        "tokens": 49,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 8,
+        "elapsed_seconds": 4.840137541000004,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 49,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 8,
+        "elapsed_seconds": 4.848075666,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 383,
+        "max_tokens": 128,
+        "raw_output_tokens": 49,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 8,
+        "elapsed_seconds": 4.8483494170000085,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 8,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 8,
+        "elapsed_seconds": 4.849094750000006,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 9,
+        "elapsed_seconds": 1.4579999998431958e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "timings": {
+        "cache_n": 236,
+        "prompt_n": 76,
+        "prompt_ms": 1478.9,
+        "prompt_per_token_ms": 19.45921052631579,
+        "prompt_per_second": 51.389546284400566,
+        "predicted_n": 15,
+        "predicted_ms": 584.936,
+        "predicted_per_token_ms": 41.78114285714286,
+        "predicted_per_second": 23.934242378653387
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd we're left with dvR equals u is a constant. So that goes up front. And then we have dmR over mR.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: integrate=적분.\\n\\nThat's an equation that we can integrate now.\"}]",
+      "result": {
+        "text": "이것은 이제 적분할 수 있는 방정식입니다.",
+        "tokens": 15,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 9,
+        "elapsed_seconds": 2.066202084000011,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 15,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 9,
+        "elapsed_seconds": 2.0701314160000095,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 312,
+        "max_tokens": 128,
+        "raw_output_tokens": 15,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 9,
+        "elapsed_seconds": 2.070616000000001,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 9,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 9,
+        "elapsed_seconds": 2.071157041999996,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 10,
+        "elapsed_seconds": 1.3749999965284587e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 48,
+        "prompt_ms": 972.067,
+        "prompt_per_token_ms": 20.251395833333333,
+        "prompt_per_second": 49.37931233135164,
+        "predicted_n": 8,
+        "predicted_ms": 312.537,
+        "predicted_per_token_ms": 44.64814285714285,
+        "predicted_per_second": 22.39734815397857
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nThat's an equation that we can integrate now.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nAnd we can do that.\"}]",
+      "result": {
+        "text": "그것을 할 수 있습니다.",
+        "tokens": 8,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 10,
+        "elapsed_seconds": 1.2863242079999964,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 8,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 10,
+        "elapsed_seconds": 1.288976667,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 281,
+        "max_tokens": 128,
+        "raw_output_tokens": 8,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 10,
+        "elapsed_seconds": 1.2892782090000026,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 10,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 10,
+        "elapsed_seconds": 1.289716458000001,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 11,
+        "elapsed_seconds": 1.3749999965284587e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 66,
+        "prompt_ms": 1207.551,
+        "prompt_per_token_ms": 18.296227272727272,
+        "prompt_per_second": 54.65607663775692,
+        "predicted_n": 28,
+        "predicted_ms": 1098.351,
+        "predicted_per_token_ms": 40.67966666666667,
+        "predicted_per_second": 24.582305656388527
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd we can do that.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: integration limits=적분 구간.\\n\\nAnd the tricky bit is that we need to take care of the integration limits here.\"}]",
+      "result": {
+        "text": "그리고 어려운 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+        "tokens": 28,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 11,
+        "elapsed_seconds": 2.307754750000001,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 28,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 11,
+        "elapsed_seconds": 2.310759042000001,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 299,
+        "max_tokens": 128,
+        "raw_output_tokens": 28,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 11,
+        "elapsed_seconds": 2.311092957999989,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 11,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 11,
+        "elapsed_seconds": 2.3114146249999976,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 12,
+        "elapsed_seconds": 8.624999992434823e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "timings": {
+        "cache_n": 234,
+        "prompt_n": 119,
+        "prompt_ms": 2522.547,
+        "prompt_per_token_ms": 21.197873949579833,
+        "prompt_per_second": 47.17454223845978,
+        "predicted_n": 19,
+        "predicted_ms": 713.177,
+        "predicted_per_token_ms": 39.62094444444445,
+        "predicted_per_second": 25.239176249374278
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd the tricky bit is that we need to take care of the integration limits here.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: primes=프라임.\\n\\nWe have vR, and actually these now are all primes.\"}]",
+      "result": {
+        "text": "우리는 vR을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+        "tokens": 19,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 12,
+        "elapsed_seconds": 3.2373852080000063,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 12,
+        "elapsed_seconds": 3.240825375,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 353,
+        "max_tokens": 128,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 12,
+        "elapsed_seconds": 3.241056416999996,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 12,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 12,
+        "elapsed_seconds": 3.241303000000002,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 13,
+        "elapsed_seconds": 5.830000020523585e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 141,
+        "prompt_ms": 2884.227,
+        "prompt_per_token_ms": 20.45551063829787,
+        "prompt_per_second": 48.88658208941252,
+        "predicted_n": 32,
+        "predicted_ms": 1225.459,
+        "predicted_per_token_ms": 39.53093548387097,
+        "predicted_per_second": 25.296643951368424
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nWe have vR, and actually these now are all primes.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, v0, t. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: initial condition=초기 조건; prime=프라임.\\n\\nSo we have vR going from v0. That is our initial condition here. 2 vR prime of t.\"}]",
+      "result": {
+        "text": "따라서 vR은 v0에서 시작합니다. 이는 여기서의 초기 조건입니다. 2vR' of t입니다.",
+        "tokens": 32,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 13,
+        "elapsed_seconds": 4.111676915999993,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 32,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 13,
+        "elapsed_seconds": 4.116320000000002,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 374,
+        "max_tokens": 128,
+        "raw_output_tokens": 32,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 13,
+        "elapsed_seconds": 4.116544625000003,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 13,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 13,
+        "elapsed_seconds": 4.116810708999992,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 14,
+        "elapsed_seconds": 4.590000060034072e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 190,
+        "prompt_ms": 3663.969,
+        "prompt_per_token_ms": 19.284047368421053,
+        "prompt_per_second": 51.85633393732316,
+        "predicted_n": 56,
+        "predicted_ms": 2212.083,
+        "predicted_per_token_ms": 40.21969090909091,
+        "predicted_per_second": 24.863443189066594
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nSo we have vR going from v0. That is our initial condition here. 2 vR prime of t.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: fuel mass=연료 질량; dry mass=건조 질량; prime=프라임; mass=질량.\\n\\nAnd for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.\"}]",
+      "result": {
+        "text": "질량에 대해서는 mR'이 m0에 등록됩니다. 실제로는 m0이 아니라 2m0입니다. 이 경우 초기 질량은 건조 질량과 연료 질량을 합한 것이므로 2m0입니다.",
+        "tokens": 56,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 14,
+        "elapsed_seconds": 5.877836083000005,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 56,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 14,
+        "elapsed_seconds": 5.8809806250000065,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 423,
+        "max_tokens": 128,
+        "raw_output_tokens": 56,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 14,
+        "elapsed_seconds": 5.881154834,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 14,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 14,
+        "elapsed_seconds": 5.881381832999992,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 15,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 98,
+        "prompt_ms": 1712.944,
+        "prompt_per_token_ms": 17.479020408163265,
+        "prompt_per_second": 57.21144415696018,
+        "predicted_n": 10,
+        "predicted_ms": 366.875,
+        "predicted_per_token_ms": 40.763888888888886,
+        "predicted_per_second": 24.53151618398637
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd for the mass, we have mR prime equals m0. Actually, not quite m0. It's 2 m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2 m0.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: mass=질량.\\n\\nSo this is the initial mass.\"}]",
+      "result": {
+        "text": "따라서 이것은 초기 질량입니다.",
+        "tokens": 10,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 15,
+        "elapsed_seconds": 2.0815499169999896,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 10,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 15,
+        "elapsed_seconds": 2.084180291999999,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 331,
+        "max_tokens": 128,
+        "raw_output_tokens": 10,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 15,
+        "elapsed_seconds": 2.0843487500000037,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 15,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 15,
+        "elapsed_seconds": 2.0845795839999965,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 132,
+        "prompt_ms": 2421.407,
+        "prompt_per_token_ms": 18.343992424242426,
+        "prompt_per_second": 54.51375997508886,
+        "predicted_n": 19,
+        "predicted_ms": 749.696,
+        "predicted_per_token_ms": 41.64977777777778,
+        "predicted_per_second": 24.00973194468158
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nSo this is the initial mass.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: mR, m, vR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: prime=프라임. Preserve these source relations: m(vR) (function value, not multiplication).\\n\\nAnd then we go to mR prime equals m of vR.\"}]",
+      "result": {
+        "text": "그리고 그 다음에 mR 프라임은 m의 vR입니다.",
+        "tokens": 19,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 3.1729751249999936,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 3.1763684999999953,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 365,
+        "max_tokens": 128,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "rejection_reason": "missing_math_function",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 158,
+        "prompt_ms": 2881.72,
+        "prompt_per_token_ms": 18.23873417721519,
+        "prompt_per_second": 54.828366392293496,
+        "predicted_n": 19,
+        "predicted_ms": 693.518,
+        "predicted_per_token_ms": 38.528777777777776,
+        "predicted_per_second": 25.95462554684954
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: mR, m, vR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: prime=프라임. Preserve these source relations: m(vR) (function value, not multiplication).\\nReturn only complete polite Korean translation sentences ending in 합니다/입니다. Start with Korean words and then give the expression; a formula alone is not a complete Korean translation.\\n\\nAnd then we go to mR prime equals m of vR.\"}]",
+      "result": {
+        "text": "그리고 그 후에 mR 프라임은 m의 vR입니다.",
+        "tokens": 19,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 3.577068416000003,
+        "status": "ok",
+        "attempt": 2,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 3.581902999999997,
+        "status": "ok",
+        "attempt": 2,
+        "prompt_tokens": 339,
+        "max_tokens": 128,
+        "raw_output_tokens": 19,
+        "finish_reason": "stop",
+        "rejection_reason": "missing_math_function",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 6.758712333999995,
+        "status": "error",
+        "attempts": 2,
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 16,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 16,
+        "elapsed_seconds": 6.758997915999998,
+        "status": "error",
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 17,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 107,
+        "prompt_ms": 2179.705,
+        "prompt_per_token_ms": 20.37107476635514,
+        "prompt_per_second": 49.08921161349816,
+        "predicted_n": 13,
+        "predicted_ms": 465.213,
+        "predicted_per_token_ms": 38.76775,
+        "predicted_per_second": 25.794636005442666
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd then we go to mR prime equals m of vR.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nAll right, so let's do that.\"}]",
+      "result": {
+        "text": "좋아요, 그래서 그걸 해봅시다.",
+        "tokens": 13,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 17,
+        "elapsed_seconds": 2.6465355839999916,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 13,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 17,
+        "elapsed_seconds": 2.6490470829999992,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 288,
+        "max_tokens": 128,
+        "raw_output_tokens": 13,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 17,
+        "elapsed_seconds": 2.6491934589999886,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 17,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 17,
+        "elapsed_seconds": 2.6494049169999982,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 4.5899999179255246e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 140,
+        "prompt_ms": 2469.246,
+        "prompt_per_token_ms": 17.63747142857143,
+        "prompt_per_second": 56.697469591932105,
+        "predicted_n": 30,
+        "predicted_ms": 1115.868,
+        "predicted_per_token_ms": 38.478206896551725,
+        "predicted_per_second": 25.98873701907394
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAll right, so let's do that.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, v0, m, ln. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: integrated=적분. Preserve these source relations: u1/(m).\\n\\nWe're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.\"}]",
+      "result": {
+        "text": "좋습니다. vR minus v0는 u1 over m입니다. 적분을 취하면 ln이 됩니다. 따라서 ln입니다.",
+        "tokens": 30,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 3.5868271249999992,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 30,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 3.5901218340000014,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 373,
+        "max_tokens": 128,
+        "raw_output_tokens": 30,
+        "finish_reason": "stop",
+        "rejection_reason": "untranslated_math_operator",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 164,
+        "prompt_ms": 2874.4,
+        "prompt_per_token_ms": 17.526829268292683,
+        "prompt_per_second": 57.055385471750625,
+        "predicted_n": 36,
+        "predicted_ms": 1364.744,
+        "predicted_per_token_ms": 38.99268571428571,
+        "predicted_per_second": 25.645835409424773
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, v0, m, ln. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: integrated=적분. Preserve these source relations: u1/(m).\\nReturn only complete polite Korean translation sentences ending in 합니다/입니다. Start with Korean words and then give the expression; a formula alone is not a complete Korean translation.\\n\\nWe're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.\"}]",
+      "result": {
+        "text": "우리는 vR 빼기 v0이 m에 대한 u1을 얻습니다. 적분을 취하면 ln이 됩니다. 따라서 ln입니다.",
+        "tokens": 36,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 4.240811542000003,
+        "status": "ok",
+        "attempt": 2,
+        "raw_output_tokens": 36,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 4.243724,
+        "status": "ok",
+        "attempt": 2,
+        "prompt_tokens": 345,
+        "max_tokens": 128,
+        "raw_output_tokens": 36,
+        "finish_reason": "stop",
+        "rejection_reason": "missing_math_division",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 7.834080165999993,
+        "status": "error",
+        "attempts": 2,
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 18,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 18,
+        "elapsed_seconds": 7.834332458999995,
+        "status": "error",
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 19,
+        "elapsed_seconds": 4.999999987376214e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 172,
+        "prompt_ms": 3219.44,
+        "prompt_per_token_ms": 18.717674418604652,
+        "prompt_per_second": 53.42544044927068,
+        "predicted_n": 24,
+        "predicted_ms": 999.214,
+        "predicted_per_token_ms": 43.444086956521744,
+        "predicted_per_second": 23.0180922204853
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nWe're going to get vR minus v0 equals u1 over m. Integrated gives us an ln. So ln.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone.\\n\\nAnd then we can immediately do this here over 2 m0.\"}]",
+      "result": {
+        "text": "그리고 그 후에 바로 여기서 2m0 과 나누어 줄 수 있습니다.",
+        "tokens": 24,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 19,
+        "elapsed_seconds": 4.220760958999989,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 24,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 19,
+        "elapsed_seconds": 4.223453124999992,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 353,
+        "max_tokens": 128,
+        "raw_output_tokens": 24,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 19,
+        "elapsed_seconds": 4.223668833000005,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 19,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 19,
+        "elapsed_seconds": 4.223943625000004,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 20,
+        "elapsed_seconds": 4.579999881570984e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 52,
+        "prompt_ms": 1143.423,
+        "prompt_per_token_ms": 21.988903846153846,
+        "prompt_per_second": 45.47748296124881,
+        "predicted_n": 12,
+        "predicted_ms": 444.373,
+        "predicted_per_token_ms": 40.39754545454545,
+        "predicted_per_second": 24.75397920215675
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd then we can immediately do this here over 2 m0.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nAnd we ultimately want this.\"}]",
+      "result": {
+        "text": "그리고 우리는 결국 이것이 되기를 원합니다.",
+        "tokens": 12,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 20,
+        "elapsed_seconds": 1.5897617079999975,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 12,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 20,
+        "elapsed_seconds": 1.5930554999999913,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 285,
+        "max_tokens": 128,
+        "raw_output_tokens": 12,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 20,
+        "elapsed_seconds": 1.5932279589999894,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 20,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 20,
+        "elapsed_seconds": 1.5934614169999861,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 1.2909999895782676e-06,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timings": {
+        "cache_n": 234,
+        "prompt_n": 153,
+        "prompt_ms": 2947.438,
+        "prompt_per_token_ms": 19.264300653594773,
+        "prompt_per_second": 51.90948885099534,
+        "predicted_n": 34,
+        "predicted_ms": 1381.823,
+        "predicted_per_token_ms": 41.87342424242424,
+        "predicted_per_second": 23.88149567636376
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd we ultimately want this.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, t, v0, u, ln, mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Preserve these source relations: vR(t) (function value, not multiplication); mR/(2m0).\\n\\nSo this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.\"}]",
+      "result": {
+        "text": "그러므로 이는 t에 대한 vR입니다. 물론, 그리고 우리는 v0 plus u ln mR over 2 m0를 얻습니다.",
+        "tokens": 34,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 4.331348040999984,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 34,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 4.335822249999978,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 387,
+        "max_tokens": 128,
+        "raw_output_tokens": 34,
+        "finish_reason": "stop",
+        "rejection_reason": "untranslated_math_operator",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 181,
+        "prompt_ms": 3796.768,
+        "prompt_per_token_ms": 20.976618784530388,
+        "prompt_per_second": 47.672125344503534,
+        "predicted_n": 30,
+        "predicted_ms": 1189.923,
+        "predicted_per_token_ms": 41.031827586206894,
+        "predicted_per_second": 24.37132486723931
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, t, v0, u, ln, mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Preserve these source relations: vR(t) (function value, not multiplication); mR/(2m0).\\nReturn only complete polite Korean translation sentences ending in 합니다/입니다. Start with Korean words and then give the expression; a formula alone is not a complete Korean translation.\\n\\nSo this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.\"}]",
+      "result": {
+        "text": "그러므로 이것은 t에 대한 vR입니다. 그리고 그 다음은 v0 plus u ln mR over 2 m0입니다.",
+        "tokens": 30,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 4.988517583000004,
+        "status": "ok",
+        "attempt": 2,
+        "raw_output_tokens": 30,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 4.992156125000008,
+        "status": "ok",
+        "attempt": 2,
+        "prompt_tokens": 362,
+        "max_tokens": 128,
+        "raw_output_tokens": 30,
+        "finish_reason": "stop",
+        "rejection_reason": "untranslated_math_operator",
+        "accepted": false
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 9.32842149999999,
+        "status": "error",
+        "attempts": 2,
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 21,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 21,
+        "elapsed_seconds": 9.328751167000007,
+        "status": "error",
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 22,
+        "elapsed_seconds": 4.579999881570984e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "timings": {
+        "cache_n": 181,
+        "prompt_n": 119,
+        "prompt_ms": 2473.238,
+        "prompt_per_token_ms": 20.783512605042016,
+        "prompt_per_second": 48.115062116949524,
+        "predicted_n": 11,
+        "predicted_ms": 388.578,
+        "predicted_per_token_ms": 38.8578,
+        "predicted_per_second": 25.734858895768674
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nSo this is a vR of t, of course. And then we got v0 plus u ln mR over 2 m0.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nAnd that is our equation.\"}]",
+      "result": {
+        "text": "그리고 이것이 우리의 방정식입니다.",
+        "tokens": 11,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 22,
+        "elapsed_seconds": 2.86348562500001,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 11,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 22,
+        "elapsed_seconds": 2.8662181659999817,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 300,
+        "max_tokens": 128,
+        "raw_output_tokens": 11,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 22,
+        "elapsed_seconds": 2.866359958000004,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 22,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 22,
+        "elapsed_seconds": 2.866584375000002,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 23,
+        "elapsed_seconds": 4.579999881570984e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 46,
+        "prompt_ms": 928.948,
+        "prompt_per_token_ms": 20.194521739130433,
+        "prompt_per_second": 49.51837993084651,
+        "predicted_n": 18,
+        "predicted_ms": 673.471,
+        "predicted_per_token_ms": 39.615941176470585,
+        "predicted_per_second": 25.24236381373511
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nAnd that is our equation.\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation.\\n\\nSo what does this equation tell us?\"}]",
+      "result": {
+        "text": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+        "tokens": 18,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 23,
+        "elapsed_seconds": 1.6039863329999946,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 18,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 23,
+        "elapsed_seconds": 1.6063529580000022,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 279,
+        "max_tokens": 128,
+        "raw_output_tokens": 18,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 23,
+        "elapsed_seconds": 1.6064940420000084,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 23,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 23,
+        "elapsed_seconds": 1.6067012079999756,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 24,
+        "elapsed_seconds": 4.160000059982849e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 134,
+        "prompt_ms": 2255.063,
+        "prompt_per_token_ms": 16.828828358208956,
+        "prompt_per_second": 59.421843203493644,
+        "predicted_n": 40,
+        "predicted_ms": 1507.036,
+        "predicted_per_token_ms": 38.64194871794872,
+        "predicted_per_second": 25.87861205704442
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nSo what does this equation tell us?\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: mR. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: rocket=로켓; mass=질량.\\n\\nmR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,\"}]",
+      "result": {
+        "text": "질량 mR의 로켓은 이전과 비교하여 이후에 작아지며, 이로 인해 여기서 나타나는 항은 0보다 작아집니다.",
+        "tokens": 40,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 24,
+        "elapsed_seconds": 3.7637335420000113,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 40,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 24,
+        "elapsed_seconds": 3.766459375000011,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 367,
+        "max_tokens": 128,
+        "raw_output_tokens": 40,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 24,
+        "elapsed_seconds": 3.7666042090000076,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 24,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 24,
+        "elapsed_seconds": 3.7668205829999977,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "timing": {
+        "event": "translation_queue",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 25,
+        "elapsed_seconds": 4.590000060034072e-07,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "server_timings",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "timings": {
+        "cache_n": 233,
+        "prompt_n": 108,
+        "prompt_ms": 1889.764,
+        "prompt_per_token_ms": 17.497814814814813,
+        "prompt_per_second": 57.14999333250078,
+        "predicted_n": 45,
+        "predicted_ms": 1700.895,
+        "predicted_per_token_ms": 38.656704545454545,
+        "predicted_per_second": 25.868733813668687
+      }
+    },
+    {
+      "kind": "raw_generation",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "prompt": "[{\"role\": \"system\", \"content\": \"Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \\\"over\\\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. \\nPrevious English context:\\nmR, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0,\"}, {\"role\": \"user\", \"content\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Terminology: velocity=속도; sled=썰매.\\n\\nwhich means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.\"}]",
+      "result": {
+        "text": "즉, 속도는 초기 속도에서 어떤 값이 빠진 것이므로 속도가 감소한다는 의미이며, 따라서 내 썰매는 결국 멈추게 됩니다.",
+        "tokens": 45,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "timing": {
+        "event": "translation_generate",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 25,
+        "elapsed_seconds": 3.5924226250000117,
+        "status": "ok",
+        "attempt": 1,
+        "raw_output_tokens": 45,
+        "finish_reason": "stop",
+        "early_stop_reason": null
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "timing": {
+        "event": "translation_attempt",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 25,
+        "elapsed_seconds": 3.595298165999992,
+        "status": "ok",
+        "attempt": 1,
+        "prompt_tokens": 341,
+        "max_tokens": 128,
+        "raw_output_tokens": 45,
+        "finish_reason": "stop",
+        "rejection_reason": null,
+        "accepted": true
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "timing": {
+        "event": "translation_total",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 25,
+        "elapsed_seconds": 3.5954451249999977,
+        "status": "ok",
+        "attempts": 1
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": 25,
+      "timing": {
+        "event": "segment_translation",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": 25,
+        "elapsed_seconds": 3.595685666999998,
+        "status": "ok"
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "translation_batch",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 98.318322209,
+        "status": "ok",
+        "source_segment_count": 45,
+        "sentence_count": 26,
+        "failed_segments": 3
+      }
+    },
+    {
+      "kind": "timing",
+      "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+      "segment_index": null,
+      "timing": {
+        "event": "job_processing",
+        "request_id": "de8f21388fe34a5abbf8271c75a52e98",
+        "segment_index": null,
+        "elapsed_seconds": 119.97176945800001,
+        "status": "ok",
+        "job_id": "de8f21388fe34a5abbf8271c75a52e98"
+      }
+    }
+  ],
+  "observer_source": "\"\"\"기존 API 동작을 유지하며 단일 영상 평가의 STT·번역 원시 출력과 시간 로그를 보존한다.\"\"\"\nimport json\nimport logging\nfrom pathlib import Path\nimport sys\nfrom threading import Lock\n\nROOT = Path('/Users/macbookair/Desktop/K-aption_BE')\nsys.path.insert(0, str(ROOT))\nimport uvicorn\nfrom app.main import app\nfrom app.services.translation_http import HttpTranslationService\nfrom transcribe import TranscriptionService\nfrom timing import logger, request_id, segment_index\n\nDESTINATION = Path('/private/tmp/kaption-rocket-full-observations-261025.jsonl')\nLOCK = Lock()\nORIGINAL_TRANSCRIBE = TranscriptionService.transcribe\nORIGINAL_GENERATE = HttpTranslationService._generate_output\nORIGINAL_STREAM = HttpTranslationService._stream_output\n\n\ndef record(kind, **data):\n    \"\"\"평가 입력·출력과 요청 상관관계를 전용 JSONL에 추가한다.\n\n    :param kind: 기록 종류.\n    :param data: JSON으로 직렬화 가능한 관측 데이터.\n    :return: None. 전용 평가 파일에 한 줄을 추가한다.\n    \"\"\"\n    row = {'kind': kind, 'request_id': request_id.get(), 'segment_index': segment_index.get(), **data}\n    with LOCK:\n        with DESTINATION.open('a', encoding='utf-8') as stream:\n            stream.write(json.dumps(row, ensure_ascii=False) + '\\n')\n\n\ndef transcribe(self, media_path, language='en'):\n    \"\"\"기존 STT를 실행하고 반환된 원문 구간을 복사해 기록한다.\n\n    :param media_path: 업로드된 평가 미디어 경로.\n    :param language: 음성 인식 언어 코드.\n    :return: 기존 STT 결과. 반환값을 변경하지 않는다.\n    \"\"\"\n    result = ORIGINAL_TRANSCRIBE(self, media_path, language)\n    record('stt_result', result=result)\n    return result\n\n\ndef generate(self, prompt, max_tokens):\n    \"\"\"기존 생성기를 실행하고 검증 전 원시 번역 후보를 기록한다.\n\n    :param prompt: 직렬화된 실제 메시지 JSON.\n    :param max_tokens: 출력 토큰 상한.\n    :return: 기존 생성 결과. 반환값을 변경하지 않는다.\n    \"\"\"\n    result = ORIGINAL_GENERATE(self, prompt, max_tokens)\n    record('raw_generation', prompt=prompt, result=result)\n    return result\n\n\ndef stream(self, prompt, max_tokens):\n    \"\"\"기존 SSE 스트림을 그대로 전달하고 서버가 제공한 처리 시간을 기록한다.\n\n    :param prompt: 직렬화된 실제 메시지 JSON.\n    :param max_tokens: 출력 토큰 상한.\n    :return: 기존 응답을 순서대로 제공하는 생성기.\n    :yield: 기존 텍스트·토큰 수·종료 사유 응답 객체.\n    \"\"\"\n    original = ORIGINAL_STREAM(self, prompt, max_tokens)\n    try:\n        for chunk in original:\n            if getattr(chunk, 'server_timings', None):\n                record('server_timings', timings=chunk.server_timings)\n            yield chunk\n    finally:\n        original.close()\n\n\nclass TimingHandler(logging.Handler):\n    \"\"\"기존 구조화 시간 로그를 평가 파일에 복사한다.\"\"\"\n\n    def emit(self, entry):\n        \"\"\"시간 필드를 갖는 기존 로그 레코드만 보존한다.\n\n        :param entry: Python 로깅 레코드.\n        :return: None.\n        \"\"\"\n        if hasattr(entry, 'timing'):\n            record('timing', timing=entry.timing)\n\n\nif __name__ == '__main__':\n    if DESTINATION.exists():\n        raise FileExistsError(DESTINATION)\n    TranscriptionService.transcribe = transcribe\n    HttpTranslationService._generate_output = generate\n    HttpTranslationService._stream_output = stream\n    config = uvicorn.Config(app, host='127.0.0.1', port=18000, workers=1)\n    logger.addHandler(TimingHandler())\n    uvicorn.Server(config).run()\n",
+  "observer_source_sha256": "707337ae18a41a8c12fc3697b2e7c4b44844b9936182cc6fe9c14899eab06d58",
+  "limits": [
+    "Observer copies unmodified raw STT, generation and structured logs to disk. Observed time includes that instrumentation.",
+    "Completed job has three failed translations; pipeline_succeeded=false is intentionally preserved.",
+    "One current native CPU run, not comparable as a controlled speedup to earlier Docker/image runs."
+  ],
+  "stt_experiment_source": "\"\"\"동일한 로켓 강의에서 탐색 폭·선택적 물리 용어 힌트의 시간과 자막 대비 차이를 측정한다.\"\"\"\nimport json\nfrom pathlib import Path\nimport sys\nfrom time import perf_counter\n\nROOT = Path('/Users/macbookair/Desktop/K-aption_BE')\nsys.path.insert(0, str(ROOT))\nfrom faster_whisper.audio import decode_audio\nfrom transcribe import TranscriptionService\nfrom scripts.evaluate_lecture_quality import compare_stt\n\nOUTPUT = ROOT / 'evaluation/rocket-native-stt-options-261025.json'\nVIDEO = ROOT / 'MIT8_01F16_W06PS01-2_360p.mp4'\nHINT = 'A university physics lecture about a rocket sled, velocity, mass, and integration.'\nWORDS = ('rocket sled, differential, separation of variables, integration limits, '\n         'prime, natural logarithm, dry mass, fuel mass, mR, vR, m0, v0, dt, dmR, dvR')\n\n\ndef main():\n    \"\"\"한 모델·동일 디코딩 오디오로 기본·beam1·용어 힌트 조건을 순서대로 실행한다.\n\n    :return: None. 원문·시간·공식 자막 대비 차이를 새 평가 JSON에 기록한다.\n    :raises FileExistsError: 같은 결과 파일이 이미 있는 경우.\n    \"\"\"\n    if OUTPUT.exists():\n        raise FileExistsError(OUTPUT)\n    service = TranscriptionService()\n    start = perf_counter()\n    model = service._get_model()\n    loading = perf_counter() - start\n    audio = decode_audio(str(VIDEO))\n    reference = json.loads((ROOT / 'evaluation/mit_rocket_reference.json').read_text())\n    report = {'model': 'small', 'device': 'cpu', 'compute_type': 'int8', 'model_load_seconds': loading,\n              'audio_seconds': len(audio) / 16000, 'model_reused': True, 'audio_decoded_once': True,\n              'limits': ['One pass per option in fixed baseline/beam1/hints order, not statistical proof.',\n                         'Inference excludes model loading/audio decoding and is not end-to-end API time.',\n                         'Caption WER is a spelling proxy; official captions contain known errors and ambiguous formulas.',\n                         'Domain hints were selected for this lecture and have not been tested on an independent video.',\n                         'These are evaluation-only overrides; production code/settings are unchanged.'], 'cases': []}\n    cases = [('baseline', 5, None, None), ('beam1', 1, None, None), ('physics_hints', 5, HINT, WORDS)]\n    for name, beam, prompt, hotwords in cases:\n        start = perf_counter()\n        segments, info = model.transcribe(audio, language='en', task='transcribe', beam_size=beam,\n                                         vad_filter=True, initial_prompt=prompt, hotwords=hotwords)\n        rows = [{'start': s.start, 'end': min(len(audio) / 16000, s.end), 'text': s.text.strip()}\n                for s in segments if s.text.strip()]\n        elapsed = perf_counter() - start\n        comparison = compare_stt(reference, {'results': rows})\n        case = {'name': name, 'beam_size': beam, 'initial_prompt': prompt, 'hotwords': hotwords,\n                'inference_seconds': elapsed, 'segments': rows, 'caption_comparison': comparison}\n        report['cases'].append(case)\n        OUTPUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\\n')\n        print(json.dumps({'name': name, 'seconds': elapsed, 'segments': len(rows),\n                          'caption_WER': comparison['word_error_rate']}, ensure_ascii=False), flush=True)\n\n\nif __name__ == '__main__':\n    main()\n",
+  "stt_experiment_source_sha256": "7c45195b8e05440c4515033aaf4cc7b60c08ee5f205f89d26e01d59896a991bd",
+  "stt_options_report": "rocket-native-stt-options-261025.json",
+  "stt_options_report_sha256": "198bdc8d51b1de34a73acfb7e0e94fb4fcf8e42172e8371116dd11f45f1e8fb8",
+  "prefix_options_report": "rocket-native-prefix-options-261025.json",
+  "prefix_options_report_sha256": "8298104ed37c0df911ca3253a3fedd649d0a2f4a281389ec0b4ce12dcb425419",
+  "stt_options_adopted": false,
+  "candidate_prefix_adopted": false,
+  "subtitle_files": {
+    "srt": {
+      "path": "rocket-native-full-261025.srt",
+      "sha256": "65f6c5246f8a9a98965fba04c64370bf6d95accca8927217324f312d82446b01"
+    },
+    "vtt": {
+      "path": "rocket-native-full-261025.vtt",
+      "sha256": "5365e5252b811fb400680e4df96fb1d262efa330cb2ac6003f315e80eee5a437"
+    }
+  },
+  "manual_review": {
+    "status": "Selected outputs reviewed by Codex; no independent human/expert accuracy scoring.",
+    "findings": [
+      {
+        "index": 1,
+        "issue": "STT rocket sled -> rocket's lead; translation follows incorrect source."
+      },
+      {
+        "index": 8,
+        "issue": "Accepted translation repeats prior m-moving context and renders dvR = u as a constant; complete equality not preserved."
+      },
+      {
+        "index": 13,
+        "issue": "Ambiguous STT 2 vR prime of t; accepted translation retains English of. No correction inferred."
+      },
+      {
+        "index": 14,
+        "issue": "Accepted mR prime equals m0 -> mR'이 m0에 등록됩니다; equality is mistranslated despite passing current validation."
+      },
+      {
+        "index": 16,
+        "issue": "Both attempts reverse m of vR into m의 vR; rejected by function relation check."
+      },
+      {
+        "index": 18,
+        "issue": "First attempt leaves English operators, retry loses division; rejected."
+      },
+      {
+        "index": 21,
+        "issue": "Both attempts retain plus/over; rejected."
+      }
+    ],
+    "interpretation": "23 returned translations out of 26 is availability, not a semantic accuracy percentage."
+  }
+}

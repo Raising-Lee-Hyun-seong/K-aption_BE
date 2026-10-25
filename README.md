@@ -36,6 +36,17 @@ docker compose logs -f backend translator model-init
 브라우저에서 **http://localhost:8000/swagger** 를 엽니다.
 상태 확인은 **http://localhost:8000/health** 입니다.
 
+Docker에 **8 vCPU 이상**을 할당했다면 아래 명령으로 번역 CPU와 스레드를 8개로 실행할 수 있습니다.
+
+```bash
+docker compose --env-file docker/cpu8.defaults up -d --build
+```
+
+재시작·업데이트에도 같은 `--env-file docker/cpu8.defaults`를 사용하세요.
+4 CPU로 돌아가려면 `--env-file docker/cpu.defaults`로 바꿉니다. 메모리·모델·STT 설정은 같습니다.
+8 CPU의 실제 성능·번역 검증은 Mac ARM64 Docker 기준이며 Windows 실기기는 미검증입니다.
+[수식 연산어 처리와 측정 결과](evaluation/math-operator-analysis-261025.md)를 참고하세요.
+
 ## 3. 영상 올리고 자막 받기
 
 Swagger의 **Try it out → Execute**로 실행합니다.

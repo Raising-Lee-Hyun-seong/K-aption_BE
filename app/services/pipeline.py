@@ -5,7 +5,7 @@ from typing import Awaitable, Callable, Optional
 from fastapi.concurrency import run_in_threadpool
 
 from app.schemas import TranscriptionResponse
-from app.services.subtitles import group_segments
+from app.services.subtitles import group_segments, merge_incomplete_math_groups
 from timing import measure, segment_index
 
 ProgressCallback = Callable[[str, int, Optional[int], int], Awaitable[None]]
@@ -19,7 +19,7 @@ async def process_media(
     media_path: Path, transcriber, translator, language: str = 'en',
     progress: Optional[ProgressCallback] = None,
 ) -> TranscriptionResponse:
-    """STT 결과의 문장·수학 연결을 묶고 앞 원문 문맥으로 번역하며 구간 진행을 알린다.
+    """STT 문장·수식과 미완성 발언을 묶어 앞 원문 문맥으로 번역하고 진행을 알린다.
 
     :param media_path: 처리할 로컬 미디어 경로. 파일 삭제는 호출자가 담당한다.
     :param transcriber: transcribe 메서드를 제공하는 STT 서비스.
@@ -29,7 +29,9 @@ async def process_media(
     :return: 시각·원문·번역·부분 실패를 보존한 자막 응답.
     :raises MediaValidationError: STT의 오디오·길이 검증이 실패할 때.
 
-    모델 추론을 실행하고 시간 로그를 남긴다. 콜백과 예기치 않은 서비스 오류는 전파한다.
+    기본 18초 묶음 뒤에 명확한 미완성 수학 발언만 36초·350자 안에서
+    연결한다. 모델 추론을 실행하고 시간 로그를 남긴다. 콜백과 예기치 않은
+    서비스 오류는 전파한다.
     """
     if progress:
         await progress('transcribing', 0, None, 0)
@@ -42,7 +44,7 @@ async def process_media(
     if progress:
         await progress('grouping', 0, None, 0)
     with measure('sentence_grouping', source_segment_count=len(result['segments'])) as metrics:
-        sentences = group_segments(result['segments'], merge_math=True)
+        sentences = merge_incomplete_math_groups(group_segments(result['segments'], merge_math=True))
         metrics['sentence_count'] = len(sentences)
     previous_source, translated_segments, failed_segments = '', [], 0
     if progress:
