@@ -28,6 +28,8 @@ docker compose up -d --build
 docker compose logs -f backend translator model-init
 ```
 
+Intel·AMD Windows PC에서는 Docker Desktop을 WSL2 기반 Linux 컨테이너 모드로 실행한 뒤, 위 명령을 PowerShell에서 실행하세요. `--build`가 해당 PC에 맞는 `linux/amd64` 이미지를 빌드합니다. Apple Silicon Mac에서 만든 `linux/arm64` 이미지를 옮기는 대신 Windows에서 직접 빌드하세요.
+
 처음에는 **약 2.50GB Q4_K_M 모델을 자동 다운로드하고 SHA256을 검사**합니다.
 준비가 끝나면 backend 로그에 `Uvicorn running`이 나옵니다.
 `Ctrl+C`로 로그 보기를 끝내도 서버는 계속 실행됩니다.
