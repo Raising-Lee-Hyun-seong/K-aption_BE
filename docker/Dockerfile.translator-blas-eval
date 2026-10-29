@@ -1,0 +1,60 @@
+# 운영 Compose에 연결하지 않는 BLAS OFF/ON 비교 전용 이미지다.
+# 빌드 컨텍스트에는 지정한 소스 아카이브만 넣는다. 모델·환경 파일은 복사하지 않는다.
+ARG BASE_IMAGE=ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852
+FROM ${BASE_IMAGE} AS build-base
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc-14 g++-14 cmake make pkg-config libssl-dev libopenblas-pthread-dev ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+ENV CC=gcc-14 CXX=g++-14
+WORKDIR /src
+COPY kaption-llama-source-339f3242c.tar.gz /tmp/source.tar.gz
+RUN echo '901a2a2b2eb389a08cae3fec3269914f5c03e8d39b1352db9a29cbd1886727f3  /tmp/source.tar.gz' | sha256sum -c - \
+    && tar -xzf /tmp/source.tar.gz --strip-components=1 -C /src \
+    && rm /tmp/source.tar.gz
+
+FROM build-base AS build-off
+ARG TARGETARCH
+ARG BUILD_JOBS=2
+# 공식 CPU 이미지의 아키텍처별 커널 선택을 유지한다. x86 옵션을 ARM에 강제하지 않는다.
+RUN case "$TARGETARCH" in amd64|arm64) ;; *) exit 1 ;; esac \
+    && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+      -DGGML_NATIVE=OFF -DGGML_BACKEND_DL=ON -DGGML_CPU_ALL_VARIANTS=ON \
+      -DGGML_BLAS=OFF -DGGML_BLAS_VENDOR=OpenBLAS \
+      -DGGML_CUDA=OFF -DGGML_METAL=OFF -DGGML_VULKAN=OFF -DGGML_OPENCL=OFF \
+      -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF \
+      -DLLAMA_BUILD_UI=OFF -DLLAMA_USE_PREBUILT_UI=OFF \
+    && cmake --build build --target llama-server llama-bench -j "$BUILD_JOBS"
+RUN mkdir -p /out/build-info \
+    && cp build/bin/llama-server build/bin/llama-bench /out/ \
+    && find build -name '*.so*' -exec cp -P {} /out/ \; \
+    && cp build/CMakeCache.txt /out/build-info/ \
+    && gcc-14 --version > /out/build-info/compiler.txt \
+    && dpkg-query -W > /out/build-info/packages.txt
+
+# OFF 빌드의 공통 산출물을 재사용하고 BLAS 설정만 바꾼다.
+FROM build-off AS build-on
+ARG BUILD_JOBS=2
+RUN cmake -S . -B build -DGGML_BLAS=ON \
+    && cmake --build build --target llama-server llama-bench -j "$BUILD_JOBS" \
+    && find build -name '*.so*' -exec cp -P {} /out/ \; \
+    && cp build/bin/llama-server build/bin/llama-bench /out/ \
+    && cp build/CMakeCache.txt /out/build-info/
+
+FROM ${BASE_IMAGE} AS runtime
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 libopenblas0-pthread libssl3t64 curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+LABEL org.opencontainers.image.revision="339f3242c761f16c27e5ffcde1d35dcc31933a55" \
+      org.opencontainers.image.source="https://github.com/ggml-org/llama.cpp" \
+      kaption.evaluation.source-sha256="901a2a2b2eb389a08cae3fec3269914f5c03e8d39b1352db9a29cbd1886727f3"
+WORKDIR /app
+ENV LD_LIBRARY_PATH=/app
+ENTRYPOINT ["/app/llama-server"]
+
+FROM runtime AS blas-off
+COPY --from=build-off /out/ /app/
+LABEL kaption.evaluation.blas="OFF"
+
+FROM runtime AS blas-on
+COPY --from=build-on /out/ /app/
+LABEL kaption.evaluation.blas="ON"
