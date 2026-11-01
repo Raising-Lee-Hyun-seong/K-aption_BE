@@ -30,8 +30,22 @@ SPOKEN_RELATION = re.compile(
 NUMBER_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_.])[-−]?\s*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)"
     r"(?=$|[^A-Za-z0-9_]|(?:" + RAW_SYMBOL_PATTERN
-    + r"|kg|km|cm|mm)(?![A-Za-z0-9_]))"
+    + r"|[xy](?:_?\d+)?|kg|km|cm|mm)(?![A-Za-z0-9_]))"
 )
+ORDINAL_NUMBER_PATTERN = re.compile(r'(?<![A-Za-z0-9_.])([-−]?\s*\d+)(?:st|nd|rd|th)(?![A-Za-z0-9_])', re.IGNORECASE)
+NEGATIVE_PREFIX = re.compile(r'(?:(?<![A-Za-z-])(?:minus|negative)\s+|(?<![가-힣])(?:마이너스|음수|음의)\s*)$', re.IGNORECASE)
+ORDINAL_REFERENCES = {
+    'first': ('1', r'첫\s*(?:번째|째)?'),
+    'second': ('2', r'둘\s*째|두\s*번째'),
+    'third': ('3', r'셋\s*째|세\s*번째'),
+    'fourth': ('4', r'넷\s*째|네\s*번째'),
+    'fifth': ('5', r'다섯\s*(?:번째|째)'),
+    'sixth': ('6', r'여섯\s*(?:번째|째)'),
+    'seventh': ('7', r'일곱\s*(?:번째|째)'),
+    'eighth': ('8', r'여덟\s*(?:번째|째)'),
+    'ninth': ('9', r'아홉\s*(?:번째|째)'),
+    'tenth': ('10', r'열\s*(?:번째|째)'),
+}
 UNIT_PREFIX_PATTERN = re.compile(
     r'(?:\d|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten))\s*$',
     re.IGNORECASE,
@@ -64,13 +78,76 @@ UNIT_ALIASES = {
 
 
 def _numbers(text: str) -> set:
-    """변수의 첨자와 구별한 부호 포함 숫자를 표기와 무관한 값으로 반환한다.
+    """첨자를 제외한 숫자·숫자 서수와 바로 앞의 영어·한국어 음수 부호를 정규화한다.
 
     :param text: 검사하거나 번역할 입력 텍스트.
     :return: 중복을 제거하고 Decimal로 정규화한 숫자 값 집합.
     """
-    return {Decimal(re.sub(r'\s+', '', value).replace('−', '-').replace(',', ''))
-            for value in NUMBER_PATTERN.findall(text)}
+    values = set()
+    for pattern in (NUMBER_PATTERN, ORDINAL_NUMBER_PATTERN):
+        for match in pattern.finditer(text):
+            literal = match[1] if pattern is ORDINAL_NUMBER_PATTERN else match.group()
+            value = Decimal(re.sub(r'\s+', '', literal).replace('−', '-').replace(',', ''))
+            if value >= 0 and NEGATIVE_PREFIX.search(text[:match.start()].rstrip() + ' '):
+                value = -value
+            values.add(value)
+    return values
+
+
+def _korean_number_match(translation: str, alternatives: tuple, negative: bool) -> bool:
+    """한국어 수사와 바로 앞 음수 표현을 함께 확인해 다른 숫자의 부호와 혼동하지 않는다.
+
+    :param translation: 숫자 수사 보존을 확인할 한국어 번역 후보.
+    :param alternatives: 동일한 값을 나타내는 한국어 수사 문자열 튜플.
+    :param negative: 원문 수사가 음수이면 True.
+    :return: 같은 수사와 부호의 한국어 표현을 발견하면 True.
+    """
+    for alternative in alternatives:
+        pattern = r'(?<![가-힣])' + alternative + (
+            r'(?=\s|$|개|명|번|의|이|입|인|에|으|과|와|를|만|도|은|는|로)'
+            if len(alternative) == 1 else '')
+        for match in re.finditer(pattern, translation):
+            has_negative = bool(NEGATIVE_PREFIX.search(translation[:match.start()].rstrip() + ' '))
+            if has_negative == negative:
+                return True
+    return False
+
+
+def _number_word_problem(source: str, translation: str, source_numbers: set, output_numbers: set) -> Optional[str]:
+    """영어 수량·순서 지시·국소 관용 표현을 구별하고 허용 숫자 집합에 값을 추가한다.
+
+    :param source: 숫자 수사와 문맥을 확인할 영어 원문.
+    :param translation: 수량 또는 순서 보존을 검사할 한국어 번역 후보.
+    :param source_numbers: 원문 숫자 집합. 의미가 있는 수사·서수 값을 이 집합에 추가한다.
+    :param output_numbers: 번역 후보에서 추출한 숫자 값 집합.
+    :return: 수량·순서가 사라지면 missing_number, 보존되거나 명시적 지시 대명사이면 None.
+    """
+    for word, alternatives in NUMBER_WORDS.items():
+        for match in re.finditer(r'\b(?:(?<![A-Za-z-])(minus|negative)\s+)?' + word + r'\b', source, re.IGNORECASE):
+            prefix, suffix = source[:match.start()], source[match.end():]
+            ordinal = re.search(r'\b(' + '|'.join(ORDINAL_REFERENCES) + r')\s+$', prefix, re.IGNORECASE)
+            if word == 'one' and not match[1] and ordinal:
+                number, korean = ORDINAL_REFERENCES[ordinal[1].lower()]
+                value = Decimal(number)
+                source_numbers.add(value)
+                if value not in output_numbers and not re.search(r'(?<![가-힣])(?:' + korean + r')', translation):
+                    return 'missing_number'
+                continue
+            if (word == 'one' and not match[1]
+                    and re.search(r'\b(?:this|that|which)\s+$', prefix, re.IGNORECASE)
+                    and re.match(r'\s+(?:is|was|will|would|equals|becomes)\b', suffix, re.IGNORECASE)):
+                continue
+            value = Decimal(alternatives[0]) * (-1 if match[1] else 1)
+            source_numbers.add(value)
+            approximate = not match[1] and (
+                (word == 'one' and re.match(r'\s+or\s+two\b', suffix, re.IGNORECASE))
+                or (word == 'two' and re.search(r'\b(?:one|questions?)\s+or\s+$', prefix, re.IGNORECASE)))
+            korean_match = _korean_number_match(translation, alternatives[1:], bool(match[1]))
+            if approximate:
+                korean_match = korean_match or _korean_number_match(translation, ('한두',), False)
+            if value not in output_numbers and not korean_match:
+                return 'missing_number'
+    return None
 
 
 def _is_unit_symbol(text: str, start: int, symbol: str) -> bool:
@@ -295,19 +372,9 @@ def preservation_problem(source: str, translation: str) -> Optional[str]:
     output_numbers = _numbers(translation)
     if not source_numbers.issubset(output_numbers):
         return "missing_number"
-    for word, alternatives in NUMBER_WORDS.items():
-        for match in re.finditer(r"\b(?:(minus|negative)\s+)?" + word + r"\b", source, re.IGNORECASE):
-            value = Decimal(alternatives[0]) * (-1 if match.group(1) else 1)
-            source_numbers.add(value)
-            numeric_match = value in output_numbers
-            korean_match = any(re.search(r"(?<![가-힣])" + value
-                                        + (r'(?=\s|$|개|명|번|의|이|입|인|에|으|과|와|를|만|도|은|는|로)'
-                                           if len(value) == 1 else ''), translation)
-                               for value in alternatives[1:])
-            if match.group(1):
-                korean_match = korean_match and bool(re.search(r'마이너스|음수|음의', translation))
-            if not (numeric_match or korean_match):
-                return "missing_number"
+    word_problem = _number_word_problem(source, translation, source_numbers, output_numbers)
+    if word_problem:
+        return word_problem
     if not output_numbers.issubset(source_numbers):
         return "invented_number"
     if not _units(translation, include_korean=True).issubset(_units(source)):

@@ -1,0 +1,499 @@
+{
+  "source_pdf": "/Users/macbookair/Downloads/8abaf0e2-0647-4c60-8c02-76897eec854b_번역_실패모음_11월_1.pdf",
+  "source_pdf_sha256": "8e5951c8fad4deb284df4f707ab20693ed3ff7127c31430f19a04df37ef3f7bc",
+  "pdf_page_count": 16,
+  "reported_failed_count": 27,
+  "visible_failure_cases": 22,
+  "unaccounted_reported_failures": 5,
+  "extraction_method": "Visual transcription of all 16 rendered pages; native PDF text contains headings/footers only.",
+  "relation_to_local_clip": {
+    "user_supplied_relation": "ocw_미적분_1.mp4 is the first part of the same full lecture.",
+    "local_clip_duration_seconds_previously_measured": 330.908005,
+    "earliest_pdf_display_seconds": 401,
+    "latest_pdf_display_seconds": 3027,
+    "overlapping_cases_if_timestamps_are_full_lecture_absolute": 0,
+    "limits": "Only display start times available. Full-lecture video and surrounding transcript were not supplied. Timing origin and lecture identity were not independently verified."
+  },
+  "cases": [
+    {
+      "id": "calculus-pdf-01",
+      "pdf_page": 1,
+      "display_timestamp": "06:41",
+      "display_seconds": 401,
+      "source": "Well, a tangent line has an equation, and any line through a point has the equation y minus y0 is equal to m the slope times x minus x0.",
+      "inspection_features_not_confirmed_causes": [
+        "spoken_math",
+        "calculus_variables"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-02",
+      "pdf_page": 2,
+      "display_timestamp": "06:59",
+      "display_seconds": 419,
+      "source": "And now there are two pieces of information that we're going to need to work out what the line is.",
+      "inspection_features_not_confirmed_causes": [
+        "number_word",
+        "work_out"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-03",
+      "pdf_page": 2,
+      "display_timestamp": "07:07",
+      "display_seconds": 427,
+      "source": "The first one is the point.",
+      "inspection_features_not_confirmed_causes": [
+        "ordinal_reference"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-04",
+      "pdf_page": 3,
+      "display_timestamp": "09:56",
+      "display_seconds": 596,
+      "source": "It's not really the fact, this thing crosses at some other place, which is this point q, but it's not really the fact that the thing crosses at two place, because the line could be wiggly, the curve could be wiggly, and it could cross back and forth a number of times.",
+      "inspection_features_not_confirmed_causes": [
+        "number_word",
+        "long_explanation",
+        "possible_stt_grammar"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-05",
+      "pdf_page": 4,
+      "display_timestamp": "11:01",
+      "display_seconds": 661,
+      "source": "So the tangent line is equal to the limit of what's so-called",
+      "inspection_features_not_confirmed_causes": [
+        "incomplete_source"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-06",
+      "pdf_page": 5,
+      "display_timestamp": "11:32",
+      "display_seconds": 692,
+      "source": "So again, this is still a geometric discussion, but now we're going to be able to put symbols and formulas to this computation, and we'll be able to work out formulas in",
+      "inspection_features_not_confirmed_causes": [
+        "incomplete_source",
+        "work_out"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-07",
+      "pdf_page": 6,
+      "display_timestamp": "14:19",
+      "display_seconds": 859,
+      "source": "And I want to work out a more usable form here.",
+      "inspection_features_not_confirmed_causes": [
+        "work_out"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-08",
+      "pdf_page": 6,
+      "display_timestamp": "14:26",
+      "display_seconds": 866,
+      "source": "I want to work out a better formula for this.",
+      "inspection_features_not_confirmed_causes": [
+        "work_out"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-09",
+      "pdf_page": 7,
+      "display_timestamp": "15:01",
+      "display_seconds": 901,
+      "source": "So if this horizontal distance is delta x, then this location is x0 plus delta x.",
+      "inspection_features_not_confirmed_causes": [
+        "spoken_math",
+        "calculus_variables"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-10",
+      "pdf_page": 7,
+      "display_timestamp": "20:20",
+      "display_seconds": 1220,
+      "source": "The first one is that x0 and x0 cancel.",
+      "inspection_features_not_confirmed_causes": [
+        "ordinal_reference",
+        "calculus_variables"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-11",
+      "pdf_page": 8,
+      "display_timestamp": "23:02",
+      "display_seconds": 1382,
+      "source": "So I've managed to fill the boards, so maybe I should stop for a question or two.",
+      "inspection_features_not_confirmed_causes": [
+        "approximate_quantity_idiom"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-12",
+      "pdf_page": 9,
+      "display_timestamp": "23:27",
+      "display_seconds": 1407,
+      "source": "So in other words, why is it that this expression, when delta x tends to 0, is equal to minus 1 over x0 squared?",
+      "inspection_features_not_confirmed_causes": [
+        "negative_numeric_literal",
+        "fraction",
+        "power",
+        "calculus_variables"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-13",
+      "pdf_page": 10,
+      "display_timestamp": "24:07",
+      "display_seconds": 1447,
+      "source": "Minus 1 in the numerator.",
+      "inspection_features_not_confirmed_causes": [
+        "negative_numeric_literal",
+        "short_phrase"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-14",
+      "pdf_page": 10,
+      "display_timestamp": "31:45",
+      "display_seconds": 1905,
+      "source": "We're going to find the so-called x-intercept.",
+      "inspection_features_not_confirmed_causes": [
+        "terminology"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-15",
+      "pdf_page": 11,
+      "display_timestamp": "32:34",
+      "display_seconds": 1954,
+      "source": "And that's equal to minus 1 over x0 squared.",
+      "inspection_features_not_confirmed_causes": [
+        "negative_numeric_literal",
+        "fraction",
+        "power",
+        "calculus_variables"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-16",
+      "pdf_page": 11,
+      "display_timestamp": "34:42",
+      "display_seconds": 2082,
+      "source": "So this one is 2y0.",
+      "inspection_features_not_confirmed_causes": [
+        "reference_one",
+        "coefficient_variable"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-17",
+      "pdf_page": 12,
+      "display_timestamp": "41:52",
+      "display_seconds": 2512,
+      "source": "And the first one is the following.",
+      "inspection_features_not_confirmed_causes": [
+        "ordinal_reference"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-18",
+      "pdf_page": 12,
+      "display_timestamp": "45:24",
+      "display_seconds": 2724,
+      "source": "Anyway, no zeros.",
+      "inspection_features_not_confirmed_causes": [
+        "ambiguous_zero_or_root",
+        "short_phrase"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-19",
+      "pdf_page": 13,
+      "display_timestamp": "45:40",
+      "display_seconds": 2740,
+      "source": "All right, now in order to simplify this, in order to understand algebraically what's going on, I need to understand what the nth power of a sum is.",
+      "inspection_features_not_confirmed_causes": [
+        "power",
+        "long_explanation"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-20",
+      "pdf_page": 14,
+      "display_timestamp": "46:11",
+      "display_seconds": 2771,
+      "source": "appendix, sorry, says that if you take the sum of two guys and you take them to the nth power, that of course is x plus delta x multiplied by itself n times.",
+      "inspection_features_not_confirmed_causes": [
+        "power",
+        "number_word",
+        "spoken_math",
+        "possible_source_continuation"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-21",
+      "pdf_page": 15,
+      "display_timestamp": "50:14",
+      "display_seconds": 3014,
+      "source": "Namely, if I take d by dx of something like x cubed plus 5 x to the 10th power, that's going to be equal to 3x squared.",
+      "inspection_features_not_confirmed_causes": [
+        "differentiation",
+        "numeric_ordinal_power",
+        "coefficient_variable",
+        "possible_source_continuation"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    },
+    {
+      "id": "calculus-pdf-22",
+      "pdf_page": 16,
+      "display_timestamp": "50:27",
+      "display_seconds": 3027,
+      "source": "And then here I'll get 5 times 10, so 50 x to the 9th.",
+      "inspection_features_not_confirmed_causes": [
+        "numeric_ordinal_power",
+        "coefficient_variable",
+        "spoken_math",
+        "possible_source_continuation"
+      ],
+      "observed_ui": "English / 영어 원문 유지 / 번역 실패 · 원문 유지",
+      "actual_rejected_translation": null,
+      "actual_backend_rejection_reason": null
+    }
+  ],
+  "validator_diagnostics": [
+    {
+      "timestamp": "07:07",
+      "source": "The first one is the point.",
+      "manually_constructed_translation_not_observed_model_output": "첫 번째는 그 점입니다.",
+      "restored_translation": "첫 번째는 그 점입니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "20:20",
+      "source": "The first one is that x0 and x0 cancel.",
+      "manually_constructed_translation_not_observed_model_output": "첫 번째는 x0와 x0가 서로 소거된다는 것입니다.",
+      "restored_translation": "첫 번째는 x0와 x0가 서로 소거된다는 것입니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "41:52",
+      "source": "And the first one is the following.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 첫 번째는 다음과 같습니다.",
+      "restored_translation": "그리고 첫 번째는 다음과 같습니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "34:42",
+      "source": "So this one is 2y0.",
+      "manually_constructed_translation_not_observed_model_output": "그러면 이것은 2y0입니다.",
+      "restored_translation": "그러면 이것은 2y0입니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "23:02",
+      "source": "So I've managed to fill the boards, so maybe I should stop for a question or two.",
+      "manually_constructed_translation_not_observed_model_output": "칠판을 다 채웠으니 질문을 한두 개 받아야 할 것 같습니다.",
+      "restored_translation": "칠판을 다 채웠으니 질문을 한두 개 받아야 할 것 같습니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "24:07",
+      "source": "Minus 1 in the numerator.",
+      "manually_constructed_translation_not_observed_model_output": "분자에는 -1이 있습니다.",
+      "restored_translation": "분자에는 -1이 있습니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "32:34",
+      "source": "And that's equal to minus 1 over x0 squared.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 이것은 -1 / x0²와 같습니다.",
+      "restored_translation": "그리고 이것은 -1 / x0²와 같습니다.",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "23:27",
+      "source": "So in other words, why is it that this expression, when delta x tends to 0, is equal to minus 1 over x0 squared?",
+      "manually_constructed_translation_not_observed_model_output": "다시 말해 Δx가 0으로 갈 때 이 식이 -1 / x0²가 되는 이유는 무엇인가요?",
+      "restored_translation": "다시 말해 Δx가 0으로 갈 때 이 식이 -1 / x0²가 되는 이유는 무엇인가요?",
+      "rejection_reason": "missing_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "50:27",
+      "source": "And then here I'll get 5 times 10, so 50 x to the 9th.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 여기서는 5 × 10이므로 50 x의 9제곱을 얻습니다.",
+      "restored_translation": "그리고 여기서는 5 × 10이므로 50 x의 9제곱을 얻습니다.",
+      "rejection_reason": "invented_number",
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "15:01",
+      "source": "So if this horizontal distance is delta x, then this location is x0 plus delta x.",
+      "manually_constructed_translation_not_observed_model_output": "이 수평 거리가 Δx라면 이 위치는 x0 + Δx입니다.",
+      "restored_translation": "이 수평 거리가 Δx라면 이 위치는 x0 + Δx입니다.",
+      "rejection_reason": null,
+      "model_generation_run": false,
+      "forced_terms": [
+        {
+          "en": "distance",
+          "ko": "거리"
+        }
+      ]
+    },
+    {
+      "timestamp": "14:19",
+      "source": "And I want to work out a more usable form here.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 여기서 더 사용하기 편리한 형태를 구하고 싶습니다.",
+      "restored_translation": "그리고 여기서 더 사용하기 편리한 형태를 구하고 싶습니다.",
+      "rejection_reason": "missing_term",
+      "model_generation_run": false,
+      "forced_terms": [
+        {
+          "en": "work",
+          "ko": "일"
+        }
+      ]
+    },
+    {
+      "timestamp": "14:26",
+      "source": "I want to work out a better formula for this.",
+      "manually_constructed_translation_not_observed_model_output": "이에 대해 더 나은 공식을 구하고 싶습니다.",
+      "restored_translation": "이에 대해 더 나은 공식을 구하고 싶습니다.",
+      "rejection_reason": "missing_term",
+      "model_generation_run": false,
+      "forced_terms": [
+        {
+          "en": "work",
+          "ko": "일"
+        }
+      ]
+    },
+    {
+      "timestamp": "31:45",
+      "source": "We're going to find the so-called x-intercept.",
+      "manually_constructed_translation_not_observed_model_output": "우리는 이른바 x절편을 구할 것입니다.",
+      "restored_translation": "우리는 이른바 x절편을 구할 것입니다.",
+      "rejection_reason": null,
+      "model_generation_run": false,
+      "forced_terms": []
+    },
+    {
+      "timestamp": "06:59",
+      "source": "And now there are two pieces of information that we're going to need to work out what the line is.",
+      "manually_constructed_translation_not_observed_model_output": "이 직선을 구하려면 두 가지 정보가 필요합니다.",
+      "restored_translation": "이 직선을 구하려면 두 가지 정보가 필요합니다.",
+      "rejection_reason": "missing_term",
+      "model_generation_run": false,
+      "forced_terms": [
+        {
+          "en": "work",
+          "ko": "일"
+        }
+      ]
+    }
+  ],
+  "diagnostic_scope": "Manually constructed Korean examples passed through current restore/validation functions with empty context. No actual rejected model output is present in the screenshots. Diagnostics are not confirmed causes or recovery counts for team run.",
+  "implementation_sha256": {
+    "app/services/translation.py": "e85c57a9165896d3850a517e1d3fa932d0aa4b993d386f8b372aec38a89882e6",
+    "app/services/translation_qwen.py": "0286013dfee45cd2dad48afdc770f6513cedf033a6ed975c8206de0b7fc2afce",
+    "app/services/translation_validation.py": "4e4daf57bd338bff592e9d4b8e507b847dc77cd3518f5e300bcf9d261108981b",
+    "app/services/translation_inputs.py": "f38fcc7cadf3d9d901276a6de97e9b74650c71b1584a663fe3d0401c3cfcdcf1",
+    "app/services/translation_normalization.py": "f650924fb3f817e684b482da23c1e25ebabcdc63bd423fb9d3153da9507daa68",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "observed_features": {
+    "work_out_source_cases": 4,
+    "first_one_source_cases": 3
+  },
+  "work_scope": {
+    "production_code_changed": false,
+    "model_generation_requests": 0,
+    "full_test_suite_run": false,
+    "git_commit_performed": false
+  }
+}

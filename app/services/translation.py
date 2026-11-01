@@ -13,6 +13,12 @@ from app.services.translation_validation import (
 OUTPUT_MARKERS = ("참고 문맥:", "번역할 대상:", "입력:", "출력:")
 HANGUL_PATTERN = re.compile(r"[가-힣]")
 GLOSSARY_PATH = Path(__file__).resolve().parents[2] / "data/physics_glossary.json"
+WORK_OUT_PATTERN = re.compile(
+    r"\bwork\s+(?:(?:it|this|that|these|those|them)(?:\s+all)?\s+|"
+    r"(?:the|a|an|this|that|these|those|our|your|its|their)\s+"
+    r"(?:(?:better|usable|general|new|remaining|same|whole|final|exact|numerical|algebraic)\s+){0,2}"
+    r"(?:formula|equation|problem|value|result|answer|expression|calculation|solution|"
+    r"relation|relationship|line)s?\s+)?out\b(?!\s+of\b)", re.IGNORECASE)
 
 
 class TranslationTransportError(ValueError):
@@ -42,17 +48,19 @@ class TranslationService:
         self._lock = Lock()
 
     def _matching_terms(self, text: str, glossary=None) -> list:
-        """단어 경계로 용어를 찾고 겹치는 위치에서는 긴 복합 용어를 우선한다.
+        """긴 복합 용어를 우선하며 계산을 뜻하는 work out의 work는 제외한다.
 
         :param text: 검사하거나 번역할 입력 텍스트.
         :param glossary: 선택적 용어 목록. None이면 서비스의 필수 검증 용어집을 사용한다.
         :return: 원문과 매칭된 영어·한국어 용어 항목 목록.
         """
         matched, occupied = [], []
+        nonphysical_work = {match.start() for match in WORK_OUT_PATTERN.finditer(text)}
         for entry in sorted(self.glossary if glossary is None else glossary,
                             key=lambda entry: -len(entry["en"])):
             spans = [match.span() for match in re.finditer(
                 r"\b" + re.escape(entry["en"]) + r"\b", text, re.IGNORECASE)
+                if not (entry["en"].lower() == "work" and match.start() in nonphysical_work)
                 if not any(match.start() < end and match.end() > start
                            for start, end in occupied)]
             if spans:

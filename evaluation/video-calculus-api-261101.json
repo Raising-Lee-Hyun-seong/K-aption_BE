@@ -1,0 +1,305 @@
+{
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.68,
+      "text": "The following content is provided under a Creative Commons license.",
+      "translation": "다음 내용은 크리에이티브 커먼스 라이선스 하에 제공됩니다.",
+      "translation_error": null
+    },
+    {
+      "start": 3.68,
+      "end": 10.0,
+      "text": "Your support will help MIT OpenCourseWare continue to offer high quality educational resources for free.",
+      "translation": "당신의 지원은 MIT 오픈코스웨어가 무료로 뛰어난 교육 자원을 계속 제공할 수 있도록 도와줍니다.",
+      "translation_error": null
+    },
+    {
+      "start": 10.0,
+      "end": 21.73,
+      "text": "To make a donation or to view additional materials from hundreds of MIT courses, visit MIT OpenCourseWare at ocw.mit.edu.",
+      "translation": "백만 개의 MIT 강좌에서 기부하거나 추가 자료를 확인하고자 한다면, MIT 개방 강의자료(OpenCourseWare) 웹사이트 ocw.mit.edu를 방문하시기 바랍니다.",
+      "translation_error": null
+    },
+    {
+      "start": 21.73,
+      "end": 25.45,
+      "text": "So again, welcome to 1801.",
+      "translation": "그래서 다시 한번, 1801에 오신 것을 환영합니다.",
+      "translation_error": null
+    },
+    {
+      "start": 25.45,
+      "end": 34.25,
+      "text": "We're getting started today with what we're calling Unit 1, highly imaginative topic,",
+      "translation": "오늘 우리는 '단위 1'이라고 부르는 매우 창의적인 주제에 대해 시작합니다.",
+      "translation_error": null
+    },
+    {
+      "start": 34.25,
+      "end": 43.56,
+      "text": "highly imaginative title, and its differentiation.",
+      "translation": "매우 상상력 있는 제목이며, 그 도함수입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 43.56,
+      "end": 49.92,
+      "text": "So let me first tell you briefly what's in store in the next couple of weeks.",
+      "translation": "그러면 다음 몇 주 동안 어떤 것이 준비되어 있는지 간단히 알려드릴게요.",
+      "translation_error": null
+    },
+    {
+      "start": 49.92,
+      "end": 62.77,
+      "text": "The main topic today is what is a derivative.",
+      "translation": "오늘의 주제는 도함수란 무엇인가입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 62.77,
+      "end": 71.83,
+      "text": "And we're going to look at this from several different points of view.",
+      "translation": "그리고 우리는 이 내용을 여러 가지 관점에서 살펴보겠습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 71.83,
+      "end": 79.21,
+      "text": "And the first one is the geometric interpretation.",
+      "translation": null,
+      "translation_error": "translation_failed"
+    },
+    {
+      "start": 79.21,
+      "end": 82.25,
+      "text": "And that's what we'll spend most of today on.",
+      "translation": "그것이 오늘 대부분의 시간을 보내는 주제입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 82.25,
+      "end": 97.82,
+      "text": "And then we'll also talk about a physical interpretation of what a derivative is.",
+      "translation": "그리고 그 후에 우리는 도함수의 물리적 의미에 대해 이야기할 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 97.82,
+      "end": 113.33,
+      "text": "And then there's going to be something else, which I guess is maybe the reason why calculus is so fundamental and why we always start with it in most science and",
+      "translation": "그리고 그 다음에는 도함수의 물리적 의미에 대해 이야기할 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 113.33,
+      "end": 129.69,
+      "text": "engineering schools, which is the importance of derivatives of this to all measurements.",
+      "translation": "그리고 그 외에도 어떤 것이 있겠는데, 아마도 미적분이 매우 기본적이며 대부분의 과학 및 공학 학과에서 처음으로 다루는 이유가 바로 이 것의 모든 측정에 대한 도함수의 중요성 때문일 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 129.69,
+      "end": 147.15,
+      "text": "So that means pretty much every place, that means in science and engineering, in economics, in political science, et cetera, polling, lots of commercial",
+      "translation": "그러므로 거의 모든 곳에서, 과학과 공학, 경제, 정치학 등에서, 여론 조사, 다양한 상업 분야에서 적용됩니다.",
+      "translation_error": null
+    },
+    {
+      "start": 147.15,
+      "end": 150.11,
+      "text": "applications, just about everything.",
+      "translation": "응용 분야에서 거의 모든 것.",
+      "translation_error": null
+    },
+    {
+      "start": 150.11,
+      "end": 153.55,
+      "text": "Now, so that's what we'll be getting started with.",
+      "translation": "지금부터 그게 바로 우리가 시작할 내용입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 153.55,
+      "end": 170.14,
+      "text": "And then there's another thing that we're going to do in this unit, which is we're going to explain how to differentiate anything.",
+      "translation": "그리고 이 단위에서 우리가 할 또 다른 일은 무엇인가요. 바로 어떤 것을 미분하는 방법을 설명하는 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 170.14,
+      "end": 182.01,
+      "text": "So how to differentiate any function you know.",
+      "translation": "그러면 어떤 함수든 미분하는 방법은 무엇입니까?",
+      "translation_error": null
+    },
+    {
+      "start": 182.01,
+      "end": 184.49,
+      "text": "And that's kind of a tall order.",
+      "translation": "그리고 그건 어느 정도 큰 요구사항입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 184.49,
+      "end": 186.57,
+      "text": "But let me just give you an example.",
+      "translation": "하지만 제가 단지 예를 들어 드릴게요.",
+      "translation_error": null
+    },
+    {
+      "start": 186.57,
+      "end": 200.45,
+      "text": "If you want to take the derivative, this we'll see today as the notation for the derivative of something, of some messy function like e to the x arc tan of x, we'll",
+      "translation": "도함수를 구하고자 한다면, 오늘 우리가 어떤 복잡한 함수, 예를 들어 e의 x승에 x의 아크타너를 곱한 함수의 도함수를 나타내는 기호로 보게 될 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 200.45,
+      "end": 206.53,
+      "text": "work this out by the end of this unit.",
+      "translation": "이 단위의 끝까지 이 일을 계산해 보세요.",
+      "translation_error": null
+    },
+    {
+      "start": 206.53,
+      "end": 212.84,
+      "text": "So anything you can think of, anything you can write down, we can differentiate it.",
+      "translation": "그러므로 당신이 생각나는 어떤 것도, 쓸 수 있는 어떤 것도 우리는 그걸 미분할 수 있습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 212.84,
+      "end": 214.96,
+      "text": "So that's what we're going to do.",
+      "translation": "그래서 그게 바로 우리가 할 일입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 214.96,
+      "end": 225.03,
+      "text": "And today, as I said, we're going to spend most of our time on this geometric interpretation.",
+      "translation": "오늘 저는 말씀드렸듯이, 대부분의 시간을 이 기하학적 해석에 할애할 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 225.03,
+      "end": 230.38,
+      "text": "So let's begin with that.",
+      "translation": "그러면 그 부분부터 시작해 보겠습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 230.38,
+      "end": 241.98,
+      "text": "So here we go with the geometric interpretation of derivatives.",
+      "translation": "그러면 도함수의 기하학적 해석에 대해 시작해 보겠습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 241.98,
+      "end": 251.11,
+      "text": "And what we're going to do is just ask the geometric",
+      "translation": "그리고 우리가 할 일은 단지 기하학을 묻는 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 251.11,
+      "end": 266.46,
+      "text": "problem of finding the tangent line to some graph of some",
+      "translation": "어떤 그래프에 대한 어떤 접선을 찾는 문제",
+      "translation_error": null
+    },
+    {
+      "start": 266.46,
+      "end": 273.68,
+      "text": "function at some point, say x0, y0.",
+      "translation": "함수는 어떤 점, 예를 들어 x₀에서 y₀에서 정의된다 합니다.",
+      "translation_error": null
+    },
+    {
+      "start": 273.68,
+      "end": 278.84,
+      "text": "So that's the problem that we're addressing here.",
+      "translation": "그러므로 여기서 다루고 있는 문제는 바로 그 것입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 278.84,
+      "end": 282.88,
+      "text": "Guess I should probably turn this off.",
+      "translation": "아마도 이걸 꺼야 할 것 같아요.",
+      "translation_error": null
+    },
+    {
+      "start": 282.88,
+      "end": 286.0,
+      "text": "All right, so here's our problem.",
+      "translation": "좋아요, 그래서 여기는 우리의 문제입니다.",
+      "translation_error": null
+    },
+    {
+      "start": 286.0,
+      "end": 289.72,
+      "text": "And now let me show you the solution.",
+      "translation": "이제 제가 여러분에게 해법을 보여드리겠습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 289.72,
+      "end": 298.08,
+      "text": "So well, let's graph the function.",
+      "translation": "그래서 아주 잘, 함수를 그래프로 그려봅시다.",
+      "translation_error": null
+    },
+    {
+      "start": 298.08,
+      "end": 300.88,
+      "text": "So let's say here's its graph.",
+      "translation": "그러면 여기서는 그 함수의 그래프가 이렇게 됩니다.",
+      "translation_error": null
+    },
+    {
+      "start": 300.88,
+      "end": 304.2,
+      "text": "And here's some point.",
+      "translation": "그리고 여기는 몇 개의 점이 있습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 304.2,
+      "end": 309.86,
+      "text": "Maybe I should draw it just a bit lower so that I don't.",
+      "translation": "아마도 나는 그것을 약간 더 낮게 그리는 것이 좋을지도 모릅니다.",
+      "translation_error": null
+    },
+    {
+      "start": 309.86,
+      "end": 316.34,
+      "text": "So here's a point P. Maybe it's above the point x0.",
+      "translation": "그러면 여기에 점 P가 있습니다. 아마도 점 x0보다 위에 있을 수도 있습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 316.34,
+      "end": 319.5,
+      "text": "x0, by the way, this was supposed to be an x0.",
+      "translation": "x0이란, 그런데 이건 x0이어야 했죠.",
+      "translation_error": null
+    },
+    {
+      "start": 319.5,
+      "end": 327.26,
+      "text": "That was some fixed place on the x-axis.",
+      "translation": "그것은 x축 위의 고정된 위치였습니다.",
+      "translation_error": null
+    },
+    {
+      "start": 327.26,
+      "end": 330.86,
+      "text": "And now, in order to perform this.",
+      "translation": "그리고 이제 이 작업을 수행하기 위해.",
+      "translation_error": null
+    }
+  ]
+}

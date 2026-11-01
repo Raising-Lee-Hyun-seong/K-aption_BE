@@ -12,7 +12,7 @@ API_TESTS = ('test_api_contract', 'test_pipeline', 'test_jobs',
              'test_media_limits', 'test_subtitle_export', 'test_job_events', 'test_job_cancellation',
              'test_capabilities')
 TRANSLATION_TESTS = ('test_translation_validation', 'test_pipeline',
-                     'test_prompt_matrix', 'test_qwen_lecture')
+                     'test_prompt_matrix', 'test_qwen_lecture', 'test_glossary_context')
 CPU_TESTS = ('test_http_translation', 'test_model_download', 'test_qwen_translation', 'test_cpu_configuration')
 OWNERS = {
     'app/main.py': API_TESTS + ('test_http_translation', 'test_qwen_translation'),

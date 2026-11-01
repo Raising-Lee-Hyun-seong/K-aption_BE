@@ -1,0 +1,4225 @@
+{
+  "started_utc": "2026-11-01T13:52:34.441611+00:00",
+  "controller_source": "\"\"\"격리된 수정본 Docker API에 두 원본 영상을 순차 업로드하고 결과와 요청별 로그를 보존한다.\"\"\"\nimport datetime\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nimport subprocess\nimport time\n\nimport httpx\n\nROOT = Path('/Users/macbookair/Desktop/K-aption_BE')\nOUT = Path('/private/tmp/kaption-calculus-fix-final-two-videos-261101')\nSOURCE = Path(__file__).read_text()\n\n\ndef docker(args):\n    \"\"\"공개 상태·평가 로그만 조회하는 Docker 명령을 실행한다.\n\n    :param args: 셸로 해석하지 않을 인자 목록. 환경 설정 전체를 조회하지 않는다.\n    :return: 명령 결과.\n    :raises subprocess.CalledProcessError: Docker 명령이 실패한 경우.\n    \"\"\"\n    return subprocess.run(['docker', *args], capture_output=True, text=True, encoding='utf-8',\n                          errors='replace' if args[0] == 'logs' else 'strict', check=True, timeout=60)\n\n\ndef states():\n    \"\"\"운영 컨테이너 두 개의 이미지·자원·상태만 기록한다.\n\n    :return: 비밀 환경 변수를 제외한 두 컨테이너의 공개 상태 목록.\n    \"\"\"\n    fmt = ('{\"name\":{{json .Name}},\"id\":{{json .Id}},\"image\":{{json .Image}},\"cmd\":{{json .Config.Cmd}},'\n           '\"cpu\":{{.HostConfig.NanoCpus}},\"memory\":{{.HostConfig.Memory}},\"swap\":{{.HostConfig.MemorySwap}},'\n           '\"health\":{{json .State.Health.Status}},\"oom\":{{.State.OOMKilled}},\"restarts\":{{.RestartCount}}}')\n    result = docker(['inspect', 'k-aption_be-backend-1', 'k-aption_be-translator-1', '--format', fmt])\n    return [json.loads(line) for line in result.stdout.splitlines()]\n\n\ndef fingerprint(path):\n    \"\"\"큰 영상 파일을 메모리에 한 번에 올리지 않고 SHA256을 계산한다.\n\n    :param path: 읽을 공개 평가 영상의 경로.\n    :return: 파일 SHA256의 16진 문자열.\n    \"\"\"\n    digest = hashlib.sha256()\n    with path.open('rb') as source:\n        for block in iter(lambda: source.read(1024 * 1024), b''):\n            digest.update(block)\n    return digest.hexdigest()\n\n\ndef request_video(client, filename, label):\n    \"\"\"한 원본 영상을 실제 동기 API로 처리하고 전체 응답·서버 로그·시간을 새로 저장한다.\n\n    :param client: 로컬 API에 연결할 환경 프록시 비활성 HTTP 클라이언트.\n    :param filename: 저장소 루트의 원본 영상 파일명.\n    :param label: 결과 파일에 사용할 고유 이름.\n    :return: 입력 출처·실제 응답·분리된 서버 로그·요약을 포함한 평가 결과 사전.\n    :raises httpx.HTTPError: 실제 업로드 또는 서버 응답이 실패한 경우.\n    \"\"\"\n    path = ROOT / filename\n    probe = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration,size', '-of', 'json', str(path)],\n                           capture_output=True, text=True, check=True)\n    media = json.loads(probe.stdout)['format']\n    row = {'filename': filename, 'bytes': path.stat().st_size, 'duration_seconds': float(media['duration']),\n           'sha256': fingerprint(path), 'health_before': client.get('/health').json()}\n    since = datetime.datetime.now(datetime.timezone.utc).isoformat()\n    row['request_started_utc'] = since\n    started = time.perf_counter()\n    with path.open('rb') as source:\n        response = client.post('/api/v1/transcriptions', params={'language': 'en'},\n                               files={'file': (filename, source, 'video/mp4')})\n    row['client_elapsed_seconds'] = time.perf_counter() - started\n    row['http_status'] = response.status_code\n    row['response'] = response.json()\n    (OUT / f'{label}-response.json').write_text(json.dumps(row['response'], ensure_ascii=False, indent=2) + '\\n')\n    log = docker(['logs', '--since', since, 'kaption-calculus-fix-final-261101'])\n    raw_log = log.stdout + log.stderr\n    (OUT / f'{label}-backend.log').write_text(raw_log)\n    ids = re.findall(r'event=request_started request_id=(\\S+).*method=POST path=/api/v1/transcriptions', raw_log)\n    row['request_id'] = ids[0] if len(ids) == 1 else None\n    lines = [line for line in raw_log.splitlines() if row['request_id'] and 'request_id=' + row['request_id'] + ' ' in line]\n    row['request_log_lines'] = lines\n    row['events'] = []\n    for line in lines:\n        fields = dict(re.findall(r'(\\w+)=([^ ]+)', line))\n        if 'elapsed_seconds' in fields:\n            fields['elapsed_seconds'] = float(fields['elapsed_seconds'])\n        row['events'].append(fields)\n    segments = row['response'].get('segments', [])\n    row['segment_count'] = len(segments)\n    row['failed_segments'] = sum(s.get('translation_error') is not None or not s.get('translation') for s in segments)\n    row['generation_attempt_count'] = sum(e.get('event') == 'translation_attempt' for e in row['events'])\n    row['phase_seconds'] = {e['event']: e['elapsed_seconds'] for e in row['events']\n                            if e.get('event') in ('http_request', 'upload_save', 'stt', 'stt_decode', 'stt_model_load',\n                                                 'stt_inference', 'stt_features', 'sentence_grouping', 'translation_batch')}\n    row['states_after'] = states()\n    (OUT / f'{label}.json').write_text(json.dumps(row, ensure_ascii=False, indent=2) + '\\n')\n    print(json.dumps({k: row[k] for k in ('filename', 'client_elapsed_seconds', 'http_status', 'segment_count',\n                                          'failed_segments', 'generation_attempt_count', 'phase_seconds')}, ensure_ascii=False), flush=True)\n    response.raise_for_status()\n    return row\n\n\nOUT.mkdir(exist_ok=False)\nreport = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'controller_source': SOURCE,\n          'states_before': states(), 'runs': [], 'source_sha256': {},\n          'limits': ['One complete HTTP request per original video, sequentially; no statistical repetitions.',\n                     'Qwen already loaded; isolated backend STT not explicitly warmed before first request. See stt_model_load.',\n                     'Only glossary matching and numeric validation changed; production backend untouched, translator shared sequentially.', 'Mac ARM64 Docker only; Windows untested.',\n                     'HTTP success and returned translation do not prove semantic accuracy.']}\nfor rel in ('app/services/pipeline.py', 'app/services/translation.py', 'app/services/translation_http.py',\n            'app/services/translation_qwen.py', 'app/services/translation_inputs.py',\n            'app/services/translation_normalization.py', 'app/services/translation_validation.py',\n            'app/services/subtitles.py', 'transcribe.py', 'data/physics_glossary.json', 'data/qwen_translation_terms.json'):\n    report['source_sha256'][rel] = hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()\ntry:\n    with httpx.Client(base_url='http://127.0.0.1:18001', trust_env=False,\n                      timeout=httpx.Timeout(7200, connect=10), limits=httpx.Limits(max_connections=1)) as client:\n        for filename, label in [('MIT8_01F16_W06PS01-2_360p.mp4', 'rocket'), ('ocw_미적분_1.mp4', 'calculus')]:\n            report['runs'].append(request_video(client, filename, label))\n            (OUT / 'comparison.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\\n')\nfinally:\n    report['states_after'] = states()\n    report['production_state_unchanged'] = report['states_before'] == report['states_after']\n    (OUT / 'comparison.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\\n')\n",
+  "states_before": [
+    {
+      "name": "/k-aption_be-backend-1",
+      "id": "06c1ff2092e95bb78794f8e5b9a7ca766ef0e4cb511df78e64adaf10522ea5c7",
+      "image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+      "cmd": [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--workers",
+        "1"
+      ],
+      "cpu": 4000000000,
+      "memory": 2500000000,
+      "swap": 2500000000,
+      "health": "healthy",
+      "oom": false,
+      "restarts": 0
+    },
+    {
+      "name": "/k-aption_be-translator-1",
+      "id": "8b4bee8f95e7dec118fc93cd4c9ea30a7230b80210743cf00a9a4f637260e9a5",
+      "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+      "cmd": [
+        "--model",
+        "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "--alias",
+        "qwen3-4b-instruct-2507",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8080",
+        "--device",
+        "none",
+        "--n-gpu-layers",
+        "0",
+        "--no-kv-offload",
+        "--no-op-offload",
+        "--no-repack",
+        "--ctx-size",
+        "2048",
+        "--parallel",
+        "1",
+        "--threads",
+        "8",
+        "--threads-batch",
+        "8",
+        "--batch-size",
+        "256",
+        "--ubatch-size",
+        "128",
+        "--cache-ram",
+        "0",
+        "--no-context-shift",
+        "--jinja"
+      ],
+      "cpu": 8000000000,
+      "memory": 4000000000,
+      "swap": 4000000000,
+      "health": "healthy",
+      "oom": false,
+      "restarts": 0
+    }
+  ],
+  "runs": [
+    {
+      "filename": "MIT8_01F16_W06PS01-2_360p.mp4",
+      "bytes": 21729088,
+      "duration_seconds": 212.586667,
+      "sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+      "health_before": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": false
+      },
+      "request_started_utc": "2026-11-01T13:52:34.723830+00:00",
+      "client_elapsed_seconds": 227.688536,
+      "http_status": 200,
+      "response": {
+        "segments": [
+          {
+            "start": 3.6,
+            "end": 7.28,
+            "text": "We just derived this relation here.",
+            "translation": "여기서 우리는 이 관계를 도출했습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 7.28,
+            "end": 17.76,
+            "text": "The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket.",
+            "translation": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 17.76,
+            "end": 25.96,
+            "text": "So we have to apply a technique called separation variables, and then we want to integrate.",
+            "translation": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 25.96,
+            "end": 58.56,
+            "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away, and we're left with mr dvr equals dmru, and we're going to shuffle the m onto the other side, and we're left with dvr equals u is a constant, so that goes up front, and then we have dmr over mr.",
+            "translation": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 58.56,
+            "end": 67.2,
+            "text": "That's an equation that we can integrate now, and we can do that.",
+            "translation": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 67.2,
+            "end": 70.96,
+            "text": "The tricky bit is that we need to take care of the integration limits here.",
+            "translation": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 70.96,
+            "end": 76.4,
+            "text": "We have vr, and actually these now are all primes.",
+            "translation": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 76.4,
+            "end": 94.12,
+            "text": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+            "translation": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 94.12,
+            "end": 99.32,
+            "text": "And for the mass, we have mr prime equals m0.",
+            "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 99.32,
+            "end": 116.48,
+            "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+            "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 116.48,
+            "end": 125.0,
+            "text": "And then we go to mr prime equals m of vr.",
+            "translation": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+            "translation_error": null
+          },
+          {
+            "start": 125.0,
+            "end": 127.44,
+            "text": "All right, so let's do that.",
+            "translation": "좋아요, 그래서 그걸 해봅시다.",
+            "translation_error": null
+          },
+          {
+            "start": 127.44,
+            "end": 152.85,
+            "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+            "translation_error": null
+          },
+          {
+            "start": 152.85,
+            "end": 169.65,
+            "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+            "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 171.53,
+            "end": 176.7,
+            "text": "And that is our equation.",
+            "translation": "그리고 이것이 우리의 방정식입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 176.7,
+            "end": 179.5,
+            "text": "So what does this equation tell us?",
+            "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+            "translation_error": null
+          },
+          {
+            "start": 179.5,
+            "end": 208.46,
+            "text": "mr, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+            "translation": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+            "translation_error": null
+          }
+        ]
+      },
+      "request_id": "aff7a1db086e",
+      "request_log_lines": [
+        "INFO:     event=request_started request_id=aff7a1db086e segment_index=None elapsed_seconds=0.000 method=POST path=/api/v1/transcriptions",
+        "INFO:     event=upload_save request_id=aff7a1db086e segment_index=None elapsed_seconds=0.010 status=ok upload_bytes=21729088",
+        "INFO:     event=stt_decode request_id=aff7a1db086e segment_index=None elapsed_seconds=0.248 status=ok",
+        "INFO:     event=stt_model_load request_id=aff7a1db086e segment_index=None elapsed_seconds=1.403 status=ok model=small",
+        "INFO:     event=stt_queue request_id=aff7a1db086e segment_index=None elapsed_seconds=0.000 status=ok",
+        "INFO:     event=stt_features request_id=aff7a1db086e segment_index=None elapsed_seconds=0.042 status=ok audio_seconds=200.0 block_frames=3000 feature_frames=20001",
+        "INFO:     event=stt_inference request_id=aff7a1db086e segment_index=None elapsed_seconds=84.593 status=ok audio_seconds=212.5866875 segment_count=39",
+        "INFO:     event=stt request_id=aff7a1db086e segment_index=None elapsed_seconds=86.479 status=ok segment_count=39",
+        "INFO:     event=sentence_grouping request_id=aff7a1db086e segment_index=None elapsed_seconds=0.003 status=ok source_segment_count=39 sentence_count=17",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=0 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=0 elapsed_seconds=9.173 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=0 elapsed_seconds=9.224 status=ok attempt=1 prompt_tokens=220 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=0 elapsed_seconds=9.225 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=0 elapsed_seconds=9.228 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=1 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=1 elapsed_seconds=19.433 status=ok attempt=1 raw_output_tokens=44 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=1 elapsed_seconds=19.476 status=ok attempt=1 prompt_tokens=333 max_tokens=128 raw_output_tokens=44 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=1 elapsed_seconds=19.477 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=1 elapsed_seconds=19.479 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=2 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=2 elapsed_seconds=19.144 status=ok attempt=1 raw_output_tokens=25 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=2 elapsed_seconds=19.173 status=ok attempt=1 prompt_tokens=239 max_tokens=128 raw_output_tokens=25 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=2 elapsed_seconds=19.174 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=2 elapsed_seconds=19.177 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=3 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=3 elapsed_seconds=21.299 status=ok attempt=1 raw_output_tokens=75 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=3 elapsed_seconds=21.350 status=ok attempt=1 prompt_tokens=439 max_tokens=128 raw_output_tokens=75 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=3 elapsed_seconds=21.350 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=3 elapsed_seconds=21.353 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=4 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=4 elapsed_seconds=5.643 status=ok attempt=1 raw_output_tokens=23 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=4 elapsed_seconds=5.661 status=ok attempt=1 prompt_tokens=359 max_tokens=128 raw_output_tokens=23 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=4 elapsed_seconds=5.661 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=4 elapsed_seconds=5.662 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=5 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=5 elapsed_seconds=6.573 status=ok attempt=1 raw_output_tokens=27 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=5 elapsed_seconds=6.585 status=ok attempt=1 prompt_tokens=308 max_tokens=128 raw_output_tokens=27 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=5 elapsed_seconds=6.586 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=5 elapsed_seconds=6.587 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=6 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=6 elapsed_seconds=3.549 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=6 elapsed_seconds=3.564 status=ok attempt=1 prompt_tokens=351 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=6 elapsed_seconds=3.564 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=6 elapsed_seconds=3.565 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=7 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=7 elapsed_seconds=4.121 status=ok attempt=1 raw_output_tokens=33 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=7 elapsed_seconds=4.132 status=ok attempt=1 prompt_tokens=381 max_tokens=128 raw_output_tokens=33 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=7 elapsed_seconds=4.132 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=7 elapsed_seconds=4.132 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=8 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=8 elapsed_seconds=1.949 status=ok attempt=1 raw_output_tokens=16 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=8 elapsed_seconds=1.956 status=ok attempt=1 prompt_tokens=255 max_tokens=128 raw_output_tokens=16 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=8 elapsed_seconds=1.956 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=8 elapsed_seconds=1.956 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=9 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=9 elapsed_seconds=13.549 status=ok attempt=1 raw_output_tokens=54 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=9 elapsed_seconds=13.562 status=ok attempt=1 prompt_tokens=396 max_tokens=128 raw_output_tokens=54 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=9 elapsed_seconds=13.562 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=9 elapsed_seconds=13.563 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=10 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=10 elapsed_seconds=2.576 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=10 elapsed_seconds=2.590 status=ok attempt=1 prompt_tokens=245 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=10 elapsed_seconds=2.590 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=10 elapsed_seconds=2.591 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=11 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=11 elapsed_seconds=3.306 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=11 elapsed_seconds=3.312 status=ok attempt=1 prompt_tokens=286 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=11 elapsed_seconds=3.312 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=11 elapsed_seconds=3.313 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=12 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=12 elapsed_seconds=7.265 status=ok attempt=1 raw_output_tokens=46 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=12 elapsed_seconds=7.274 status=ok attempt=1 prompt_tokens=401 max_tokens=128 raw_output_tokens=46 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=12 elapsed_seconds=7.274 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=12 elapsed_seconds=7.274 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=13 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=13 elapsed_seconds=7.846 status=ok attempt=1 raw_output_tokens=45 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=13 elapsed_seconds=7.855 status=ok attempt=1 prompt_tokens=421 max_tokens=128 raw_output_tokens=45 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=13 elapsed_seconds=7.855 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=13 elapsed_seconds=7.856 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=14 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=14 elapsed_seconds=2.315 status=ok attempt=1 raw_output_tokens=11 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=14 elapsed_seconds=2.322 status=ok attempt=1 prompt_tokens=303 max_tokens=128 raw_output_tokens=11 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=14 elapsed_seconds=2.323 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=14 elapsed_seconds=2.323 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=15 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=15 elapsed_seconds=2.167 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=15 elapsed_seconds=2.173 status=ok attempt=1 prompt_tokens=279 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=15 elapsed_seconds=2.173 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=15 elapsed_seconds=2.173 status=ok",
+        "INFO:     event=translation_queue request_id=aff7a1db086e segment_index=16 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=aff7a1db086e segment_index=16 elapsed_seconds=10.787 status=ok attempt=1 raw_output_tokens=89 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=aff7a1db086e segment_index=16 elapsed_seconds=10.796 status=ok attempt=1 prompt_tokens=407 max_tokens=128 raw_output_tokens=89 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=aff7a1db086e segment_index=16 elapsed_seconds=10.796 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=aff7a1db086e segment_index=16 elapsed_seconds=10.796 status=ok",
+        "INFO:     event=translation_batch request_id=aff7a1db086e segment_index=None elapsed_seconds=141.029 status=ok source_segment_count=39 sentence_count=17 failed_segments=0",
+        "INFO:     event=http_request request_id=aff7a1db086e segment_index=None elapsed_seconds=227.643 method=POST path=/api/v1/transcriptions status_code=200 status=ok error_type=None elapsed_minutes=3.794"
+      ],
+      "events": [
+        {
+          "event": "request_started",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 0.0,
+          "method": "POST",
+          "path": "/api/v1/transcriptions"
+        },
+        {
+          "event": "upload_save",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 0.01,
+          "status": "ok",
+          "upload_bytes": "21729088"
+        },
+        {
+          "event": "stt_decode",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 0.248,
+          "status": "ok"
+        },
+        {
+          "event": "stt_model_load",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 1.403,
+          "status": "ok",
+          "model": "small"
+        },
+        {
+          "event": "stt_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "stt_features",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 0.042,
+          "status": "ok",
+          "audio_seconds": "200.0",
+          "block_frames": "3000",
+          "feature_frames": "20001"
+        },
+        {
+          "event": "stt_inference",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 84.593,
+          "status": "ok",
+          "audio_seconds": "212.5866875",
+          "segment_count": "39"
+        },
+        {
+          "event": "stt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 86.479,
+          "status": "ok",
+          "segment_count": "39"
+        },
+        {
+          "event": "sentence_grouping",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 0.003,
+          "status": "ok",
+          "source_segment_count": "39",
+          "sentence_count": "17"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "0",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "0",
+          "elapsed_seconds": 9.173,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "0",
+          "elapsed_seconds": 9.224,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "220",
+          "max_tokens": "128",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "0",
+          "elapsed_seconds": 9.225,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "0",
+          "elapsed_seconds": 9.228,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "1",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "1",
+          "elapsed_seconds": 19.433,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "44",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "1",
+          "elapsed_seconds": 19.476,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "333",
+          "max_tokens": "128",
+          "raw_output_tokens": "44",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "1",
+          "elapsed_seconds": 19.477,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "1",
+          "elapsed_seconds": 19.479,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "2",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "2",
+          "elapsed_seconds": 19.144,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "25",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "2",
+          "elapsed_seconds": 19.173,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "239",
+          "max_tokens": "128",
+          "raw_output_tokens": "25",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "2",
+          "elapsed_seconds": 19.174,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "2",
+          "elapsed_seconds": 19.177,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "3",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "3",
+          "elapsed_seconds": 21.299,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "75",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "3",
+          "elapsed_seconds": 21.35,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "439",
+          "max_tokens": "128",
+          "raw_output_tokens": "75",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "3",
+          "elapsed_seconds": 21.35,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "3",
+          "elapsed_seconds": 21.353,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "4",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "4",
+          "elapsed_seconds": 5.643,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "23",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "4",
+          "elapsed_seconds": 5.661,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "359",
+          "max_tokens": "128",
+          "raw_output_tokens": "23",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "4",
+          "elapsed_seconds": 5.661,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "4",
+          "elapsed_seconds": 5.662,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "5",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "5",
+          "elapsed_seconds": 6.573,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "27",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "5",
+          "elapsed_seconds": 6.585,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "308",
+          "max_tokens": "128",
+          "raw_output_tokens": "27",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "5",
+          "elapsed_seconds": 6.586,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "5",
+          "elapsed_seconds": 6.587,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "6",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "6",
+          "elapsed_seconds": 3.549,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "6",
+          "elapsed_seconds": 3.564,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "351",
+          "max_tokens": "128",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "6",
+          "elapsed_seconds": 3.564,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "6",
+          "elapsed_seconds": 3.565,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "7",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "7",
+          "elapsed_seconds": 4.121,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "33",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "7",
+          "elapsed_seconds": 4.132,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "381",
+          "max_tokens": "128",
+          "raw_output_tokens": "33",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "7",
+          "elapsed_seconds": 4.132,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "7",
+          "elapsed_seconds": 4.132,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "8",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "8",
+          "elapsed_seconds": 1.949,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "8",
+          "elapsed_seconds": 1.956,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "255",
+          "max_tokens": "128",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "8",
+          "elapsed_seconds": 1.956,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "8",
+          "elapsed_seconds": 1.956,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "9",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "9",
+          "elapsed_seconds": 13.549,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "54",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "9",
+          "elapsed_seconds": 13.562,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "396",
+          "max_tokens": "128",
+          "raw_output_tokens": "54",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "9",
+          "elapsed_seconds": 13.562,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "9",
+          "elapsed_seconds": 13.563,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "10",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "10",
+          "elapsed_seconds": 2.576,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "10",
+          "elapsed_seconds": 2.59,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "245",
+          "max_tokens": "128",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "10",
+          "elapsed_seconds": 2.59,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "10",
+          "elapsed_seconds": 2.591,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "11",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "11",
+          "elapsed_seconds": 3.306,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "11",
+          "elapsed_seconds": 3.312,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "286",
+          "max_tokens": "128",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "11",
+          "elapsed_seconds": 3.312,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "11",
+          "elapsed_seconds": 3.313,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "12",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "12",
+          "elapsed_seconds": 7.265,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "46",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "12",
+          "elapsed_seconds": 7.274,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "401",
+          "max_tokens": "128",
+          "raw_output_tokens": "46",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "12",
+          "elapsed_seconds": 7.274,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "12",
+          "elapsed_seconds": 7.274,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "13",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "13",
+          "elapsed_seconds": 7.846,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "45",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "13",
+          "elapsed_seconds": 7.855,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "421",
+          "max_tokens": "128",
+          "raw_output_tokens": "45",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "13",
+          "elapsed_seconds": 7.855,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "13",
+          "elapsed_seconds": 7.856,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "14",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "14",
+          "elapsed_seconds": 2.315,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "11",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "14",
+          "elapsed_seconds": 2.322,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "303",
+          "max_tokens": "128",
+          "raw_output_tokens": "11",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "14",
+          "elapsed_seconds": 2.323,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "14",
+          "elapsed_seconds": 2.323,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "15",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "15",
+          "elapsed_seconds": 2.167,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "15",
+          "elapsed_seconds": 2.173,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "279",
+          "max_tokens": "128",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "15",
+          "elapsed_seconds": 2.173,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "15",
+          "elapsed_seconds": 2.173,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "aff7a1db086e",
+          "segment_index": "16",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "aff7a1db086e",
+          "segment_index": "16",
+          "elapsed_seconds": 10.787,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "89",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "aff7a1db086e",
+          "segment_index": "16",
+          "elapsed_seconds": 10.796,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "407",
+          "max_tokens": "128",
+          "raw_output_tokens": "89",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "aff7a1db086e",
+          "segment_index": "16",
+          "elapsed_seconds": 10.796,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "aff7a1db086e",
+          "segment_index": "16",
+          "elapsed_seconds": 10.796,
+          "status": "ok"
+        },
+        {
+          "event": "translation_batch",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 141.029,
+          "status": "ok",
+          "source_segment_count": "39",
+          "sentence_count": "17",
+          "failed_segments": "0"
+        },
+        {
+          "event": "http_request",
+          "request_id": "aff7a1db086e",
+          "segment_index": "None",
+          "elapsed_seconds": 227.643,
+          "method": "POST",
+          "path": "/api/v1/transcriptions",
+          "status_code": "200",
+          "status": "ok",
+          "error_type": "None",
+          "elapsed_minutes": "3.794"
+        }
+      ],
+      "segment_count": 17,
+      "failed_segments": 0,
+      "generation_attempt_count": 17,
+      "phase_seconds": {
+        "upload_save": 0.01,
+        "stt_decode": 0.248,
+        "stt_model_load": 1.403,
+        "stt_features": 0.042,
+        "stt_inference": 84.593,
+        "stt": 86.479,
+        "sentence_grouping": 0.003,
+        "translation_batch": 141.029,
+        "http_request": 227.643
+      },
+      "states_after": [
+        {
+          "name": "/k-aption_be-backend-1",
+          "id": "06c1ff2092e95bb78794f8e5b9a7ca766ef0e4cb511df78e64adaf10522ea5c7",
+          "image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+          "cmd": [
+            "uvicorn",
+            "app.main:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8000",
+            "--workers",
+            "1"
+          ],
+          "cpu": 4000000000,
+          "memory": 2500000000,
+          "swap": 2500000000,
+          "health": "healthy",
+          "oom": false,
+          "restarts": 0
+        },
+        {
+          "name": "/k-aption_be-translator-1",
+          "id": "8b4bee8f95e7dec118fc93cd4c9ea30a7230b80210743cf00a9a4f637260e9a5",
+          "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+          "cmd": [
+            "--model",
+            "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "--alias",
+            "qwen3-4b-instruct-2507",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8080",
+            "--device",
+            "none",
+            "--n-gpu-layers",
+            "0",
+            "--no-kv-offload",
+            "--no-op-offload",
+            "--no-repack",
+            "--ctx-size",
+            "2048",
+            "--parallel",
+            "1",
+            "--threads",
+            "8",
+            "--threads-batch",
+            "8",
+            "--batch-size",
+            "256",
+            "--ubatch-size",
+            "128",
+            "--cache-ram",
+            "0",
+            "--no-context-shift",
+            "--jinja"
+          ],
+          "cpu": 8000000000,
+          "memory": 4000000000,
+          "swap": 4000000000,
+          "health": "healthy",
+          "oom": false,
+          "restarts": 0
+        }
+      ],
+      "baseline_source_and_timestamps_match": true,
+      "translation_changes": []
+    },
+    {
+      "filename": "ocw_미적분_1.mp4",
+      "bytes": 389909974,
+      "duration_seconds": 330.908005,
+      "sha256": "9c5dcd7c97e91996b1a7807288c4d67cb573eb1a7f9e46069753bca46b25ac42",
+      "health_before": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": true
+      },
+      "request_started_utc": "2026-11-01T13:56:22.954450+00:00",
+      "client_elapsed_seconds": 180.530354583,
+      "http_status": 200,
+      "response": {
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 3.68,
+            "text": "The following content is provided under a Creative Commons license.",
+            "translation": "다음 내용은 크리에이티브 커먼스 라이선스 하에 제공됩니다.",
+            "translation_error": null
+          },
+          {
+            "start": 3.68,
+            "end": 10.0,
+            "text": "Your support will help MIT OpenCourseWare continue to offer high quality educational resources for free.",
+            "translation": "당신의 지원은 MIT 오픈코스웨어가 무료로 뛰어난 교육 자원을 계속 제공할 수 있도록 도와줍니다.",
+            "translation_error": null
+          },
+          {
+            "start": 10.0,
+            "end": 21.73,
+            "text": "To make a donation or to view additional materials from hundreds of MIT courses, visit MIT OpenCourseWare at ocw.mit.edu.",
+            "translation": "백만 개의 MIT 강좌에서 기부하거나 추가 자료를 확인하고자 한다면, MIT 개방 강의자료(OpenCourseWare) 웹사이트 ocw.mit.edu를 방문하시기 바랍니다.",
+            "translation_error": null
+          },
+          {
+            "start": 21.73,
+            "end": 25.45,
+            "text": "So again, welcome to 1801.",
+            "translation": "그래서 다시 한번, 1801에 오신 것을 환영합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 25.45,
+            "end": 34.25,
+            "text": "We're getting started today with what we're calling Unit 1, highly imaginative topic,",
+            "translation": "오늘 우리는 '단위 1'이라고 부르는 매우 창의적인 주제에 대해 시작합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 34.25,
+            "end": 43.56,
+            "text": "highly imaginative title, and its differentiation.",
+            "translation": "매우 상상력 있는 제목이며, 그 도함수입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 43.56,
+            "end": 49.92,
+            "text": "So let me first tell you briefly what's in store in the next couple of weeks.",
+            "translation": "그러면 다음 몇 주 동안 어떤 것이 준비되어 있는지 간단히 알려드릴게요.",
+            "translation_error": null
+          },
+          {
+            "start": 49.92,
+            "end": 62.77,
+            "text": "The main topic today is what is a derivative.",
+            "translation": "오늘의 주제는 도함수란 무엇인가입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 62.77,
+            "end": 71.83,
+            "text": "And we're going to look at this from several different points of view.",
+            "translation": "그리고 우리는 이 내용을 여러 가지 관점에서 살펴보겠습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 71.83,
+            "end": 79.21,
+            "text": "And the first one is the geometric interpretation.",
+            "translation": "첫째는 기하학적 해석입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 79.21,
+            "end": 82.25,
+            "text": "And that's what we'll spend most of today on.",
+            "translation": "그것이 오늘 대부분의 시간을 보내는 주제입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 82.25,
+            "end": 97.82,
+            "text": "And then we'll also talk about a physical interpretation of what a derivative is.",
+            "translation": "그리고 그 후에 우리는 도함수의 물리적 의미에 대해 이야기할 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 97.82,
+            "end": 113.33,
+            "text": "And then there's going to be something else, which I guess is maybe the reason why calculus is so fundamental and why we always start with it in most science and",
+            "translation": "그리고 그 다음에는 도함수의 물리적 의미에 대해 이야기할 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 113.33,
+            "end": 129.69,
+            "text": "engineering schools, which is the importance of derivatives of this to all measurements.",
+            "translation": "그리고 그 외에도 어떤 것이 있겠는데, 아마도 미적분이 매우 기본적이며 대부분의 과학 및 공학 학과에서 처음으로 다루는 이유가 바로 이 것의 모든 측정에 대한 도함수의 중요성 때문일 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 129.69,
+            "end": 147.15,
+            "text": "So that means pretty much every place, that means in science and engineering, in economics, in political science, et cetera, polling, lots of commercial",
+            "translation": "그러므로 거의 모든 곳에서, 과학과 공학, 경제, 정치학 등에서, 여론 조사, 다양한 상업 분야에서 적용됩니다.",
+            "translation_error": null
+          },
+          {
+            "start": 147.15,
+            "end": 150.11,
+            "text": "applications, just about everything.",
+            "translation": "응용 분야에서 거의 모든 것.",
+            "translation_error": null
+          },
+          {
+            "start": 150.11,
+            "end": 153.55,
+            "text": "Now, so that's what we'll be getting started with.",
+            "translation": "지금부터 그게 바로 우리가 시작할 내용입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 153.55,
+            "end": 170.14,
+            "text": "And then there's another thing that we're going to do in this unit, which is we're going to explain how to differentiate anything.",
+            "translation": "그리고 이 단위에서 우리가 할 또 다른 일은 무엇인가요. 바로 어떤 것을 미분하는 방법을 설명하는 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 170.14,
+            "end": 182.01,
+            "text": "So how to differentiate any function you know.",
+            "translation": "그러면 어떤 함수든 미분하는 방법은 무엇입니까?",
+            "translation_error": null
+          },
+          {
+            "start": 182.01,
+            "end": 184.49,
+            "text": "And that's kind of a tall order.",
+            "translation": "그리고 그건 어느 정도 큰 요구사항입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 184.49,
+            "end": 186.57,
+            "text": "But let me just give you an example.",
+            "translation": "하지만 제가 단지 예를 들어 드릴게요.",
+            "translation_error": null
+          },
+          {
+            "start": 186.57,
+            "end": 200.45,
+            "text": "If you want to take the derivative, this we'll see today as the notation for the derivative of something, of some messy function like e to the x arc tan of x, we'll",
+            "translation": "도함수를 구하고자 한다면, 오늘 우리가 어떤 복잡한 함수, 예를 들어 e의 x승에 x의 아크타너를 곱한 함수의 도함수를 나타내는 기호로 보게 될 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 200.45,
+            "end": 206.53,
+            "text": "work this out by the end of this unit.",
+            "translation": "이 단위의 끝까지 이를 계산하여 해결하시기 바랍니다.",
+            "translation_error": null
+          },
+          {
+            "start": 206.53,
+            "end": 212.84,
+            "text": "So anything you can think of, anything you can write down, we can differentiate it.",
+            "translation": "그러므로 당신이 생각나는 어떤 것도, 쓸 수 있는 어떤 것도 우리는 그걸 미분할 수 있습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 212.84,
+            "end": 214.96,
+            "text": "So that's what we're going to do.",
+            "translation": "그래서 그게 바로 우리가 할 일입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 214.96,
+            "end": 225.03,
+            "text": "And today, as I said, we're going to spend most of our time on this geometric interpretation.",
+            "translation": "오늘 저는 말씀드렸듯이, 대부분의 시간을 이 기하학적 해석에 할애할 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 225.03,
+            "end": 230.38,
+            "text": "So let's begin with that.",
+            "translation": "그러면 그 부분부터 시작해 보겠습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 230.38,
+            "end": 241.98,
+            "text": "So here we go with the geometric interpretation of derivatives.",
+            "translation": "그러면 도함수의 기하학적 해석에 대해 시작해 보겠습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 241.98,
+            "end": 251.11,
+            "text": "And what we're going to do is just ask the geometric",
+            "translation": "그리고 우리가 할 일은 단지 기하학을 묻는 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 251.11,
+            "end": 266.46,
+            "text": "problem of finding the tangent line to some graph of some",
+            "translation": "어떤 그래프에 대한 어떤 접선을 찾는 문제",
+            "translation_error": null
+          },
+          {
+            "start": 266.46,
+            "end": 273.68,
+            "text": "function at some point, say x0, y0.",
+            "translation": "함수는 어떤 점, 예를 들어 x₀에서 y₀에서 정의된다 합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 273.68,
+            "end": 278.84,
+            "text": "So that's the problem that we're addressing here.",
+            "translation": "그러므로 여기서 다루고 있는 문제는 바로 그 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 278.84,
+            "end": 282.88,
+            "text": "Guess I should probably turn this off.",
+            "translation": "아마도 이걸 꺼야 할 것 같아요.",
+            "translation_error": null
+          },
+          {
+            "start": 282.88,
+            "end": 286.0,
+            "text": "All right, so here's our problem.",
+            "translation": "좋아요, 그래서 여기는 우리의 문제입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 286.0,
+            "end": 289.72,
+            "text": "And now let me show you the solution.",
+            "translation": "이제 제가 여러분에게 해법을 보여드리겠습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 289.72,
+            "end": 298.08,
+            "text": "So well, let's graph the function.",
+            "translation": "그래서 아주 잘, 함수를 그래프로 그려봅시다.",
+            "translation_error": null
+          },
+          {
+            "start": 298.08,
+            "end": 300.88,
+            "text": "So let's say here's its graph.",
+            "translation": "그러면 여기서는 그 함수의 그래프가 이렇게 됩니다.",
+            "translation_error": null
+          },
+          {
+            "start": 300.88,
+            "end": 304.2,
+            "text": "And here's some point.",
+            "translation": "그리고 여기는 몇 개의 점이 있습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 304.2,
+            "end": 309.86,
+            "text": "Maybe I should draw it just a bit lower so that I don't.",
+            "translation": "아마도 나는 그것을 약간 더 낮게 그리는 것이 좋을지도 모릅니다.",
+            "translation_error": null
+          },
+          {
+            "start": 309.86,
+            "end": 316.34,
+            "text": "So here's a point P. Maybe it's above the point x0.",
+            "translation": "그러면 여기에 점 P가 있습니다. 아마도 점 x0보다 위에 있을 수도 있습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 316.34,
+            "end": 319.5,
+            "text": "x0, by the way, this was supposed to be an x0.",
+            "translation": "x0이란, 그런데 이건 x0이어야 했죠.",
+            "translation_error": null
+          },
+          {
+            "start": 319.5,
+            "end": 327.26,
+            "text": "That was some fixed place on the x-axis.",
+            "translation": "그것은 x축 위의 고정된 위치였습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 327.26,
+            "end": 330.86,
+            "text": "And now, in order to perform this.",
+            "translation": "그리고 이제 이 작업을 수행하기 위해.",
+            "translation_error": null
+          }
+        ]
+      },
+      "request_id": "16153600f8a8",
+      "request_log_lines": [
+        "INFO:     event=request_started request_id=16153600f8a8 segment_index=None elapsed_seconds=0.000 method=POST path=/api/v1/transcriptions",
+        "INFO:     event=upload_save request_id=16153600f8a8 segment_index=None elapsed_seconds=1.049 status=ok upload_bytes=389909974",
+        "INFO:     event=stt_decode request_id=16153600f8a8 segment_index=None elapsed_seconds=0.898 status=ok",
+        "INFO:     event=stt_queue request_id=16153600f8a8 segment_index=None elapsed_seconds=0.000 status=ok",
+        "INFO:     event=stt_features request_id=16153600f8a8 segment_index=None elapsed_seconds=0.057 status=ok audio_seconds=248.2515625 block_frames=3000 feature_frames=24826",
+        "INFO:     event=stt_inference request_id=16153600f8a8 segment_index=None elapsed_seconds=49.887 status=ok audio_seconds=330.9075625 segment_count=63",
+        "INFO:     event=stt request_id=16153600f8a8 segment_index=None elapsed_seconds=50.786 status=ok segment_count=63",
+        "INFO:     event=sentence_grouping request_id=16153600f8a8 segment_index=None elapsed_seconds=0.001 status=ok source_segment_count=63 sentence_count=43",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=0 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=0 elapsed_seconds=4.722 status=ok attempt=1 raw_output_tokens=25 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=0 elapsed_seconds=4.740 status=ok attempt=1 prompt_tokens=224 max_tokens=128 raw_output_tokens=25 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=0 elapsed_seconds=4.741 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=0 elapsed_seconds=4.744 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=1 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=1 elapsed_seconds=2.940 status=ok attempt=1 raw_output_tokens=37 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=1 elapsed_seconds=2.954 status=ok attempt=1 prompt_tokens=231 max_tokens=128 raw_output_tokens=37 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=1 elapsed_seconds=2.954 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=1 elapsed_seconds=2.957 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=2 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=2 elapsed_seconds=4.176 status=ok attempt=1 raw_output_tokens=47 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=2 elapsed_seconds=4.184 status=ok attempt=1 prompt_tokens=239 max_tokens=128 raw_output_tokens=47 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=2 elapsed_seconds=4.184 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=2 elapsed_seconds=4.185 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=3 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=3 elapsed_seconds=1.657 status=ok attempt=1 raw_output_tokens=20 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=3 elapsed_seconds=1.663 status=ok attempt=1 prompt_tokens=224 max_tokens=128 raw_output_tokens=20 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=3 elapsed_seconds=1.663 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=3 elapsed_seconds=1.663 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=4 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=4 elapsed_seconds=2.268 status=ok attempt=1 raw_output_tokens=26 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=4 elapsed_seconds=2.274 status=ok attempt=1 prompt_tokens=231 max_tokens=128 raw_output_tokens=26 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=4 elapsed_seconds=2.274 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=4 elapsed_seconds=2.274 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=5 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=5 elapsed_seconds=3.518 status=ok attempt=1 raw_output_tokens=17 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=5 elapsed_seconds=3.524 status=ok attempt=1 prompt_tokens=292 max_tokens=128 raw_output_tokens=17 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=5 elapsed_seconds=3.524 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=5 elapsed_seconds=3.524 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=6 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=6 elapsed_seconds=2.669 status=ok attempt=1 raw_output_tokens=26 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=6 elapsed_seconds=2.676 status=ok attempt=1 prompt_tokens=231 max_tokens=128 raw_output_tokens=26 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=6 elapsed_seconds=2.676 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=6 elapsed_seconds=2.677 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=7 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=7 elapsed_seconds=1.091 status=ok attempt=1 raw_output_tokens=16 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=7 elapsed_seconds=1.096 status=ok attempt=1 prompt_tokens=223 max_tokens=128 raw_output_tokens=16 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=7 elapsed_seconds=1.096 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=7 elapsed_seconds=1.096 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=8 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=8 elapsed_seconds=3.198 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=8 elapsed_seconds=3.203 status=ok attempt=1 prompt_tokens=290 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=8 elapsed_seconds=3.203 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=8 elapsed_seconds=3.203 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=9 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=9 elapsed_seconds=1.656 status=ok attempt=1 raw_output_tokens=12 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=9 elapsed_seconds=1.661 status=ok attempt=1 prompt_tokens=222 max_tokens=128 raw_output_tokens=12 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=9 elapsed_seconds=1.661 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=9 elapsed_seconds=1.662 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=10 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=10 elapsed_seconds=4.705 status=ok attempt=1 raw_output_tokens=15 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=10 elapsed_seconds=4.709 status=ok attempt=1 prompt_tokens=286 max_tokens=128 raw_output_tokens=15 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=10 elapsed_seconds=4.709 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=10 elapsed_seconds=4.710 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=11 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=11 elapsed_seconds=3.074 status=ok attempt=1 raw_output_tokens=22 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=11 elapsed_seconds=3.090 status=ok attempt=1 prompt_tokens=229 max_tokens=128 raw_output_tokens=22 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=11 elapsed_seconds=3.090 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=11 elapsed_seconds=3.091 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=12 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=12 elapsed_seconds=4.557 status=ok attempt=1 raw_output_tokens=21 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=12 elapsed_seconds=4.570 status=ok attempt=1 prompt_tokens=314 max_tokens=128 raw_output_tokens=21 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=12 elapsed_seconds=4.570 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=12 elapsed_seconds=4.571 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=13 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=13 elapsed_seconds=6.391 status=ok attempt=1 raw_output_tokens=64 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=13 elapsed_seconds=6.405 status=ok attempt=1 prompt_tokens=313 max_tokens=128 raw_output_tokens=64 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=13 elapsed_seconds=6.405 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=13 elapsed_seconds=6.406 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=14 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=14 elapsed_seconds=5.093 status=ok attempt=1 raw_output_tokens=39 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=14 elapsed_seconds=5.104 status=ok attempt=1 prompt_tokens=312 max_tokens=128 raw_output_tokens=39 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=14 elapsed_seconds=5.104 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=14 elapsed_seconds=5.105 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=15 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=15 elapsed_seconds=1.472 status=ok attempt=1 raw_output_tokens=10 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=15 elapsed_seconds=1.485 status=ok attempt=1 prompt_tokens=219 max_tokens=128 raw_output_tokens=10 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=15 elapsed_seconds=1.485 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=15 elapsed_seconds=1.486 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=16 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=16 elapsed_seconds=2.780 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=16 elapsed_seconds=2.785 status=ok attempt=1 prompt_tokens=284 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=16 elapsed_seconds=2.785 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=16 elapsed_seconds=2.785 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=17 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=17 elapsed_seconds=3.490 status=ok attempt=1 raw_output_tokens=31 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=17 elapsed_seconds=3.496 status=ok attempt=1 prompt_tokens=306 max_tokens=128 raw_output_tokens=31 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=17 elapsed_seconds=3.496 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=17 elapsed_seconds=3.497 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=18 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=18 elapsed_seconds=1.837 status=ok attempt=1 raw_output_tokens=16 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=18 elapsed_seconds=1.841 status=ok attempt=1 prompt_tokens=222 max_tokens=128 raw_output_tokens=16 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=18 elapsed_seconds=1.841 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=18 elapsed_seconds=1.842 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=19 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=19 elapsed_seconds=2.891 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=19 elapsed_seconds=2.898 status=ok attempt=1 prompt_tokens=283 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=19 elapsed_seconds=2.899 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=19 elapsed_seconds=2.899 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=20 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=20 elapsed_seconds=1.808 status=ok attempt=1 raw_output_tokens=15 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=20 elapsed_seconds=1.814 status=ok attempt=1 prompt_tokens=283 max_tokens=128 raw_output_tokens=15 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=20 elapsed_seconds=1.814 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=20 elapsed_seconds=1.814 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=21 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=21 elapsed_seconds=5.279 status=ok attempt=1 raw_output_tokens=55 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=21 elapsed_seconds=5.286 status=ok attempt=1 prompt_tokens=312 max_tokens=128 raw_output_tokens=55 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=21 elapsed_seconds=5.286 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=21 elapsed_seconds=5.287 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=22 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=22 elapsed_seconds=2.760 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=22 elapsed_seconds=2.767 status=ok attempt=1 prompt_tokens=313 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=22 elapsed_seconds=2.767 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=22 elapsed_seconds=2.768 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=23 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=23 elapsed_seconds=2.790 status=ok attempt=1 raw_output_tokens=28 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=23 elapsed_seconds=2.796 status=ok attempt=1 prompt_tokens=293 max_tokens=128 raw_output_tokens=28 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=23 elapsed_seconds=2.796 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=23 elapsed_seconds=2.796 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=24 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=24 elapsed_seconds=1.989 status=ok attempt=1 raw_output_tokens=11 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=24 elapsed_seconds=1.994 status=ok attempt=1 prompt_tokens=293 max_tokens=128 raw_output_tokens=11 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=24 elapsed_seconds=1.995 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=24 elapsed_seconds=1.995 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=25 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=25 elapsed_seconds=2.928 status=ok attempt=1 raw_output_tokens=27 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=25 elapsed_seconds=2.933 status=ok attempt=1 prompt_tokens=296 max_tokens=128 raw_output_tokens=27 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=25 elapsed_seconds=2.933 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=25 elapsed_seconds=2.934 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=26 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=26 elapsed_seconds=1.827 status=ok attempt=1 raw_output_tokens=12 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=26 elapsed_seconds=1.831 status=ok attempt=1 prompt_tokens=293 max_tokens=128 raw_output_tokens=12 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=26 elapsed_seconds=1.831 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=26 elapsed_seconds=1.832 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=27 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=27 elapsed_seconds=2.094 status=ok attempt=1 raw_output_tokens=21 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=27 elapsed_seconds=2.100 status=ok attempt=1 prompt_tokens=283 max_tokens=128 raw_output_tokens=21 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=27 elapsed_seconds=2.100 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=27 elapsed_seconds=2.100 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=28 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=28 elapsed_seconds=1.820 status=ok attempt=1 raw_output_tokens=19 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=28 elapsed_seconds=1.824 status=ok attempt=1 prompt_tokens=225 max_tokens=128 raw_output_tokens=19 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=28 elapsed_seconds=1.824 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=28 elapsed_seconds=1.825 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=29 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=29 elapsed_seconds=1.210 status=ok attempt=1 raw_output_tokens=14 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=29 elapsed_seconds=1.218 status=ok attempt=1 prompt_tokens=224 max_tokens=128 raw_output_tokens=14 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=29 elapsed_seconds=1.218 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=29 elapsed_seconds=1.219 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=30 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=30 elapsed_seconds=1.566 status=ok attempt=1 raw_output_tokens=21 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=30 elapsed_seconds=1.571 status=ok attempt=1 prompt_tokens=225 max_tokens=128 raw_output_tokens=21 finish_reason=stop rejection_reason=informal_speech accepted=False",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=30 elapsed_seconds=2.179 status=ok attempt=2 raw_output_tokens=22 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=30 elapsed_seconds=2.183 status=ok attempt=2 prompt_tokens=238 max_tokens=128 raw_output_tokens=22 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=30 elapsed_seconds=3.755 status=ok attempts=2",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=30 elapsed_seconds=3.755 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=31 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=31 elapsed_seconds=3.804 status=ok attempt=1 raw_output_tokens=16 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=31 elapsed_seconds=3.814 status=ok attempt=1 prompt_tokens=288 max_tokens=128 raw_output_tokens=16 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=31 elapsed_seconds=3.815 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=31 elapsed_seconds=3.816 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=32 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=32 elapsed_seconds=2.494 status=ok attempt=1 raw_output_tokens=16 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=32 elapsed_seconds=2.514 status=ok attempt=1 prompt_tokens=284 max_tokens=128 raw_output_tokens=16 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=32 elapsed_seconds=2.514 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=32 elapsed_seconds=2.516 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=33 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=33 elapsed_seconds=2.140 status=ok attempt=1 raw_output_tokens=12 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=33 elapsed_seconds=2.154 status=ok attempt=1 prompt_tokens=282 max_tokens=128 raw_output_tokens=12 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=33 elapsed_seconds=2.154 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=33 elapsed_seconds=2.156 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=34 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=34 elapsed_seconds=1.626 status=ok attempt=1 raw_output_tokens=14 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=34 elapsed_seconds=1.633 status=ok attempt=1 prompt_tokens=222 max_tokens=128 raw_output_tokens=14 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=34 elapsed_seconds=1.634 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=34 elapsed_seconds=1.635 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=35 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=35 elapsed_seconds=1.306 status=ok attempt=1 raw_output_tokens=17 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=35 elapsed_seconds=1.312 status=ok attempt=1 prompt_tokens=222 max_tokens=128 raw_output_tokens=17 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=35 elapsed_seconds=1.312 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=35 elapsed_seconds=1.313 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=36 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=36 elapsed_seconds=3.426 status=ok attempt=1 raw_output_tokens=17 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=36 elapsed_seconds=3.431 status=ok attempt=1 prompt_tokens=283 max_tokens=128 raw_output_tokens=17 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=36 elapsed_seconds=3.431 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=36 elapsed_seconds=3.432 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=37 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=37 elapsed_seconds=2.345 status=ok attempt=1 raw_output_tokens=15 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=37 elapsed_seconds=2.354 status=ok attempt=1 prompt_tokens=280 max_tokens=128 raw_output_tokens=15 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=37 elapsed_seconds=2.355 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=37 elapsed_seconds=2.356 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=38 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=38 elapsed_seconds=2.953 status=ok attempt=1 raw_output_tokens=23 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=38 elapsed_seconds=2.966 status=ok attempt=1 prompt_tokens=286 max_tokens=128 raw_output_tokens=23 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=38 elapsed_seconds=2.966 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=38 elapsed_seconds=2.967 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=39 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=39 elapsed_seconds=3.365 status=ok attempt=1 raw_output_tokens=25 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=39 elapsed_seconds=3.372 status=ok attempt=1 prompt_tokens=296 max_tokens=128 raw_output_tokens=25 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=39 elapsed_seconds=3.372 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=39 elapsed_seconds=3.373 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=40 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=40 elapsed_seconds=2.830 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=40 elapsed_seconds=2.839 status=ok attempt=1 prompt_tokens=297 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=40 elapsed_seconds=2.839 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=40 elapsed_seconds=2.840 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=41 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=41 elapsed_seconds=2.752 status=ok attempt=1 raw_output_tokens=15 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=41 elapsed_seconds=2.762 status=ok attempt=1 prompt_tokens=291 max_tokens=128 raw_output_tokens=15 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=41 elapsed_seconds=2.762 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=41 elapsed_seconds=2.764 status=ok",
+        "INFO:     event=translation_queue request_id=16153600f8a8 segment_index=42 elapsed_seconds=0.000 status=ok",
+        "INFO:     event=translation_generate request_id=16153600f8a8 segment_index=42 elapsed_seconds=2.770 status=ok attempt=1 raw_output_tokens=12 finish_reason=stop early_stop_reason=None",
+        "INFO:     event=translation_attempt request_id=16153600f8a8 segment_index=42 elapsed_seconds=2.782 status=ok attempt=1 prompt_tokens=284 max_tokens=128 raw_output_tokens=12 finish_reason=stop rejection_reason=None accepted=True",
+        "INFO:     event=translation_total request_id=16153600f8a8 segment_index=42 elapsed_seconds=2.782 status=ok attempts=1",
+        "INFO:     event=segment_translation request_id=16153600f8a8 segment_index=42 elapsed_seconds=2.783 status=ok",
+        "INFO:     event=translation_batch request_id=16153600f8a8 segment_index=None elapsed_seconds=124.654 status=ok source_segment_count=63 sentence_count=43 failed_segments=0",
+        "INFO:     event=http_request request_id=16153600f8a8 segment_index=None elapsed_seconds=180.522 method=POST path=/api/v1/transcriptions status_code=200 status=ok error_type=None elapsed_minutes=3.009"
+      ],
+      "events": [
+        {
+          "event": "request_started",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 0.0,
+          "method": "POST",
+          "path": "/api/v1/transcriptions"
+        },
+        {
+          "event": "upload_save",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 1.049,
+          "status": "ok",
+          "upload_bytes": "389909974"
+        },
+        {
+          "event": "stt_decode",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 0.898,
+          "status": "ok"
+        },
+        {
+          "event": "stt_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "stt_features",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 0.057,
+          "status": "ok",
+          "audio_seconds": "248.2515625",
+          "block_frames": "3000",
+          "feature_frames": "24826"
+        },
+        {
+          "event": "stt_inference",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 49.887,
+          "status": "ok",
+          "audio_seconds": "330.9075625",
+          "segment_count": "63"
+        },
+        {
+          "event": "stt",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 50.786,
+          "status": "ok",
+          "segment_count": "63"
+        },
+        {
+          "event": "sentence_grouping",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 0.001,
+          "status": "ok",
+          "source_segment_count": "63",
+          "sentence_count": "43"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "0",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "0",
+          "elapsed_seconds": 4.722,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "25",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "0",
+          "elapsed_seconds": 4.74,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "224",
+          "max_tokens": "128",
+          "raw_output_tokens": "25",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "0",
+          "elapsed_seconds": 4.741,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "0",
+          "elapsed_seconds": 4.744,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "1",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "1",
+          "elapsed_seconds": 2.94,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "37",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "1",
+          "elapsed_seconds": 2.954,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "231",
+          "max_tokens": "128",
+          "raw_output_tokens": "37",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "1",
+          "elapsed_seconds": 2.954,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "1",
+          "elapsed_seconds": 2.957,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "2",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "2",
+          "elapsed_seconds": 4.176,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "47",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "2",
+          "elapsed_seconds": 4.184,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "239",
+          "max_tokens": "128",
+          "raw_output_tokens": "47",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "2",
+          "elapsed_seconds": 4.184,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "2",
+          "elapsed_seconds": 4.185,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "3",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "3",
+          "elapsed_seconds": 1.657,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "20",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "3",
+          "elapsed_seconds": 1.663,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "224",
+          "max_tokens": "128",
+          "raw_output_tokens": "20",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "3",
+          "elapsed_seconds": 1.663,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "3",
+          "elapsed_seconds": 1.663,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "4",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "4",
+          "elapsed_seconds": 2.268,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "26",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "4",
+          "elapsed_seconds": 2.274,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "231",
+          "max_tokens": "128",
+          "raw_output_tokens": "26",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "4",
+          "elapsed_seconds": 2.274,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "4",
+          "elapsed_seconds": 2.274,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "5",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "5",
+          "elapsed_seconds": 3.518,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "17",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "5",
+          "elapsed_seconds": 3.524,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "292",
+          "max_tokens": "128",
+          "raw_output_tokens": "17",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "5",
+          "elapsed_seconds": 3.524,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "5",
+          "elapsed_seconds": 3.524,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "6",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "6",
+          "elapsed_seconds": 2.669,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "26",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "6",
+          "elapsed_seconds": 2.676,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "231",
+          "max_tokens": "128",
+          "raw_output_tokens": "26",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "6",
+          "elapsed_seconds": 2.676,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "6",
+          "elapsed_seconds": 2.677,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "7",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "7",
+          "elapsed_seconds": 1.091,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "7",
+          "elapsed_seconds": 1.096,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "223",
+          "max_tokens": "128",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "7",
+          "elapsed_seconds": 1.096,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "7",
+          "elapsed_seconds": 1.096,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "8",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "8",
+          "elapsed_seconds": 3.198,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "8",
+          "elapsed_seconds": 3.203,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "290",
+          "max_tokens": "128",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "8",
+          "elapsed_seconds": 3.203,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "8",
+          "elapsed_seconds": 3.203,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "9",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "9",
+          "elapsed_seconds": 1.656,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "9",
+          "elapsed_seconds": 1.661,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "222",
+          "max_tokens": "128",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "9",
+          "elapsed_seconds": 1.661,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "9",
+          "elapsed_seconds": 1.662,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "10",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "10",
+          "elapsed_seconds": 4.705,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "10",
+          "elapsed_seconds": 4.709,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "286",
+          "max_tokens": "128",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "10",
+          "elapsed_seconds": 4.709,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "10",
+          "elapsed_seconds": 4.71,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "11",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "11",
+          "elapsed_seconds": 3.074,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "22",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "11",
+          "elapsed_seconds": 3.09,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "229",
+          "max_tokens": "128",
+          "raw_output_tokens": "22",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "11",
+          "elapsed_seconds": 3.09,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "11",
+          "elapsed_seconds": 3.091,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "12",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "12",
+          "elapsed_seconds": 4.557,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "21",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "12",
+          "elapsed_seconds": 4.57,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "314",
+          "max_tokens": "128",
+          "raw_output_tokens": "21",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "12",
+          "elapsed_seconds": 4.57,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "12",
+          "elapsed_seconds": 4.571,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "13",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "13",
+          "elapsed_seconds": 6.391,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "64",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "13",
+          "elapsed_seconds": 6.405,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "313",
+          "max_tokens": "128",
+          "raw_output_tokens": "64",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "13",
+          "elapsed_seconds": 6.405,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "13",
+          "elapsed_seconds": 6.406,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "14",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "14",
+          "elapsed_seconds": 5.093,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "39",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "14",
+          "elapsed_seconds": 5.104,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "312",
+          "max_tokens": "128",
+          "raw_output_tokens": "39",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "14",
+          "elapsed_seconds": 5.104,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "14",
+          "elapsed_seconds": 5.105,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "15",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "15",
+          "elapsed_seconds": 1.472,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "10",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "15",
+          "elapsed_seconds": 1.485,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "219",
+          "max_tokens": "128",
+          "raw_output_tokens": "10",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "15",
+          "elapsed_seconds": 1.485,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "15",
+          "elapsed_seconds": 1.486,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "16",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "16",
+          "elapsed_seconds": 2.78,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "16",
+          "elapsed_seconds": 2.785,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "284",
+          "max_tokens": "128",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "16",
+          "elapsed_seconds": 2.785,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "16",
+          "elapsed_seconds": 2.785,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "17",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "17",
+          "elapsed_seconds": 3.49,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "31",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "17",
+          "elapsed_seconds": 3.496,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "306",
+          "max_tokens": "128",
+          "raw_output_tokens": "31",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "17",
+          "elapsed_seconds": 3.496,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "17",
+          "elapsed_seconds": 3.497,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "18",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "18",
+          "elapsed_seconds": 1.837,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "18",
+          "elapsed_seconds": 1.841,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "222",
+          "max_tokens": "128",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "18",
+          "elapsed_seconds": 1.841,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "18",
+          "elapsed_seconds": 1.842,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "19",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "19",
+          "elapsed_seconds": 2.891,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "19",
+          "elapsed_seconds": 2.898,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "283",
+          "max_tokens": "128",
+          "raw_output_tokens": "13",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "19",
+          "elapsed_seconds": 2.899,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "19",
+          "elapsed_seconds": 2.899,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "20",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "20",
+          "elapsed_seconds": 1.808,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "20",
+          "elapsed_seconds": 1.814,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "283",
+          "max_tokens": "128",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "20",
+          "elapsed_seconds": 1.814,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "20",
+          "elapsed_seconds": 1.814,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "21",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "21",
+          "elapsed_seconds": 5.279,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "55",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "21",
+          "elapsed_seconds": 5.286,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "312",
+          "max_tokens": "128",
+          "raw_output_tokens": "55",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "21",
+          "elapsed_seconds": 5.286,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "21",
+          "elapsed_seconds": 5.287,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "22",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "22",
+          "elapsed_seconds": 2.76,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "22",
+          "elapsed_seconds": 2.767,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "313",
+          "max_tokens": "128",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "22",
+          "elapsed_seconds": 2.767,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "22",
+          "elapsed_seconds": 2.768,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "23",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "23",
+          "elapsed_seconds": 2.79,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "28",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "23",
+          "elapsed_seconds": 2.796,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "293",
+          "max_tokens": "128",
+          "raw_output_tokens": "28",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "23",
+          "elapsed_seconds": 2.796,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "23",
+          "elapsed_seconds": 2.796,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "24",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "24",
+          "elapsed_seconds": 1.989,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "11",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "24",
+          "elapsed_seconds": 1.994,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "293",
+          "max_tokens": "128",
+          "raw_output_tokens": "11",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "24",
+          "elapsed_seconds": 1.995,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "24",
+          "elapsed_seconds": 1.995,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "25",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "25",
+          "elapsed_seconds": 2.928,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "27",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "25",
+          "elapsed_seconds": 2.933,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "296",
+          "max_tokens": "128",
+          "raw_output_tokens": "27",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "25",
+          "elapsed_seconds": 2.933,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "25",
+          "elapsed_seconds": 2.934,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "26",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "26",
+          "elapsed_seconds": 1.827,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "26",
+          "elapsed_seconds": 1.831,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "293",
+          "max_tokens": "128",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "26",
+          "elapsed_seconds": 1.831,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "26",
+          "elapsed_seconds": 1.832,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "27",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "27",
+          "elapsed_seconds": 2.094,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "21",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "27",
+          "elapsed_seconds": 2.1,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "283",
+          "max_tokens": "128",
+          "raw_output_tokens": "21",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "27",
+          "elapsed_seconds": 2.1,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "27",
+          "elapsed_seconds": 2.1,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "28",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "28",
+          "elapsed_seconds": 1.82,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "19",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "28",
+          "elapsed_seconds": 1.824,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "225",
+          "max_tokens": "128",
+          "raw_output_tokens": "19",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "28",
+          "elapsed_seconds": 1.824,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "28",
+          "elapsed_seconds": 1.825,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "29",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "29",
+          "elapsed_seconds": 1.21,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "14",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "29",
+          "elapsed_seconds": 1.218,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "224",
+          "max_tokens": "128",
+          "raw_output_tokens": "14",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "29",
+          "elapsed_seconds": 1.218,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "29",
+          "elapsed_seconds": 1.219,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 1.566,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "21",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 1.571,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "225",
+          "max_tokens": "128",
+          "raw_output_tokens": "21",
+          "finish_reason": "stop",
+          "rejection_reason": "informal_speech",
+          "accepted": "False"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 2.179,
+          "status": "ok",
+          "attempt": "2",
+          "raw_output_tokens": "22",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 2.183,
+          "status": "ok",
+          "attempt": "2",
+          "prompt_tokens": "238",
+          "max_tokens": "128",
+          "raw_output_tokens": "22",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 3.755,
+          "status": "ok",
+          "attempts": "2"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "30",
+          "elapsed_seconds": 3.755,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "31",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "31",
+          "elapsed_seconds": 3.804,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "31",
+          "elapsed_seconds": 3.814,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "288",
+          "max_tokens": "128",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "31",
+          "elapsed_seconds": 3.815,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "31",
+          "elapsed_seconds": 3.816,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "32",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "32",
+          "elapsed_seconds": 2.494,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "32",
+          "elapsed_seconds": 2.514,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "284",
+          "max_tokens": "128",
+          "raw_output_tokens": "16",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "32",
+          "elapsed_seconds": 2.514,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "32",
+          "elapsed_seconds": 2.516,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "33",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "33",
+          "elapsed_seconds": 2.14,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "33",
+          "elapsed_seconds": 2.154,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "282",
+          "max_tokens": "128",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "33",
+          "elapsed_seconds": 2.154,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "33",
+          "elapsed_seconds": 2.156,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "34",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "34",
+          "elapsed_seconds": 1.626,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "14",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "34",
+          "elapsed_seconds": 1.633,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "222",
+          "max_tokens": "128",
+          "raw_output_tokens": "14",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "34",
+          "elapsed_seconds": 1.634,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "34",
+          "elapsed_seconds": 1.635,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "35",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "35",
+          "elapsed_seconds": 1.306,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "17",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "35",
+          "elapsed_seconds": 1.312,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "222",
+          "max_tokens": "128",
+          "raw_output_tokens": "17",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "35",
+          "elapsed_seconds": 1.312,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "35",
+          "elapsed_seconds": 1.313,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "36",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "36",
+          "elapsed_seconds": 3.426,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "17",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "36",
+          "elapsed_seconds": 3.431,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "283",
+          "max_tokens": "128",
+          "raw_output_tokens": "17",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "36",
+          "elapsed_seconds": 3.431,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "36",
+          "elapsed_seconds": 3.432,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "37",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "37",
+          "elapsed_seconds": 2.345,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "37",
+          "elapsed_seconds": 2.354,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "280",
+          "max_tokens": "128",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "37",
+          "elapsed_seconds": 2.355,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "37",
+          "elapsed_seconds": 2.356,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "38",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "38",
+          "elapsed_seconds": 2.953,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "23",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "38",
+          "elapsed_seconds": 2.966,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "286",
+          "max_tokens": "128",
+          "raw_output_tokens": "23",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "38",
+          "elapsed_seconds": 2.966,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "38",
+          "elapsed_seconds": 2.967,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "39",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "39",
+          "elapsed_seconds": 3.365,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "25",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "39",
+          "elapsed_seconds": 3.372,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "296",
+          "max_tokens": "128",
+          "raw_output_tokens": "25",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "39",
+          "elapsed_seconds": 3.372,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "39",
+          "elapsed_seconds": 3.373,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "40",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "40",
+          "elapsed_seconds": 2.83,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "40",
+          "elapsed_seconds": 2.839,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "297",
+          "max_tokens": "128",
+          "raw_output_tokens": "18",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "40",
+          "elapsed_seconds": 2.839,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "40",
+          "elapsed_seconds": 2.84,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "41",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "41",
+          "elapsed_seconds": 2.752,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "41",
+          "elapsed_seconds": 2.762,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "291",
+          "max_tokens": "128",
+          "raw_output_tokens": "15",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "41",
+          "elapsed_seconds": 2.762,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "41",
+          "elapsed_seconds": 2.764,
+          "status": "ok"
+        },
+        {
+          "event": "translation_queue",
+          "request_id": "16153600f8a8",
+          "segment_index": "42",
+          "elapsed_seconds": 0.0,
+          "status": "ok"
+        },
+        {
+          "event": "translation_generate",
+          "request_id": "16153600f8a8",
+          "segment_index": "42",
+          "elapsed_seconds": 2.77,
+          "status": "ok",
+          "attempt": "1",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "early_stop_reason": "None"
+        },
+        {
+          "event": "translation_attempt",
+          "request_id": "16153600f8a8",
+          "segment_index": "42",
+          "elapsed_seconds": 2.782,
+          "status": "ok",
+          "attempt": "1",
+          "prompt_tokens": "284",
+          "max_tokens": "128",
+          "raw_output_tokens": "12",
+          "finish_reason": "stop",
+          "rejection_reason": "None",
+          "accepted": "True"
+        },
+        {
+          "event": "translation_total",
+          "request_id": "16153600f8a8",
+          "segment_index": "42",
+          "elapsed_seconds": 2.782,
+          "status": "ok",
+          "attempts": "1"
+        },
+        {
+          "event": "segment_translation",
+          "request_id": "16153600f8a8",
+          "segment_index": "42",
+          "elapsed_seconds": 2.783,
+          "status": "ok"
+        },
+        {
+          "event": "translation_batch",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 124.654,
+          "status": "ok",
+          "source_segment_count": "63",
+          "sentence_count": "43",
+          "failed_segments": "0"
+        },
+        {
+          "event": "http_request",
+          "request_id": "16153600f8a8",
+          "segment_index": "None",
+          "elapsed_seconds": 180.522,
+          "method": "POST",
+          "path": "/api/v1/transcriptions",
+          "status_code": "200",
+          "status": "ok",
+          "error_type": "None",
+          "elapsed_minutes": "3.009"
+        }
+      ],
+      "segment_count": 43,
+      "failed_segments": 0,
+      "generation_attempt_count": 44,
+      "phase_seconds": {
+        "upload_save": 1.049,
+        "stt_decode": 0.898,
+        "stt_features": 0.057,
+        "stt_inference": 49.887,
+        "stt": 50.786,
+        "sentence_grouping": 0.001,
+        "translation_batch": 124.654,
+        "http_request": 180.522
+      },
+      "states_after": [
+        {
+          "name": "/k-aption_be-backend-1",
+          "id": "06c1ff2092e95bb78794f8e5b9a7ca766ef0e4cb511df78e64adaf10522ea5c7",
+          "image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+          "cmd": [
+            "uvicorn",
+            "app.main:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8000",
+            "--workers",
+            "1"
+          ],
+          "cpu": 4000000000,
+          "memory": 2500000000,
+          "swap": 2500000000,
+          "health": "healthy",
+          "oom": false,
+          "restarts": 0
+        },
+        {
+          "name": "/k-aption_be-translator-1",
+          "id": "8b4bee8f95e7dec118fc93cd4c9ea30a7230b80210743cf00a9a4f637260e9a5",
+          "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+          "cmd": [
+            "--model",
+            "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "--alias",
+            "qwen3-4b-instruct-2507",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8080",
+            "--device",
+            "none",
+            "--n-gpu-layers",
+            "0",
+            "--no-kv-offload",
+            "--no-op-offload",
+            "--no-repack",
+            "--ctx-size",
+            "2048",
+            "--parallel",
+            "1",
+            "--threads",
+            "8",
+            "--threads-batch",
+            "8",
+            "--batch-size",
+            "256",
+            "--ubatch-size",
+            "128",
+            "--cache-ram",
+            "0",
+            "--no-context-shift",
+            "--jinja"
+          ],
+          "cpu": 8000000000,
+          "memory": 4000000000,
+          "swap": 4000000000,
+          "health": "healthy",
+          "oom": false,
+          "restarts": 0
+        }
+      ],
+      "baseline_source_and_timestamps_match": true,
+      "translation_changes": [
+        {
+          "index": 9,
+          "source": "And the first one is the geometric interpretation.",
+          "before": null,
+          "after": "첫째는 기하학적 해석입니다.",
+          "after_error": null
+        },
+        {
+          "index": 22,
+          "source": "work this out by the end of this unit.",
+          "before": "이 단위의 끝까지 이 일을 계산해 보세요.",
+          "after": "이 단위의 끝까지 이를 계산하여 해결하시기 바랍니다.",
+          "after_error": null
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "app/services/pipeline.py": "0c102b8df0a80baa15fdfbc8d09cc52de38dbe1d4a8e47b515acf0e23a04add1",
+    "app/services/translation.py": "3a2d123253d200da19921aca2e1cfd8a186dc78219cfa9f8aa7450baeacf5e6e",
+    "app/services/translation_http.py": "ee41ef91c149b0eaea59a00eb3346a5b8e2ff0de0a8b42de66b14ed8bc16cd10",
+    "app/services/translation_qwen.py": "0286013dfee45cd2dad48afdc770f6513cedf033a6ed975c8206de0b7fc2afce",
+    "app/services/translation_inputs.py": "f38fcc7cadf3d9d901276a6de97e9b74650c71b1584a663fe3d0401c3cfcdcf1",
+    "app/services/translation_normalization.py": "f650924fb3f817e684b482da23c1e25ebabcdc63bd423fb9d3153da9507daa68",
+    "app/services/translation_validation.py": "528d39d7959745dc6d69a158493f02091b8ee9c75014d35c4e048333a0e55d0a",
+    "app/services/subtitles.py": "869db07be8fb0d4a08358949746f68c095d365f4e6400b8341f4e7339eb32079",
+    "transcribe.py": "4f467be1e9ec5c78744110ea9f296aa91940f1b54ea77135a37131718243fe3a",
+    "data/physics_glossary.json": "49ee4f9a3b9dddedf50805c59c19a93c2976453ec66a26427224f8a8859d6d02",
+    "data/qwen_translation_terms.json": "ff80d3f4db645910b1c31ead1c1d8b21b751cebfb8040110886d295df9c32642"
+  },
+  "limits": [
+    "One complete HTTP request per original video, sequentially; no statistical repetitions.",
+    "Qwen already loaded; isolated backend STT not explicitly warmed before first request. See stt_model_load.",
+    "Only glossary matching and numeric validation changed; production backend untouched, translator shared sequentially.",
+    "Mac ARM64 Docker only; Windows untested.",
+    "HTTP success and returned translation do not prove semantic accuracy."
+  ],
+  "states_after": [
+    {
+      "name": "/k-aption_be-backend-1",
+      "id": "06c1ff2092e95bb78794f8e5b9a7ca766ef0e4cb511df78e64adaf10522ea5c7",
+      "image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+      "cmd": [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--workers",
+        "1"
+      ],
+      "cpu": 4000000000,
+      "memory": 2500000000,
+      "swap": 2500000000,
+      "health": "healthy",
+      "oom": false,
+      "restarts": 0
+    },
+    {
+      "name": "/k-aption_be-translator-1",
+      "id": "8b4bee8f95e7dec118fc93cd4c9ea30a7230b80210743cf00a9a4f637260e9a5",
+      "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+      "cmd": [
+        "--model",
+        "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "--alias",
+        "qwen3-4b-instruct-2507",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8080",
+        "--device",
+        "none",
+        "--n-gpu-layers",
+        "0",
+        "--no-kv-offload",
+        "--no-op-offload",
+        "--no-repack",
+        "--ctx-size",
+        "2048",
+        "--parallel",
+        "1",
+        "--threads",
+        "8",
+        "--threads-batch",
+        "8",
+        "--batch-size",
+        "256",
+        "--ubatch-size",
+        "128",
+        "--cache-ram",
+        "0",
+        "--no-context-shift",
+        "--jinja"
+      ],
+      "cpu": 8000000000,
+      "memory": 4000000000,
+      "swap": 4000000000,
+      "health": "healthy",
+      "oom": false,
+      "restarts": 0
+    }
+  ],
+  "production_state_unchanged": true,
+  "baseline_report": "evaluation/two-video-api-261101.json",
+  "candidate_image": "sha256:bb4123b6e81856a0f40156553f55c12388dec2780ee3c1d576b4903de7878017",
+  "candidate_parent_image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+  "candidate_build_dockerfile": "FROM kaption-backend:local\nCOPY app/services/translation.py app/services/translation_validation.py /app/app/services/\n",
+  "vm_pressure_snapshot": {
+    "cgroup": {
+      "memory.current": "1346707456\n",
+      "memory.peak": "1538297856\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+      "memory.stat": "anon 1085378560\nfile 248160256\nkernel 11112448\nkernel_stack 344064\npagetables 2789376\nsec_pagetables 0\npercpu 22480\nsock 4096\nvmalloc 16384\nshmem 4096\nzswap 0\nzswapped 0\nfile_mapped 21180416\nfile_dirty 0\nfile_writeback 0\nswapcached 0\nanon_thp 266338304\nfile_thp 14680064\nshmem_thp 0\ninactive_anon 277925888\nactive_anon 808144896\ninactive_file 243068928\nactive_file 5087232\nunevictable 0\nslab_reclaimable 7000464\nslab_unreclaimable 906280\nslab 7906744\nworkingset_refault_anon 0\nworkingset_refault_file 251320\nworkingset_activate_anon 0\nworkingset_activate_file 27727\nworkingset_restore_anon 0\nworkingset_restore_file 101\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 423190\npgsteal 418596\npswpin 0\npswpout 0\npgscan_kswapd 421482\npgscan_direct 1708\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 416888\npgsteal_direct 1708\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 2206535\npgmajfault 236\npgrefill 113514\npgactivate 61\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 8675\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n",
+      "cpu.stat": "usage_usec 479000307\nuser_usec 463929376\nsystem_usec 15070930\nnice_usec 0\nnr_periods 2294\nnr_throttled 662\nthrottled_usec 47501601\nnr_bursts 0\nburst_usec 0\n"
+    },
+    "pressure": {
+      "memory": "some avg10=0.00 avg60=0.13 avg300=0.10 total=3559499\nfull avg10=0.00 avg60=0.13 avg300=0.10 total=3543589\n",
+      "io": "some avg10=0.01 avg60=0.22 avg300=0.18 total=9613299\nfull avg10=0.01 avg60=0.22 avg300=0.17 total=9129195\n",
+      "cpu": "some avg10=1.97 avg60=3.75 avg300=2.65 total=265795209\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n"
+    },
+    "memory": [
+      "MemTotal:        6064496 kB",
+      "MemAvailable:    2885912 kB",
+      "SwapTotal:       1048572 kB",
+      "SwapFree:         998860 kB"
+    ]
+  },
+  "comparability_limits": [
+    "Baseline production backend stays running while isolated candidate is tested, so memory/cache and host state differ. No performance improvement or causal slowdown inferred.",
+    "STT source and dependencies unchanged but observed time differs; Qwen cache, host thermals, page residency and background load not controlled.",
+    "Only complete final-image requests below used. Earlier evaluation interrupted for boundary fixes, excluded from comparison.",
+    "No complete 50-minute video or original rejected Korean candidates are available."
+  ],
+  "local_application_after_evaluation": {
+    "health_and_source": {
+      "health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": false
+      },
+      "source_sha256": {
+        "app/services/translation.py": "3a2d123253d200da19921aca2e1cfd8a186dc78219cfa9f8aa7450baeacf5e6e",
+        "app/services/translation_validation.py": "528d39d7959745dc6d69a158493f02091b8ee9c75014d35c4e048333a0e55d0a"
+      }
+    },
+    "states": [
+      {
+        "name": "/k-aption_be-backend-1",
+        "image": "sha256:bb4123b6e81856a0f40156553f55c12388dec2780ee3c1d576b4903de7878017",
+        "cpu": 4000000000,
+        "memory": 2500000000,
+        "health": "healthy",
+        "oom": false,
+        "restarts": 0
+      },
+      {
+        "name": "/k-aption_be-translator-1",
+        "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+        "cpu": 8000000000,
+        "memory": 4000000000,
+        "health": "healthy",
+        "oom": false,
+        "restarts": 0
+      }
+    ],
+    "candidate_containers_removed": true,
+    "rollback_image": "kaption-backend:before-calculus-fix-261101",
+    "command": "docker compose --env-file docker/cpu8.defaults up -d --no-deps --no-build backend"
+  }
+}

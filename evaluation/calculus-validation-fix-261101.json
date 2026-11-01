@@ -1,0 +1,165 @@
+{
+  "baseline": "evaluation/calculus-failures-pdf-261101.json",
+  "scope": "14 manually constructed translations, not actual rejected outputs. No model generation; no 22/27-case recovery claim.",
+  "before_rejected": 12,
+  "after_rejected": 0,
+  "cases": [
+    {
+      "timestamp": "07:07",
+      "source": "The first one is the point.",
+      "manually_constructed_translation_not_observed_model_output": "첫 번째는 그 점입니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "첫 번째는 그 점입니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "20:20",
+      "source": "The first one is that x0 and x0 cancel.",
+      "manually_constructed_translation_not_observed_model_output": "첫 번째는 x0와 x0가 서로 소거된다는 것입니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "첫 번째는 x0와 x0가 서로 소거된다는 것입니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "41:52",
+      "source": "And the first one is the following.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 첫 번째는 다음과 같습니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "그리고 첫 번째는 다음과 같습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "34:42",
+      "source": "So this one is 2y0.",
+      "manually_constructed_translation_not_observed_model_output": "그러면 이것은 2y0입니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "그러면 이것은 2y0입니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "23:02",
+      "source": "So I've managed to fill the boards, so maybe I should stop for a question or two.",
+      "manually_constructed_translation_not_observed_model_output": "칠판을 다 채웠으니 질문을 한두 개 받아야 할 것 같습니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "칠판을 다 채웠으니 질문을 한두 개 받아야 할 것 같습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "24:07",
+      "source": "Minus 1 in the numerator.",
+      "manually_constructed_translation_not_observed_model_output": "분자에는 -1이 있습니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "분자에는 -1이 있습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "32:34",
+      "source": "And that's equal to minus 1 over x0 squared.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 이것은 -1 / x0²와 같습니다.",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "그리고 이것은 -1 / x0²와 같습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "23:27",
+      "source": "So in other words, why is it that this expression, when delta x tends to 0, is equal to minus 1 over x0 squared?",
+      "manually_constructed_translation_not_observed_model_output": "다시 말해 Δx가 0으로 갈 때 이 식이 -1 / x0²가 되는 이유는 무엇인가요?",
+      "before_rejection_reason": "missing_number",
+      "after_rejection_reason": null,
+      "restored_translation": "다시 말해 Δx가 0으로 갈 때 이 식이 -1 / x0²가 되는 이유는 무엇인가요?",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "50:27",
+      "source": "And then here I'll get 5 times 10, so 50 x to the 9th.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 여기서는 5 × 10이므로 50 x의 9제곱을 얻습니다.",
+      "before_rejection_reason": "invented_number",
+      "after_rejection_reason": null,
+      "restored_translation": "그리고 여기서는 5 × 10이므로 50 x의 9제곱을 얻습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "15:01",
+      "source": "So if this horizontal distance is delta x, then this location is x0 plus delta x.",
+      "manually_constructed_translation_not_observed_model_output": "이 수평 거리가 Δx라면 이 위치는 x0 + Δx입니다.",
+      "before_rejection_reason": null,
+      "after_rejection_reason": null,
+      "restored_translation": "이 수평 거리가 Δx라면 이 위치는 x0 + Δx입니다.",
+      "model_generation_run": false,
+      "required_terms_after": [
+        {
+          "en": "distance",
+          "ko": "거리"
+        }
+      ]
+    },
+    {
+      "timestamp": "14:19",
+      "source": "And I want to work out a more usable form here.",
+      "manually_constructed_translation_not_observed_model_output": "그리고 여기서 더 사용하기 편리한 형태를 구하고 싶습니다.",
+      "before_rejection_reason": "missing_term",
+      "after_rejection_reason": null,
+      "restored_translation": "그리고 여기서 더 사용하기 편리한 형태를 구하고 싶습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "14:26",
+      "source": "I want to work out a better formula for this.",
+      "manually_constructed_translation_not_observed_model_output": "이에 대해 더 나은 공식을 구하고 싶습니다.",
+      "before_rejection_reason": "missing_term",
+      "after_rejection_reason": null,
+      "restored_translation": "이에 대해 더 나은 공식을 구하고 싶습니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "31:45",
+      "source": "We're going to find the so-called x-intercept.",
+      "manually_constructed_translation_not_observed_model_output": "우리는 이른바 x절편을 구할 것입니다.",
+      "before_rejection_reason": null,
+      "after_rejection_reason": null,
+      "restored_translation": "우리는 이른바 x절편을 구할 것입니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    },
+    {
+      "timestamp": "06:59",
+      "source": "And now there are two pieces of information that we're going to need to work out what the line is.",
+      "manually_constructed_translation_not_observed_model_output": "이 직선을 구하려면 두 가지 정보가 필요합니다.",
+      "before_rejection_reason": "missing_term",
+      "after_rejection_reason": null,
+      "restored_translation": "이 직선을 구하려면 두 가지 정보가 필요합니다.",
+      "model_generation_run": false,
+      "required_terms_after": []
+    }
+  ],
+  "implementation_sha256": {
+    "app/services/translation.py": "3a2d123253d200da19921aca2e1cfd8a186dc78219cfa9f8aa7450baeacf5e6e",
+    "app/services/translation_validation.py": "528d39d7959745dc6d69a158493f02091b8ee9c75014d35c4e048333a0e55d0a",
+    "tests/test_translation_validation.py": "a7316ef0ff297f0e6cd9096deb79affb92160e9de29497faab65ec189453d7f0",
+    "tests/test_glossary_context.py": "d9c2d00c17f307afa7647296841e73972e43b2ae26421928463f6fe36a70b289"
+  },
+  "focused_tests": {
+    "command": ".venv-api/bin/python scripts/run_changed_tests.py --files app/services/translation.py app/services/translation_validation.py tests/test_glossary_context.py scripts/run_changed_tests.py",
+    "count": 103,
+    "passed": true,
+    "full_test_suite_run": false
+  }
+}

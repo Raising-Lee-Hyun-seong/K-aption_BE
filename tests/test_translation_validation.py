@@ -143,6 +143,94 @@ class PreservationTests(unittest.TestCase):
         self.assertIsNone(preservation_problem('2 m and 2 g', '2미터와 2그램입니다.'))
         self.assertEqual(preservation_problem('m', '미터입니다.'), 'missing_math_symbol')
 
+    def test_spoken_digit_signs_are_local_and_preserved(self):
+        """숫자 앞 영어·한국어 음수 표현을 동등하게 인식하고 부호 손실을 거부한다.
+
+        :return: None.
+        """
+        for source in ('Minus 1 in the numerator.', 'Negative 1 in the numerator.',
+                       'The value is -1.', 'The value is − 1.'):
+            for output in ('분자는 -1입니다.', '분자는 −1입니다.',
+                           '분자는 마이너스 1입니다.', '분자는 음의 1입니다.'):
+                with self.subTest(source=source, output=output):
+                    self.assertIsNone(preservation_problem(source, output))
+            self.assertEqual(preservation_problem(source, '분자는 1입니다.'), 'missing_number')
+        self.assertIsNone(preservation_problem('minus 1 and 2', '마이너스 1과 2입니다.'))
+        self.assertEqual(preservation_problem('minus 1 and 2', '1과 마이너스 2입니다.'), 'missing_number')
+        self.assertEqual(preservation_problem('minus two and one', '마이너스 하나와 두입니다.'), 'missing_number')
+        self.assertEqual(preservation_problem('two', '음의 두 개입니다.'), 'missing_number')
+        self.assertIsNone(preservation_problem('Value is 1.', '다음의 1입니다.'))
+        self.assertIsNone(preservation_problem('Value is 1.', '처음의 1입니다.'))
+        self.assertIsNone(preservation_problem('The value is non-negative 1.', '값은 음이 아닌 1입니다.'))
+        self.assertIsNone(preservation_problem('The value is non-negative one.', '값은 음이 아닌 하나입니다.'))
+
+    def test_ordinal_and_demonstrative_one_are_not_cardinal_one(self):
+        """순서 지시와 대명사의 one을 구별하고 실제 수량 one과 순서 변경은 계속 검사한다.
+
+        :return: None.
+        """
+        for source, output in (
+            ('The first one is the point.', '첫 번째는 그 점입니다.'),
+            ('The first one is the geometric interpretation.', '첫째는 기하학적 해석입니다.'),
+            ('The first one is the point.', '1번째는 그 점입니다.'),
+            ('The second one is the point.', '두 번째는 그 점입니다.'),
+            ('So this one is 2y0.', '그러면 이것은 2y0입니다.'),
+            ('That one was the point.', '그것이 그 점이었습니다.'),
+        ):
+            with self.subTest(source=source, output=output):
+                self.assertIsNone(preservation_problem(source, output))
+        for source, output in (
+            ('The first one is the point.', '두 번째는 그 점입니다.'),
+            ('The second one is the point.', '첫 번째는 그 점입니다.'),
+            ('One kilogram.', '킬로그램입니다.'),
+            ('One of the points.', '그 점들입니다.'),
+            ('One more point.', '추가 점입니다.'),
+            ('One minus two.', '둘입니다.'),
+            ('This one kilogram is here.', '이 킬로그램이 여기 있습니다.'),
+            ('So this one is 2y0.', '그러면 이것은 3y0입니다.'),
+        ):
+            with self.subTest(source=source, output=output):
+                self.assertEqual(preservation_problem(source, output), 'missing_number')
+
+    def test_han_du_is_only_accepted_for_approximate_source_quantities(self):
+        """한두 표현은 원문이 근사 수량일 때만 허용하고 정확한 두 개와 혼동하지 않는다.
+
+        :return: None.
+        """
+        for source, output in (
+            ('Maybe I should stop for a question or two.', '질문을 한두 개 받겠습니다.'),
+            ('One or two questions.', '한두 개의 질문입니다.'),
+            ('One or two kilograms.', '한두 킬로그램입니다.'),
+        ):
+            with self.subTest(source=source, output=output):
+                self.assertIsNone(preservation_problem(source, output))
+        self.assertEqual(preservation_problem('Two questions.', '질문 한두 개입니다.'), 'missing_number')
+        self.assertEqual(preservation_problem('Two kilograms.', '한두 킬로그램입니다.'), 'missing_number')
+        self.assertEqual(preservation_problem('One or two questions.', '질문 세 개입니다.'), 'missing_number')
+        self.assertEqual(preservation_problem('One or two questions.', '마이너스 한두 개의 질문입니다.'), 'missing_number')
+
+    def test_numeric_ordinals_and_calculus_coefficients_keep_their_values(self):
+        """숫자 서수·x와 y의 계수를 보존하며 지수·계수 변경과 숫자 첨가를 거부한다.
+
+        :return: None.
+        """
+        source = "And then here I'll get 5 times 10, so 50 x to the 9th."
+        self.assertIsNone(preservation_problem(source, '여기서는 5 × 10이므로 50 x의 9제곱입니다.'))
+        self.assertEqual(preservation_problem(source, '여기서는 5 × 10이므로 50 x의 8제곱입니다.'), 'missing_number')
+        self.assertIsNone(preservation_problem('x to the 10th power', 'x의 10제곱입니다.'))
+        for source in ('x to the minus 9th power.', 'x to the -9th power.'):
+            with self.subTest(source=source):
+                self.assertIsNone(preservation_problem(source, 'x의 -9제곱입니다.'))
+                self.assertEqual(preservation_problem(source, 'x의 9제곱입니다.'), 'missing_number')
+        for source, output in (('2y0', '3y0입니다.'), ('3x squared', '4x²입니다.'),
+                               ('50x', '5x입니다.'), ('2x_0', '3x_0입니다.')):
+            with self.subTest(source=source, output=output):
+                self.assertEqual(preservation_problem(source, output), 'missing_number')
+        for source in ('foo9th', '9thousand', 'x0', 'm0', 'm_r2'):
+            with self.subTest(source=source):
+                output = source + '이며 9입니다.'
+                self.assertEqual(preservation_problem(source, output), 'invented_number')
+
     def test_spaced_and_lowercase_math_aliases_are_canonical(self):
         """공식 자막의 띄어쓴·소문자 기호를 보존하고 원표기와 붙인 표기를 모두 허용한다.
 
