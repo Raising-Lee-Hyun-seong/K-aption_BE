@@ -1,0 +1,2512 @@
+{
+  "source": "\"\"\"분리 API와 내부 HTTP 클라이언트에서 원본 영상의 일반·단어 정렬 경로를 비교한다.\"\"\"\nimport json\nfrom pathlib import Path\nimport subprocess\nfrom time import monotonic,sleep\n\nROOT=Path('/Users/macbookair/Desktop/K-aption_BE')\nDIRECTORY=Path('/private/tmp/kaption-word-packed-api-261026')\nDIRECTORY.mkdir()\nfor filename,source in (('server.py','/private/tmp/kaption-word-packed-server-261026.py'),('client.py','/private/tmp/kaption-word-api-client-261026.py')):\n    (DIRECTORY/filename).write_text(Path(source).read_text())\nreport={'source':Path(__file__).read_text(),'server_source':(DIRECTORY/'server.py').read_text(),\n        'client_source':(DIRECTORY/'client.py').read_text(),'runs':[],\n        'limits':['Original 212.5866875-second video; CPU4 backend, CPU8 translator.',\n                  'HTTP client container uses the same internal network; not host port upload.',\n                  'Backend STT starts unloaded; translator uses identical cache-disabled warmup.',\n                  'Candidate includes alignment audit writes and optional sentence packing within 18s/350 chars.',\n                  'Windows amd64 and host total RAM are untested.']}\norder=['candidate','baseline']\nfor index,mode in enumerate(order):\n    label=f'run{index+1}-{mode}'\n    destination=DIRECTORY/label\n    destination.mkdir()\n    name='kaption-word-api-eval'\n    command=['docker','run','-d','--name',name,'--network','k-aption_be_inference',\n             '--cpus','4','--memory','2500000000','--memory-swap','2500000000',\n             '-e','PYTHONPATH=/app','-e','HF_HUB_OFFLINE=1','-e','HF_HUB_DISABLE_IMPLICIT_TOKEN=1',\n             '-e','KAPTION_TRANSLATOR_URL=http://translator:8080','-e','KAPTION_TRANSLATOR_PROMPT_CACHE=true',\n             '-e',f'KAPTION_JOB_DIR=/reports/{label}/jobs','-e','KAPTION_MAX_ACTIVE_JOBS=2',\n             '-e','OMP_NUM_THREADS=4','-e','OPENBLAS_NUM_THREADS=1','-e','MKL_NUM_THREADS=1',\n             '--mount',f'type=bind,source={ROOT},target=/app,readonly',\n             '--mount',f'type=bind,source={DIRECTORY},target=/reports',\n             '--mount','type=volume,source=k-aption_be_whisper-cache,target=/cache/huggingface,readonly',\n             '--entrypoint','python','kaption-backend:local','/reports/server.py',\n             '--mode',mode,'--reports',f'/reports/{label}']\n    print('Starting',label,flush=True)\n    subprocess.run(command,cwd=ROOT,check=True,capture_output=True)\n    try:\n        deadline=monotonic()+30\n        ready=\"import json,urllib.request; assert json.load(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2))['translation_model_loaded']\"\n        while monotonic()<deadline:\n            result=subprocess.run(['docker','exec',name,'python','-c',ready],capture_output=True)\n            if result.returncode==0:break\n            sleep(.5)\n        else:raise RuntimeError('API not ready internally')\n        warmup=\"from app.main import create_translation_service; s=create_translation_service(); s.cache_prompt=False; print(s.translate('This is the initial mass.','',128)['translation']); s.close()\"\n        subprocess.run(['docker','exec',name,'python','-c',warmup],capture_output=True,check=True)\n        command=['docker','run','--rm','--name','kaption-word-http-client',\n                 '--network','k-aption_be_inference','--cpus','1','--memory','268435456',\n                 '--memory-swap','268435456','--mount',f'type=bind,source={ROOT},target=/app,readonly',\n                 '--mount',f'type=bind,source={DIRECTORY},target=/reports',\n                 '--entrypoint','python','kaption-backend:local','/reports/client.py',\n                 '--output',f'/reports/{label}/http.json']\n        result=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,check=True)\n        row={'label':label,'mode':mode,**json.loads((destination/'http.json').read_text())}\n        row['client_log']={'stdout':result.stdout,'stderr':result.stderr}\n        row['logs']=subprocess.check_output(['docker','logs',name],stderr=subprocess.STDOUT,text=True)\n        fmt=('{\"image\":{{json .Image}},\"cpu\":{{.HostConfig.NanoCpus}},\"memory\":{{.HostConfig.Memory}},'\n             '\"memory_swap\":{{.HostConfig.MemorySwap}},\"oom\":{{.State.OOMKilled}},\"restarts\":{{.RestartCount}}}')\n        row['state']=json.loads(subprocess.check_output(['docker','inspect',name,'--format',fmt],text=True))\n        row['memory_observation']=subprocess.check_output(['docker','exec',name,'sh','-c','cat /sys/fs/cgroup/memory.peak /sys/fs/cgroup/memory.events'],text=True)\n        row['failed']=sum(s['translation_error'] is not None for s in row['result'].get('segments',[]))\n        row['alignment_audits']=[json.loads(p.read_text()) for p in sorted(destination.glob('aligned-source-*.json'))]\n        report['runs'].append(row)\n        (DIRECTORY/'comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n')\n        print(json.dumps({'label':label,'seconds':row['seconds'],'status':row['status'],'segments':len(row['result'].get('segments',[])),'failed':row['failed']}),flush=True)\n        if mode=='baseline' and index==1:\n            candidate=report['runs'][0]\n            if candidate['status']==200 and not candidate['failed'] and candidate['seconds']<row['seconds']*.9:\n                order.extend(['baseline','candidate'])\n    finally:\n        logs=subprocess.run(['docker','logs',name],capture_output=True,text=True)\n        (destination/'server.log').write_text(logs.stdout+logs.stderr)\n        subprocess.run(['docker','stop','--timeout','5',name],capture_output=True)\n        subprocess.run(['docker','rm',name],capture_output=True,check=True)\n",
+  "server_source": "\"\"\"기존 API에 평가용 단어 정렬 STT만 주입하고 운영 컨테이너와 분리해 실행한다.\"\"\"\nimport argparse\nfrom pathlib import Path\nfrom types import SimpleNamespace\nfrom uuid import uuid4\n\nfrom faster_whisper import BatchedInferencePipeline\nfrom transcribe import TranscriptionService\nfrom app.services.stt_words import split_aligned_segments\nfrom scripts.evaluate_cpu_stt_options import save_new\nimport app.main as api\n\nREPORTS = None\n\n\nclass AlignedModel:\n    \"\"\"동일 Whisper 모델의 배치 단어 정렬을 기존 STT 구간 인터페이스로 감싼다.\"\"\"\n\n    def __init__(self, model):\n        \"\"\"로드된 CPU 모델을 재사용하는 배치 전사기를 생성한다.\n\n        :param model: 메모리 제한 특징 추출기를 가진 기존 WhisperModel.\n        :return: None.\n        \"\"\"\n        self.pipeline = BatchedInferencePipeline(model=model)\n\n    def transcribe(self, audio, **options):\n        \"\"\"단어 정렬 원문을 기록하고 검증한 자막 조각을 기존 호출자에게 반환한다.\n\n        :param audio: 16kHz 단일 채널 오디오 배열.\n        :param options: 기존 STT의 language·task·beam_size·VAD·힌트 설정.\n        :return: start·end·text 객체 생성기와 기존 언어 정보의 튜플.\n        :raises ValueError: 정렬 시각 또는 원문 보존 검사가 실패한 경우.\n\n        평가 전용 REPORTS 경로에 원시 단어와 분할 결과를 새 JSON으로 저장한다.\n        \"\"\"\n        segments, info = self.pipeline.transcribe(audio, **options, batch_size=2,\n                                                 without_timestamps=True, word_timestamps=True)\n        raw = [{'start': s.start, 'end': s.end, 'text': s.text,\n                'words': [{'start': w.start, 'end': w.end, 'word': w.word,\n                           'probability': w.probability} for w in (s.words or [])]}\n               for s in segments if s.text.strip()]\n        cues = split_aligned_segments(raw, len(audio) / 16000, pack_sentences=True)\n        save_new(REPORTS / ('aligned-source-' + uuid4().hex + '.json'),\n                 {'raw': raw, 'cues': cues, 'audio_seconds': len(audio) / 16000})\n        return (SimpleNamespace(**cue) for cue in cues), info\n\n\nclass EvaluationTranscriber(TranscriptionService):\n    \"\"\"기존 업로드·길이·음성 검증과 공유 잠금을 유지하며 평가 모델만 대체한다.\"\"\"\n\n    def _get_model(self):\n        \"\"\"기존 지연 로드 모델과 단어 정렬 어댑터를 한 번 만들고 재사용한다.\n\n        :return: 기존 transcribe 인터페이스를 제공하는 평가용 어댑터.\n        \"\"\"\n        model = super()._get_model()\n        if not hasattr(self, '_aligned_proxy'):\n            self._aligned_proxy = AlignedModel(model)\n        return self._aligned_proxy\n\n\nif __name__ == '__main__':\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'candidate'), required=True)\n    parser.add_argument('--reports', type=Path, required=True)\n    args = parser.parse_args()\n    REPORTS = args.reports\n    if args.mode == 'candidate':\n        api.TranscriptionService = EvaluationTranscriber\n    import uvicorn\n    uvicorn.run(api.app, host='0.0.0.0', port=8000)\n",
+  "client_source": "\"\"\"내부 네트워크의 평가 API에 원본 영상을 업로드하고 실제 HTTP 시간을 저장한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nfrom time import perf_counter\nimport httpx\n\nif __name__ == '__main__':\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--output',type=Path,required=True)\n    args=parser.parse_args()\n    media=Path('/app/MIT8_01F16_W06PS01-2_360p.mp4')\n    with httpx.Client(base_url='http://kaption-word-api-eval:8000',timeout=180,trust_env=False) as client:\n        initial=client.get('/health').json()\n        started=perf_counter()\n        with media.open('rb') as stream:\n            response=client.post('/api/v1/transcriptions',params={'language':'en'},files={'file':(media.name,stream,'video/mp4')})\n        report={'seconds':perf_counter()-started,'initial_health':initial,\n                'status':response.status_code,'request_id':response.headers.get('x-request-id'),\n                'result':response.json(),'media_sha256':hashlib.sha256(media.read_bytes()).hexdigest(),\n                'final_health':client.get('/health').json()}\n    with args.output.open('x') as target:json.dump(report,target,ensure_ascii=False,indent=2)\n    print(json.dumps({'seconds':report['seconds'],'status':report['status']}),flush=True)\n",
+  "runs": [
+    {
+      "label": "run1-candidate",
+      "mode": "candidate",
+      "seconds": 87.55378737200226,
+      "initial_health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": false
+      },
+      "status": 200,
+      "request_id": null,
+      "result": {
+        "segments": [
+          {
+            "start": 3.6,
+            "end": 16.8,
+            "text": "We just derived this relation here. The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket. And we want to ultimately get the speed of the rocket.",
+            "translation": "여기서 우리는 이 관계를 도출했습니다. 로켓 썰매의 속도의 미분과 로켓의 질량의 미분 사이의 관계입니다. 그리고 최종적으로 로켓의 속력을 얻고자 합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 17.85,
+            "end": 32.51,
+            "text": "So we have to apply a technique called separation variables. And then we want to integrate. What we're going to do is first we're going to multiply by dt. So that falls away.",
+            "translation": "따라서 우리는 변수 분리 기법을 적용해야 합니다. 그리고 그 후 적분을 수행합니다. 우리가 할 일은 먼저 dt를 곱하는 것입니다. 그러면 그 값이 사라집니다.",
+            "translation_error": null
+          },
+          {
+            "start": 32.99,
+            "end": 50.32,
+            "text": "And we're left with mr dvr equals dmru. And we're going to shuffle the m onto the other side. And we're left with dvr equals u is a constant.",
+            "translation": "그리고 우리는 mR d vR = d mR u 를 얻습니다. 그리고 m을 다른 쪽으로 옮깁니다. 그러면 d vR = u가 상수입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 50.96,
+            "end": 60.71,
+            "text": "So that goes up front. And then we have dmr over mr. That's an equation that we can integrate now.",
+            "translation": "그러므로 그 것이 앞쪽에 옵니다. 그리고 우리는 dmR/(mR)를 가지게 됩니다. 그는 지금 적분할 수 있는 방정식입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 63.08,
+            "end": 80.15,
+            "text": "We can do that. And the tricky bit is that we need to take care of the integration limits here. We have vr and actually these now are all primes. So we have vr going from v0.",
+            "translation": "그것을 할 수 있습니다. 그리고 어려운 점은 여기 적분 구간을 올바르게 처리해야 한다는 것입니다. 우리는 vR과 실제로 이 모든 것이 프라임입니다. 따라서 vR은 v0에서 시작합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 80.63,
+            "end": 92.43,
+            "text": "That is our initial condition here to vr prime of equal vr of t.",
+            "translation": "그것은 여기서 vR(t)의 초기 조건입니다. vR(t)는 vR의 프라임이 vR의 t와 같을 때의 함수 값입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 93.74,
+            "end": 111.3,
+            "text": "And for the mass, we have mr prime equals m0. Actually, not quite m0. It's 2m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2m0.",
+            "translation": "질량에 대해서는 mR 프라임이 m0에 등합니다. 실제로는 정확히 m0가 아닙니다. 그것은 2m0입니다. 왜냐하면 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이기 때문입니다. 따라서 그 값은 2m0입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 111.52,
+            "end": 126.59,
+            "text": "So this is the initial mass. And then we go to mr prime equals m of vr. Alright, so let's do that.",
+            "translation": "그러므로 이 것은 초기 질량입니다. 그리고 그 다음에 mR′ = m(vR)로 넘어갑니다. 좋아, 그걸 해보겠습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 127.31,
+            "end": 143.51,
+            "text": "We're gonna get vr minus v0 equals u1 over m. Integrated gives us an ln, so ln. And then we can immediately do",
+            "translation": "우리는 vR - v0 = u1 / m을 얻습니다. 적분을 취하면 ln이 나옵니다. 따라서 ln이며, 그 후 즉시 수행할 수 있습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 145.62,
+            "end": 150.49,
+            "text": "this here over 2m0.",
+            "translation": "이것은 2m0 나누기입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 155.27,
+            "end": 173.25,
+            "text": "Well, we ultimately want this so this is an vr of t of course and then we get v0 plus u ln mr over 2 m0 and that",
+            "translation": "좋아요, 결국 우리가 원하는 것은 바로 이것이므로 이는 t에 대한 vR입니다. 그리고 그 결과는 v0 + u ln mR / 2m0입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 173.25,
+            "end": 174.03,
+            "text": "is our equation.",
+            "translation": "이것이 우리의 방정식입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 176.48,
+            "end": 178.52,
+            "text": "So what does this equation tell us?",
+            "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+            "translation_error": null
+          },
+          {
+            "start": 179.65,
+            "end": 208.48,
+            "text": "mr, the mass of the rocket, is less later on than it was before which means This term here is going to be less than 0, which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+            "translation": "mr, 즉 로켓의 질량은 이전보다 나중에 작아지므로, 여기서 나타나는 항은 0보다 작습니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+            "translation_error": null
+          }
+        ]
+      },
+      "media_sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+      "final_health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": true
+      },
+      "client_log": {
+        "stdout": "{\"seconds\": 87.55378737200226, \"status\": 200}\n",
+        "stderr": ""
+      },
+      "logs": "INFO:     Started server process [1]\nINFO:     Waiting for application startup.\nINFO:     Application startup complete.\nINFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)\nINFO:     127.0.0.1:40800 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     127.0.0.1:40820 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     172.19.0.5:40390 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     event=request_started request_id=6659968b3c91 segment_index=None elapsed_seconds=0.000 method=POST path=/api/v1/transcriptions\nINFO:     event=upload_save request_id=6659968b3c91 segment_index=None elapsed_seconds=0.007 status=ok upload_bytes=21729088\nINFO:     event=stt_decode request_id=6659968b3c91 segment_index=None elapsed_seconds=0.229 status=ok\nINFO:     event=stt_model_load request_id=6659968b3c91 segment_index=None elapsed_seconds=0.986 status=ok model=small\nINFO:     event=stt_queue request_id=6659968b3c91 segment_index=None elapsed_seconds=0.000 status=ok\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.006 status=ok audio_seconds=28.304 block_frames=3000 feature_frames=2831\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.005 status=ok audio_seconds=28.72 block_frames=3000 feature_frames=2873\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.005 status=ok audio_seconds=27.776 block_frames=3000 feature_frames=2778\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.005 status=ok audio_seconds=29.056 block_frames=3000 feature_frames=2906\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.005 status=ok audio_seconds=25.472 block_frames=3000 feature_frames=2548\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.006 status=ok audio_seconds=29.6 block_frames=3000 feature_frames=2961\nINFO:     event=stt_features request_id=6659968b3c91 segment_index=None elapsed_seconds=0.004 status=ok audio_seconds=19.296 block_frames=3000 feature_frames=1930\nINFO:     event=stt_inference request_id=6659968b3c91 segment_index=None elapsed_seconds=16.378 status=ok audio_seconds=212.5866875 segment_count=15\nINFO:     event=stt request_id=6659968b3c91 segment_index=None elapsed_seconds=17.596 status=ok segment_count=15\nINFO:     event=sentence_grouping request_id=6659968b3c91 segment_index=None elapsed_seconds=0.001 status=ok source_segment_count=15 sentence_count=14\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=0 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=0 elapsed_seconds=3.715 status=ok attempt=1 raw_output_tokens=56 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=0 elapsed_seconds=3.730 status=ok attempt=1 prompt_tokens=281 max_tokens=128 raw_output_tokens=56 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=0 elapsed_seconds=3.730 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=0 elapsed_seconds=3.731 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=1 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=1 elapsed_seconds=5.465 status=ok attempt=1 raw_output_tokens=45 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=1 elapsed_seconds=5.471 status=ok attempt=1 prompt_tokens=401 max_tokens=128 raw_output_tokens=45 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=1 elapsed_seconds=5.471 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=1 elapsed_seconds=5.472 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=2 elapsed_seconds=0.000 status=ok\nINFO:     127.0.0.1:42628 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=2 elapsed_seconds=4.813 status=ok attempt=1 raw_output_tokens=46 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=2 elapsed_seconds=4.817 status=ok attempt=1 prompt_tokens=409 max_tokens=128 raw_output_tokens=46 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=2 elapsed_seconds=4.817 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=2 elapsed_seconds=4.818 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=3 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=3 elapsed_seconds=3.555 status=ok attempt=1 raw_output_tokens=39 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=3 elapsed_seconds=3.560 status=ok attempt=1 prompt_tokens=358 max_tokens=128 raw_output_tokens=39 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=3 elapsed_seconds=3.560 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=3 elapsed_seconds=3.560 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=4 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=4 elapsed_seconds=5.297 status=ok attempt=1 raw_output_tokens=55 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=4 elapsed_seconds=5.303 status=ok attempt=1 prompt_tokens=401 max_tokens=128 raw_output_tokens=55 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=4 elapsed_seconds=5.303 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=4 elapsed_seconds=5.304 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=5 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=5 elapsed_seconds=3.858 status=ok attempt=1 raw_output_tokens=24 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=5 elapsed_seconds=3.862 status=ok attempt=1 prompt_tokens=406 max_tokens=128 raw_output_tokens=24 finish_reason=stop rejection_reason=missing_math_function accepted=False\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=5 elapsed_seconds=4.376 status=ok attempt=2 raw_output_tokens=41 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=5 elapsed_seconds=4.381 status=ok attempt=2 prompt_tokens=345 max_tokens=128 raw_output_tokens=41 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=5 elapsed_seconds=8.243 status=ok attempts=2\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=5 elapsed_seconds=8.243 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=6 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=6 elapsed_seconds=7.073 status=ok attempt=1 raw_output_tokens=73 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=6 elapsed_seconds=7.077 status=ok attempt=1 prompt_tokens=412 max_tokens=128 raw_output_tokens=73 finish_reason=stop rejection_reason=unexpected_script accepted=False\nINFO:     127.0.0.1:53352 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=6 elapsed_seconds=6.540 status=ok attempt=2 raw_output_tokens=76 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=6 elapsed_seconds=6.549 status=ok attempt=2 prompt_tokens=378 max_tokens=128 raw_output_tokens=76 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=6 elapsed_seconds=13.626 status=ok attempts=2\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=6 elapsed_seconds=13.627 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=7 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=7 elapsed_seconds=4.404 status=ok attempt=1 raw_output_tokens=33 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=7 elapsed_seconds=4.410 status=ok attempt=1 prompt_tokens=370 max_tokens=128 raw_output_tokens=33 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=7 elapsed_seconds=4.411 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=7 elapsed_seconds=4.411 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=8 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=8 elapsed_seconds=3.882 status=ok attempt=1 raw_output_tokens=42 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=8 elapsed_seconds=3.887 status=ok attempt=1 prompt_tokens=316 max_tokens=128 raw_output_tokens=42 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=8 elapsed_seconds=3.887 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=8 elapsed_seconds=3.887 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=9 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=9 elapsed_seconds=3.278 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=9 elapsed_seconds=3.281 status=ok attempt=1 prompt_tokens=351 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=9 elapsed_seconds=3.281 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=9 elapsed_seconds=3.282 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=10 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=10 elapsed_seconds=4.249 status=ok attempt=1 raw_output_tokens=40 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=10 elapsed_seconds=4.253 status=ok attempt=1 prompt_tokens=392 max_tokens=128 raw_output_tokens=40 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=10 elapsed_seconds=4.253 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=10 elapsed_seconds=4.253 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=11 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=11 elapsed_seconds=0.923 status=ok attempt=1 raw_output_tokens=10 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=11 elapsed_seconds=0.925 status=ok attempt=1 prompt_tokens=217 max_tokens=128 raw_output_tokens=10 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=11 elapsed_seconds=0.925 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=11 elapsed_seconds=0.925 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=12 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=12 elapsed_seconds=2.244 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=12 elapsed_seconds=2.247 status=ok attempt=1 prompt_tokens=277 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=12 elapsed_seconds=2.247 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=12 elapsed_seconds=2.247 status=ok\nINFO:     event=translation_queue request_id=6659968b3c91 segment_index=13 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=6659968b3c91 segment_index=13 elapsed_seconds=6.154 status=ok attempt=1 raw_output_tokens=83 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=6659968b3c91 segment_index=13 elapsed_seconds=6.160 status=ok attempt=1 prompt_tokens=406 max_tokens=128 raw_output_tokens=83 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=6659968b3c91 segment_index=13 elapsed_seconds=6.160 status=ok attempts=1\nINFO:     event=segment_translation request_id=6659968b3c91 segment_index=13 elapsed_seconds=6.160 status=ok\nINFO:     event=translation_batch request_id=6659968b3c91 segment_index=None elapsed_seconds=69.921 status=ok source_segment_count=15 sentence_count=14 failed_segments=0\nINFO:     172.19.0.5:40390 - \"POST /api/v1/transcriptions?language=en HTTP/1.1\" 200 OK\nINFO:     event=http_request request_id=6659968b3c91 segment_index=None elapsed_seconds=87.549 method=POST path=/api/v1/transcriptions status_code=200 status=ok error_type=None elapsed_minutes=1.459\nINFO:     172.19.0.5:40390 - \"GET /health HTTP/1.1\" 200 OK\n",
+      "state": {
+        "image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+        "cpu": 4000000000,
+        "memory": 2500000000,
+        "memory_swap": 2500000000,
+        "oom": false,
+        "restarts": 0
+      },
+      "memory_observation": "1498034176\nlow 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+      "failed": 0,
+      "alignment_audits": [
+        {
+          "raw": [
+            {
+              "start": 3.6,
+              "end": 32.51,
+              "text": " We just derived this relation here. The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket. And we want to ultimately get the speed of the rocket. So we have to apply a technique called separation variables. And then we want to integrate. What we're going to do is first we're going to multiply by dt. So that falls away.",
+              "words": [
+                {
+                  "start": 3.6,
+                  "end": 4.12,
+                  "word": " We",
+                  "probability": 0.8548437356948853
+                },
+                {
+                  "start": 4.12,
+                  "end": 4.36,
+                  "word": " just",
+                  "probability": 0.992553174495697
+                },
+                {
+                  "start": 4.36,
+                  "end": 4.74,
+                  "word": " derived",
+                  "probability": 0.43327638506889343
+                },
+                {
+                  "start": 4.74,
+                  "end": 5.08,
+                  "word": " this",
+                  "probability": 0.9969106316566467
+                },
+                {
+                  "start": 5.08,
+                  "end": 5.9,
+                  "word": " relation",
+                  "probability": 0.9928519129753113
+                },
+                {
+                  "start": 5.9,
+                  "end": 6.24,
+                  "word": " here.",
+                  "probability": 0.9901614189147949
+                },
+                {
+                  "start": 6.96,
+                  "end": 7.5,
+                  "word": " The",
+                  "probability": 0.8888546824455261
+                },
+                {
+                  "start": 7.5,
+                  "end": 8.08,
+                  "word": " relation",
+                  "probability": 0.977562427520752
+                },
+                {
+                  "start": 8.08,
+                  "end": 8.42,
+                  "word": " between",
+                  "probability": 0.9974240064620972
+                },
+                {
+                  "start": 8.42,
+                  "end": 8.64,
+                  "word": " the",
+                  "probability": 0.9962648749351501
+                },
+                {
+                  "start": 8.64,
+                  "end": 9.0,
+                  "word": " differential",
+                  "probability": 0.9737480878829956
+                },
+                {
+                  "start": 9.0,
+                  "end": 9.42,
+                  "word": " of",
+                  "probability": 0.9945381283760071
+                },
+                {
+                  "start": 9.42,
+                  "end": 9.56,
+                  "word": " the",
+                  "probability": 0.9950852990150452
+                },
+                {
+                  "start": 9.56,
+                  "end": 9.82,
+                  "word": " speed",
+                  "probability": 0.9985490441322327
+                },
+                {
+                  "start": 9.82,
+                  "end": 10.04,
+                  "word": " of",
+                  "probability": 0.9958628416061401
+                },
+                {
+                  "start": 10.04,
+                  "end": 10.16,
+                  "word": " the",
+                  "probability": 0.995707094669342
+                },
+                {
+                  "start": 10.16,
+                  "end": 10.44,
+                  "word": " rocket",
+                  "probability": 0.9062114357948303
+                },
+                {
+                  "start": 10.44,
+                  "end": 10.78,
+                  "word": " sled",
+                  "probability": 0.5387956500053406
+                },
+                {
+                  "start": 10.78,
+                  "end": 11.7,
+                  "word": " and",
+                  "probability": 0.9020631313323975
+                },
+                {
+                  "start": 11.7,
+                  "end": 12.06,
+                  "word": " the",
+                  "probability": 0.9934373497962952
+                },
+                {
+                  "start": 12.06,
+                  "end": 12.36,
+                  "word": " differential",
+                  "probability": 0.9929854273796082
+                },
+                {
+                  "start": 12.36,
+                  "end": 12.66,
+                  "word": " of",
+                  "probability": 0.9907523393630981
+                },
+                {
+                  "start": 12.66,
+                  "end": 12.76,
+                  "word": " the",
+                  "probability": 0.9950374960899353
+                },
+                {
+                  "start": 12.76,
+                  "end": 12.96,
+                  "word": " mass",
+                  "probability": 0.996615469455719
+                },
+                {
+                  "start": 12.96,
+                  "end": 13.2,
+                  "word": " of",
+                  "probability": 0.9973936080932617
+                },
+                {
+                  "start": 13.2,
+                  "end": 13.32,
+                  "word": " the",
+                  "probability": 0.9972162246704102
+                },
+                {
+                  "start": 13.32,
+                  "end": 13.6,
+                  "word": " rocket.",
+                  "probability": 0.9964266419410706
+                },
+                {
+                  "start": 14.36,
+                  "end": 14.7,
+                  "word": " And",
+                  "probability": 0.9427973031997681
+                },
+                {
+                  "start": 14.7,
+                  "end": 14.88,
+                  "word": " we",
+                  "probability": 0.9909098744392395
+                },
+                {
+                  "start": 14.88,
+                  "end": 15.06,
+                  "word": " want",
+                  "probability": 0.8763057589530945
+                },
+                {
+                  "start": 15.06,
+                  "end": 15.2,
+                  "word": " to",
+                  "probability": 0.9909981489181519
+                },
+                {
+                  "start": 15.2,
+                  "end": 15.48,
+                  "word": " ultimately",
+                  "probability": 0.9718012809753418
+                },
+                {
+                  "start": 15.48,
+                  "end": 15.78,
+                  "word": " get",
+                  "probability": 0.9949966669082642
+                },
+                {
+                  "start": 15.78,
+                  "end": 15.96,
+                  "word": " the",
+                  "probability": 0.9904423356056213
+                },
+                {
+                  "start": 15.96,
+                  "end": 16.18,
+                  "word": " speed",
+                  "probability": 0.9989460110664368
+                },
+                {
+                  "start": 16.18,
+                  "end": 16.4,
+                  "word": " of",
+                  "probability": 0.9968055486679077
+                },
+                {
+                  "start": 16.4,
+                  "end": 16.5,
+                  "word": " the",
+                  "probability": 0.9802985787391663
+                },
+                {
+                  "start": 16.5,
+                  "end": 16.8,
+                  "word": " rocket.",
+                  "probability": 0.9959534406661987
+                },
+                {
+                  "start": 17.85,
+                  "end": 18.03,
+                  "word": " So",
+                  "probability": 0.9046922922134399
+                },
+                {
+                  "start": 18.03,
+                  "end": 18.27,
+                  "word": " we",
+                  "probability": 0.930587112903595
+                },
+                {
+                  "start": 18.27,
+                  "end": 18.45,
+                  "word": " have",
+                  "probability": 0.9864147305488586
+                },
+                {
+                  "start": 18.45,
+                  "end": 18.71,
+                  "word": " to",
+                  "probability": 0.9890748858451843
+                },
+                {
+                  "start": 18.71,
+                  "end": 20.27,
+                  "word": " apply",
+                  "probability": 0.8021162748336792
+                },
+                {
+                  "start": 20.27,
+                  "end": 20.53,
+                  "word": " a",
+                  "probability": 0.9849045276641846
+                },
+                {
+                  "start": 20.53,
+                  "end": 20.81,
+                  "word": " technique",
+                  "probability": 0.9945504069328308
+                },
+                {
+                  "start": 20.81,
+                  "end": 21.07,
+                  "word": " called",
+                  "probability": 0.9906028509140015
+                },
+                {
+                  "start": 21.07,
+                  "end": 21.45,
+                  "word": " separation",
+                  "probability": 0.8141729831695557
+                },
+                {
+                  "start": 21.45,
+                  "end": 21.97,
+                  "word": " variables.",
+                  "probability": 0.6746198534965515
+                },
+                {
+                  "start": 22.89,
+                  "end": 23.13,
+                  "word": " And",
+                  "probability": 0.9947707056999207
+                },
+                {
+                  "start": 23.13,
+                  "end": 23.25,
+                  "word": " then",
+                  "probability": 0.9976861476898193
+                },
+                {
+                  "start": 23.25,
+                  "end": 23.41,
+                  "word": " we",
+                  "probability": 0.9327405691146851
+                },
+                {
+                  "start": 23.41,
+                  "end": 23.53,
+                  "word": " want",
+                  "probability": 0.9805442690849304
+                },
+                {
+                  "start": 23.53,
+                  "end": 23.61,
+                  "word": " to",
+                  "probability": 0.9973815083503723
+                },
+                {
+                  "start": 23.61,
+                  "end": 23.99,
+                  "word": " integrate.",
+                  "probability": 0.9965558052062988
+                },
+                {
+                  "start": 25.83,
+                  "end": 26.09,
+                  "word": " What",
+                  "probability": 0.9814823865890503
+                },
+                {
+                  "start": 26.09,
+                  "end": 26.21,
+                  "word": " we're",
+                  "probability": 0.9800806045532227
+                },
+                {
+                  "start": 26.21,
+                  "end": 26.35,
+                  "word": " going",
+                  "probability": 0.9821045994758606
+                },
+                {
+                  "start": 26.35,
+                  "end": 26.43,
+                  "word": " to",
+                  "probability": 0.9942436814308167
+                },
+                {
+                  "start": 26.43,
+                  "end": 26.59,
+                  "word": " do",
+                  "probability": 0.9963855743408203
+                },
+                {
+                  "start": 26.59,
+                  "end": 26.73,
+                  "word": " is",
+                  "probability": 0.9628066420555115
+                },
+                {
+                  "start": 26.73,
+                  "end": 26.93,
+                  "word": " first",
+                  "probability": 0.6710968613624573
+                },
+                {
+                  "start": 26.93,
+                  "end": 27.17,
+                  "word": " we're",
+                  "probability": 0.8013224899768829
+                },
+                {
+                  "start": 27.17,
+                  "end": 27.27,
+                  "word": " going",
+                  "probability": 0.9832199215888977
+                },
+                {
+                  "start": 27.27,
+                  "end": 27.57,
+                  "word": " to",
+                  "probability": 0.9963080883026123
+                },
+                {
+                  "start": 27.57,
+                  "end": 29.95,
+                  "word": " multiply",
+                  "probability": 0.5922937989234924
+                },
+                {
+                  "start": 29.95,
+                  "end": 30.41,
+                  "word": " by",
+                  "probability": 0.987851619720459
+                },
+                {
+                  "start": 30.41,
+                  "end": 30.97,
+                  "word": " dt.",
+                  "probability": 0.7791296243667603
+                },
+                {
+                  "start": 31.31,
+                  "end": 31.61,
+                  "word": " So",
+                  "probability": 0.9924452900886536
+                },
+                {
+                  "start": 31.61,
+                  "end": 31.87,
+                  "word": " that",
+                  "probability": 0.9953722357749939
+                },
+                {
+                  "start": 31.87,
+                  "end": 32.13,
+                  "word": " falls",
+                  "probability": 0.9938607215881348
+                },
+                {
+                  "start": 32.13,
+                  "end": 32.51,
+                  "word": " away.",
+                  "probability": 0.9943251013755798
+                }
+              ]
+            },
+            {
+              "start": 32.99,
+              "end": 60.71,
+              "text": " And we're left with mr dvr equals dmru. And we're going to shuffle the m onto the other side. And we're left with dvr equals u is a constant. So that goes up front. And then we have dmr over mr. That's an equation that we can integrate now.",
+              "words": [
+                {
+                  "start": 32.99,
+                  "end": 33.47,
+                  "word": " And",
+                  "probability": 0.492744117975235
+                },
+                {
+                  "start": 33.47,
+                  "end": 33.67,
+                  "word": " we're",
+                  "probability": 0.8687158226966858
+                },
+                {
+                  "start": 33.67,
+                  "end": 33.93,
+                  "word": " left",
+                  "probability": 0.998798131942749
+                },
+                {
+                  "start": 33.93,
+                  "end": 34.25,
+                  "word": " with",
+                  "probability": 0.9977547526359558
+                },
+                {
+                  "start": 34.25,
+                  "end": 35.55,
+                  "word": " mr",
+                  "probability": 0.2109459936618805
+                },
+                {
+                  "start": 35.55,
+                  "end": 37.51,
+                  "word": " dvr",
+                  "probability": 0.7474958896636963
+                },
+                {
+                  "start": 37.51,
+                  "end": 38.61,
+                  "word": " equals",
+                  "probability": 0.8647392392158508
+                },
+                {
+                  "start": 38.64,
+                  "end": 40.78,
+                  "word": " dmru.",
+                  "probability": 0.9302009542783102
+                },
+                {
+                  "start": 42.1,
+                  "end": 42.58,
+                  "word": " And",
+                  "probability": 0.9802150726318359
+                },
+                {
+                  "start": 42.58,
+                  "end": 43.04,
+                  "word": " we're",
+                  "probability": 0.9944693148136139
+                },
+                {
+                  "start": 43.04,
+                  "end": 43.18,
+                  "word": " going",
+                  "probability": 0.3402959108352661
+                },
+                {
+                  "start": 43.18,
+                  "end": 43.44,
+                  "word": " to",
+                  "probability": 0.998244047164917
+                },
+                {
+                  "start": 43.44,
+                  "end": 43.88,
+                  "word": " shuffle",
+                  "probability": 0.9940472841262817
+                },
+                {
+                  "start": 43.88,
+                  "end": 44.14,
+                  "word": " the",
+                  "probability": 0.9881464242935181
+                },
+                {
+                  "start": 44.14,
+                  "end": 44.4,
+                  "word": " m",
+                  "probability": 0.8813766241073608
+                },
+                {
+                  "start": 44.4,
+                  "end": 44.66,
+                  "word": " onto",
+                  "probability": 0.858215868473053
+                },
+                {
+                  "start": 44.66,
+                  "end": 44.9,
+                  "word": " the",
+                  "probability": 0.9969086050987244
+                },
+                {
+                  "start": 44.9,
+                  "end": 45.06,
+                  "word": " other",
+                  "probability": 0.9993281364440918
+                },
+                {
+                  "start": 45.06,
+                  "end": 45.54,
+                  "word": " side.",
+                  "probability": 0.9992882609367371
+                },
+                {
+                  "start": 46.66,
+                  "end": 47.16,
+                  "word": " And",
+                  "probability": 0.9938943982124329
+                },
+                {
+                  "start": 47.16,
+                  "end": 47.34,
+                  "word": " we're",
+                  "probability": 0.9771837592124939
+                },
+                {
+                  "start": 47.34,
+                  "end": 47.54,
+                  "word": " left",
+                  "probability": 0.9993579983711243
+                },
+                {
+                  "start": 47.54,
+                  "end": 47.8,
+                  "word": " with",
+                  "probability": 0.9958233833312988
+                },
+                {
+                  "start": 47.8,
+                  "end": 48.64,
+                  "word": " dvr",
+                  "probability": 0.9753174185752869
+                },
+                {
+                  "start": 48.64,
+                  "end": 49.06,
+                  "word": " equals",
+                  "probability": 0.9878398776054382
+                },
+                {
+                  "start": 49.06,
+                  "end": 49.6,
+                  "word": " u",
+                  "probability": 0.873708963394165
+                },
+                {
+                  "start": 49.6,
+                  "end": 49.8,
+                  "word": " is",
+                  "probability": 0.5930963158607483
+                },
+                {
+                  "start": 49.8,
+                  "end": 49.9,
+                  "word": " a",
+                  "probability": 0.9806511998176575
+                },
+                {
+                  "start": 49.9,
+                  "end": 50.32,
+                  "word": " constant.",
+                  "probability": 0.9995649456977844
+                },
+                {
+                  "start": 50.96,
+                  "end": 51.26,
+                  "word": " So",
+                  "probability": 0.9643068909645081
+                },
+                {
+                  "start": 51.26,
+                  "end": 51.48,
+                  "word": " that",
+                  "probability": 0.9790436029434204
+                },
+                {
+                  "start": 51.48,
+                  "end": 51.7,
+                  "word": " goes",
+                  "probability": 0.9991199374198914
+                },
+                {
+                  "start": 51.7,
+                  "end": 51.96,
+                  "word": " up",
+                  "probability": 0.7016609311103821
+                },
+                {
+                  "start": 51.96,
+                  "end": 52.26,
+                  "word": " front.",
+                  "probability": 0.9928048253059387
+                },
+                {
+                  "start": 53.08,
+                  "end": 53.36,
+                  "word": " And",
+                  "probability": 0.9795385003089905
+                },
+                {
+                  "start": 53.36,
+                  "end": 53.48,
+                  "word": " then",
+                  "probability": 0.9944011569023132
+                },
+                {
+                  "start": 53.48,
+                  "end": 53.64,
+                  "word": " we",
+                  "probability": 0.9824833869934082
+                },
+                {
+                  "start": 53.64,
+                  "end": 53.9,
+                  "word": " have",
+                  "probability": 0.9970859885215759
+                },
+                {
+                  "start": 53.9,
+                  "end": 55.62,
+                  "word": " dmr",
+                  "probability": 0.9796693126360575
+                },
+                {
+                  "start": 55.62,
+                  "end": 56.04,
+                  "word": " over",
+                  "probability": 0.9511579275131226
+                },
+                {
+                  "start": 56.04,
+                  "end": 57.34,
+                  "word": " mr.",
+                  "probability": 0.817852795124054
+                },
+                {
+                  "start": 58.37,
+                  "end": 58.97,
+                  "word": " That's",
+                  "probability": 0.9964480102062225
+                },
+                {
+                  "start": 58.97,
+                  "end": 59.09,
+                  "word": " an",
+                  "probability": 0.9906644821166992
+                },
+                {
+                  "start": 59.09,
+                  "end": 59.37,
+                  "word": " equation",
+                  "probability": 0.9992699027061462
+                },
+                {
+                  "start": 59.37,
+                  "end": 59.67,
+                  "word": " that",
+                  "probability": 0.996906578540802
+                },
+                {
+                  "start": 59.67,
+                  "end": 59.81,
+                  "word": " we",
+                  "probability": 0.998375654220581
+                },
+                {
+                  "start": 59.81,
+                  "end": 59.95,
+                  "word": " can",
+                  "probability": 0.9917939305305481
+                },
+                {
+                  "start": 59.95,
+                  "end": 60.25,
+                  "word": " integrate",
+                  "probability": 0.9959560036659241
+                },
+                {
+                  "start": 60.25,
+                  "end": 60.71,
+                  "word": " now.",
+                  "probability": 0.9880728125572205
+                }
+              ]
+            },
+            {
+              "start": 63.08,
+              "end": 92.43,
+              "text": " We can do that. And the tricky bit is that we need to take care of the integration limits here. We have vr and actually these now are all primes. So we have vr going from v0. That is our initial condition here to vr prime of equal vr of t.",
+              "words": [
+                {
+                  "start": 63.08,
+                  "end": 63.56,
+                  "word": " We",
+                  "probability": 0.7291920781135559
+                },
+                {
+                  "start": 63.56,
+                  "end": 63.74,
+                  "word": " can",
+                  "probability": 0.9802481532096863
+                },
+                {
+                  "start": 63.74,
+                  "end": 63.92,
+                  "word": " do",
+                  "probability": 0.9971893429756165
+                },
+                {
+                  "start": 63.92,
+                  "end": 64.26,
+                  "word": " that.",
+                  "probability": 0.9990553259849548
+                },
+                {
+                  "start": 65.77,
+                  "end": 66.23,
+                  "word": " And",
+                  "probability": 0.7289857268333435
+                },
+                {
+                  "start": 66.23,
+                  "end": 67.35,
+                  "word": " the",
+                  "probability": 0.9242173433303833
+                },
+                {
+                  "start": 67.35,
+                  "end": 67.57,
+                  "word": " tricky",
+                  "probability": 0.9784834384918213
+                },
+                {
+                  "start": 67.57,
+                  "end": 67.77,
+                  "word": " bit",
+                  "probability": 0.9895994663238525
+                },
+                {
+                  "start": 67.77,
+                  "end": 67.93,
+                  "word": " is",
+                  "probability": 0.9934225678443909
+                },
+                {
+                  "start": 67.93,
+                  "end": 68.07,
+                  "word": " that",
+                  "probability": 0.9663420915603638
+                },
+                {
+                  "start": 68.07,
+                  "end": 68.17,
+                  "word": " we",
+                  "probability": 0.995320737361908
+                },
+                {
+                  "start": 68.17,
+                  "end": 68.29,
+                  "word": " need",
+                  "probability": 0.9942398071289062
+                },
+                {
+                  "start": 68.29,
+                  "end": 68.41,
+                  "word": " to",
+                  "probability": 0.9984904527664185
+                },
+                {
+                  "start": 68.41,
+                  "end": 68.59,
+                  "word": " take",
+                  "probability": 0.9979178309440613
+                },
+                {
+                  "start": 68.59,
+                  "end": 68.81,
+                  "word": " care",
+                  "probability": 0.9935355186462402
+                },
+                {
+                  "start": 68.81,
+                  "end": 69.03,
+                  "word": " of",
+                  "probability": 0.9970308542251587
+                },
+                {
+                  "start": 69.03,
+                  "end": 69.15,
+                  "word": " the",
+                  "probability": 0.9971508383750916
+                },
+                {
+                  "start": 69.15,
+                  "end": 69.59,
+                  "word": " integration",
+                  "probability": 0.9964350461959839
+                },
+                {
+                  "start": 69.59,
+                  "end": 69.97,
+                  "word": " limits",
+                  "probability": 0.9929929971694946
+                },
+                {
+                  "start": 69.97,
+                  "end": 70.31,
+                  "word": " here.",
+                  "probability": 0.9732627272605896
+                },
+                {
+                  "start": 70.87,
+                  "end": 71.11,
+                  "word": " We",
+                  "probability": 0.9956668615341187
+                },
+                {
+                  "start": 71.11,
+                  "end": 71.61,
+                  "word": " have",
+                  "probability": 0.9990405440330505
+                },
+                {
+                  "start": 71.61,
+                  "end": 72.71,
+                  "word": " vr",
+                  "probability": 0.37921081483364105
+                },
+                {
+                  "start": 72.71,
+                  "end": 73.05,
+                  "word": " and",
+                  "probability": 0.502246618270874
+                },
+                {
+                  "start": 73.05,
+                  "end": 73.43,
+                  "word": " actually",
+                  "probability": 0.9430859684944153
+                },
+                {
+                  "start": 73.43,
+                  "end": 73.73,
+                  "word": " these",
+                  "probability": 0.8314957618713379
+                },
+                {
+                  "start": 73.73,
+                  "end": 74.13,
+                  "word": " now",
+                  "probability": 0.9487255811691284
+                },
+                {
+                  "start": 74.13,
+                  "end": 74.33,
+                  "word": " are",
+                  "probability": 0.8373351693153381
+                },
+                {
+                  "start": 74.33,
+                  "end": 74.55,
+                  "word": " all",
+                  "probability": 0.930909276008606
+                },
+                {
+                  "start": 74.55,
+                  "end": 75.23,
+                  "word": " primes.",
+                  "probability": 0.9825231432914734
+                },
+                {
+                  "start": 76.35,
+                  "end": 76.61,
+                  "word": " So",
+                  "probability": 0.985805094242096
+                },
+                {
+                  "start": 76.61,
+                  "end": 76.79,
+                  "word": " we",
+                  "probability": 0.9427100419998169
+                },
+                {
+                  "start": 76.79,
+                  "end": 76.91,
+                  "word": " have",
+                  "probability": 0.9866200685501099
+                },
+                {
+                  "start": 76.91,
+                  "end": 77.57,
+                  "word": " vr",
+                  "probability": 0.9852433204650879
+                },
+                {
+                  "start": 77.57,
+                  "end": 78.51,
+                  "word": " going",
+                  "probability": 0.9768745303153992
+                },
+                {
+                  "start": 78.51,
+                  "end": 78.97,
+                  "word": " from",
+                  "probability": 0.9969980716705322
+                },
+                {
+                  "start": 78.97,
+                  "end": 80.15,
+                  "word": " v0.",
+                  "probability": 0.8115814626216888
+                },
+                {
+                  "start": 80.63,
+                  "end": 80.99,
+                  "word": " That",
+                  "probability": 0.9925037622451782
+                },
+                {
+                  "start": 80.99,
+                  "end": 81.15,
+                  "word": " is",
+                  "probability": 0.9961075186729431
+                },
+                {
+                  "start": 81.15,
+                  "end": 81.43,
+                  "word": " our",
+                  "probability": 0.9961487054824829
+                },
+                {
+                  "start": 81.43,
+                  "end": 81.79,
+                  "word": " initial",
+                  "probability": 0.9986823201179504
+                },
+                {
+                  "start": 81.79,
+                  "end": 82.21,
+                  "word": " condition",
+                  "probability": 0.9974173307418823
+                },
+                {
+                  "start": 82.21,
+                  "end": 82.67,
+                  "word": " here",
+                  "probability": 0.9931827187538147
+                },
+                {
+                  "start": 82.67,
+                  "end": 83.59,
+                  "word": " to",
+                  "probability": 0.3720710277557373
+                },
+                {
+                  "start": 83.59,
+                  "end": 84.35,
+                  "word": " vr",
+                  "probability": 0.9773789346218109
+                },
+                {
+                  "start": 84.35,
+                  "end": 84.75,
+                  "word": " prime",
+                  "probability": 0.4707795977592468
+                },
+                {
+                  "start": 84.75,
+                  "end": 86.11,
+                  "word": " of",
+                  "probability": 0.8077467083930969
+                },
+                {
+                  "start": 86.18,
+                  "end": 88.54,
+                  "word": " equal",
+                  "probability": 0.6619375944137573
+                },
+                {
+                  "start": 89.75,
+                  "end": 91.45,
+                  "word": " vr",
+                  "probability": 0.9166609048843384
+                },
+                {
+                  "start": 91.45,
+                  "end": 91.83,
+                  "word": " of",
+                  "probability": 0.9470254182815552
+                },
+                {
+                  "start": 91.83,
+                  "end": 92.43,
+                  "word": " t.",
+                  "probability": 0.8808428049087524
+                }
+              ]
+            },
+            {
+              "start": 93.74,
+              "end": 122.74,
+              "text": " And for the mass, we have mr prime equals m0. Actually, not quite m0. It's 2m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2m0. So this is the initial mass. And then we go to mr prime equals m of vr.",
+              "words": [
+                {
+                  "start": 93.74,
+                  "end": 94.34,
+                  "word": " And",
+                  "probability": 0.8053668141365051
+                },
+                {
+                  "start": 94.34,
+                  "end": 94.54,
+                  "word": " for",
+                  "probability": 0.9897854924201965
+                },
+                {
+                  "start": 94.54,
+                  "end": 94.7,
+                  "word": " the",
+                  "probability": 0.9974424839019775
+                },
+                {
+                  "start": 94.7,
+                  "end": 94.9,
+                  "word": " mass,",
+                  "probability": 0.9727526307106018
+                },
+                {
+                  "start": 95.18,
+                  "end": 95.2,
+                  "word": " we",
+                  "probability": 0.9957970380783081
+                },
+                {
+                  "start": 95.2,
+                  "end": 95.56,
+                  "word": " have",
+                  "probability": 0.9986366629600525
+                },
+                {
+                  "start": 95.56,
+                  "end": 96.16,
+                  "word": " mr",
+                  "probability": 0.19511368870735168
+                },
+                {
+                  "start": 96.16,
+                  "end": 96.82,
+                  "word": " prime",
+                  "probability": 0.524010181427002
+                },
+                {
+                  "start": 96.82,
+                  "end": 97.32,
+                  "word": " equals",
+                  "probability": 0.9412409067153931
+                },
+                {
+                  "start": 97.32,
+                  "end": 98.8,
+                  "word": " m0.",
+                  "probability": 0.6979427337646484
+                },
+                {
+                  "start": 99.2,
+                  "end": 99.62,
+                  "word": " Actually,",
+                  "probability": 0.9834448099136353
+                },
+                {
+                  "start": 99.72,
+                  "end": 100.0,
+                  "word": " not",
+                  "probability": 0.9777496457099915
+                },
+                {
+                  "start": 100.0,
+                  "end": 100.28,
+                  "word": " quite",
+                  "probability": 0.9941418766975403
+                },
+                {
+                  "start": 100.28,
+                  "end": 100.7,
+                  "word": " m0.",
+                  "probability": 0.9908249080181122
+                },
+                {
+                  "start": 100.82,
+                  "end": 101.0,
+                  "word": " It's",
+                  "probability": 0.9844098687171936
+                },
+                {
+                  "start": 101.0,
+                  "end": 102.62,
+                  "word": " 2m0,",
+                  "probability": 0.8631376226743063
+                },
+                {
+                  "start": 103.04,
+                  "end": 103.6,
+                  "word": " because",
+                  "probability": 0.9953615069389343
+                },
+                {
+                  "start": 103.6,
+                  "end": 104.12,
+                  "word": " the",
+                  "probability": 0.9965419173240662
+                },
+                {
+                  "start": 104.12,
+                  "end": 104.56,
+                  "word": " initial",
+                  "probability": 0.9979704022407532
+                },
+                {
+                  "start": 104.56,
+                  "end": 104.96,
+                  "word": " mass",
+                  "probability": 0.9980214834213257
+                },
+                {
+                  "start": 104.96,
+                  "end": 105.8,
+                  "word": " of",
+                  "probability": 0.9972656965255737
+                },
+                {
+                  "start": 105.8,
+                  "end": 106.14,
+                  "word": " this",
+                  "probability": 0.9985356330871582
+                },
+                {
+                  "start": 106.14,
+                  "end": 106.64,
+                  "word": " is",
+                  "probability": 0.9977092742919922
+                },
+                {
+                  "start": 106.64,
+                  "end": 107.0,
+                  "word": " the",
+                  "probability": 0.9980788230895996
+                },
+                {
+                  "start": 107.0,
+                  "end": 107.3,
+                  "word": " dry",
+                  "probability": 0.9952352643013
+                },
+                {
+                  "start": 107.3,
+                  "end": 107.6,
+                  "word": " mass",
+                  "probability": 0.9984038472175598
+                },
+                {
+                  "start": 107.6,
+                  "end": 107.86,
+                  "word": " and",
+                  "probability": 0.7887879014015198
+                },
+                {
+                  "start": 107.86,
+                  "end": 108.0,
+                  "word": " the",
+                  "probability": 0.9885801672935486
+                },
+                {
+                  "start": 108.0,
+                  "end": 108.22,
+                  "word": " fuel",
+                  "probability": 0.9845278859138489
+                },
+                {
+                  "start": 108.22,
+                  "end": 108.52,
+                  "word": " mass.",
+                  "probability": 0.9992673993110657
+                },
+                {
+                  "start": 108.84,
+                  "end": 108.84,
+                  "word": " So",
+                  "probability": 0.9906015396118164
+                },
+                {
+                  "start": 108.84,
+                  "end": 109.28,
+                  "word": " that's",
+                  "probability": 0.975734680891037
+                },
+                {
+                  "start": 109.28,
+                  "end": 111.3,
+                  "word": " 2m0.",
+                  "probability": 0.9553346633911133
+                },
+                {
+                  "start": 111.52,
+                  "end": 111.74,
+                  "word": " So",
+                  "probability": 0.9647855758666992
+                },
+                {
+                  "start": 111.74,
+                  "end": 111.96,
+                  "word": " this",
+                  "probability": 0.984468400478363
+                },
+                {
+                  "start": 111.96,
+                  "end": 112.14,
+                  "word": " is",
+                  "probability": 0.9937511086463928
+                },
+                {
+                  "start": 112.14,
+                  "end": 112.38,
+                  "word": " the",
+                  "probability": 0.9966747760772705
+                },
+                {
+                  "start": 112.38,
+                  "end": 113.76,
+                  "word": " initial",
+                  "probability": 0.9643705487251282
+                },
+                {
+                  "start": 113.76,
+                  "end": 114.16,
+                  "word": " mass.",
+                  "probability": 0.9994015693664551
+                },
+                {
+                  "start": 115.6,
+                  "end": 116.08,
+                  "word": " And",
+                  "probability": 0.9832454919815063
+                },
+                {
+                  "start": 116.08,
+                  "end": 116.86,
+                  "word": " then",
+                  "probability": 0.9812910556793213
+                },
+                {
+                  "start": 116.86,
+                  "end": 117.32,
+                  "word": " we",
+                  "probability": 0.9176980257034302
+                },
+                {
+                  "start": 117.32,
+                  "end": 117.56,
+                  "word": " go",
+                  "probability": 0.9974839687347412
+                },
+                {
+                  "start": 117.56,
+                  "end": 117.76,
+                  "word": " to",
+                  "probability": 0.9955627918243408
+                },
+                {
+                  "start": 117.76,
+                  "end": 118.34,
+                  "word": " mr",
+                  "probability": 0.9871899485588074
+                },
+                {
+                  "start": 118.34,
+                  "end": 119.58,
+                  "word": " prime",
+                  "probability": 0.9955774545669556
+                },
+                {
+                  "start": 119.58,
+                  "end": 120.18,
+                  "word": " equals",
+                  "probability": 0.9965555667877197
+                },
+                {
+                  "start": 120.18,
+                  "end": 120.9,
+                  "word": " m",
+                  "probability": 0.9424475431442261
+                },
+                {
+                  "start": 120.9,
+                  "end": 121.36,
+                  "word": " of",
+                  "probability": 0.9508528113365173
+                },
+                {
+                  "start": 121.36,
+                  "end": 122.74,
+                  "word": " vr.",
+                  "probability": 0.7637588679790497
+                }
+              ]
+            },
+            {
+              "start": 124.59,
+              "end": 150.49,
+              "text": " Alright, so let's do that. We're gonna get vr minus v0 equals u1 over m. Integrated gives us an ln, so ln. And then we can immediately do this here over 2m0.",
+              "words": [
+                {
+                  "start": 124.59,
+                  "end": 125.19,
+                  "word": " Alright,",
+                  "probability": 0.44770342111587524
+                },
+                {
+                  "start": 125.47,
+                  "end": 125.73,
+                  "word": " so",
+                  "probability": 0.9682523012161255
+                },
+                {
+                  "start": 125.73,
+                  "end": 126.13,
+                  "word": " let's",
+                  "probability": 0.9644966125488281
+                },
+                {
+                  "start": 126.13,
+                  "end": 126.29,
+                  "word": " do",
+                  "probability": 0.9988453388214111
+                },
+                {
+                  "start": 126.29,
+                  "end": 126.59,
+                  "word": " that.",
+                  "probability": 0.9990222454071045
+                },
+                {
+                  "start": 127.31,
+                  "end": 127.59,
+                  "word": " We're",
+                  "probability": 0.9704166352748871
+                },
+                {
+                  "start": 127.59,
+                  "end": 127.77,
+                  "word": " gonna",
+                  "probability": 0.6359310150146484
+                },
+                {
+                  "start": 127.77,
+                  "end": 128.19,
+                  "word": " get",
+                  "probability": 0.9961597919464111
+                },
+                {
+                  "start": 128.19,
+                  "end": 129.71,
+                  "word": " vr",
+                  "probability": 0.3149837255477905
+                },
+                {
+                  "start": 129.74,
+                  "end": 131.12,
+                  "word": " minus",
+                  "probability": 0.4785026013851166
+                },
+                {
+                  "start": 131.12,
+                  "end": 132.66,
+                  "word": " v0",
+                  "probability": 0.8114589154720306
+                },
+                {
+                  "start": 132.66,
+                  "end": 133.72,
+                  "word": " equals",
+                  "probability": 0.9668126702308655
+                },
+                {
+                  "start": 133.72,
+                  "end": 135.8,
+                  "word": " u1",
+                  "probability": 0.8247936069965363
+                },
+                {
+                  "start": 135.8,
+                  "end": 136.22,
+                  "word": " over",
+                  "probability": 0.8752895593643188
+                },
+                {
+                  "start": 136.22,
+                  "end": 136.64,
+                  "word": " m.",
+                  "probability": 0.9208414554595947
+                },
+                {
+                  "start": 136.88,
+                  "end": 137.46,
+                  "word": " Integrated",
+                  "probability": 0.9662945568561554
+                },
+                {
+                  "start": 137.46,
+                  "end": 137.76,
+                  "word": " gives",
+                  "probability": 0.9793999791145325
+                },
+                {
+                  "start": 137.76,
+                  "end": 138.04,
+                  "word": " us",
+                  "probability": 0.9974638223648071
+                },
+                {
+                  "start": 138.04,
+                  "end": 138.26,
+                  "word": " an",
+                  "probability": 0.9421286582946777
+                },
+                {
+                  "start": 138.26,
+                  "end": 138.6,
+                  "word": " ln,",
+                  "probability": 0.9293900728225708
+                },
+                {
+                  "start": 139.49,
+                  "end": 139.77,
+                  "word": " so",
+                  "probability": 0.9271281361579895
+                },
+                {
+                  "start": 139.77,
+                  "end": 140.27,
+                  "word": " ln.",
+                  "probability": 0.9626403450965881
+                },
+                {
+                  "start": 141.19,
+                  "end": 141.49,
+                  "word": " And",
+                  "probability": 0.9074459075927734
+                },
+                {
+                  "start": 141.49,
+                  "end": 141.65,
+                  "word": " then",
+                  "probability": 0.9945277571678162
+                },
+                {
+                  "start": 141.65,
+                  "end": 141.81,
+                  "word": " we",
+                  "probability": 0.979437530040741
+                },
+                {
+                  "start": 141.81,
+                  "end": 142.05,
+                  "word": " can",
+                  "probability": 0.9976215958595276
+                },
+                {
+                  "start": 142.05,
+                  "end": 142.65,
+                  "word": " immediately",
+                  "probability": 0.9866934418678284
+                },
+                {
+                  "start": 142.65,
+                  "end": 143.51,
+                  "word": " do",
+                  "probability": 0.9894017577171326
+                },
+                {
+                  "start": 145.62,
+                  "end": 145.92,
+                  "word": " this",
+                  "probability": 0.9980450868606567
+                },
+                {
+                  "start": 145.92,
+                  "end": 146.3,
+                  "word": " here",
+                  "probability": 0.995215892791748
+                },
+                {
+                  "start": 146.91,
+                  "end": 148.07,
+                  "word": " over",
+                  "probability": 0.9488852024078369
+                },
+                {
+                  "start": 148.07,
+                  "end": 150.49,
+                  "word": " 2m0.",
+                  "probability": 0.6142853448788325
+                }
+              ]
+            },
+            {
+              "start": 155.27,
+              "end": 188.83,
+              "text": " Well, we ultimately want this so this is an vr of t of course and then we get v0 plus u ln mr over 2 m0 and that is our equation. So what does this equation tell us? mr, the mass of the rocket, is less later on than it was before which means",
+              "words": [
+                {
+                  "start": 155.27,
+                  "end": 155.75,
+                  "word": " Well,",
+                  "probability": 0.7878981828689575
+                },
+                {
+                  "start": 155.77,
+                  "end": 155.91,
+                  "word": " we",
+                  "probability": 0.9936245679855347
+                },
+                {
+                  "start": 155.91,
+                  "end": 156.27,
+                  "word": " ultimately",
+                  "probability": 0.9827057123184204
+                },
+                {
+                  "start": 156.27,
+                  "end": 156.55,
+                  "word": " want",
+                  "probability": 0.9845902919769287
+                },
+                {
+                  "start": 156.55,
+                  "end": 156.77,
+                  "word": " this",
+                  "probability": 0.9977814555168152
+                },
+                {
+                  "start": 156.77,
+                  "end": 156.97,
+                  "word": " so",
+                  "probability": 0.39597243070602417
+                },
+                {
+                  "start": 156.97,
+                  "end": 157.17,
+                  "word": " this",
+                  "probability": 0.9812807440757751
+                },
+                {
+                  "start": 157.17,
+                  "end": 157.35,
+                  "word": " is",
+                  "probability": 0.7809126377105713
+                },
+                {
+                  "start": 157.35,
+                  "end": 157.53,
+                  "word": " an",
+                  "probability": 0.48792701959609985
+                },
+                {
+                  "start": 157.53,
+                  "end": 157.97,
+                  "word": " vr",
+                  "probability": 0.4055522382259369
+                },
+                {
+                  "start": 157.97,
+                  "end": 158.09,
+                  "word": " of",
+                  "probability": 0.7329877614974976
+                },
+                {
+                  "start": 158.09,
+                  "end": 158.31,
+                  "word": " t",
+                  "probability": 0.9283449053764343
+                },
+                {
+                  "start": 158.31,
+                  "end": 158.57,
+                  "word": " of",
+                  "probability": 0.6556400060653687
+                },
+                {
+                  "start": 158.57,
+                  "end": 158.79,
+                  "word": " course",
+                  "probability": 0.9986463189125061
+                },
+                {
+                  "start": 158.79,
+                  "end": 159.13,
+                  "word": " and",
+                  "probability": 0.6647024750709534
+                },
+                {
+                  "start": 159.13,
+                  "end": 159.25,
+                  "word": " then",
+                  "probability": 0.9565396904945374
+                },
+                {
+                  "start": 159.25,
+                  "end": 159.43,
+                  "word": " we",
+                  "probability": 0.9886580109596252
+                },
+                {
+                  "start": 159.43,
+                  "end": 159.67,
+                  "word": " get",
+                  "probability": 0.4554293155670166
+                },
+                {
+                  "start": 159.67,
+                  "end": 160.79,
+                  "word": " v0",
+                  "probability": 0.748139500617981
+                },
+                {
+                  "start": 160.79,
+                  "end": 162.01,
+                  "word": " plus",
+                  "probability": 0.582685649394989
+                },
+                {
+                  "start": 162.01,
+                  "end": 162.63,
+                  "word": " u",
+                  "probability": 0.7609404921531677
+                },
+                {
+                  "start": 162.66,
+                  "end": 163.98,
+                  "word": " ln",
+                  "probability": 0.9550431370735168
+                },
+                {
+                  "start": 164.37,
+                  "end": 166.09,
+                  "word": " mr",
+                  "probability": 0.5370637625455856
+                },
+                {
+                  "start": 166.09,
+                  "end": 167.11,
+                  "word": " over",
+                  "probability": 0.9222602248191833
+                },
+                {
+                  "start": 167.33,
+                  "end": 167.83,
+                  "word": " 2",
+                  "probability": 0.8907483816146851
+                },
+                {
+                  "start": 168.22,
+                  "end": 169.8,
+                  "word": " m0",
+                  "probability": 0.8156049847602844
+                },
+                {
+                  "start": 170.63,
+                  "end": 172.07,
+                  "word": " and",
+                  "probability": 0.7661467790603638
+                },
+                {
+                  "start": 172.07,
+                  "end": 173.25,
+                  "word": " that",
+                  "probability": 0.6600335836410522
+                },
+                {
+                  "start": 173.25,
+                  "end": 173.41,
+                  "word": " is",
+                  "probability": 0.9853596091270447
+                },
+                {
+                  "start": 173.41,
+                  "end": 173.57,
+                  "word": " our",
+                  "probability": 0.9990361928939819
+                },
+                {
+                  "start": 173.57,
+                  "end": 174.03,
+                  "word": " equation.",
+                  "probability": 0.998936116695404
+                },
+                {
+                  "start": 176.48,
+                  "end": 176.96,
+                  "word": " So",
+                  "probability": 0.9795467257499695
+                },
+                {
+                  "start": 176.96,
+                  "end": 177.2,
+                  "word": " what",
+                  "probability": 0.6950190663337708
+                },
+                {
+                  "start": 177.2,
+                  "end": 177.36,
+                  "word": " does",
+                  "probability": 0.9969004392623901
+                },
+                {
+                  "start": 177.36,
+                  "end": 177.56,
+                  "word": " this",
+                  "probability": 0.9975449442863464
+                },
+                {
+                  "start": 177.56,
+                  "end": 177.88,
+                  "word": " equation",
+                  "probability": 0.9977904558181763
+                },
+                {
+                  "start": 177.88,
+                  "end": 178.18,
+                  "word": " tell",
+                  "probability": 0.9968193769454956
+                },
+                {
+                  "start": 178.18,
+                  "end": 178.52,
+                  "word": " us?",
+                  "probability": 0.9993873834609985
+                },
+                {
+                  "start": 179.65,
+                  "end": 180.33,
+                  "word": " mr,",
+                  "probability": 0.6670862138271332
+                },
+                {
+                  "start": 180.55,
+                  "end": 181.23,
+                  "word": " the",
+                  "probability": 0.9968542456626892
+                },
+                {
+                  "start": 181.23,
+                  "end": 181.47,
+                  "word": " mass",
+                  "probability": 0.9944327473640442
+                },
+                {
+                  "start": 181.47,
+                  "end": 181.77,
+                  "word": " of",
+                  "probability": 0.9991361498832703
+                },
+                {
+                  "start": 181.77,
+                  "end": 181.89,
+                  "word": " the",
+                  "probability": 0.9975351095199585
+                },
+                {
+                  "start": 181.89,
+                  "end": 182.23,
+                  "word": " rocket,",
+                  "probability": 0.9955812096595764
+                },
+                {
+                  "start": 182.75,
+                  "end": 183.03,
+                  "word": " is",
+                  "probability": 0.9963244795799255
+                },
+                {
+                  "start": 183.03,
+                  "end": 183.45,
+                  "word": " less",
+                  "probability": 0.9971064925193787
+                },
+                {
+                  "start": 183.54,
+                  "end": 184.86,
+                  "word": " later",
+                  "probability": 0.8948854804039001
+                },
+                {
+                  "start": 184.86,
+                  "end": 185.52,
+                  "word": " on",
+                  "probability": 0.9944696426391602
+                },
+                {
+                  "start": 185.52,
+                  "end": 186.0,
+                  "word": " than",
+                  "probability": 0.9412733316421509
+                },
+                {
+                  "start": 186.0,
+                  "end": 186.16,
+                  "word": " it",
+                  "probability": 0.9968216419219971
+                },
+                {
+                  "start": 186.16,
+                  "end": 186.32,
+                  "word": " was",
+                  "probability": 0.9993060827255249
+                },
+                {
+                  "start": 186.32,
+                  "end": 186.82,
+                  "word": " before",
+                  "probability": 0.9992057681083679
+                },
+                {
+                  "start": 186.82,
+                  "end": 187.96,
+                  "word": " which",
+                  "probability": 0.5709272623062134
+                },
+                {
+                  "start": 188.35,
+                  "end": 188.83,
+                  "word": " means",
+                  "probability": 0.9983618855476379
+                }
+              ]
+            },
+            {
+              "start": 189.29,
+              "end": 208.48,
+              "text": " This term here is going to be less than 0, which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+              "words": [
+                {
+                  "start": 189.29,
+                  "end": 189.83,
+                  "word": " This",
+                  "probability": 0.6209518909454346
+                },
+                {
+                  "start": 189.83,
+                  "end": 190.19,
+                  "word": " term",
+                  "probability": 0.9981964230537415
+                },
+                {
+                  "start": 190.19,
+                  "end": 190.47,
+                  "word": " here",
+                  "probability": 0.9717597365379333
+                },
+                {
+                  "start": 190.47,
+                  "end": 190.75,
+                  "word": " is",
+                  "probability": 0.9877875447273254
+                },
+                {
+                  "start": 190.75,
+                  "end": 190.95,
+                  "word": " going",
+                  "probability": 0.7205063104629517
+                },
+                {
+                  "start": 190.95,
+                  "end": 191.09,
+                  "word": " to",
+                  "probability": 0.9990953207015991
+                },
+                {
+                  "start": 191.09,
+                  "end": 191.29,
+                  "word": " be",
+                  "probability": 0.9988130331039429
+                },
+                {
+                  "start": 191.61,
+                  "end": 192.77,
+                  "word": " less",
+                  "probability": 0.9771710634231567
+                },
+                {
+                  "start": 192.77,
+                  "end": 192.99,
+                  "word": " than",
+                  "probability": 0.9928655624389648
+                },
+                {
+                  "start": 192.99,
+                  "end": 193.33,
+                  "word": " 0,",
+                  "probability": 0.45991581678390503
+                },
+                {
+                  "start": 194.34,
+                  "end": 194.6,
+                  "word": " which",
+                  "probability": 0.9953468441963196
+                },
+                {
+                  "start": 194.6,
+                  "end": 194.96,
+                  "word": " means",
+                  "probability": 0.998083233833313
+                },
+                {
+                  "start": 194.96,
+                  "end": 195.22,
+                  "word": " the",
+                  "probability": 0.975284218788147
+                },
+                {
+                  "start": 195.22,
+                  "end": 195.74,
+                  "word": " velocity",
+                  "probability": 0.9990233182907104
+                },
+                {
+                  "start": 195.74,
+                  "end": 196.56,
+                  "word": " is",
+                  "probability": 0.984657347202301
+                },
+                {
+                  "start": 196.56,
+                  "end": 196.88,
+                  "word": " our",
+                  "probability": 0.45384299755096436
+                },
+                {
+                  "start": 196.88,
+                  "end": 197.22,
+                  "word": " initial",
+                  "probability": 0.9968861937522888
+                },
+                {
+                  "start": 197.22,
+                  "end": 197.9,
+                  "word": " velocity",
+                  "probability": 0.9989758729934692
+                },
+                {
+                  "start": 197.9,
+                  "end": 198.86,
+                  "word": " minus",
+                  "probability": 0.8809890747070312
+                },
+                {
+                  "start": 198.86,
+                  "end": 200.16,
+                  "word": " something,",
+                  "probability": 0.9937902092933655
+                },
+                {
+                  "start": 200.84,
+                  "end": 201.14,
+                  "word": " which",
+                  "probability": 0.9957107305526733
+                },
+                {
+                  "start": 201.14,
+                  "end": 201.44,
+                  "word": " means",
+                  "probability": 0.9985840320587158
+                },
+                {
+                  "start": 201.44,
+                  "end": 201.8,
+                  "word": " we",
+                  "probability": 0.9909524917602539
+                },
+                {
+                  "start": 201.8,
+                  "end": 202.12,
+                  "word": " have",
+                  "probability": 0.9983512163162231
+                },
+                {
+                  "start": 202.12,
+                  "end": 202.24,
+                  "word": " a",
+                  "probability": 0.990391731262207
+                },
+                {
+                  "start": 202.24,
+                  "end": 202.64,
+                  "word": " decrease",
+                  "probability": 0.9954240918159485
+                },
+                {
+                  "start": 202.64,
+                  "end": 203.98,
+                  "word": " in",
+                  "probability": 0.9977594614028931
+                },
+                {
+                  "start": 203.98,
+                  "end": 204.56,
+                  "word": " velocity,",
+                  "probability": 0.9935930371284485
+                },
+                {
+                  "start": 205.26,
+                  "end": 205.56,
+                  "word": " which",
+                  "probability": 0.9979972243309021
+                },
+                {
+                  "start": 205.56,
+                  "end": 205.92,
+                  "word": " means",
+                  "probability": 0.9964397549629211
+                },
+                {
+                  "start": 205.92,
+                  "end": 206.2,
+                  "word": " my",
+                  "probability": 0.8617939949035645
+                },
+                {
+                  "start": 206.2,
+                  "end": 206.5,
+                  "word": " sled",
+                  "probability": 0.9436929225921631
+                },
+                {
+                  "start": 206.5,
+                  "end": 206.78,
+                  "word": " will",
+                  "probability": 0.9903945326805115
+                },
+                {
+                  "start": 206.78,
+                  "end": 207.22,
+                  "word": " eventually",
+                  "probability": 0.9949226975440979
+                },
+                {
+                  "start": 207.22,
+                  "end": 207.88,
+                  "word": " come",
+                  "probability": 0.9975172281265259
+                },
+                {
+                  "start": 207.88,
+                  "end": 208.14,
+                  "word": " to",
+                  "probability": 0.9986586570739746
+                },
+                {
+                  "start": 208.14,
+                  "end": 208.26,
+                  "word": " a",
+                  "probability": 0.996819257736206
+                },
+                {
+                  "start": 208.26,
+                  "end": 208.48,
+                  "word": " stop.",
+                  "probability": 0.994491457939148
+                }
+              ]
+            }
+          ],
+          "cues": [
+            {
+              "start": 3.6,
+              "end": 16.8,
+              "text": "We just derived this relation here. The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket. And we want to ultimately get the speed of the rocket."
+            },
+            {
+              "start": 17.85,
+              "end": 32.51,
+              "text": "So we have to apply a technique called separation variables. And then we want to integrate. What we're going to do is first we're going to multiply by dt. So that falls away."
+            },
+            {
+              "start": 32.99,
+              "end": 50.32,
+              "text": "And we're left with mr dvr equals dmru. And we're going to shuffle the m onto the other side. And we're left with dvr equals u is a constant."
+            },
+            {
+              "start": 50.96,
+              "end": 60.71,
+              "text": "So that goes up front. And then we have dmr over mr. That's an equation that we can integrate now."
+            },
+            {
+              "start": 63.08,
+              "end": 80.15,
+              "text": "We can do that. And the tricky bit is that we need to take care of the integration limits here. We have vr and actually these now are all primes. So we have vr going from v0."
+            },
+            {
+              "start": 80.63,
+              "end": 92.43,
+              "text": "That is our initial condition here to vr prime of equal vr of t."
+            },
+            {
+              "start": 93.74,
+              "end": 111.3,
+              "text": "And for the mass, we have mr prime equals m0. Actually, not quite m0. It's 2m0, because the initial mass of this is the dry mass and the fuel mass. So that's 2m0."
+            },
+            {
+              "start": 111.52,
+              "end": 126.59,
+              "text": "So this is the initial mass. And then we go to mr prime equals m of vr. Alright, so let's do that."
+            },
+            {
+              "start": 127.31,
+              "end": 143.51,
+              "text": "We're gonna get vr minus v0 equals u1 over m. Integrated gives us an ln, so ln. And then we can immediately do"
+            },
+            {
+              "start": 145.62,
+              "end": 150.49,
+              "text": "this here over 2m0."
+            },
+            {
+              "start": 155.27,
+              "end": 173.25,
+              "text": "Well, we ultimately want this so this is an vr of t of course and then we get v0 plus u ln mr over 2 m0 and that"
+            },
+            {
+              "start": 173.25,
+              "end": 174.03,
+              "text": "is our equation."
+            },
+            {
+              "start": 176.48,
+              "end": 178.52,
+              "text": "So what does this equation tell us?"
+            },
+            {
+              "start": 179.65,
+              "end": 197.22,
+              "text": "mr, the mass of the rocket, is less later on than it was before which means This term here is going to be less than 0, which means the velocity is our initial"
+            },
+            {
+              "start": 197.22,
+              "end": 208.48,
+              "text": "velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop."
+            }
+          ],
+          "audio_seconds": 212.5866875
+        }
+      ]
+    },
+    {
+      "label": "run2-baseline",
+      "mode": "baseline",
+      "seconds": 84.37377753699911,
+      "initial_health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": false
+      },
+      "status": 200,
+      "request_id": null,
+      "result": {
+        "segments": [
+          {
+            "start": 3.6,
+            "end": 7.28,
+            "text": "We just derived this relation here.",
+            "translation": "여기서 우리는 이 관계를 도출했습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 7.28,
+            "end": 17.76,
+            "text": "The relation between the differential of the speed of the rocket sled and the differential of the mass of the rocket, and we want to ultimately get the speed of the rocket.",
+            "translation": "로켓 썰매의 속력의 미분과 로켓의 질량의 미분 사이의 관계를 도출하며, 결국 로켓의 속력을 얻고자 합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 17.76,
+            "end": 25.96,
+            "text": "So we have to apply a technique called separation variables, and then we want to integrate.",
+            "translation": "그래서 우리는 변수 분리 기법을 적용해야 하며, 그 후에 적분을 해야 합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 25.96,
+            "end": 58.56,
+            "text": "What we're going to do is, first, we're going to multiply by dt, so that falls away, and we're left with mr dvr equals dmru, and we're going to shuffle the m onto the other side, and we're left with dvr equals u is a constant, so that goes up front, and then we have dmr over mr.",
+            "translation": "우리가 할 일은 먼저 dt로 곱하는 것입니다. 이렇게 하면 dt가 사라지고, mr dvr = dmru가 남습니다. 그 후 m을 다른 쪽으로 옮기고, dvr = u가 상수이므로 이 값이 앞으로 올라가며, dmr / mr가 남습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 58.56,
+            "end": 67.2,
+            "text": "That's an equation that we can integrate now, and we can do that.",
+            "translation": "이것은 이제 적분할 수 있는 방정식입니다. 그리고 우리는 그걸 할 수 있습니다.",
+            "translation_error": null
+          },
+          {
+            "start": 67.2,
+            "end": 70.96,
+            "text": "The tricky bit is that we need to take care of the integration limits here.",
+            "translation": "문제가 되는 점은 여기서 적분 구간을 올바르게 처리해야 한다는 것입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 70.96,
+            "end": 76.4,
+            "text": "We have vr, and actually these now are all primes.",
+            "translation": "우리는 vr을 가지고 있으며, 실제로 이 모든 것이 모두 프라임입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 76.4,
+            "end": 94.12,
+            "text": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+            "translation": "그래서 우리는 vr이 v0에서 시작하여 vr이 vr(t)로 변화한다는 것을 가집니다. 이는 여기서 초기 조건입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 94.12,
+            "end": 99.32,
+            "text": "And for the mass, we have mr prime equals m0.",
+            "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 99.32,
+            "end": 116.48,
+            "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+            "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+            "translation_error": null
+          },
+          {
+            "start": 116.48,
+            "end": 125.0,
+            "text": "And then we go to mr prime equals m of vr.",
+            "translation": "그리고 그 후에 우리는 mR′ = m(vR)로 갑니다.",
+            "translation_error": null
+          },
+          {
+            "start": 125.0,
+            "end": 127.44,
+            "text": "All right, so let's do that.",
+            "translation": "좋아요, 그래서 그걸 해봅시다.",
+            "translation_error": null
+          },
+          {
+            "start": 127.44,
+            "end": 152.85,
+            "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+            "translation_error": null
+          },
+          {
+            "start": 152.85,
+            "end": 169.65,
+            "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+            "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 171.53,
+            "end": 176.7,
+            "text": "And that is our equation.",
+            "translation": "그리고 이것이 우리의 방정식입니다.",
+            "translation_error": null
+          },
+          {
+            "start": 176.7,
+            "end": 179.5,
+            "text": "So what does this equation tell us?",
+            "translation": "그러면 이 방정식은 우리에게 무엇을 알려주나요?",
+            "translation_error": null
+          },
+          {
+            "start": 179.5,
+            "end": 208.46,
+            "text": "mr, the mass of the rocket, is less later on than it was before, which means this term here is going to be less than 0, which means the velocity is our initial velocity minus something, which means we have a decrease in velocity, which means my sled will eventually come to a stop.",
+            "translation": "mr, 즉 로켓의 질량은 이전보다 이후에 작아지며, 이는 여기서 나타나는 항목이 0보다 작다는 뜻입니다. 따라서 속도는 초기 속도에서 어떤 값이 빠져나간 것과 같으며, 이는 속도의 감소를 의미합니다. 따라서 내 썰매는 결국 정지하게 됩니다.",
+            "translation_error": null
+          }
+        ]
+      },
+      "media_sha256": "90035e75da2873c1688339044c5881a19283deb1fec2886854ec0fb56a09d350",
+      "final_health": {
+        "status": "ok",
+        "translation_model_loaded": true,
+        "transcription_model_loaded": true
+      },
+      "client_log": {
+        "stdout": "{\"seconds\": 84.37377753699911, \"status\": 200}\n",
+        "stderr": ""
+      },
+      "logs": "INFO:     Started server process [1]\nINFO:     Waiting for application startup.\nINFO:     Application startup complete.\nINFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)\nINFO:     127.0.0.1:54090 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     127.0.0.1:51278 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     172.19.0.5:56942 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     event=request_started request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.000 method=POST path=/api/v1/transcriptions\nINFO:     event=upload_save request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.013 status=ok upload_bytes=21729088\nINFO:     event=stt_decode request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.237 status=ok\nINFO:     event=stt_model_load request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.673 status=ok model=small\nINFO:     event=stt_queue request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.000 status=ok\nINFO:     event=stt_features request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.038 status=ok audio_seconds=200.0 block_frames=3000 feature_frames=20001\nINFO:     event=stt_inference request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=27.907 status=ok audio_seconds=212.5866875 segment_count=39\nINFO:     event=stt request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=28.818 status=ok segment_count=39\nINFO:     event=sentence_grouping request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=0.002 status=ok source_segment_count=39 sentence_count=17\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=0 elapsed_seconds=0.000 status=ok\nINFO:     127.0.0.1:60948 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=0 elapsed_seconds=1.232 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=0 elapsed_seconds=1.244 status=ok attempt=1 prompt_tokens=220 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=0 elapsed_seconds=1.244 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=0 elapsed_seconds=1.244 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=1 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=1 elapsed_seconds=4.200 status=ok attempt=1 raw_output_tokens=44 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=1 elapsed_seconds=4.205 status=ok attempt=1 prompt_tokens=333 max_tokens=128 raw_output_tokens=44 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=1 elapsed_seconds=4.205 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=1 elapsed_seconds=4.206 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=2 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=2 elapsed_seconds=2.006 status=ok attempt=1 raw_output_tokens=25 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=2 elapsed_seconds=2.016 status=ok attempt=1 prompt_tokens=239 max_tokens=128 raw_output_tokens=25 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=2 elapsed_seconds=2.017 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=2 elapsed_seconds=2.017 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=3 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=3 elapsed_seconds=7.013 status=ok attempt=1 raw_output_tokens=75 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=3 elapsed_seconds=7.021 status=ok attempt=1 prompt_tokens=439 max_tokens=128 raw_output_tokens=75 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=3 elapsed_seconds=7.021 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=3 elapsed_seconds=7.021 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=4 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=4 elapsed_seconds=2.997 status=ok attempt=1 raw_output_tokens=23 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=4 elapsed_seconds=3.000 status=ok attempt=1 prompt_tokens=359 max_tokens=128 raw_output_tokens=23 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=4 elapsed_seconds=3.001 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=4 elapsed_seconds=3.001 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=5 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=5 elapsed_seconds=2.190 status=ok attempt=1 raw_output_tokens=27 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=5 elapsed_seconds=2.192 status=ok attempt=1 prompt_tokens=308 max_tokens=128 raw_output_tokens=27 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=5 elapsed_seconds=2.192 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=5 elapsed_seconds=2.193 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=6 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=6 elapsed_seconds=2.532 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=6 elapsed_seconds=2.535 status=ok attempt=1 prompt_tokens=351 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=6 elapsed_seconds=2.536 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=6 elapsed_seconds=2.536 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=7 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=7 elapsed_seconds=3.672 status=ok attempt=1 raw_output_tokens=33 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=7 elapsed_seconds=3.675 status=ok attempt=1 prompt_tokens=381 max_tokens=128 raw_output_tokens=33 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=7 elapsed_seconds=3.675 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=7 elapsed_seconds=3.675 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=8 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=8 elapsed_seconds=1.896 status=ok attempt=1 raw_output_tokens=16 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=8 elapsed_seconds=1.899 status=ok attempt=1 prompt_tokens=255 max_tokens=128 raw_output_tokens=16 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=8 elapsed_seconds=1.899 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=8 elapsed_seconds=1.899 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=9 elapsed_seconds=0.000 status=ok\nINFO:     127.0.0.1:47652 - \"GET /health HTTP/1.1\" 200 OK\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=9 elapsed_seconds=5.502 status=ok attempt=1 raw_output_tokens=54 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=9 elapsed_seconds=5.505 status=ok attempt=1 prompt_tokens=396 max_tokens=128 raw_output_tokens=54 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=9 elapsed_seconds=5.505 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=9 elapsed_seconds=5.505 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=10 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=10 elapsed_seconds=1.550 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=10 elapsed_seconds=1.552 status=ok attempt=1 prompt_tokens=245 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=10 elapsed_seconds=1.552 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=10 elapsed_seconds=1.552 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=11 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=11 elapsed_seconds=2.147 status=ok attempt=1 raw_output_tokens=13 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=11 elapsed_seconds=2.149 status=ok attempt=1 prompt_tokens=286 max_tokens=128 raw_output_tokens=13 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=11 elapsed_seconds=2.150 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=11 elapsed_seconds=2.150 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=12 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=12 elapsed_seconds=4.469 status=ok attempt=1 raw_output_tokens=46 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=12 elapsed_seconds=4.473 status=ok attempt=1 prompt_tokens=401 max_tokens=128 raw_output_tokens=46 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=12 elapsed_seconds=4.473 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=12 elapsed_seconds=4.473 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=13 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=13 elapsed_seconds=4.738 status=ok attempt=1 raw_output_tokens=45 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=13 elapsed_seconds=4.742 status=ok attempt=1 prompt_tokens=421 max_tokens=128 raw_output_tokens=45 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=13 elapsed_seconds=4.742 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=13 elapsed_seconds=4.742 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=14 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=14 elapsed_seconds=1.549 status=ok attempt=1 raw_output_tokens=11 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=14 elapsed_seconds=1.551 status=ok attempt=1 prompt_tokens=303 max_tokens=128 raw_output_tokens=11 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=14 elapsed_seconds=1.551 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=14 elapsed_seconds=1.551 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=15 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=15 elapsed_seconds=1.410 status=ok attempt=1 raw_output_tokens=18 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=15 elapsed_seconds=1.412 status=ok attempt=1 prompt_tokens=279 max_tokens=128 raw_output_tokens=18 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=15 elapsed_seconds=1.412 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=15 elapsed_seconds=1.412 status=ok\nINFO:     event=translation_queue request_id=3aa0a289a9f4 segment_index=16 elapsed_seconds=0.000 status=ok\nINFO:     event=translation_generate request_id=3aa0a289a9f4 segment_index=16 elapsed_seconds=6.308 status=ok attempt=1 raw_output_tokens=89 finish_reason=stop early_stop_reason=None\nINFO:     event=translation_attempt request_id=3aa0a289a9f4 segment_index=16 elapsed_seconds=6.311 status=ok attempt=1 prompt_tokens=407 max_tokens=128 raw_output_tokens=89 finish_reason=stop rejection_reason=None accepted=True\nINFO:     event=translation_total request_id=3aa0a289a9f4 segment_index=16 elapsed_seconds=6.311 status=ok attempts=1\nINFO:     event=segment_translation request_id=3aa0a289a9f4 segment_index=16 elapsed_seconds=6.311 status=ok\nINFO:     event=translation_batch request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=55.490 status=ok source_segment_count=39 sentence_count=17 failed_segments=0\nINFO:     172.19.0.5:56942 - \"POST /api/v1/transcriptions?language=en HTTP/1.1\" 200 OK\nINFO:     event=http_request request_id=3aa0a289a9f4 segment_index=None elapsed_seconds=84.372 method=POST path=/api/v1/transcriptions status_code=200 status=ok error_type=None elapsed_minutes=1.406\nINFO:     172.19.0.5:56942 - \"GET /health HTTP/1.1\" 200 OK\n",
+      "state": {
+        "image": "sha256:0571ff5bf3d350f6b0dff647ef3aece975e501fed1b1ed0e4632c2100e0fe2dd",
+        "cpu": 4000000000,
+        "memory": 2500000000,
+        "memory_swap": 2500000000,
+        "oom": false,
+        "restarts": 0
+      },
+      "memory_observation": "1459597312\nlow 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+      "failed": 0,
+      "alignment_audits": []
+    }
+  ],
+  "limits": [
+    "Original 212.5866875-second video; CPU4 backend, CPU8 translator.",
+    "HTTP client container uses the same internal network; not host port upload.",
+    "Backend STT starts unloaded; translator uses identical cache-disabled warmup.",
+    "Candidate includes alignment audit writes and optional sentence packing within 18s/350 chars.",
+    "Windows amd64 and host total RAM are untested."
+  ],
+  "helper_source": "\"\"\"정렬된 STT 단어의 원문·순서를 보존하면서 시각과 문장 경계로 자막 조각을 구성한다.\"\"\"\n\nimport math\nfrom numbers import Real\n\nfrom app.services.subtitles import SENTENCE_END\n\n\ndef _cue(words: list, max_duration: float, max_chars: int) -> dict:\n    \"\"\"연속 단어의 실제 시각과 원문으로 상한 안의 자막 조각 하나를 만든다.\n\n    :param words: start·end·word를 가진 비어 있지 않은 순서 보존 단어 목록.\n    :param max_duration: 조각의 최대 시간(초).\n    :param max_chars: 조각 원문의 최대 문자 수.\n    :return: start·end·text 사전. 시각이나 문장부호를 추론하지 않는다.\n    :raises ValueError: 시각이 없거나 나눌 수 없는 단어 묶음이 상한을 넘는 경우.\n    \"\"\"\n    result = {'start': words[0]['start'], 'end': max(w['end'] for w in words),\n              'text': ''.join(w['word'] for w in words).strip()}\n    if (result['end'] <= result['start']\n            or result['end'] - result['start'] > max_duration + 1e-6\n            or len(result['text']) > max_chars):\n        raise ValueError('Aligned words cannot form a bounded subtitle cue')\n    return result\n\n\ndef split_aligned_segments(segments: list, duration: float, max_duration: float = 18,\n                           max_chars: int = 350, max_gap: float = 2,\n                           pack_sentences: bool = False) -> list:\n    \"\"\"검증한 단어를 문장·무음·상한 경계에서 나누고 전체 원문 보존을 확인한다.\n\n    :param segments: text와 words(start·end·word)를 가진 순서 보존 STT 원시 구간 목록.\n    :param duration: 실제 음성 길이(초). 양의 유한값이어야 한다.\n    :param max_duration: 자막 조각 최대 시간(초). 기본 18초, 양의 유한값.\n    :param max_chars: 자막 조각 최대 원문 문자 수. 기본 350, 양의 정수.\n    :param max_gap: 조각을 나누는 무음 상한(초). 기본 2초, 0 이상 유한값.\n    :param pack_sentences: 참이면 같은 상한 안의 인접 조각을 묶는다. 질문 경계는 유지한다.\n    :return: 단어 순서·내용을 보존하고 음성 범위 안에서 겹치지 않는 start·end·text 목록.\n    :raises ValueError: 단어 누락·원문 불일치·비유한/역행/범위 밖 시각·분할 불가능 상한인 경우.\n\n    단어 사이 공백 외에 원문을 고치거나 삭제하지 않으며, 영시간 단어는 양의 길이\n    조각에 포함한다. 겹치는 단어 사이와 붙어 있는 토큰 안에서는 조각을 나누지 않는다.\n    입력 사전·단어 목록을 수정하거나 누락된 시각을 새로 만들지 않는다.\n    \"\"\"\n    if (type(pack_sentences) is not bool\n            or any(not isinstance(value, Real) or isinstance(value, bool)\n            for value in (duration, max_duration, max_gap))\n            or not math.isfinite(duration) or duration <= 0\n            or not math.isfinite(max_duration) or max_duration <= 0\n            or type(max_chars) is not int or max_chars <= 0\n            or not math.isfinite(max_gap) or max_gap < 0):\n        raise ValueError('Invalid aligned subtitle limits')\n    words, sources = [], []\n    for segment in segments:\n        if not isinstance(segment, dict) or not isinstance(segment.get('text'), str):\n            raise ValueError('Invalid aligned source segment')\n        text = segment['text'].strip()\n        if not text:\n            continue\n        aligned = segment.get('words')\n        if (not isinstance(aligned, (list, tuple)) or not aligned\n                or any(not isinstance(w, dict) or not {'start', 'end', 'word'} <= w.keys()\n                       or not isinstance(w['word'], str) for w in aligned)):\n            raise ValueError('Missing or malformed aligned words')\n        if ' '.join(''.join(w['word'] for w in aligned).split()) != ' '.join(text.split()):\n            raise ValueError('Aligned words do not preserve the source text')\n        sources.append(text)\n        for index, original in enumerate(aligned):\n            start, end, piece = original['start'], original['end'], original['word']\n            if (not piece.strip()\n                    or any(not isinstance(value, Real) or isinstance(value, bool)\n                           for value in (start, end))\n                    or not math.isfinite(start) or not math.isfinite(end)\n                    or not 0 <= start <= end <= duration\n                    or (words and start < words[-1]['start'])):\n                raise ValueError('Invalid or unordered aligned word timestamps')\n            if words and index == 0 and not piece[0].isspace():\n                piece = ' ' + piece\n            words.append({'start': start, 'end': end, 'word': piece})\n    cues, pending = [], []\n    for index, word in enumerate(words):\n        if pending:\n            end = max(w['end'] for w in pending)\n            text = ''.join(w['word'] for w in pending).strip()\n            safe = word['start'] >= end and word['word'][0].isspace() and end > pending[0]['start']\n            if safe and (word['end'] - pending[0]['start'] > max_duration\n                         or len(text + word['word']) > max_chars\n                         or word['start'] - end > max_gap):\n                cues.append(_cue(pending, max_duration, max_chars))\n                pending = []\n        pending.append(word)\n        next_word = words[index + 1] if index + 1 < len(words) else None\n        end = max(w['end'] for w in pending)\n        safe_end = (next_word is None or (next_word['start'] >= end\n                    and next_word['word'][0].isspace()))\n        if safe_end and end > pending[0]['start'] and SENTENCE_END.search(word['word'].strip()):\n            cues.append(_cue(pending, max_duration, max_chars))\n            pending = []\n    if pending:\n        cues.append(_cue(pending, max_duration, max_chars))\n    if pack_sentences:\n        packed = []\n        for cue in cues:\n            if (packed and '?' not in packed[-1]['text'] and '?' not in cue['text']\n                    and cue['start'] - packed[-1]['end'] <= max_gap\n                    and cue['end'] - packed[-1]['start'] <= max_duration\n                    and len(packed[-1]['text']) + 1 + len(cue['text']) <= max_chars):\n                packed[-1]['end'] = cue['end']\n                packed[-1]['text'] += ' ' + cue['text']\n            else:\n                packed.append(cue.copy())\n        cues = packed\n    if ' '.join(' '.join(c['text'] for c in cues).split()) != ' '.join(' '.join(sources).split()):\n        raise ValueError('Subtitle segmentation changed the source text')\n    return cues\n",
+  "helper_sha256": "7934e87538057476d3a8d8653165e433fbe56863306b66f52cfb6e3c35370e88",
+  "decision": "Not adopted: packed candidate slower than following baseline, with awkward grammar and uncertain-source elaboration."
+}

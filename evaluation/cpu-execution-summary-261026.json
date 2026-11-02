@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-26 Asia/Seoul",
+  "production_adopted": false,
+  "windows_amd64_tested": false,
+  "stt": {
+    "normal_mean_seconds": 27.624475637499927,
+    "batch2_mean_seconds": 16.009301007999966,
+    "inference_reduction_percent": 42.04667911861642,
+    "normal_caption_errors": 51,
+    "batch2_caption_errors": 88,
+    "caption_reference_words": 369,
+    "cpu8_normal_single_seconds": 114.41455692700038
+  },
+  "translation": {
+    "baseline": {
+      "runs": [
+        {
+          "seconds": 61.14293702800205,
+          "returned": 19,
+          "attempts": 19,
+          "prompt_n": 2119,
+          "predicted_n": 613,
+          "prompt_ms": 35674.625,
+          "predicted_ms": 25325.418999999994
+        },
+        {
+          "seconds": 60.22172394500012,
+          "returned": 19,
+          "attempts": 19,
+          "prompt_n": 2119,
+          "predicted_n": 613,
+          "prompt_ms": 35589.174999999996,
+          "predicted_ms": 24527.228999999996
+        }
+      ],
+      "mean_seconds": 60.68233048650109
+    },
+    "prefix": {
+      "runs": [
+        {
+          "seconds": 56.356492566999805,
+          "returned": 19,
+          "attempts": 20,
+          "prompt_n": 1676,
+          "predicted_n": 686,
+          "prompt_ms": 28621.44,
+          "predicted_ms": 27616.158000000003
+        },
+        {
+          "seconds": 56.175223066999024,
+          "returned": 19,
+          "attempts": 20,
+          "prompt_n": 1676,
+          "predicted_n": 686,
+          "prompt_ms": 28620.177000000003,
+          "predicted_ms": 27439.188000000002
+        }
+      ],
+      "mean_seconds": 56.265857816999414
+    },
+    "reduction_percent": 7.278020857297374
+  },
+  "unit_tests_passed": 23,
+  "whole_api_rebenchmarked": false,
+  "final_health": {
+    "status": "ok",
+    "translation_model_loaded": true,
+    "transcription_model_loaded": true
+  },
+  "final_runtime": {
+    "backend_cpu": 4,
+    "translator_cpu": 8,
+    "oom": false,
+    "restart_count": 0
+  },
+  "artifact_sha256": {
+    "evaluation/stt-execution-261026.json": "9568abfbc86ae4b4c773d67b5ea00d6f12cdfef45c75b6731a4b6084bec57619",
+    "evaluation/translation-execution-pilot-261026.json": "17e4f66c58b8574aa4dd9f9e7554f052019145b31627e0c97ffb1221278becb8",
+    "evaluation/translation-execution-full-261026.json": "366d6d164be7c2b38ad2b01a25f4bf1126422ebf263d4ed249ee539b4edb06a0"
+  },
+  "limits": [
+    "All candidates rejected; benchmark speed differences are not deployed API speedups.",
+    "One rocket video and fixed development text; no held-out semantic accuracy test.",
+    "No whole-host memory measurement, Windows amd64 run or full test suite."
+  ]
+}

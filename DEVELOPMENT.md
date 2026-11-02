@@ -296,6 +296,23 @@ M2M100 비교에는 별도로 준비한 로컬 CTranslate2 INT8 모델과 토크
 Compose의 내부 inference 네트워크에서 실행합니다. `--beam`은 M2M100에만 적용됩니다.
 두 스크립트는 기존 결과를 덮어쓰지 않으므로 출력 경로와 같은 접두사의 조건별 파일도 새 경로를 사용합니다.
 
+### 미채택 성능 실험 기록
+
+다음 후보는 속도·품질을 함께 개선한 근거가 부족해 운영에 적용하지 않았습니다.
+2026-11-03에 미사용 실험 구현·테스트 6개를 실행 경로에서 제거하고,
+[원문·SHA256 기록](evaluation/retired-experiment-sources-261103.json)에 보존했습니다.
+평가 JSON·SRT·VTT는 당시 결과이며 현재 서버 동작이나 성능 보장이 아닙니다.
+
+- [STT CPU·배치와 번역 캐시 비교](evaluation/cpu-execution-analysis-261026.md)
+- [단어 시각·자막 분할과 전체 API 비교](evaluation/stt-word-analysis-261026.md)
+- [프롬프트 중복 제거 비교](evaluation/prompt-dedup-analysis-261101.md)
+- [OpenBLAS 비교](evaluation/blas-pilot-analysis-261029.md)
+- [미사용 모델 정리 기록](evaluation/model-cleanup-261101.json)
+
+해당 결과는 Mac ARM64 Docker에서 측정했으며 Windows AMD64 검증 결과가 아닙니다.
+
+### 변경 범위 테스트
+
 ```bash
 .venv-api/bin/python scripts/run_changed_tests.py --files app/services/translation_http.py compose.yaml scripts/benchmark_cpu.py
 ```

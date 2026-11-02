@@ -1,0 +1,121 @@
+{
+  "evaluated_on": "2026-10-26 Asia/Seoul",
+  "platform": "Linux ARM64 Docker on Apple Silicon, host RAM 16GB; VM 8 vCPU/6210043904 bytes",
+  "windows_amd64_tested": false,
+  "production_adopted": false,
+  "stt": {
+    "normal_seconds": [
+      28.374666264000552,
+      26.35043492800105
+    ],
+    "candidate_seconds": [
+      15.622510964996764,
+      15.593207300000358
+    ],
+    "normal_mean": 27.3625505960008,
+    "candidate_mean": 15.607859132498561,
+    "reduction_percent": 42.95904880015191,
+    "raw_words": 345,
+    "split_cues": 34,
+    "normal_caption_errors": 51,
+    "candidate_caption_errors": 52,
+    "word_timestamps_repeated_identical": true
+  },
+  "api_pairs": {
+    "sentence_split": [
+      {
+        "mode": "baseline",
+        "seconds": 93.4379745840015,
+        "status": 200,
+        "failed": 0
+      },
+      {
+        "mode": "candidate",
+        "seconds": 89.90855858199939,
+        "status": 200,
+        "failed": 0
+      }
+    ],
+    "packed": [
+      {
+        "mode": "candidate",
+        "seconds": 87.55378737200226,
+        "status": 200,
+        "failed": 0
+      },
+      {
+        "mode": "baseline",
+        "seconds": 84.37377753699911,
+        "status": 200,
+        "failed": 0
+      }
+    ]
+  },
+  "subtitle_exports": [
+    {
+      "path": "evaluation/stt-word-baseline-261026.srt",
+      "cues": 17,
+      "sha256": "2aa8ccf61b1ec03e1e626b0d8962df276892847b027888ba1d05b459f4930f0d",
+      "origin": "Local production renderer on actual HTTP response, not job API download."
+    },
+    {
+      "path": "evaluation/stt-word-baseline-261026.vtt",
+      "cues": 17,
+      "sha256": "278e395090ba6815f8c0ff70aba0ec852235c6c091b336ef25725355aeff96e6",
+      "origin": "Local production renderer on actual HTTP response, not job API download."
+    },
+    {
+      "path": "evaluation/stt-word-aligned-261026.srt",
+      "cues": 26,
+      "sha256": "bf3b95fa625bc07301abd172a0049c82160a665678a47072551799907bdf7a01",
+      "origin": "Local production renderer on actual HTTP response, not job API download."
+    },
+    {
+      "path": "evaluation/stt-word-aligned-261026.vtt",
+      "cues": 26,
+      "sha256": "f623f70d4b0756cec31947f10519d2ab161b8be9a9e77ddbd0679ab9430c7929",
+      "origin": "Local production renderer on actual HTTP response, not job API download."
+    },
+    {
+      "path": "evaluation/stt-word-packed-261026.srt",
+      "cues": 14,
+      "sha256": "dda50a5779c84b1562d7b11a52f20d373b1896f47e5c11375b7a6a37389744d2",
+      "origin": "Local production renderer on actual HTTP response, not job API download."
+    },
+    {
+      "path": "evaluation/stt-word-packed-261026.vtt",
+      "cues": 14,
+      "sha256": "928818bde781f4cb6fa09e0852fc3d4f8095f020f66f521738de9cfaf6c0a1e9",
+      "origin": "Local production renderer on actual HTTP response, not job API download."
+    }
+  ],
+  "related_unit_tests_passed": 61,
+  "whole_job_sse_tested": false,
+  "limits": [
+    "One development video, one pair per API candidate; fixed orders and uncontrolled host load.",
+    "No semantic accuracy percentage; heuristic return success is not full quality validation.",
+    "API HTTP client runs inside Docker; published host port upload was not validated.",
+    "SRT/VTT are local exports from actual API responses; job/SSE/download was not re-run.",
+    "No Windows, 90-minute input, concurrency or whole-host RAM validation.",
+    "Production STT, translation prompts, model, CPU profile and running services were not switched."
+  ],
+  "artifact_sha256": {
+    "evaluation/stt-word-alignment-261026.json": "474aefec8864b324f11f9522f17f0cdcae67ffcb1df70466db714a60bc0faba8",
+    "evaluation/stt-word-api-261026.json": "a272084920ed8226878e54e92d5eef2a58b148bd0e6a7c81f424671037c172e6",
+    "evaluation/stt-word-packed-api-261026.json": "d73fc359fcfe8501a93d774dbd64a556aac6ddaf92b6d50915a5fdc04f1af02f"
+  },
+  "final_runtime": {
+    "backend_cpu": 4,
+    "translator_cpu": 8,
+    "backend_healthy": true,
+    "translator_healthy": true,
+    "oom": false,
+    "restarts": 0
+  },
+  "source_sha256": {
+    "app/services/stt_words.py": "7934e87538057476d3a8d8653165e433fbe56863306b66f52cfb6e3c35370e88",
+    "scripts/evaluate_stt_execution.py": "45c2062d764d90c8077fca4f4eec58ed0583131a66bdb1fe36f51d1d5de570ff",
+    "tests/test_stt_words.py": "36392f51884363f295a16d2dfab563d3e9109f595a0b07b979f9fce85c2b27f7",
+    "tests/test_stt_execution.py": "7406cc90e73b8bd3817c281a99a94c22717187b6d4e75d915fefc00ba7ff7ce8"
+  }
+}

@@ -1,0 +1,1699 @@
+{
+  "source": "\"\"\"STT 시험 종료 후 번역 묶음·고정 접두부 후보를 동일 CPU8 서버에서 교차 비교한다.\"\"\"\nimport json\nfrom pathlib import Path\nimport subprocess\nfrom time import monotonic,sleep\n\nROOT=Path('/Users/macbookair/Desktop/K-aption_BE')\nDIRECTORY=Path('/private/tmp/kaption-translation-candidates-261026')\nDIRECTORY.mkdir()\n(DIRECTORY/'driver.py').write_text(Path('/private/tmp/kaption-translation-candidates-261026.py').read_text())\nmarker=Path('/private/tmp/kaption-stt-timestamps-261026/comparison.json')\ndeadline=monotonic()+400\nwhile monotonic()<deadline:\n    if marker.exists() and len(json.loads(marker.read_text())['runs'])==4:\n        break\n    sleep(5)\nelse:\n    raise RuntimeError('STT comparison did not finish; no competing inference started')\nreport={'source':Path(__file__).read_text(),'order':['baseline','batch','prefix','prefix','batch','baseline'],'runs':[]}\nfmt=('{\"image\":{{json .Image}},\"cmd\":{{json .Config.Cmd}},\"nano_cpus\":{{.HostConfig.NanoCpus}},'\n     '\"memory\":{{.HostConfig.Memory}},\"oom\":{{.State.OOMKilled}},\"restarts\":{{.RestartCount}}}')\nreport['server_initial']=json.loads(subprocess.check_output(['docker','inspect','k-aption_be-translator-1','--format',fmt],text=True))\nfor index,mode in enumerate(report['order']):\n    label=f'run{index+1}-{mode}'\n    print('Starting',label,flush=True)\n    command=['docker','run','--rm','--name','kaption-translation-candidate-client',\n             '--network','k-aption_be_inference','--cpus','1','--memory','268435456',\n             '--memory-swap','268435456','-e','PYTHONPATH=/app','-e','PYTHONDONTWRITEBYTECODE=1',\n             '--mount',f'type=bind,source={ROOT},target=/app,readonly',\n             '--mount',f'type=bind,source={DIRECTORY},target=/reports',\n             '--entrypoint','python','kaption-backend:local',\n             '/reports/driver.py','--mode',mode,'--output',f'/reports/{label}.json']\n    result=subprocess.run(command,cwd=ROOT,capture_output=True,text=True)\n    row={'label':label,'mode':mode,'exit_code':result.returncode,'stdout':result.stdout,'stderr':result.stderr}\n    path=DIRECTORY/f'{label}.json'\n    if path.exists(): row['report']=json.loads(path.read_text())\n    report['runs'].append(row)\n    report['server_final']=json.loads(subprocess.check_output(['docker','inspect','k-aption_be-translator-1','--format',fmt],text=True))\n    (DIRECTORY/'comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n')\n    print(json.dumps({'label':label,'exit_code':result.returncode,'seconds':row.get('report',{}).get('seconds'),'stderr_tail':result.stderr[-1800:] if result.returncode else ''}),flush=True)\n    if result.returncode: raise RuntimeError('Translation candidate failed')\n    if report['server_final']!=report['server_initial']: raise RuntimeError('Translator state changed')\n",
+  "order": [
+    "baseline",
+    "batch",
+    "prefix",
+    "prefix",
+    "batch",
+    "baseline"
+  ],
+  "runs": [
+    {
+      "label": "run1-baseline",
+      "mode": "baseline",
+      "exit_code": 0,
+      "stdout": "{\"mode\": \"baseline\", \"seconds\": 19.005083467000077}\n",
+      "stderr": "",
+      "report": {
+        "mode": "baseline",
+        "indices": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "source": "\"\"\"고정 개발 문장 네 개로 번역 두 문장 묶음과 고정 접두부 캐시 후보를 비교한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nfrom time import perf_counter\n\nfrom scripts.evaluate_cpu_translation_models import RecordingQwen, load_cases, run_qwen\nfrom app.services.translation_qwen import FORMAL_STYLE, INSTRUCTION, CONTEXT_INSTRUCTION\nfrom app.services.translation_inputs import select_context\n\nROOT = Path('/app')\nINDICES = (8, 9, 12, 13)\n\n\nclass PrefixCandidate(RecordingQwen):\n    \"\"\"기존 지시는 보존하되 변하는 문맥을 사용자 메시지 뒤쪽에 분리한다.\"\"\"\n\n    def _build_prompt(self, text, context, retry=False):\n        \"\"\"고정 시스템 지시와 사용자 지시 다음에 참고 문맥과 현재 원문을 둔다.\n\n        :param text: 현재 영어 원문.\n        :param context: 앞 영어 원문.\n        :param retry: 기존 재시도 지시 유지 여부.\n        :return: 후보 채팅 메시지 JSON.\n        \"\"\"\n        messages = json.loads(super()._build_prompt(text, context, retry))\n        instruction, source = messages[1]['content'].rsplit('\\n\\n', 1)\n        previous = select_context(text, context)\n        messages[0]['content'] = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n        messages[1]['content'] = instruction + '\\n\\n'\n        if previous:\n            messages[1]['content'] += 'Previous English context:\\n' + previous + '\\n\\n'\n        messages[1]['content'] += 'Current English source:\\n' + source\n        return json.dumps(messages, ensure_ascii=False)\n\n\ndef run_pair(service, cases):\n    \"\"\"두 입력을 ID별로 생성하고 기존 복원·검증 뒤 실패 입력만 개별 재처리한다.\n\n    :param service: 기존 Qwen 모델과 샘플링을 사용하는 기록용 서비스.\n    :param cases: 현재 원문과 앞 영어 문맥이 있는 두 사례.\n    :return: 원시 생성·분리·검증·개별 재처리와 전체 초를 포함한 사전.\n    \"\"\"\n    started = perf_counter()\n    items = []\n    for index, case in enumerate(cases):\n        messages = json.loads(service._build_prompt(case['text'], case['context']))\n        previous = select_context(case['text'], case['context'])\n        items.append({'id': index, 'previous_english_context': previous,\n                      'current_source_with_instructions': messages[1]['content']})\n    system = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n    user = ('Translate each item separately. Previous English context is background only. '\n            'Return exactly two lines in ID order, starting with [0] and [1]. '\n            'Each line must contain only that item ID and its Korean translation. '\n            'Do not merge items or translate the item instructions.\\n\\n' +\n            json.dumps(items, ensure_ascii=False))\n    prompt = json.dumps([{'role': 'system', 'content': system},\n                         {'role': 'user', 'content': user}], ensure_ascii=False)\n    service.recorded = []\n    row = {'prompt': json.loads(prompt), 'items': cases, 'results': []}\n    tokens = service.tokenizer.encode(prompt)\n    row['input_tokens'] = len(tokens)\n    parsed, generation_error = {}, None\n    if len(tokens) + 256 > 2048:\n        generation_error = 'input_limit'\n    else:\n        output = service._generate_output(prompt, 256)\n        row['generated'] = output\n        if output['stop_reason'] or output['finish_reason'] == 'length':\n            generation_error = output['stop_reason'] or 'token_limit'\n        else:\n            lines = output['text'].strip().splitlines()\n            matches = [re.fullmatch(r'\\[(\\d+)\\]\\s+(.+)', line.strip()) for line in lines]\n            if len(matches) != 2 or any(match is None for match in matches):\n                generation_error = 'item_format'\n            elif [int(match[1]) for match in matches] != [0, 1]:\n                generation_error = 'item_ids'\n            else:\n                parsed = {int(match[1]): match[2] for match in matches}\n    row['attempts'] = list(service.recorded)\n    for index, case in enumerate(cases):\n        candidate = parsed.get(index, '')\n        reason = generation_error\n        if reason is None:\n            candidate, reason = service._restore_translation(service._clean_translation(candidate), case['text'])\n            reason = reason or service._rejection_reason(candidate, case['text'], case['context'])\n        item = {'id': case['id'], 'batch_translation': candidate,\n                'batch_rejection_reason': reason, 'fallback': None}\n        if reason:\n            item['fallback'] = run_qwen(service, case)\n            item['translation'] = item['fallback']['translation']\n            item['accepted'] = item['fallback']['accepted']\n        else:\n            item.update(translation=candidate, accepted=True)\n        row['results'].append(item)\n    row['seconds'] = perf_counter() - started\n    return row\n\n\ndef main():\n    \"\"\"한 조건을 동일 워밍업 뒤 실행하고 새 경로에 원시 결과를 보존한다.\n\n    :return: None. 평가 파일을 생성하며 운영 코드는 변경하지 않는다.\n    \"\"\"\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'batch', 'prefix'), required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    args = parser.parse_args()\n    if args.output.exists():\n        raise FileExistsError(args.output)\n    cases = [load_cases()[i] for i in INDICES]\n    cls = PrefixCandidate if args.mode == 'prefix' else RecordingQwen\n    service = cls('http://translator:8080', ROOT / 'templates/korean.json', cache_prompt=False)\n    report = {'mode': args.mode, 'indices': INDICES, 'source': Path(__file__).read_text(),\n              'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'results': [], 'limits': ['Four fixed development cases only; no held-out accuracy claim.',\n               'Batch fallback may use one group generation plus two individual attempts.',\n               'No STT, upload or subtitle timing; no runtime or API implementation change.']}\n    try:\n        report['warmup'] = run_qwen(service, {'text': 'This is the initial mass.', 'context': ''})\n        service.cache_prompt = True\n        started = perf_counter()\n        if args.mode == 'batch':\n            for index in (0, 2):\n                report['results'].append(run_pair(service, cases[index:index+2]))\n        else:\n            for case in cases:\n                report['results'].append({**case, **run_qwen(service, case)})\n        report['seconds'] = perf_counter() - started\n        with args.output.open('x') as stream:\n            json.dump(report, stream, ensure_ascii=False, indent=2)\n        print(json.dumps({'mode': args.mode, 'seconds': report['seconds']}), flush=True)\n    finally:\n        service.close()\n\n\nif __name__ == '__main__':\n    main()\n",
+        "source_sha256": "6d773bb2ab52b75501aac0a295a147f03349658735f170b6f9f53ec7bea1dc46",
+        "results": [
+          {
+            "id": "rocket-8",
+            "suite": "rocket",
+            "text": "And for the mass, we have mr prime equals m0.",
+            "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+            "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+              "prompt_tokens": 255,
+              "generated_tokens": 16,
+              "elapsed_seconds": 1.680899042999954
+            },
+            "seconds": 1.68118079299893,
+            "attempts": [
+              {
+                "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+                "server_timings": {
+                  "cache_n": 208,
+                  "prompt_n": 47,
+                  "prompt_ms": 816.822,
+                  "prompt_per_token_ms": 17.379191489361702,
+                  "prompt_per_second": 57.540076050840945,
+                  "predicted_n": 16,
+                  "predicted_ms": 834.129,
+                  "predicted_per_token_ms": 55.6086,
+                  "predicted_per_second": 17.982829993921804
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 1.6806728759984253,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 255,
+                "max_tokens": 128,
+                "raw_output_tokens": 16,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-9",
+            "suite": "rocket",
+            "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+            "context": "And for the mass, we have mr prime equals m0.",
+            "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+            "accepted": true,
+            "response": {
+              "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+              "prompt_tokens": 396,
+              "generated_tokens": 54,
+              "elapsed_seconds": 6.258919378000428
+            },
+            "seconds": 6.259247502999642,
+            "attempts": [
+              {
+                "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+                "server_timings": {
+                  "cache_n": 181,
+                  "prompt_n": 215,
+                  "prompt_ms": 4013.488,
+                  "prompt_per_token_ms": 18.667386046511627,
+                  "prompt_per_second": 53.569364104240506,
+                  "predicted_n": 54,
+                  "predicted_ms": 2223.006,
+                  "predicted_per_token_ms": 41.94350943396226,
+                  "predicted_per_second": 23.84159107082932
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 6.258787419999862,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 396,
+                "max_tokens": 128,
+                "raw_output_tokens": 54,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-12",
+            "suite": "rocket",
+            "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "context": "All right, so let's do that.",
+            "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+              "prompt_tokens": 401,
+              "generated_tokens": 46,
+              "elapsed_seconds": 5.307860753000568
+            },
+            "seconds": 5.3081289189976815,
+            "attempts": [
+              {
+                "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                "server_timings": {
+                  "cache_n": 233,
+                  "prompt_n": 168,
+                  "prompt_ms": 3042.974,
+                  "prompt_per_token_ms": 18.112940476190477,
+                  "prompt_per_second": 55.209147367016605,
+                  "predicted_n": 46,
+                  "predicted_ms": 2246.313,
+                  "predicted_per_token_ms": 49.91806666666667,
+                  "predicted_per_second": 20.032827126050556
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 5.307692460999533,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 401,
+                "max_tokens": 128,
+                "raw_output_tokens": 46,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-13",
+            "suite": "rocket",
+            "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+            "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+              "prompt_tokens": 421,
+              "generated_tokens": 45,
+              "elapsed_seconds": 5.756157128002087
+            },
+            "seconds": 5.756433503000153,
+            "attempts": [
+              {
+                "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+                "server_timings": {
+                  "cache_n": 233,
+                  "prompt_n": 188,
+                  "prompt_ms": 3588.294,
+                  "prompt_per_token_ms": 19.086670212765956,
+                  "prompt_per_second": 52.39258544589714,
+                  "predicted_n": 45,
+                  "predicted_ms": 2151.676,
+                  "predicted_per_token_ms": 48.90172727272727,
+                  "predicted_per_second": 20.449175433476043
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 5.756075168999814,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 421,
+                "max_tokens": 128,
+                "raw_output_tokens": 45,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          }
+        ],
+        "limits": [
+          "Four fixed development cases only; no held-out accuracy claim.",
+          "Batch fallback may use one group generation plus two individual attempts.",
+          "No STT, upload or subtitle timing; no runtime or API implementation change."
+        ],
+        "warmup": {
+          "translation": "이것은 초기 질량입니다.",
+          "accepted": true,
+          "response": {
+            "translation": "이것은 초기 질량입니다.",
+            "prompt_tokens": 227,
+            "generated_tokens": 9,
+            "elapsed_seconds": 7.1345037530008995
+          },
+          "seconds": 7.1346729199976835,
+          "attempts": [
+            {
+              "raw_output": "이것은 초기 질량입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 227,
+                "prompt_ms": 6465.53,
+                "prompt_per_token_ms": 28.48251101321586,
+                "prompt_per_second": 35.10926405105227,
+                "predicted_n": 9,
+                "predicted_ms": 609.197,
+                "predicted_per_token_ms": 76.149625,
+                "predicted_per_second": 13.1320410310622
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "event": "translation_attempt",
+              "request_id": "-",
+              "segment_index": null,
+              "elapsed_seconds": 7.1344113779996405,
+              "status": "ok",
+              "attempt": 1,
+              "prompt_tokens": 227,
+              "max_tokens": 128,
+              "raw_output_tokens": 9,
+              "finish_reason": "stop",
+              "rejection_reason": null,
+              "accepted": true
+            }
+          ]
+        },
+        "seconds": 19.005083467000077
+      }
+    },
+    {
+      "label": "run2-batch",
+      "mode": "batch",
+      "exit_code": 0,
+      "stdout": "{\"mode\": \"batch\", \"seconds\": 32.21457009799997}\n",
+      "stderr": "",
+      "report": {
+        "mode": "batch",
+        "indices": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "source": "\"\"\"고정 개발 문장 네 개로 번역 두 문장 묶음과 고정 접두부 캐시 후보를 비교한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nfrom time import perf_counter\n\nfrom scripts.evaluate_cpu_translation_models import RecordingQwen, load_cases, run_qwen\nfrom app.services.translation_qwen import FORMAL_STYLE, INSTRUCTION, CONTEXT_INSTRUCTION\nfrom app.services.translation_inputs import select_context\n\nROOT = Path('/app')\nINDICES = (8, 9, 12, 13)\n\n\nclass PrefixCandidate(RecordingQwen):\n    \"\"\"기존 지시는 보존하되 변하는 문맥을 사용자 메시지 뒤쪽에 분리한다.\"\"\"\n\n    def _build_prompt(self, text, context, retry=False):\n        \"\"\"고정 시스템 지시와 사용자 지시 다음에 참고 문맥과 현재 원문을 둔다.\n\n        :param text: 현재 영어 원문.\n        :param context: 앞 영어 원문.\n        :param retry: 기존 재시도 지시 유지 여부.\n        :return: 후보 채팅 메시지 JSON.\n        \"\"\"\n        messages = json.loads(super()._build_prompt(text, context, retry))\n        instruction, source = messages[1]['content'].rsplit('\\n\\n', 1)\n        previous = select_context(text, context)\n        messages[0]['content'] = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n        messages[1]['content'] = instruction + '\\n\\n'\n        if previous:\n            messages[1]['content'] += 'Previous English context:\\n' + previous + '\\n\\n'\n        messages[1]['content'] += 'Current English source:\\n' + source\n        return json.dumps(messages, ensure_ascii=False)\n\n\ndef run_pair(service, cases):\n    \"\"\"두 입력을 ID별로 생성하고 기존 복원·검증 뒤 실패 입력만 개별 재처리한다.\n\n    :param service: 기존 Qwen 모델과 샘플링을 사용하는 기록용 서비스.\n    :param cases: 현재 원문과 앞 영어 문맥이 있는 두 사례.\n    :return: 원시 생성·분리·검증·개별 재처리와 전체 초를 포함한 사전.\n    \"\"\"\n    started = perf_counter()\n    items = []\n    for index, case in enumerate(cases):\n        messages = json.loads(service._build_prompt(case['text'], case['context']))\n        previous = select_context(case['text'], case['context'])\n        items.append({'id': index, 'previous_english_context': previous,\n                      'current_source_with_instructions': messages[1]['content']})\n    system = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n    user = ('Translate each item separately. Previous English context is background only. '\n            'Return exactly two lines in ID order, starting with [0] and [1]. '\n            'Each line must contain only that item ID and its Korean translation. '\n            'Do not merge items or translate the item instructions.\\n\\n' +\n            json.dumps(items, ensure_ascii=False))\n    prompt = json.dumps([{'role': 'system', 'content': system},\n                         {'role': 'user', 'content': user}], ensure_ascii=False)\n    service.recorded = []\n    row = {'prompt': json.loads(prompt), 'items': cases, 'results': []}\n    tokens = service.tokenizer.encode(prompt)\n    row['input_tokens'] = len(tokens)\n    parsed, generation_error = {}, None\n    if len(tokens) + 256 > 2048:\n        generation_error = 'input_limit'\n    else:\n        output = service._generate_output(prompt, 256)\n        row['generated'] = output\n        if output['stop_reason'] or output['finish_reason'] == 'length':\n            generation_error = output['stop_reason'] or 'token_limit'\n        else:\n            lines = output['text'].strip().splitlines()\n            matches = [re.fullmatch(r'\\[(\\d+)\\]\\s+(.+)', line.strip()) for line in lines]\n            if len(matches) != 2 or any(match is None for match in matches):\n                generation_error = 'item_format'\n            elif [int(match[1]) for match in matches] != [0, 1]:\n                generation_error = 'item_ids'\n            else:\n                parsed = {int(match[1]): match[2] for match in matches}\n    row['attempts'] = list(service.recorded)\n    for index, case in enumerate(cases):\n        candidate = parsed.get(index, '')\n        reason = generation_error\n        if reason is None:\n            candidate, reason = service._restore_translation(service._clean_translation(candidate), case['text'])\n            reason = reason or service._rejection_reason(candidate, case['text'], case['context'])\n        item = {'id': case['id'], 'batch_translation': candidate,\n                'batch_rejection_reason': reason, 'fallback': None}\n        if reason:\n            item['fallback'] = run_qwen(service, case)\n            item['translation'] = item['fallback']['translation']\n            item['accepted'] = item['fallback']['accepted']\n        else:\n            item.update(translation=candidate, accepted=True)\n        row['results'].append(item)\n    row['seconds'] = perf_counter() - started\n    return row\n\n\ndef main():\n    \"\"\"한 조건을 동일 워밍업 뒤 실행하고 새 경로에 원시 결과를 보존한다.\n\n    :return: None. 평가 파일을 생성하며 운영 코드는 변경하지 않는다.\n    \"\"\"\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'batch', 'prefix'), required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    args = parser.parse_args()\n    if args.output.exists():\n        raise FileExistsError(args.output)\n    cases = [load_cases()[i] for i in INDICES]\n    cls = PrefixCandidate if args.mode == 'prefix' else RecordingQwen\n    service = cls('http://translator:8080', ROOT / 'templates/korean.json', cache_prompt=False)\n    report = {'mode': args.mode, 'indices': INDICES, 'source': Path(__file__).read_text(),\n              'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'results': [], 'limits': ['Four fixed development cases only; no held-out accuracy claim.',\n               'Batch fallback may use one group generation plus two individual attempts.',\n               'No STT, upload or subtitle timing; no runtime or API implementation change.']}\n    try:\n        report['warmup'] = run_qwen(service, {'text': 'This is the initial mass.', 'context': ''})\n        service.cache_prompt = True\n        started = perf_counter()\n        if args.mode == 'batch':\n            for index in (0, 2):\n                report['results'].append(run_pair(service, cases[index:index+2]))\n        else:\n            for case in cases:\n                report['results'].append({**case, **run_qwen(service, case)})\n        report['seconds'] = perf_counter() - started\n        with args.output.open('x') as stream:\n            json.dump(report, stream, ensure_ascii=False, indent=2)\n        print(json.dumps({'mode': args.mode, 'seconds': report['seconds']}), flush=True)\n    finally:\n        service.close()\n\n\nif __name__ == '__main__':\n    main()\n",
+        "source_sha256": "6d773bb2ab52b75501aac0a295a147f03349658735f170b6f9f53ec7bea1dc46",
+        "results": [
+          {
+            "prompt": [
+              {
+                "role": "system",
+                "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. "
+              },
+              {
+                "role": "user",
+                "content": "Translate each item separately. Previous English context is background only. Return exactly two lines in ID order, starting with [0] and [1]. Each line must contain only that item ID and its Korean translation. Do not merge items or translate the item instructions.\n\n[{\"id\": 0, \"previous_english_context\": \"\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Copy each [MATH_*] placeholder exactly once, in order. Use a complete Korean sentence around it. Terminology: mass=질량.\\n\\nAnd for the mass, we have [MATH_A].\"}, {\"id\": 1, \"previous_english_context\": \"And for the mass, we have mr prime equals m0.\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: fuel mass=연료 질량; dry mass=건조 질량; mass=질량.\\n\\nActually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.\"}]"
+              }
+            ],
+            "items": [
+              {
+                "id": "rocket-8",
+                "suite": "rocket",
+                "text": "And for the mass, we have mr prime equals m0.",
+                "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t."
+              },
+              {
+                "id": "rocket-9",
+                "suite": "rocket",
+                "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+                "context": "And for the mass, we have mr prime equals m0."
+              }
+            ],
+            "results": [
+              {
+                "id": "rocket-8",
+                "batch_translation": "그리고 질량은 mR′ = m0입니다.",
+                "batch_rejection_reason": null,
+                "fallback": null,
+                "translation": "그리고 질량은 mR′ = m0입니다.",
+                "accepted": true
+              },
+              {
+                "id": "rocket-9",
+                "batch_translation": "실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+                "batch_rejection_reason": null,
+                "fallback": null,
+                "translation": "실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+                "accepted": true
+              }
+            ],
+            "input_tokens": 555,
+            "generated": {
+              "text": "[0] 그리고 질량은 [MATH_A]입니다.  \n[1] 실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+              "tokens": 63,
+              "finish_reason": "stop",
+              "stop_reason": null
+            },
+            "attempts": [
+              {
+                "raw_output": "[0] 그리고 질량은 [MATH_A]입니다.  \n[1] 실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+                "server_timings": {
+                  "cache_n": 181,
+                  "prompt_n": 374,
+                  "prompt_ms": 7325.288,
+                  "prompt_per_token_ms": 19.58633155080214,
+                  "prompt_per_second": 51.05601308781307,
+                  "predicted_n": 63,
+                  "predicted_ms": 2700.699,
+                  "predicted_per_token_ms": 43.55966129032258,
+                  "predicted_per_second": 22.957019645654697
+                }
+              }
+            ],
+            "seconds": 10.050353296002868
+          },
+          {
+            "prompt": [
+              {
+                "role": "system",
+                "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. "
+              },
+              {
+                "role": "user",
+                "content": "Translate each item separately. Previous English context is background only. Return exactly two lines in ID order, starting with [0] and [1]. Each line must contain only that item ID and its Korean translation. Do not merge items or translate the item instructions.\n\n[{\"id\": 0, \"previous_english_context\": \"All right, so let's do that.\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, v0, m, ln, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: integrated=적분. Preserve these source relations: u1/(m); division by 2m0 (do not infer the numerator).\\n\\nWe're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.\"}, {\"id\": 1, \"previous_english_context\": \"We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, t, v0, u, ln, mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Preserve these source relations: vR(t) (function value, not multiplication); mR/(2m0).\\n\\nAnd we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.\"}]"
+              }
+            ],
+            "items": [
+              {
+                "id": "rocket-12",
+                "suite": "rocket",
+                "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+                "context": "All right, so let's do that."
+              },
+              {
+                "id": "rocket-13",
+                "suite": "rocket",
+                "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+                "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0."
+              }
+            ],
+            "results": [
+              {
+                "id": "rocket-12",
+                "batch_translation": "우리는 vr 차 v0이 m에 대한 u1의 적분을 통해 ln을 얻고, 그 후 여기서 2m0으로 나누는 것을 즉시 수행합니다.",
+                "batch_rejection_reason": "missing_math_division",
+                "fallback": {
+                  "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                  "accepted": true,
+                  "response": {
+                    "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                    "prompt_tokens": 401,
+                    "generated_tokens": 46,
+                    "elapsed_seconds": 5.396840210996743
+                  },
+                  "seconds": 5.39737212700129,
+                  "attempts": [
+                    {
+                      "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                      "server_timings": {
+                        "cache_n": 228,
+                        "prompt_n": 173,
+                        "prompt_ms": 3198.035,
+                        "prompt_per_token_ms": 18.485751445086706,
+                        "prompt_per_second": 54.09571815192767,
+                        "predicted_n": 46,
+                        "predicted_ms": 2181.237,
+                        "predicted_per_token_ms": 48.47193333333333,
+                        "predicted_per_second": 20.63049544822502
+                      }
+                    }
+                  ],
+                  "decisions": [
+                    {
+                      "event": "translation_attempt",
+                      "request_id": "-",
+                      "segment_index": null,
+                      "elapsed_seconds": 5.396276919997035,
+                      "status": "ok",
+                      "attempt": 1,
+                      "prompt_tokens": 401,
+                      "max_tokens": 128,
+                      "raw_output_tokens": 46,
+                      "finish_reason": "stop",
+                      "rejection_reason": null,
+                      "accepted": true
+                    }
+                  ]
+                },
+                "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                "accepted": true
+              },
+              {
+                "id": "rocket-13",
+                "batch_translation": "결국 이 결과를 원하므로, 물론 이는 t에 대한 vr의 값이며, v0에 u ln mr over 2m0을 더합니다.",
+                "batch_rejection_reason": "untranslated_math_operator",
+                "fallback": {
+                  "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+                  "accepted": true,
+                  "response": {
+                    "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+                    "prompt_tokens": 421,
+                    "generated_tokens": 45,
+                    "elapsed_seconds": 5.602523711000686
+                  },
+                  "seconds": 5.602750336001918,
+                  "attempts": [
+                    {
+                      "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+                      "server_timings": {
+                        "cache_n": 233,
+                        "prompt_n": 188,
+                        "prompt_ms": 3495.31,
+                        "prompt_per_token_ms": 18.592074468085105,
+                        "prompt_per_second": 53.78635943592987,
+                        "predicted_n": 45,
+                        "predicted_ms": 2096.466,
+                        "predicted_per_token_ms": 47.64695454545454,
+                        "predicted_per_second": 20.98770025366498
+                      }
+                    }
+                  ],
+                  "decisions": [
+                    {
+                      "event": "translation_attempt",
+                      "request_id": "-",
+                      "segment_index": null,
+                      "elapsed_seconds": 5.602434794000146,
+                      "status": "ok",
+                      "attempt": 1,
+                      "prompt_tokens": 421,
+                      "max_tokens": 128,
+                      "raw_output_tokens": 45,
+                      "finish_reason": "stop",
+                      "rejection_reason": null,
+                      "accepted": true
+                    }
+                  ]
+                },
+                "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+                "accepted": true
+              }
+            ],
+            "input_tokens": 674,
+            "generated": {
+              "text": "[0] 우리는 vr 차 v0이 m에 대한 u1의 적분을 통해 ln을 얻고, 그 후 여기서 2m0으로 나누는 것을 즉시 수행합니다.  \n[1] 결국 이 결과를 원하므로, 물론 이는 t에 대한 vr의 값이며, v0에 u ln mr over 2m0을 더합니다.",
+              "tokens": 82,
+              "finish_reason": "stop",
+              "stop_reason": null
+            },
+            "attempts": [
+              {
+                "raw_output": "[0] 우리는 vr 차 v0이 m에 대한 u1의 적분을 통해 ln을 얻고, 그 후 여기서 2m0으로 나누는 것을 즉시 수행합니다.  \n[1] 결국 이 결과를 원하므로, 물론 이는 t에 대한 vr의 값이며, v0에 u ln mr over 2m0을 더합니다.",
+                "server_timings": {
+                  "cache_n": 299,
+                  "prompt_n": 375,
+                  "prompt_ms": 7206.167,
+                  "prompt_per_token_ms": 19.216445333333333,
+                  "prompt_per_second": 52.03876068928182,
+                  "predicted_n": 82,
+                  "predicted_ms": 3932.426,
+                  "predicted_per_token_ms": 48.54846913580247,
+                  "predicted_per_second": 20.597971837232283
+                }
+              }
+            ],
+            "seconds": 22.16407946899926
+          }
+        ],
+        "limits": [
+          "Four fixed development cases only; no held-out accuracy claim.",
+          "Batch fallback may use one group generation plus two individual attempts.",
+          "No STT, upload or subtitle timing; no runtime or API implementation change."
+        ],
+        "warmup": {
+          "translation": "이것은 초기 질량입니다.",
+          "accepted": true,
+          "response": {
+            "translation": "이것은 초기 질량입니다.",
+            "prompt_tokens": 227,
+            "generated_tokens": 9,
+            "elapsed_seconds": 5.010379751998698
+          },
+          "seconds": 5.010455668998475,
+          "attempts": [
+            {
+              "raw_output": "이것은 초기 질량입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 227,
+                "prompt_ms": 4552.465,
+                "prompt_per_token_ms": 20.05491189427313,
+                "prompt_per_second": 49.86309614681277,
+                "predicted_n": 9,
+                "predicted_ms": 438.763,
+                "predicted_per_token_ms": 54.845375,
+                "predicted_per_second": 18.233077994270257
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "event": "translation_attempt",
+              "request_id": "-",
+              "segment_index": null,
+              "elapsed_seconds": 5.010297543998604,
+              "status": "ok",
+              "attempt": 1,
+              "prompt_tokens": 227,
+              "max_tokens": 128,
+              "raw_output_tokens": 9,
+              "finish_reason": "stop",
+              "rejection_reason": null,
+              "accepted": true
+            }
+          ]
+        },
+        "seconds": 32.21457009799997
+      }
+    },
+    {
+      "label": "run3-prefix",
+      "mode": "prefix",
+      "exit_code": 0,
+      "stdout": "{\"mode\": \"prefix\", \"seconds\": 16.277919382999244}\n",
+      "stderr": "",
+      "report": {
+        "mode": "prefix",
+        "indices": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "source": "\"\"\"고정 개발 문장 네 개로 번역 두 문장 묶음과 고정 접두부 캐시 후보를 비교한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nfrom time import perf_counter\n\nfrom scripts.evaluate_cpu_translation_models import RecordingQwen, load_cases, run_qwen\nfrom app.services.translation_qwen import FORMAL_STYLE, INSTRUCTION, CONTEXT_INSTRUCTION\nfrom app.services.translation_inputs import select_context\n\nROOT = Path('/app')\nINDICES = (8, 9, 12, 13)\n\n\nclass PrefixCandidate(RecordingQwen):\n    \"\"\"기존 지시는 보존하되 변하는 문맥을 사용자 메시지 뒤쪽에 분리한다.\"\"\"\n\n    def _build_prompt(self, text, context, retry=False):\n        \"\"\"고정 시스템 지시와 사용자 지시 다음에 참고 문맥과 현재 원문을 둔다.\n\n        :param text: 현재 영어 원문.\n        :param context: 앞 영어 원문.\n        :param retry: 기존 재시도 지시 유지 여부.\n        :return: 후보 채팅 메시지 JSON.\n        \"\"\"\n        messages = json.loads(super()._build_prompt(text, context, retry))\n        instruction, source = messages[1]['content'].rsplit('\\n\\n', 1)\n        previous = select_context(text, context)\n        messages[0]['content'] = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n        messages[1]['content'] = instruction + '\\n\\n'\n        if previous:\n            messages[1]['content'] += 'Previous English context:\\n' + previous + '\\n\\n'\n        messages[1]['content'] += 'Current English source:\\n' + source\n        return json.dumps(messages, ensure_ascii=False)\n\n\ndef run_pair(service, cases):\n    \"\"\"두 입력을 ID별로 생성하고 기존 복원·검증 뒤 실패 입력만 개별 재처리한다.\n\n    :param service: 기존 Qwen 모델과 샘플링을 사용하는 기록용 서비스.\n    :param cases: 현재 원문과 앞 영어 문맥이 있는 두 사례.\n    :return: 원시 생성·분리·검증·개별 재처리와 전체 초를 포함한 사전.\n    \"\"\"\n    started = perf_counter()\n    items = []\n    for index, case in enumerate(cases):\n        messages = json.loads(service._build_prompt(case['text'], case['context']))\n        previous = select_context(case['text'], case['context'])\n        items.append({'id': index, 'previous_english_context': previous,\n                      'current_source_with_instructions': messages[1]['content']})\n    system = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n    user = ('Translate each item separately. Previous English context is background only. '\n            'Return exactly two lines in ID order, starting with [0] and [1]. '\n            'Each line must contain only that item ID and its Korean translation. '\n            'Do not merge items or translate the item instructions.\\n\\n' +\n            json.dumps(items, ensure_ascii=False))\n    prompt = json.dumps([{'role': 'system', 'content': system},\n                         {'role': 'user', 'content': user}], ensure_ascii=False)\n    service.recorded = []\n    row = {'prompt': json.loads(prompt), 'items': cases, 'results': []}\n    tokens = service.tokenizer.encode(prompt)\n    row['input_tokens'] = len(tokens)\n    parsed, generation_error = {}, None\n    if len(tokens) + 256 > 2048:\n        generation_error = 'input_limit'\n    else:\n        output = service._generate_output(prompt, 256)\n        row['generated'] = output\n        if output['stop_reason'] or output['finish_reason'] == 'length':\n            generation_error = output['stop_reason'] or 'token_limit'\n        else:\n            lines = output['text'].strip().splitlines()\n            matches = [re.fullmatch(r'\\[(\\d+)\\]\\s+(.+)', line.strip()) for line in lines]\n            if len(matches) != 2 or any(match is None for match in matches):\n                generation_error = 'item_format'\n            elif [int(match[1]) for match in matches] != [0, 1]:\n                generation_error = 'item_ids'\n            else:\n                parsed = {int(match[1]): match[2] for match in matches}\n    row['attempts'] = list(service.recorded)\n    for index, case in enumerate(cases):\n        candidate = parsed.get(index, '')\n        reason = generation_error\n        if reason is None:\n            candidate, reason = service._restore_translation(service._clean_translation(candidate), case['text'])\n            reason = reason or service._rejection_reason(candidate, case['text'], case['context'])\n        item = {'id': case['id'], 'batch_translation': candidate,\n                'batch_rejection_reason': reason, 'fallback': None}\n        if reason:\n            item['fallback'] = run_qwen(service, case)\n            item['translation'] = item['fallback']['translation']\n            item['accepted'] = item['fallback']['accepted']\n        else:\n            item.update(translation=candidate, accepted=True)\n        row['results'].append(item)\n    row['seconds'] = perf_counter() - started\n    return row\n\n\ndef main():\n    \"\"\"한 조건을 동일 워밍업 뒤 실행하고 새 경로에 원시 결과를 보존한다.\n\n    :return: None. 평가 파일을 생성하며 운영 코드는 변경하지 않는다.\n    \"\"\"\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'batch', 'prefix'), required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    args = parser.parse_args()\n    if args.output.exists():\n        raise FileExistsError(args.output)\n    cases = [load_cases()[i] for i in INDICES]\n    cls = PrefixCandidate if args.mode == 'prefix' else RecordingQwen\n    service = cls('http://translator:8080', ROOT / 'templates/korean.json', cache_prompt=False)\n    report = {'mode': args.mode, 'indices': INDICES, 'source': Path(__file__).read_text(),\n              'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'results': [], 'limits': ['Four fixed development cases only; no held-out accuracy claim.',\n               'Batch fallback may use one group generation plus two individual attempts.',\n               'No STT, upload or subtitle timing; no runtime or API implementation change.']}\n    try:\n        report['warmup'] = run_qwen(service, {'text': 'This is the initial mass.', 'context': ''})\n        service.cache_prompt = True\n        started = perf_counter()\n        if args.mode == 'batch':\n            for index in (0, 2):\n                report['results'].append(run_pair(service, cases[index:index+2]))\n        else:\n            for case in cases:\n                report['results'].append({**case, **run_qwen(service, case)})\n        report['seconds'] = perf_counter() - started\n        with args.output.open('x') as stream:\n            json.dump(report, stream, ensure_ascii=False, indent=2)\n        print(json.dumps({'mode': args.mode, 'seconds': report['seconds']}), flush=True)\n    finally:\n        service.close()\n\n\nif __name__ == '__main__':\n    main()\n",
+        "source_sha256": "6d773bb2ab52b75501aac0a295a147f03349658735f170b6f9f53ec7bea1dc46",
+        "results": [
+          {
+            "id": "rocket-8",
+            "suite": "rocket",
+            "text": "And for the mass, we have mr prime equals m0.",
+            "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+            "translation": "질량에 대해서는 mR′ = m0입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "질량에 대해서는 mR′ = m0입니다.",
+              "prompt_tokens": 307,
+              "generated_tokens": 13,
+              "elapsed_seconds": 1.62343091799994
+            },
+            "seconds": 1.6237599590022,
+            "attempts": [
+              {
+                "raw_output": "질량에 대해서는 [MATH_A]입니다.",
+                "server_timings": {
+                  "cache_n": 256,
+                  "prompt_n": 51,
+                  "prompt_ms": 1061.076,
+                  "prompt_per_token_ms": 20.805411764705884,
+                  "prompt_per_second": 48.06441762889746,
+                  "predicted_n": 13,
+                  "predicted_ms": 549.094,
+                  "predicted_per_token_ms": 45.75783333333334,
+                  "predicted_per_second": 21.85418161553395
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 1.6233137090021046,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 307,
+                "max_tokens": 128,
+                "raw_output_tokens": 13,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-9",
+            "suite": "rocket",
+            "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+            "context": "And for the mass, we have mr prime equals m0.",
+            "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0이며, 이는 초기 질량을 의미합니다.",
+            "accepted": true,
+            "response": {
+              "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0이며, 이는 초기 질량을 의미합니다.",
+              "prompt_tokens": 400,
+              "generated_tokens": 52,
+              "elapsed_seconds": 4.869562252999458
+            },
+            "seconds": 4.869804876998387,
+            "attempts": [
+              {
+                "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0이며, 이는 초기 질량을 의미합니다.",
+                "server_timings": {
+                  "cache_n": 256,
+                  "prompt_n": 144,
+                  "prompt_ms": 2587.457,
+                  "prompt_per_token_ms": 17.968451388888887,
+                  "prompt_per_second": 55.65309877613426,
+                  "predicted_n": 52,
+                  "predicted_ms": 2272.195,
+                  "predicted_per_token_ms": 44.552843137254904,
+                  "predicted_per_second": 22.445256679114244
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 4.869502335997822,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 400,
+                "max_tokens": 128,
+                "raw_output_tokens": 52,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-12",
+            "suite": "rocket",
+            "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "context": "All right, so let's do that.",
+            "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+              "prompt_tokens": 405,
+              "generated_tokens": 46,
+              "elapsed_seconds": 4.636413210999308
+            },
+            "seconds": 4.636633709997113,
+            "attempts": [
+              {
+                "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                "server_timings": {
+                  "cache_n": 261,
+                  "prompt_n": 144,
+                  "prompt_ms": 2635.28,
+                  "prompt_per_token_ms": 18.300555555555558,
+                  "prompt_per_second": 54.64314987401718,
+                  "predicted_n": 46,
+                  "predicted_ms": 1986.145,
+                  "predicted_per_token_ms": 44.13655555555555,
+                  "predicted_per_second": 22.656956063127314
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 4.63636237800165,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 405,
+                "max_tokens": 128,
+                "raw_output_tokens": 46,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-13",
+            "suite": "rocket",
+            "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+            "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "translation": "그리고 결국 우리가 원하는 것은 이 식입니다. 따라서 이는 t에 대한 vr의 값이며, 물론 v0에 u ln(mR / 2m0)을 더한 값입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그리고 결국 우리가 원하는 것은 이 식입니다. 따라서 이는 t에 대한 vr의 값이며, 물론 v0에 u ln(mR / 2m0)을 더한 값입니다.",
+              "prompt_tokens": 425,
+              "generated_tokens": 45,
+              "elapsed_seconds": 5.147435961000156
+            },
+            "seconds": 5.147626752001088,
+            "attempts": [
+              {
+                "raw_output": "그리고 결국 우리가 원하는 것은 이 식입니다. 따라서 이는 t에 대한 vr의 값이며, 물론 v0에 u ln(mR / 2m0)을 더한 값입니다.",
+                "server_timings": {
+                  "cache_n": 264,
+                  "prompt_n": 161,
+                  "prompt_ms": 2932.634,
+                  "prompt_per_token_ms": 18.21511801242236,
+                  "prompt_per_second": 54.89945216484566,
+                  "predicted_n": 45,
+                  "predicted_ms": 2203.162,
+                  "predicted_per_token_ms": 50.07186363636363,
+                  "predicted_per_second": 19.971295801216616
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 5.147303210000246,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 425,
+                "max_tokens": 128,
+                "raw_output_tokens": 45,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          }
+        ],
+        "limits": [
+          "Four fixed development cases only; no held-out accuracy claim.",
+          "Batch fallback may use one group generation plus two individual attempts.",
+          "No STT, upload or subtitle timing; no runtime or API implementation change."
+        ],
+        "warmup": {
+          "translation": "이것은 초기 질량입니다.",
+          "accepted": true,
+          "response": {
+            "translation": "이것은 초기 질량입니다.",
+            "prompt_tokens": 279,
+            "generated_tokens": 9,
+            "elapsed_seconds": 6.242965044002631
+          },
+          "seconds": 6.243200168999465,
+          "attempts": [
+            {
+              "raw_output": "이것은 초기 질량입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 279,
+                "prompt_ms": 5340.596,
+                "prompt_per_token_ms": 19.141921146953404,
+                "prompt_per_second": 52.241360327573936,
+                "predicted_n": 9,
+                "predicted_ms": 875.699,
+                "predicted_per_token_ms": 109.462375,
+                "predicted_per_second": 9.135559136187206
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "event": "translation_attempt",
+              "request_id": "-",
+              "segment_index": null,
+              "elapsed_seconds": 6.242678335998789,
+              "status": "ok",
+              "attempt": 1,
+              "prompt_tokens": 279,
+              "max_tokens": 128,
+              "raw_output_tokens": 9,
+              "finish_reason": "stop",
+              "rejection_reason": null,
+              "accepted": true
+            }
+          ]
+        },
+        "seconds": 16.277919382999244
+      }
+    },
+    {
+      "label": "run4-prefix",
+      "mode": "prefix",
+      "exit_code": 0,
+      "stdout": "{\"mode\": \"prefix\", \"seconds\": 16.204309923999972}\n",
+      "stderr": "",
+      "report": {
+        "mode": "prefix",
+        "indices": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "source": "\"\"\"고정 개발 문장 네 개로 번역 두 문장 묶음과 고정 접두부 캐시 후보를 비교한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nfrom time import perf_counter\n\nfrom scripts.evaluate_cpu_translation_models import RecordingQwen, load_cases, run_qwen\nfrom app.services.translation_qwen import FORMAL_STYLE, INSTRUCTION, CONTEXT_INSTRUCTION\nfrom app.services.translation_inputs import select_context\n\nROOT = Path('/app')\nINDICES = (8, 9, 12, 13)\n\n\nclass PrefixCandidate(RecordingQwen):\n    \"\"\"기존 지시는 보존하되 변하는 문맥을 사용자 메시지 뒤쪽에 분리한다.\"\"\"\n\n    def _build_prompt(self, text, context, retry=False):\n        \"\"\"고정 시스템 지시와 사용자 지시 다음에 참고 문맥과 현재 원문을 둔다.\n\n        :param text: 현재 영어 원문.\n        :param context: 앞 영어 원문.\n        :param retry: 기존 재시도 지시 유지 여부.\n        :return: 후보 채팅 메시지 JSON.\n        \"\"\"\n        messages = json.loads(super()._build_prompt(text, context, retry))\n        instruction, source = messages[1]['content'].rsplit('\\n\\n', 1)\n        previous = select_context(text, context)\n        messages[0]['content'] = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n        messages[1]['content'] = instruction + '\\n\\n'\n        if previous:\n            messages[1]['content'] += 'Previous English context:\\n' + previous + '\\n\\n'\n        messages[1]['content'] += 'Current English source:\\n' + source\n        return json.dumps(messages, ensure_ascii=False)\n\n\ndef run_pair(service, cases):\n    \"\"\"두 입력을 ID별로 생성하고 기존 복원·검증 뒤 실패 입력만 개별 재처리한다.\n\n    :param service: 기존 Qwen 모델과 샘플링을 사용하는 기록용 서비스.\n    :param cases: 현재 원문과 앞 영어 문맥이 있는 두 사례.\n    :return: 원시 생성·분리·검증·개별 재처리와 전체 초를 포함한 사전.\n    \"\"\"\n    started = perf_counter()\n    items = []\n    for index, case in enumerate(cases):\n        messages = json.loads(service._build_prompt(case['text'], case['context']))\n        previous = select_context(case['text'], case['context'])\n        items.append({'id': index, 'previous_english_context': previous,\n                      'current_source_with_instructions': messages[1]['content']})\n    system = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n    user = ('Translate each item separately. Previous English context is background only. '\n            'Return exactly two lines in ID order, starting with [0] and [1]. '\n            'Each line must contain only that item ID and its Korean translation. '\n            'Do not merge items or translate the item instructions.\\n\\n' +\n            json.dumps(items, ensure_ascii=False))\n    prompt = json.dumps([{'role': 'system', 'content': system},\n                         {'role': 'user', 'content': user}], ensure_ascii=False)\n    service.recorded = []\n    row = {'prompt': json.loads(prompt), 'items': cases, 'results': []}\n    tokens = service.tokenizer.encode(prompt)\n    row['input_tokens'] = len(tokens)\n    parsed, generation_error = {}, None\n    if len(tokens) + 256 > 2048:\n        generation_error = 'input_limit'\n    else:\n        output = service._generate_output(prompt, 256)\n        row['generated'] = output\n        if output['stop_reason'] or output['finish_reason'] == 'length':\n            generation_error = output['stop_reason'] or 'token_limit'\n        else:\n            lines = output['text'].strip().splitlines()\n            matches = [re.fullmatch(r'\\[(\\d+)\\]\\s+(.+)', line.strip()) for line in lines]\n            if len(matches) != 2 or any(match is None for match in matches):\n                generation_error = 'item_format'\n            elif [int(match[1]) for match in matches] != [0, 1]:\n                generation_error = 'item_ids'\n            else:\n                parsed = {int(match[1]): match[2] for match in matches}\n    row['attempts'] = list(service.recorded)\n    for index, case in enumerate(cases):\n        candidate = parsed.get(index, '')\n        reason = generation_error\n        if reason is None:\n            candidate, reason = service._restore_translation(service._clean_translation(candidate), case['text'])\n            reason = reason or service._rejection_reason(candidate, case['text'], case['context'])\n        item = {'id': case['id'], 'batch_translation': candidate,\n                'batch_rejection_reason': reason, 'fallback': None}\n        if reason:\n            item['fallback'] = run_qwen(service, case)\n            item['translation'] = item['fallback']['translation']\n            item['accepted'] = item['fallback']['accepted']\n        else:\n            item.update(translation=candidate, accepted=True)\n        row['results'].append(item)\n    row['seconds'] = perf_counter() - started\n    return row\n\n\ndef main():\n    \"\"\"한 조건을 동일 워밍업 뒤 실행하고 새 경로에 원시 결과를 보존한다.\n\n    :return: None. 평가 파일을 생성하며 운영 코드는 변경하지 않는다.\n    \"\"\"\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'batch', 'prefix'), required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    args = parser.parse_args()\n    if args.output.exists():\n        raise FileExistsError(args.output)\n    cases = [load_cases()[i] for i in INDICES]\n    cls = PrefixCandidate if args.mode == 'prefix' else RecordingQwen\n    service = cls('http://translator:8080', ROOT / 'templates/korean.json', cache_prompt=False)\n    report = {'mode': args.mode, 'indices': INDICES, 'source': Path(__file__).read_text(),\n              'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'results': [], 'limits': ['Four fixed development cases only; no held-out accuracy claim.',\n               'Batch fallback may use one group generation plus two individual attempts.',\n               'No STT, upload or subtitle timing; no runtime or API implementation change.']}\n    try:\n        report['warmup'] = run_qwen(service, {'text': 'This is the initial mass.', 'context': ''})\n        service.cache_prompt = True\n        started = perf_counter()\n        if args.mode == 'batch':\n            for index in (0, 2):\n                report['results'].append(run_pair(service, cases[index:index+2]))\n        else:\n            for case in cases:\n                report['results'].append({**case, **run_qwen(service, case)})\n        report['seconds'] = perf_counter() - started\n        with args.output.open('x') as stream:\n            json.dump(report, stream, ensure_ascii=False, indent=2)\n        print(json.dumps({'mode': args.mode, 'seconds': report['seconds']}), flush=True)\n    finally:\n        service.close()\n\n\nif __name__ == '__main__':\n    main()\n",
+        "source_sha256": "6d773bb2ab52b75501aac0a295a147f03349658735f170b6f9f53ec7bea1dc46",
+        "results": [
+          {
+            "id": "rocket-8",
+            "suite": "rocket",
+            "text": "And for the mass, we have mr prime equals m0.",
+            "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+            "translation": "질량에 대해서는 mR′ = m0입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "질량에 대해서는 mR′ = m0입니다.",
+              "prompt_tokens": 307,
+              "generated_tokens": 13,
+              "elapsed_seconds": 1.441458541998145
+            },
+            "seconds": 1.4415225420016213,
+            "attempts": [
+              {
+                "raw_output": "질량에 대해서는 [MATH_A]입니다.",
+                "server_timings": {
+                  "cache_n": 256,
+                  "prompt_n": 51,
+                  "prompt_ms": 885.771,
+                  "prompt_per_token_ms": 17.36805882352941,
+                  "prompt_per_second": 57.57695837863286,
+                  "predicted_n": 13,
+                  "predicted_ms": 541.075,
+                  "predicted_per_token_ms": 45.08958333333334,
+                  "predicted_per_second": 22.178071431871736
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 1.441411126001185,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 307,
+                "max_tokens": 128,
+                "raw_output_tokens": 13,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-9",
+            "suite": "rocket",
+            "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+            "context": "And for the mass, we have mr prime equals m0.",
+            "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0이며, 이는 초기 질량을 의미합니다.",
+            "accepted": true,
+            "response": {
+              "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0이며, 이는 초기 질량을 의미합니다.",
+              "prompt_tokens": 400,
+              "generated_tokens": 52,
+              "elapsed_seconds": 4.886614834998909
+            },
+            "seconds": 4.88682171000255,
+            "attempts": [
+              {
+                "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0이며, 이는 초기 질량을 의미합니다.",
+                "server_timings": {
+                  "cache_n": 256,
+                  "prompt_n": 144,
+                  "prompt_ms": 2512.056,
+                  "prompt_per_token_ms": 17.444833333333335,
+                  "prompt_per_second": 57.3235628505097,
+                  "predicted_n": 52,
+                  "predicted_ms": 2365.198,
+                  "predicted_per_token_ms": 46.376431372549014,
+                  "predicted_per_second": 21.562676782239798
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 4.886529834999237,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 400,
+                "max_tokens": 128,
+                "raw_output_tokens": 52,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-12",
+            "suite": "rocket",
+            "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "context": "All right, so let's do that.",
+            "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+              "prompt_tokens": 405,
+              "generated_tokens": 46,
+              "elapsed_seconds": 4.942646252002305
+            },
+            "seconds": 4.942934836002678,
+            "attempts": [
+              {
+                "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                "server_timings": {
+                  "cache_n": 261,
+                  "prompt_n": 144,
+                  "prompt_ms": 2746.7,
+                  "prompt_per_token_ms": 19.074305555555554,
+                  "prompt_per_second": 52.42654822150217,
+                  "predicted_n": 46,
+                  "predicted_ms": 2182.086,
+                  "predicted_per_token_ms": 48.49079999999999,
+                  "predicted_per_second": 20.622468591980336
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 4.9425866269994,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 405,
+                "max_tokens": 128,
+                "raw_output_tokens": 46,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-13",
+            "suite": "rocket",
+            "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+            "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "translation": "그리고 결국 우리가 원하는 것은 이 식입니다. 따라서 이는 t에 대한 vr의 값이며, 물론 v0에 u ln(mR / 2m0)을 더한 값입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그리고 결국 우리가 원하는 것은 이 식입니다. 따라서 이는 t에 대한 vr의 값이며, 물론 v0에 u ln(mR / 2m0)을 더한 값입니다.",
+              "prompt_tokens": 425,
+              "generated_tokens": 45,
+              "elapsed_seconds": 4.932729169002414
+            },
+            "seconds": 4.93299350199959,
+            "attempts": [
+              {
+                "raw_output": "그리고 결국 우리가 원하는 것은 이 식입니다. 따라서 이는 t에 대한 vr의 값이며, 물론 v0에 u ln(mR / 2m0)을 더한 값입니다.",
+                "server_timings": {
+                  "cache_n": 264,
+                  "prompt_n": 161,
+                  "prompt_ms": 2832.402,
+                  "prompt_per_token_ms": 17.59255900621118,
+                  "prompt_per_second": 56.842213781800744,
+                  "predicted_n": 45,
+                  "predicted_ms": 2084.052,
+                  "predicted_per_token_ms": 47.36481818181819,
+                  "predicted_per_second": 21.112716957158458
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 4.932509252001182,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 425,
+                "max_tokens": 128,
+                "raw_output_tokens": 45,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          }
+        ],
+        "limits": [
+          "Four fixed development cases only; no held-out accuracy claim.",
+          "Batch fallback may use one group generation plus two individual attempts.",
+          "No STT, upload or subtitle timing; no runtime or API implementation change."
+        ],
+        "warmup": {
+          "translation": "이것은 초기 질량입니다.",
+          "accepted": true,
+          "response": {
+            "translation": "이것은 초기 질량입니다.",
+            "prompt_tokens": 279,
+            "generated_tokens": 9,
+            "elapsed_seconds": 5.214332627001568
+          },
+          "seconds": 5.21440750200054,
+          "attempts": [
+            {
+              "raw_output": "이것은 초기 질량입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 279,
+                "prompt_ms": 4664.8,
+                "prompt_per_token_ms": 16.719713261648746,
+                "prompt_per_second": 59.80963814097067,
+                "predicted_n": 9,
+                "predicted_ms": 532.255,
+                "predicted_per_token_ms": 66.531875,
+                "predicted_per_second": 15.030389568909639
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "event": "translation_attempt",
+              "request_id": "-",
+              "segment_index": null,
+              "elapsed_seconds": 5.214098960001138,
+              "status": "ok",
+              "attempt": 1,
+              "prompt_tokens": 279,
+              "max_tokens": 128,
+              "raw_output_tokens": 9,
+              "finish_reason": "stop",
+              "rejection_reason": null,
+              "accepted": true
+            }
+          ]
+        },
+        "seconds": 16.204309923999972
+      }
+    },
+    {
+      "label": "run5-batch",
+      "mode": "batch",
+      "exit_code": 0,
+      "stdout": "{\"mode\": \"batch\", \"seconds\": 34.75923305700053}\n",
+      "stderr": "",
+      "report": {
+        "mode": "batch",
+        "indices": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "source": "\"\"\"고정 개발 문장 네 개로 번역 두 문장 묶음과 고정 접두부 캐시 후보를 비교한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nfrom time import perf_counter\n\nfrom scripts.evaluate_cpu_translation_models import RecordingQwen, load_cases, run_qwen\nfrom app.services.translation_qwen import FORMAL_STYLE, INSTRUCTION, CONTEXT_INSTRUCTION\nfrom app.services.translation_inputs import select_context\n\nROOT = Path('/app')\nINDICES = (8, 9, 12, 13)\n\n\nclass PrefixCandidate(RecordingQwen):\n    \"\"\"기존 지시는 보존하되 변하는 문맥을 사용자 메시지 뒤쪽에 분리한다.\"\"\"\n\n    def _build_prompt(self, text, context, retry=False):\n        \"\"\"고정 시스템 지시와 사용자 지시 다음에 참고 문맥과 현재 원문을 둔다.\n\n        :param text: 현재 영어 원문.\n        :param context: 앞 영어 원문.\n        :param retry: 기존 재시도 지시 유지 여부.\n        :return: 후보 채팅 메시지 JSON.\n        \"\"\"\n        messages = json.loads(super()._build_prompt(text, context, retry))\n        instruction, source = messages[1]['content'].rsplit('\\n\\n', 1)\n        previous = select_context(text, context)\n        messages[0]['content'] = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n        messages[1]['content'] = instruction + '\\n\\n'\n        if previous:\n            messages[1]['content'] += 'Previous English context:\\n' + previous + '\\n\\n'\n        messages[1]['content'] += 'Current English source:\\n' + source\n        return json.dumps(messages, ensure_ascii=False)\n\n\ndef run_pair(service, cases):\n    \"\"\"두 입력을 ID별로 생성하고 기존 복원·검증 뒤 실패 입력만 개별 재처리한다.\n\n    :param service: 기존 Qwen 모델과 샘플링을 사용하는 기록용 서비스.\n    :param cases: 현재 원문과 앞 영어 문맥이 있는 두 사례.\n    :return: 원시 생성·분리·검증·개별 재처리와 전체 초를 포함한 사전.\n    \"\"\"\n    started = perf_counter()\n    items = []\n    for index, case in enumerate(cases):\n        messages = json.loads(service._build_prompt(case['text'], case['context']))\n        previous = select_context(case['text'], case['context'])\n        items.append({'id': index, 'previous_english_context': previous,\n                      'current_source_with_instructions': messages[1]['content']})\n    system = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n    user = ('Translate each item separately. Previous English context is background only. '\n            'Return exactly two lines in ID order, starting with [0] and [1]. '\n            'Each line must contain only that item ID and its Korean translation. '\n            'Do not merge items or translate the item instructions.\\n\\n' +\n            json.dumps(items, ensure_ascii=False))\n    prompt = json.dumps([{'role': 'system', 'content': system},\n                         {'role': 'user', 'content': user}], ensure_ascii=False)\n    service.recorded = []\n    row = {'prompt': json.loads(prompt), 'items': cases, 'results': []}\n    tokens = service.tokenizer.encode(prompt)\n    row['input_tokens'] = len(tokens)\n    parsed, generation_error = {}, None\n    if len(tokens) + 256 > 2048:\n        generation_error = 'input_limit'\n    else:\n        output = service._generate_output(prompt, 256)\n        row['generated'] = output\n        if output['stop_reason'] or output['finish_reason'] == 'length':\n            generation_error = output['stop_reason'] or 'token_limit'\n        else:\n            lines = output['text'].strip().splitlines()\n            matches = [re.fullmatch(r'\\[(\\d+)\\]\\s+(.+)', line.strip()) for line in lines]\n            if len(matches) != 2 or any(match is None for match in matches):\n                generation_error = 'item_format'\n            elif [int(match[1]) for match in matches] != [0, 1]:\n                generation_error = 'item_ids'\n            else:\n                parsed = {int(match[1]): match[2] for match in matches}\n    row['attempts'] = list(service.recorded)\n    for index, case in enumerate(cases):\n        candidate = parsed.get(index, '')\n        reason = generation_error\n        if reason is None:\n            candidate, reason = service._restore_translation(service._clean_translation(candidate), case['text'])\n            reason = reason or service._rejection_reason(candidate, case['text'], case['context'])\n        item = {'id': case['id'], 'batch_translation': candidate,\n                'batch_rejection_reason': reason, 'fallback': None}\n        if reason:\n            item['fallback'] = run_qwen(service, case)\n            item['translation'] = item['fallback']['translation']\n            item['accepted'] = item['fallback']['accepted']\n        else:\n            item.update(translation=candidate, accepted=True)\n        row['results'].append(item)\n    row['seconds'] = perf_counter() - started\n    return row\n\n\ndef main():\n    \"\"\"한 조건을 동일 워밍업 뒤 실행하고 새 경로에 원시 결과를 보존한다.\n\n    :return: None. 평가 파일을 생성하며 운영 코드는 변경하지 않는다.\n    \"\"\"\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'batch', 'prefix'), required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    args = parser.parse_args()\n    if args.output.exists():\n        raise FileExistsError(args.output)\n    cases = [load_cases()[i] for i in INDICES]\n    cls = PrefixCandidate if args.mode == 'prefix' else RecordingQwen\n    service = cls('http://translator:8080', ROOT / 'templates/korean.json', cache_prompt=False)\n    report = {'mode': args.mode, 'indices': INDICES, 'source': Path(__file__).read_text(),\n              'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'results': [], 'limits': ['Four fixed development cases only; no held-out accuracy claim.',\n               'Batch fallback may use one group generation plus two individual attempts.',\n               'No STT, upload or subtitle timing; no runtime or API implementation change.']}\n    try:\n        report['warmup'] = run_qwen(service, {'text': 'This is the initial mass.', 'context': ''})\n        service.cache_prompt = True\n        started = perf_counter()\n        if args.mode == 'batch':\n            for index in (0, 2):\n                report['results'].append(run_pair(service, cases[index:index+2]))\n        else:\n            for case in cases:\n                report['results'].append({**case, **run_qwen(service, case)})\n        report['seconds'] = perf_counter() - started\n        with args.output.open('x') as stream:\n            json.dump(report, stream, ensure_ascii=False, indent=2)\n        print(json.dumps({'mode': args.mode, 'seconds': report['seconds']}), flush=True)\n    finally:\n        service.close()\n\n\nif __name__ == '__main__':\n    main()\n",
+        "source_sha256": "6d773bb2ab52b75501aac0a295a147f03349658735f170b6f9f53ec7bea1dc46",
+        "results": [
+          {
+            "prompt": [
+              {
+                "role": "system",
+                "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. "
+              },
+              {
+                "role": "user",
+                "content": "Translate each item separately. Previous English context is background only. Return exactly two lines in ID order, starting with [0] and [1]. Each line must contain only that item ID and its Korean translation. Do not merge items or translate the item instructions.\n\n[{\"id\": 0, \"previous_english_context\": \"\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Copy each [MATH_*] placeholder exactly once, in order. Use a complete Korean sentence around it. Terminology: mass=질량.\\n\\nAnd for the mass, we have [MATH_A].\"}, {\"id\": 1, \"previous_english_context\": \"And for the mass, we have mr prime equals m0.\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: fuel mass=연료 질량; dry mass=건조 질량; mass=질량.\\n\\nActually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.\"}]"
+              }
+            ],
+            "items": [
+              {
+                "id": "rocket-8",
+                "suite": "rocket",
+                "text": "And for the mass, we have mr prime equals m0.",
+                "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t."
+              },
+              {
+                "id": "rocket-9",
+                "suite": "rocket",
+                "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+                "context": "And for the mass, we have mr prime equals m0."
+              }
+            ],
+            "results": [
+              {
+                "id": "rocket-8",
+                "batch_translation": "그리고 질량은 mR′ = m0입니다.",
+                "batch_rejection_reason": null,
+                "fallback": null,
+                "translation": "그리고 질량은 mR′ = m0입니다.",
+                "accepted": true
+              },
+              {
+                "id": "rocket-9",
+                "batch_translation": "실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+                "batch_rejection_reason": null,
+                "fallback": null,
+                "translation": "실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+                "accepted": true
+              }
+            ],
+            "input_tokens": 555,
+            "generated": {
+              "text": "[0] 그리고 질량은 [MATH_A]입니다.  \n[1] 실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+              "tokens": 63,
+              "finish_reason": "stop",
+              "stop_reason": null
+            },
+            "attempts": [
+              {
+                "raw_output": "[0] 그리고 질량은 [MATH_A]입니다.  \n[1] 실제로는 m0이 아니라 2m0입니다. 이는 초기 질량이 건조 질량과 연료 질량을 포함하기 때문이며, 따라서 초기 질량은 2m0입니다.",
+                "server_timings": {
+                  "cache_n": 181,
+                  "prompt_n": 374,
+                  "prompt_ms": 6737.682,
+                  "prompt_per_token_ms": 18.015192513368984,
+                  "prompt_per_second": 55.508704625715495,
+                  "predicted_n": 63,
+                  "predicted_ms": 2896.864,
+                  "predicted_per_token_ms": 46.723612903225806,
+                  "predicted_per_second": 21.402454516332142
+                }
+              }
+            ],
+            "seconds": 9.647578170999623
+          },
+          {
+            "prompt": [
+              {
+                "role": "system",
+                "content": "Translate into polite Korean. Use 존댓말 endings such as 합니다 and 입니다. Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep mathematical symbols, operations, inequalities and corrections unchanged. Preserve the subject and whether a sentence is a statement or question. Do not add facts, units, explanations or instructions. Translate definitions as complete grammatical Korean sentences, preserving the defined quantity and its defining relation. In mathematical speech, preserve the full equality, including factors and division, even when a parenthetical comment interrupts it. Do not infer missing relations or repair uncertain source text. In mathematical speech, preserve division expressed by \"over\". Descriptions of factor placement refer to position in the expression, not an increase in value. Prime denotes a mathematical prime mark, not a prime number. Keep variable labels rather than translating them as words. Translate only the current English source in the user's message. The previous English context below is background only. Never translate, quote, summarize or repeat that context. Never output context labels. Output only the Korean translation of the current source. "
+              },
+              {
+                "role": "user",
+                "content": "Translate each item separately. Previous English context is background only. Return exactly two lines in ID order, starting with [0] and [1]. Each line must contain only that item ID and its Korean translation. Do not merge items or translate the item instructions.\n\n[{\"id\": 0, \"previous_english_context\": \"All right, so let's do that.\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, v0, m, ln, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Terminology: integrated=적분. Preserve these source relations: u1/(m); division by 2m0 (do not infer the numerator).\\n\\nWe're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.\"}, {\"id\": 1, \"previous_english_context\": \"We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.\", \"current_source_with_instructions\": \"Translate the following English text into Korean. Preserve negation, numbers and mathematical relations. Output only the translation. Keep these source symbols: vR, t, v0, u, ln, mR, m0. Render spoken arithmetic operators as symbols: plus as +, minus as -, equals as =, and over as /. Do not leave English operator words. Use Korean prose around the expression rather than a formula alone. Preserve these source relations: vR(t) (function value, not multiplication); mR/(2m0).\\n\\nAnd we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.\"}]"
+              }
+            ],
+            "items": [
+              {
+                "id": "rocket-12",
+                "suite": "rocket",
+                "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+                "context": "All right, so let's do that."
+              },
+              {
+                "id": "rocket-13",
+                "suite": "rocket",
+                "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+                "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0."
+              }
+            ],
+            "results": [
+              {
+                "id": "rocket-12",
+                "batch_translation": "우리는 vr 차 v0이 m에 대한 u1의 적분을 통해 ln을 얻고, 그 후 여기서 2m0으로 나누는 것을 즉시 수행합니다.",
+                "batch_rejection_reason": "missing_math_division",
+                "fallback": {
+                  "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                  "accepted": true,
+                  "response": {
+                    "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                    "prompt_tokens": 401,
+                    "generated_tokens": 46,
+                    "elapsed_seconds": 7.214445836998493
+                  },
+                  "seconds": 7.215043754000362,
+                  "attempts": [
+                    {
+                      "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                      "server_timings": {
+                        "cache_n": 228,
+                        "prompt_n": 173,
+                        "prompt_ms": 3883.491,
+                        "prompt_per_token_ms": 22.44792485549133,
+                        "prompt_per_second": 44.54754755450701,
+                        "predicted_n": 46,
+                        "predicted_ms": 3313.349,
+                        "predicted_per_token_ms": 73.62997777777778,
+                        "predicted_per_second": 13.58142471559742
+                      }
+                    }
+                  ],
+                  "decisions": [
+                    {
+                      "event": "translation_attempt",
+                      "request_id": "-",
+                      "segment_index": null,
+                      "elapsed_seconds": 7.213811170000554,
+                      "status": "ok",
+                      "attempt": 1,
+                      "prompt_tokens": 401,
+                      "max_tokens": 128,
+                      "raw_output_tokens": 46,
+                      "finish_reason": "stop",
+                      "rejection_reason": null,
+                      "accepted": true
+                    }
+                  ]
+                },
+                "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                "accepted": true
+              },
+              {
+                "id": "rocket-13",
+                "batch_translation": "결국 이 결과를 원하므로, 물론 이는 t에 대한 vr의 값이며, v0에 u ln mr over 2m0을 더합니다.",
+                "batch_rejection_reason": "untranslated_math_operator",
+                "fallback": {
+                  "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+                  "accepted": true,
+                  "response": {
+                    "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+                    "prompt_tokens": 421,
+                    "generated_tokens": 45,
+                    "elapsed_seconds": 6.705789419000212
+                  },
+                  "seconds": 6.705994086001738,
+                  "attempts": [
+                    {
+                      "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+                      "server_timings": {
+                        "cache_n": 233,
+                        "prompt_n": 188,
+                        "prompt_ms": 4221.128,
+                        "prompt_per_token_ms": 22.452808510638295,
+                        "prompt_per_second": 44.53785812702198,
+                        "predicted_n": 45,
+                        "predicted_ms": 2461.423,
+                        "predicted_per_token_ms": 55.94143181818181,
+                        "predicted_per_second": 17.875838488549107
+                      }
+                    }
+                  ],
+                  "decisions": [
+                    {
+                      "event": "translation_attempt",
+                      "request_id": "-",
+                      "segment_index": null,
+                      "elapsed_seconds": 6.705673920001573,
+                      "status": "ok",
+                      "attempt": 1,
+                      "prompt_tokens": 421,
+                      "max_tokens": 128,
+                      "raw_output_tokens": 45,
+                      "finish_reason": "stop",
+                      "rejection_reason": null,
+                      "accepted": true
+                    }
+                  ]
+                },
+                "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+                "accepted": true
+              }
+            ],
+            "input_tokens": 674,
+            "generated": {
+              "text": "[0] 우리는 vr 차 v0이 m에 대한 u1의 적분을 통해 ln을 얻고, 그 후 여기서 2m0으로 나누는 것을 즉시 수행합니다.  \n[1] 결국 이 결과를 원하므로, 물론 이는 t에 대한 vr의 값이며, v0에 u ln mr over 2m0을 더합니다.",
+              "tokens": 82,
+              "finish_reason": "stop",
+              "stop_reason": null
+            },
+            "attempts": [
+              {
+                "raw_output": "[0] 우리는 vr 차 v0이 m에 대한 u1의 적분을 통해 ln을 얻고, 그 후 여기서 2m0으로 나누는 것을 즉시 수행합니다.  \n[1] 결국 이 결과를 원하므로, 물론 이는 t에 대한 vr의 값이며, v0에 u ln mr over 2m0을 더합니다.",
+                "server_timings": {
+                  "cache_n": 299,
+                  "prompt_n": 375,
+                  "prompt_ms": 7002.366,
+                  "prompt_per_token_ms": 18.672976,
+                  "prompt_per_second": 53.553327546717775,
+                  "predicted_n": 82,
+                  "predicted_ms": 4172.534,
+                  "predicted_per_token_ms": 51.51276543209876,
+                  "predicted_per_second": 19.41266386325432
+                }
+              }
+            ],
+            "seconds": 25.111481136002112
+          }
+        ],
+        "limits": [
+          "Four fixed development cases only; no held-out accuracy claim.",
+          "Batch fallback may use one group generation plus two individual attempts.",
+          "No STT, upload or subtitle timing; no runtime or API implementation change."
+        ],
+        "warmup": {
+          "translation": "이것은 초기 질량입니다.",
+          "accepted": true,
+          "response": {
+            "translation": "이것은 초기 질량입니다.",
+            "prompt_tokens": 227,
+            "generated_tokens": 9,
+            "elapsed_seconds": 4.348330585999065
+          },
+          "seconds": 4.348433627001214,
+          "attempts": [
+            {
+              "raw_output": "이것은 초기 질량입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 227,
+                "prompt_ms": 3931.526,
+                "prompt_per_token_ms": 17.319497797356828,
+                "prompt_per_second": 57.738394709840414,
+                "predicted_n": 9,
+                "predicted_ms": 400.064,
+                "predicted_per_token_ms": 50.008,
+                "predicted_per_second": 19.996800511918092
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "event": "translation_attempt",
+              "request_id": "-",
+              "segment_index": null,
+              "elapsed_seconds": 4.348244542998145,
+              "status": "ok",
+              "attempt": 1,
+              "prompt_tokens": 227,
+              "max_tokens": 128,
+              "raw_output_tokens": 9,
+              "finish_reason": "stop",
+              "rejection_reason": null,
+              "accepted": true
+            }
+          ]
+        },
+        "seconds": 34.75923305700053
+      }
+    },
+    {
+      "label": "run6-baseline",
+      "mode": "baseline",
+      "exit_code": 0,
+      "stdout": "{\"mode\": \"baseline\", \"seconds\": 17.67291513300006}\n",
+      "stderr": "",
+      "report": {
+        "mode": "baseline",
+        "indices": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "source": "\"\"\"고정 개발 문장 네 개로 번역 두 문장 묶음과 고정 접두부 캐시 후보를 비교한다.\"\"\"\nimport argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nfrom time import perf_counter\n\nfrom scripts.evaluate_cpu_translation_models import RecordingQwen, load_cases, run_qwen\nfrom app.services.translation_qwen import FORMAL_STYLE, INSTRUCTION, CONTEXT_INSTRUCTION\nfrom app.services.translation_inputs import select_context\n\nROOT = Path('/app')\nINDICES = (8, 9, 12, 13)\n\n\nclass PrefixCandidate(RecordingQwen):\n    \"\"\"기존 지시는 보존하되 변하는 문맥을 사용자 메시지 뒤쪽에 분리한다.\"\"\"\n\n    def _build_prompt(self, text, context, retry=False):\n        \"\"\"고정 시스템 지시와 사용자 지시 다음에 참고 문맥과 현재 원문을 둔다.\n\n        :param text: 현재 영어 원문.\n        :param context: 앞 영어 원문.\n        :param retry: 기존 재시도 지시 유지 여부.\n        :return: 후보 채팅 메시지 JSON.\n        \"\"\"\n        messages = json.loads(super()._build_prompt(text, context, retry))\n        instruction, source = messages[1]['content'].rsplit('\\n\\n', 1)\n        previous = select_context(text, context)\n        messages[0]['content'] = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n        messages[1]['content'] = instruction + '\\n\\n'\n        if previous:\n            messages[1]['content'] += 'Previous English context:\\n' + previous + '\\n\\n'\n        messages[1]['content'] += 'Current English source:\\n' + source\n        return json.dumps(messages, ensure_ascii=False)\n\n\ndef run_pair(service, cases):\n    \"\"\"두 입력을 ID별로 생성하고 기존 복원·검증 뒤 실패 입력만 개별 재처리한다.\n\n    :param service: 기존 Qwen 모델과 샘플링을 사용하는 기록용 서비스.\n    :param cases: 현재 원문과 앞 영어 문맥이 있는 두 사례.\n    :return: 원시 생성·분리·검증·개별 재처리와 전체 초를 포함한 사전.\n    \"\"\"\n    started = perf_counter()\n    items = []\n    for index, case in enumerate(cases):\n        messages = json.loads(service._build_prompt(case['text'], case['context']))\n        previous = select_context(case['text'], case['context'])\n        items.append({'id': index, 'previous_english_context': previous,\n                      'current_source_with_instructions': messages[1]['content']})\n    system = FORMAL_STYLE + INSTRUCTION + ' ' + CONTEXT_INSTRUCTION\n    user = ('Translate each item separately. Previous English context is background only. '\n            'Return exactly two lines in ID order, starting with [0] and [1]. '\n            'Each line must contain only that item ID and its Korean translation. '\n            'Do not merge items or translate the item instructions.\\n\\n' +\n            json.dumps(items, ensure_ascii=False))\n    prompt = json.dumps([{'role': 'system', 'content': system},\n                         {'role': 'user', 'content': user}], ensure_ascii=False)\n    service.recorded = []\n    row = {'prompt': json.loads(prompt), 'items': cases, 'results': []}\n    tokens = service.tokenizer.encode(prompt)\n    row['input_tokens'] = len(tokens)\n    parsed, generation_error = {}, None\n    if len(tokens) + 256 > 2048:\n        generation_error = 'input_limit'\n    else:\n        output = service._generate_output(prompt, 256)\n        row['generated'] = output\n        if output['stop_reason'] or output['finish_reason'] == 'length':\n            generation_error = output['stop_reason'] or 'token_limit'\n        else:\n            lines = output['text'].strip().splitlines()\n            matches = [re.fullmatch(r'\\[(\\d+)\\]\\s+(.+)', line.strip()) for line in lines]\n            if len(matches) != 2 or any(match is None for match in matches):\n                generation_error = 'item_format'\n            elif [int(match[1]) for match in matches] != [0, 1]:\n                generation_error = 'item_ids'\n            else:\n                parsed = {int(match[1]): match[2] for match in matches}\n    row['attempts'] = list(service.recorded)\n    for index, case in enumerate(cases):\n        candidate = parsed.get(index, '')\n        reason = generation_error\n        if reason is None:\n            candidate, reason = service._restore_translation(service._clean_translation(candidate), case['text'])\n            reason = reason or service._rejection_reason(candidate, case['text'], case['context'])\n        item = {'id': case['id'], 'batch_translation': candidate,\n                'batch_rejection_reason': reason, 'fallback': None}\n        if reason:\n            item['fallback'] = run_qwen(service, case)\n            item['translation'] = item['fallback']['translation']\n            item['accepted'] = item['fallback']['accepted']\n        else:\n            item.update(translation=candidate, accepted=True)\n        row['results'].append(item)\n    row['seconds'] = perf_counter() - started\n    return row\n\n\ndef main():\n    \"\"\"한 조건을 동일 워밍업 뒤 실행하고 새 경로에 원시 결과를 보존한다.\n\n    :return: None. 평가 파일을 생성하며 운영 코드는 변경하지 않는다.\n    \"\"\"\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--mode', choices=('baseline', 'batch', 'prefix'), required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    args = parser.parse_args()\n    if args.output.exists():\n        raise FileExistsError(args.output)\n    cases = [load_cases()[i] for i in INDICES]\n    cls = PrefixCandidate if args.mode == 'prefix' else RecordingQwen\n    service = cls('http://translator:8080', ROOT / 'templates/korean.json', cache_prompt=False)\n    report = {'mode': args.mode, 'indices': INDICES, 'source': Path(__file__).read_text(),\n              'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'results': [], 'limits': ['Four fixed development cases only; no held-out accuracy claim.',\n               'Batch fallback may use one group generation plus two individual attempts.',\n               'No STT, upload or subtitle timing; no runtime or API implementation change.']}\n    try:\n        report['warmup'] = run_qwen(service, {'text': 'This is the initial mass.', 'context': ''})\n        service.cache_prompt = True\n        started = perf_counter()\n        if args.mode == 'batch':\n            for index in (0, 2):\n                report['results'].append(run_pair(service, cases[index:index+2]))\n        else:\n            for case in cases:\n                report['results'].append({**case, **run_qwen(service, case)})\n        report['seconds'] = perf_counter() - started\n        with args.output.open('x') as stream:\n            json.dump(report, stream, ensure_ascii=False, indent=2)\n        print(json.dumps({'mode': args.mode, 'seconds': report['seconds']}), flush=True)\n    finally:\n        service.close()\n\n\nif __name__ == '__main__':\n    main()\n",
+        "source_sha256": "6d773bb2ab52b75501aac0a295a147f03349658735f170b6f9f53ec7bea1dc46",
+        "results": [
+          {
+            "id": "rocket-8",
+            "suite": "rocket",
+            "text": "And for the mass, we have mr prime equals m0.",
+            "context": "So we have vr going from v0. That is our initial condition here, to vr equal vr of t.",
+            "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그리고 질량에 대해서는 mR′ = m0입니다.",
+              "prompt_tokens": 255,
+              "generated_tokens": 16,
+              "elapsed_seconds": 1.474046917999658
+            },
+            "seconds": 1.4741031250014203,
+            "attempts": [
+              {
+                "raw_output": "그리고 질량에 대해서는 [MATH_A]입니다.",
+                "server_timings": {
+                  "cache_n": 208,
+                  "prompt_n": 47,
+                  "prompt_ms": 853.323,
+                  "prompt_per_token_ms": 18.1558085106383,
+                  "prompt_per_second": 55.078791969746504,
+                  "predicted_n": 16,
+                  "predicted_ms": 612.481,
+                  "predicted_per_token_ms": 40.83206666666667,
+                  "predicted_per_second": 24.49055562539899
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 1.4740043339988915,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 255,
+                "max_tokens": 128,
+                "raw_output_tokens": 16,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-9",
+            "suite": "rocket",
+            "text": "Actually, not quite m0, it's 2m0, because the initial mass of this is the dry mass, and the fuel mass, so that's 2m0, so this is the initial mass.",
+            "context": "And for the mass, we have mr prime equals m0.",
+            "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+            "accepted": true,
+            "response": {
+              "translation": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+              "prompt_tokens": 396,
+              "generated_tokens": 54,
+              "elapsed_seconds": 5.992164502000378
+            },
+            "seconds": 5.992204627000319,
+            "attempts": [
+              {
+                "raw_output": "실제로는 m0이 아니라 2m0입니다. 이 물체의 초기 질량은 건조 질량과 연료 질량의 합이므로 2m0가 되며, 이는 초기 질량을 의미합니다.",
+                "server_timings": {
+                  "cache_n": 181,
+                  "prompt_n": 215,
+                  "prompt_ms": 3689.174,
+                  "prompt_per_token_ms": 17.1589488372093,
+                  "prompt_per_second": 58.27862822409569,
+                  "predicted_n": 54,
+                  "predicted_ms": 2296.918,
+                  "predicted_per_token_ms": 43.33807547169812,
+                  "predicted_per_second": 23.074397954128095
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 5.992117252000753,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 396,
+                "max_tokens": 128,
+                "raw_output_tokens": 54,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-12",
+            "suite": "rocket",
+            "text": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "context": "All right, so let's do that.",
+            "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+              "prompt_tokens": 401,
+              "generated_tokens": 46,
+              "elapsed_seconds": 5.13296233499932
+            },
+            "seconds": 5.133161210997059,
+            "attempts": [
+              {
+                "raw_output": "그러면 vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 그 후 바로 여기서 2m0으로 나누어 줍니다.",
+                "server_timings": {
+                  "cache_n": 233,
+                  "prompt_n": 168,
+                  "prompt_ms": 3139.973,
+                  "prompt_per_token_ms": 18.690315476190477,
+                  "prompt_per_second": 53.50364477656337,
+                  "predicted_n": 46,
+                  "predicted_ms": 1984.2,
+                  "predicted_per_token_ms": 44.093333333333334,
+                  "predicted_per_second": 22.679165406713036
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 5.132909334999567,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 401,
+                "max_tokens": 128,
+                "raw_output_tokens": 46,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "id": "rocket-13",
+            "suite": "rocket",
+            "text": "And we ultimately want this, so this is vr of t, of course, and then we get v0 plus u ln mr over 2m0.",
+            "context": "We're going to get vr minus v0 equals u1 over m integrated gives us an ln, so ln, and then we can immediately do this here over 2m0.",
+            "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+            "accepted": true,
+            "response": {
+              "translation": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 + u × ln(mR / 2m0)입니다.",
+              "prompt_tokens": 421,
+              "generated_tokens": 45,
+              "elapsed_seconds": 5.0732326690013
+            },
+            "seconds": 5.07341533500221,
+            "attempts": [
+              {
+                "raw_output": "그리고 결국 우리가 원하는 것은 바로 이 식이므로, 이는 t에 대한 vr의 값이며, 그 결과는 v0 plus u times ln(mR / 2m0)입니다.",
+                "server_timings": {
+                  "cache_n": 233,
+                  "prompt_n": 188,
+                  "prompt_ms": 3190.485,
+                  "prompt_per_token_ms": 16.970664893617023,
+                  "prompt_per_second": 58.925210430389114,
+                  "predicted_n": 45,
+                  "predicted_ms": 1869.948,
+                  "predicted_per_token_ms": 42.49881818181819,
+                  "predicted_per_second": 23.530066076703736
+                }
+              }
+            ],
+            "decisions": [
+              {
+                "event": "translation_attempt",
+                "request_id": "-",
+                "segment_index": null,
+                "elapsed_seconds": 5.073182543997973,
+                "status": "ok",
+                "attempt": 1,
+                "prompt_tokens": 421,
+                "max_tokens": 128,
+                "raw_output_tokens": 45,
+                "finish_reason": "stop",
+                "rejection_reason": null,
+                "accepted": true
+              }
+            ]
+          }
+        ],
+        "limits": [
+          "Four fixed development cases only; no held-out accuracy claim.",
+          "Batch fallback may use one group generation plus two individual attempts.",
+          "No STT, upload or subtitle timing; no runtime or API implementation change."
+        ],
+        "warmup": {
+          "translation": "이것은 초기 질량입니다.",
+          "accepted": true,
+          "response": {
+            "translation": "이것은 초기 질량입니다.",
+            "prompt_tokens": 227,
+            "generated_tokens": 9,
+            "elapsed_seconds": 4.079620626998803
+          },
+          "seconds": 4.079708709999977,
+          "attempts": [
+            {
+              "raw_output": "이것은 초기 질량입니다.",
+              "server_timings": {
+                "cache_n": 0,
+                "prompt_n": 227,
+                "prompt_ms": 3739.492,
+                "prompt_per_token_ms": 16.473533039647577,
+                "prompt_per_second": 60.70343244483475,
+                "predicted_n": 9,
+                "predicted_ms": 320.535,
+                "predicted_per_token_ms": 40.066875,
+                "predicted_per_second": 24.95827288751618
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "event": "translation_attempt",
+              "request_id": "-",
+              "segment_index": null,
+              "elapsed_seconds": 4.079530752002029,
+              "status": "ok",
+              "attempt": 1,
+              "prompt_tokens": 227,
+              "max_tokens": 128,
+              "raw_output_tokens": 9,
+              "finish_reason": "stop",
+              "rejection_reason": null,
+              "accepted": true
+            }
+          ]
+        },
+        "seconds": 17.67291513300006
+      }
+    }
+  ],
+  "server_initial": {
+    "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+    "cmd": [
+      "--model",
+      "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+      "--alias",
+      "qwen3-4b-instruct-2507",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8080",
+      "--device",
+      "none",
+      "--n-gpu-layers",
+      "0",
+      "--no-kv-offload",
+      "--no-op-offload",
+      "--no-repack",
+      "--ctx-size",
+      "2048",
+      "--parallel",
+      "1",
+      "--threads",
+      "8",
+      "--threads-batch",
+      "8",
+      "--batch-size",
+      "256",
+      "--ubatch-size",
+      "128",
+      "--cache-ram",
+      "0",
+      "--no-context-shift",
+      "--jinja"
+    ],
+    "nano_cpus": 8000000000,
+    "memory": 4000000000,
+    "oom": false,
+    "restarts": 0
+  },
+  "server_final": {
+    "image": "sha256:c8113a17ae624ea486e280719c1f9ee5bd62d972d5fe589aad6c3e62c58bb140",
+    "cmd": [
+      "--model",
+      "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+      "--alias",
+      "qwen3-4b-instruct-2507",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8080",
+      "--device",
+      "none",
+      "--n-gpu-layers",
+      "0",
+      "--no-kv-offload",
+      "--no-op-offload",
+      "--no-repack",
+      "--ctx-size",
+      "2048",
+      "--parallel",
+      "1",
+      "--threads",
+      "8",
+      "--threads-batch",
+      "8",
+      "--batch-size",
+      "256",
+      "--ubatch-size",
+      "128",
+      "--cache-ram",
+      "0",
+      "--no-context-shift",
+      "--jinja"
+    ],
+    "nano_cpus": 8000000000,
+    "memory": 4000000000,
+    "oom": false,
+    "restarts": 0
+  }
+}
