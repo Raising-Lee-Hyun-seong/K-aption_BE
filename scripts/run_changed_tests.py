@@ -27,6 +27,7 @@ OWNERS = {
     'app/services/pipeline.py': ('test_pipeline', 'test_jobs', 'test_job_cancellation', 'test_math_grouping'),
     'app/services/subtitles.py': ('test_subtitles', 'test_pipeline', 'test_jobs', 'test_math_grouping'),
     'app/services/subtitle_export.py': ('test_subtitle_export',),
+    'app/services/study_inputs.py': ('test_study_inputs',),
     'app/services/translation.py': TRANSLATION_TESTS + ('test_http_translation', 'test_qwen_translation'),
     'app/services/translation_llamacpp.py': ('test_llamacpp_translation', 'test_qwen_translation'),
     'app/services/translation_qwen.py': ('test_qwen_translation', 'test_http_translation'),

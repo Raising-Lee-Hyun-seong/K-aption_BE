@@ -98,6 +98,61 @@ Whisper는 지연 로드하고 재사용합니다. Qwen은 translator에서 한 
 긴 음성의 FFT 임시 배열이 backend 한도를 넘지 않도록 log-Mel 특징 계산을 최대 3000프레임씩 수행합니다. 입력 음성·VAD·전사 문맥은 나누지 않고, 패딩·프레임·Mel 필터와 전체 음성 최대값 정규화를 유지합니다. 기존 추출기와 수치 비교한 허용 오차는 `rtol=1e-5`, `atol=1e-6`입니다. 최종 특징과 디코딩 오디오는 길이에 비례하므로 모든 길이의 메모리가 고정되는 것은 아닙니다.
 단일 backend 프로세스·Uvicorn worker 1을 유지해야 합니다. 같은 작업 저장소를 여러 worker가 공유하면 시작을 거부합니다.
 
+## 학습자료 입력 준비 (1단계)
+
+`app/services/study_inputs.py`의 `prepare_study_inputs`는 기존
+`TranscriptionResponse`를 받아 챕터·강의노트 생성에 사용할 입력 묶음을 준비합니다.
+현재는 내부 모듈이며 API·작업 상태·결과 저장에 연결하지 않았습니다.
+챕터·노트 생성과 파일 저장은 후속 단계입니다. OpenAI API는 사용하지 않습니다.
+
+- 자막 ID는 `segment-000001`부터 원본 순서대로 부여합니다. 동일 결과에서 안정적이며
+  다른 작업과 구별할 때는 작업 ID를 함께 사용해야 합니다.
+- 시작·종료 시각, 영어 원문, 한국어 번역, 번역 실패 코드를 참조용으로 보존합니다.
+  분석 본문은 정상 한국어 번역을 우선하고 실패·누락·공백 번역은 영어 원문을 사용합니다.
+- 원본 응답을 변경하지 않으며 각 자막을 한 묶음에 정확히 한 번 포함합니다.
+  현재는 중첩 문맥이나 주제 경계 추론 없이 연속된 자막을 토큰 한도별로 묶습니다.
+- 호출자는 분석 지시문과 실제 채팅 템플릿·생성 시작 표식을 포함하는 토큰 계산기를 전달합니다.
+  기본 문맥은 2048토큰, 출력 예약은 512토큰이며 지시문과 JSON 메타데이터도 입력 예산에 포함합니다.
+  이후 프롬프트를 변경하거나 추가하면 토큰 수를 다시 계산해야 합니다.
+- 묶음에는 원본 참조용 `segments`, 모델에 전달할 `messages`, `prompt_tokens`,
+  `reserved_output_tokens`가 있습니다. 모델 메시지에는 선택 언어의 본문·ID·시각을 담습니다.
+- 빈 자막 결과는 토큰화 없이 빈 목록을 반환합니다. 잘못된 시각·시간순·빈 원문은 거부합니다.
+  자막 한 개가 한도를 넘으면 잘라내거나 시각을 추정하지 않고 해당 자막 ID를 포함한
+  `ValueError`를 발생시킵니다. 실패 시 부분 결과를 반환하지 않습니다.
+
+기존 `ServerTokenizer`를 전달하는 예시입니다. `tokenizer`는 준비된 로컬 번역 서비스의
+`translator.tokenizer`를 사용합니다. 토큰화는 로컬 llama.cpp 서버에 HTTP 요청을 보내며,
+모델 생성·외부 서비스 요청은 수행하지 않습니다. 서버 오류는 호출자에게 전달합니다.
+
+```python
+from app.services.study_inputs import prepare_study_inputs
+
+
+def count_study_tokens(messages):
+    """로컬 서버의 실제 채팅 템플릿으로 입력 토큰 수를 계산한다.
+
+    :param messages: 시스템 지시문과 자막 JSON 메시지.
+    :return: 생성 시작 표식을 포함한 입력 토큰 수.
+    """
+    return len(tokenizer.encode(tokenizer.apply_chat_template(messages)))
+
+
+chunks = prepare_study_inputs(
+    transcription,
+    count_study_tokens,
+    instruction="자막에 근거하여 강의의 주제를 분석하세요.",
+)
+```
+
+검증 명령:
+
+```bash
+.venv-api/bin/python scripts/run_changed_tests.py --files app/services/study_inputs.py tests/test_study_inputs.py scripts/run_changed_tests.py
+```
+
+토큰 경계·원본 보존·영어 대체·오류 처리를 단위 테스트하며 로컬 토큰화 연동은 모의 HTTP
+응답으로 검사합니다. 실제 모델의 챕터 생성 품질·성능은 이 단계에서 검증하지 않습니다.
+
 ## API 계약
 
 Swagger는 `/swagger`, OpenAPI는 `/openapi.json`입니다.
