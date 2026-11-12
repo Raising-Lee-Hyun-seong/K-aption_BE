@@ -105,11 +105,12 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
         """
         self.client.close()
 
-    def _stream_output(self, prompt: str, max_tokens: int):
+    def _stream_output(self, prompt: str, max_tokens: int, response_schema: dict = None):
         """OpenAI 호환 채팅 SSE를 읽고 검증 가능한 생성 조각을 제공한다.
 
         :param prompt: 원문과 문맥을 구분한 메시지 JSON.
         :param max_tokens: 최대 출력 토큰 수. 서버 컨텍스트 상한은 별도로 검사한다.
+        :param response_schema: 선택적 로컬 서버 JSON 출력 스키마. None이면 기존 번역 요청을 유지한다.
         :return: HTTP 응답을 수명 동안 관리하는 생성기.
         :yield: text·generation_tokens·finish_reason·선택적 server_timings 속성을 가진 생성 조각.
         :raises TranslationTransportError: 연결·시간 초과·빈 응답·손상 응답·조기 종료 시.
@@ -120,6 +121,9 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
                    'temperature': 0, 'top_k': 1, 'top_p': 1, 'repeat_penalty': 1.0,
                    'seed': 0, 'max_tokens': max_tokens, 'stream': True,
                    'stream_options': {'include_usage': True}, 'cache_prompt': self.cache_prompt}
+        if response_schema is not None:
+            payload['response_format'] = {
+                'type': 'json_schema', 'json_schema': {'name': 'study_output', 'schema': response_schema}}
         count, ended, last_finish = 0, False, None
         try:
             with self.client.stream('POST', '/v1/chat/completions', json=payload) as response:

@@ -103,7 +103,8 @@ Whisper는 지연 로드하고 재사용합니다. Qwen은 translator에서 한 
 `app/services/study_inputs.py`의 `prepare_study_inputs`는 기존
 `TranscriptionResponse`를 받아 챕터·강의노트 생성에 사용할 입력 묶음을 준비합니다.
 현재는 내부 모듈이며 API·작업 상태·결과 저장에 연결하지 않았습니다.
-챕터·노트 생성과 파일 저장은 후속 단계입니다. OpenAI API는 사용하지 않습니다.
+챕터 생성은 아래 2단계 모듈에서 담당하고, 노트 생성과 파일 저장 연결은 후속 단계입니다.
+OpenAI API는 사용하지 않습니다.
 
 - 자막 ID는 `segment-000001`부터 원본 순서대로 부여합니다. 동일 결과에서 안정적이며
   다른 작업과 구별할 때는 작업 ID를 함께 사용해야 합니다.
@@ -152,6 +153,70 @@ chunks = prepare_study_inputs(
 
 토큰 경계·원본 보존·영어 대체·오류 처리를 단위 테스트하며 로컬 토큰화 연동은 모의 HTTP
 응답으로 검사합니다. 실제 모델의 챕터 생성 품질·성능은 이 단계에서 검증하지 않습니다.
+
+## 챕터 생성 모듈 (2단계)
+
+`app/services/chapters.py`의 `ChapterService(translator).generate(transcription)`은
+준비된 `HttpTranslationService`와 완료 자막을 사용해 한국어 목차를 생성합니다.
+API·작업 저장소·프론트엔드에는 아직 연결하지 않았습니다. OpenAI API나 새 모델을 사용하지 않습니다.
+
+- 실제 서버 토큰화로 지시문·자막 JSON·출력 예약을 합친 2048토큰 한도를 검사합니다.
+  챕터 생성 출력은 768토큰, 경계 병합 출력은 512토큰으로 제한합니다.
+- 모델은 묶음마다 보통 1개 또는 2개의 큰 주제로 정리하며 최대 3개의 제목·설명·시작 자막 ID를 반환합니다.
+  첫 경계는 묶음 첫 자막이어야 하고, 이후 경계는 중복 없이 시간순으로 증가해야 합니다.
+  시간값·근거 목록을 모델에 맡기지 않고 실제 자막에서 계산하여 전체 자막을 한 번씩 포함합니다.
+- 챕터·병합 요청에만 로컬 서버의 JSON 스키마 출력 제약을 사용합니다. 챕터 개수·필드 형식과
+  현재 묶음의 허용 자막 ID와 고정 첫 항목을 제한하며, 첫 ID·시간순·한국어 검증은 코드에서 다시 수행합니다.
+  일반 번역 요청에는 출력 스키마를 추가하지 않습니다.
+  전송 구조는 `response_format.json_schema.schema`이며,
+  [고정 버전의 실제 요청 파서](https://github.com/ggml-org/llama.cpp/blob/339f3242c761f16c27e5ffcde1d35dcc31933a55/tools/server/server-common.cpp#L1285)를 기준으로 확인했습니다.
+  `type=json_schema`에서 `schema`를 최상위에 두면 이 서버는 빈 스키마로 취급하므로 사용하지 않습니다.
+- 서로 다른 묶음의 마지막·첫 챕터는 별도 모델 호출로 같은 주제의 연속인지 판단합니다.
+  두 챕터의 제목·설명과 경계 양쪽 자막을 사용하며, 같은 과목이라는 이유만으로 합치지 않도록
+  지시합니다. 병합하면 양쪽 근거 ID를 연결하고 제목·설명을 갱신합니다.
+- 빈 입력은 빈 목차를 반환합니다. 잘못된 JSON·근거 ID·한국어 형식·출력 토큰 상한 종료·
+  불완전 스트림·전송 오류는 생성 단계별 최대 2회 시도합니다. 입력·병합 예산 초과는
+  생성 전에 거부합니다. 실패 시 부분 목차를 성공 결과로 제공하지 않습니다.
+- 같은 번역 서비스의 추론 잠금을 전체 생성 동안 유지합니다. 이 잠금은 다른 프로세스의
+  서버 작업과는 공유되지 않습니다. 클라이언트 종료는 기존 서비스 소유자가 담당합니다.
+
+반환값은 `chapters`, `elapsed_seconds`, `attempts`입니다. 각 챕터는 `chapter_id`,
+`title`, `description`, 원본 기준 `start`·`end`(초), 연속된 `segment_ids`를 가집니다.
+시도 기록에는 원시 출력·종료 사유·생성 토큰 수·소요 초·오류가 남습니다.
+이것은 구조·참조 검증이며 제목의 의미 정확도나 주제 경계의 적절성을 보증하지 않습니다.
+STT·기존 번역의 오역과 판서에만 있는 내용은 복원하지 않습니다.
+
+### 저장 자막으로 실제 모델 평가
+
+`scripts/evaluate_chapters.py`는 저장된 실제 자막을 순차 재생하고 새 JSON 보고서를 만듭니다.
+기존 출력은 덮어쓰지 않습니다. 입력·구현 해시와 서버 속성, 원시 출력·시간을 보존합니다.
+로컬 주소 또는 Docker 내부 `translator`만 허용하며 고정 Q4_K_M 모델의 파일명을 확인합니다.
+서버 가중치 SHA256은 독립적으로 다시 확인하지 않으므로 파일명 확인을 무결성 검증으로
+해석하면 안 됩니다. 평가 시간에는 업로드·STT·영상 디코딩이 포함되지 않습니다.
+
+별도 실행한 로컬 Qwen 서버가 localhost:8080에 있을 때:
+
+```bash
+.venv-api/bin/python scripts/evaluate_chapters.py --base-url http://127.0.0.1:8080 --inputs evaluation/video-rocket-calculus-fix-api-261101.json evaluation/video-calculus-calculus-fix-api-261101.json --evaluated-on 2026-11-12 --output evaluation/chapters-new-run.json
+```
+
+기본 Compose의 translator는 호스트에 포트를 공개하지 않습니다. 이미 실행 중인 내부 서버를
+평가하려면 활성 작업이 없는 상태에서 아래와 같이 일회용 평가 프로세스를 실행할 수 있습니다.
+운영 컨테이너를 재시작하거나 모델을 교체하지 않습니다. 평가일·출력 파일명은 실제 실행에 맞춥니다.
+
+```bash
+docker compose --env-file docker/cpu.defaults run --rm --no-deps -v "$PWD:/workspace:ro" -v "$PWD/evaluation:/reports" -w /workspace backend python scripts/evaluate_chapters.py --base-url http://translator:8080 --inputs evaluation/video-rocket-calculus-fix-api-261101.json evaluation/video-calculus-calculus-fix-api-261101.json --evaluated-on 2026-11-12 --output /reports/chapters-new-run.json
+```
+
+시험 명령:
+
+```bash
+.venv-api/bin/python scripts/run_changed_tests.py --files app/services/chapters.py scripts/evaluate_chapters.py app/services/study_inputs.py app/services/translation_http.py tests/test_chapters.py scripts/run_changed_tests.py
+```
+
+모의 HTTP 테스트는 생성 흐름·오류·시각 매핑·병합을 확인합니다. 실제 두 영상의 저장 자막도
+모의 모델로 입력 계약을 검사하며, 이 결과를 실제 모델의 품질·성능 평가로 취급하지 않습니다.
+실제 모델 평가 상태는 [챕터 구현·검증 기록](evaluation/chapters-progress-261112.md)에 남깁니다.
 
 ## API 계약
 

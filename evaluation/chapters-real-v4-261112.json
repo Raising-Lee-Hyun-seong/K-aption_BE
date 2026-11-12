@@ -1,0 +1,416 @@
+{
+  "evaluated_on": "2026-11-12",
+  "base_url": "http://translator:8080",
+  "model_manifest": {
+    "schema_version": 1,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+    "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+    "quantization": "Q4_K_M",
+    "release_url": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9",
+    "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "parts": [
+      {
+        "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "bytes": 2497281120,
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597"
+      }
+    ]
+  },
+  "server_props": {
+    "default_generation_settings": {
+      "params": {
+        "seed": 4294967295,
+        "temperature": 0.800000011920929,
+        "dynatemp_range": 0.0,
+        "dynatemp_exponent": 1.0,
+        "top_k": 40,
+        "top_p": 0.949999988079071,
+        "min_p": 0.05000000074505806,
+        "top_n_sigma": -1.0,
+        "xtc_probability": 0.0,
+        "xtc_threshold": 0.10000000149011612,
+        "typical_p": 1.0,
+        "repeat_last_n": 64,
+        "repeat_penalty": 1.0,
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "dry_multiplier": 0.0,
+        "dry_base": 1.75,
+        "dry_allowed_length": 2,
+        "dry_penalty_last_n": 64,
+        "mirostat": 0,
+        "mirostat_tau": 5.0,
+        "mirostat_eta": 0.10000000149011612,
+        "adaptive_target": -1.0,
+        "adaptive_decay": 0.8999999761581421,
+        "max_tokens": -1,
+        "n_predict": -1,
+        "n_keep": 0,
+        "n_discard": 0,
+        "ignore_eos": false,
+        "stream": false,
+        "n_probs": 0,
+        "min_keep": 0,
+        "chat_format": "Content-only",
+        "reasoning_format": "none",
+        "reasoning_in_content": false,
+        "generation_prompt": "",
+        "samplers": [
+          "penalties",
+          "dry",
+          "top_n_sigma",
+          "top_k",
+          "typ_p",
+          "top_p",
+          "min_p",
+          "xtc",
+          "temperature"
+        ],
+        "speculative.types": "none",
+        "timings_per_token": false,
+        "post_sampling_probs": false,
+        "backend_sampling": false,
+        "lora": []
+      },
+      "n_ctx": 2048
+    },
+    "total_slots": 1,
+    "model_alias": "qwen3-4b-instruct-2507",
+    "model_ftype": "Q4_K - Medium",
+    "model_path": "/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "modalities": {
+      "vision": false,
+      "video": false,
+      "audio": false
+    },
+    "media_marker": "<__media_MIxD9tck42UwoAFzQG9UZtr18JjGdsBx__>",
+    "endpoint_slots": true,
+    "endpoint_props": false,
+    "endpoint_metrics": false,
+    "ui": true,
+    "ui_settings": {},
+    "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0].role == 'system' %}\n        {{- messages[0].content + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0].content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" and message.content is string and not(message.content.startswith('<tool_response>') and message.content.endswith('</tool_response>')) %}\n        {%- set ns.multi_step_tool = false %}\n        {%- set ns.last_query_index = index %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if message.content is string %}\n        {%- set content = message.content %}\n    {%- else %}\n        {%- set content = '' %}\n    {%- endif %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = ((content.split('</think>')|first).rstrip('\\n').split('<think>')|last).lstrip('\\n') %}\n                {%- set content = (content.split('</think>')|last).lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {%- if loop.last or (not loop.last and reasoning_content) %}\n                {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content.strip('\\n') + '\\n</think>\\n\\n' + content.lstrip('\\n') }}\n            {%- else %}\n                {{- '<|im_start|>' + message.role + '\\n' + content }}\n            {%- endif %}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if (loop.first and content) or (not loop.first) %}\n                    {{- '\\n' }}\n                {%- endif %}\n                {%- if tool_call.function %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {{- '<tool_call>\\n{\"name\": \"' }}\n                {{- tool_call.name }}\n                {{- '\", \"arguments\": ' }}\n                {%- if tool_call.arguments is string %}\n                    {{- tool_call.arguments }}\n                {%- else %}\n                    {{- tool_call.arguments | tojson }}\n                {%- endif %}\n                {{- '}\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.first or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}",
+    "chat_template_caps": {
+      "supports_object_arguments": true,
+      "supports_parallel_tool_calls": true,
+      "supports_preserve_reasoning": false,
+      "supports_reasoning_effort": false,
+      "supports_string_content": true,
+      "supports_system_role": true,
+      "supports_tool_calls": true,
+      "supports_tools": true,
+      "supports_typed_content": false
+    },
+    "bos_token": ",",
+    "eos_token": "<|im_end|>",
+    "build_info": "b11783-339f3242c",
+    "is_sleeping": false,
+    "cors_proxy_enabled": false
+  },
+  "results": [
+    {
+      "input": "evaluation/video-rocket-calculus-fix-api-261101.json",
+      "input_sha256": "40300e367c42936129110d262a24430cd852d59696169dec38b8c7a994920880",
+      "source_segments": 17,
+      "status": "completed",
+      "chapters": [
+        {
+          "chapter_id": "chapter-000001",
+          "title": "관계 도출",
+          "description": "로켓 썰매의 속력과 질량 간의 미분 관계를 도출한다",
+          "start": 3.6,
+          "end": 7.28,
+          "segment_ids": [
+            "segment-000001"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000002",
+          "title": "변수 분리 및 적분 적용",
+          "description": "속력과 질량의 미분 관계에서 변수 분리를 통해 적분을 수행한다",
+          "start": 7.28,
+          "end": 25.96,
+          "segment_ids": [
+            "segment-000002",
+            "segment-000003"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000003",
+          "title": "미분 방정식과 vr의 적분 표현",
+          "description": "미분 방정식을 변형하여 질량과 속도의 관계를 재구성하고, vr에서 v0을 뺀 값이 m으로 나눈 u1의 적분인 ln을 통해 최종 식을 도출한다.",
+          "start": 25.96,
+          "end": 152.85,
+          "segment_ids": [
+            "segment-000004",
+            "segment-000005",
+            "segment-000006",
+            "segment-000007",
+            "segment-000008",
+            "segment-000009",
+            "segment-000010",
+            "segment-000011",
+            "segment-000012",
+            "segment-000013"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000004",
+          "title": "t에 대한 vr의 최종 식",
+          "description": "vr에 대한 t에 대한 식은 v0 + u × ln(mR / 2m0)로 표현된다.",
+          "start": 152.85,
+          "end": 169.65,
+          "segment_ids": [
+            "segment-000014"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000005",
+          "title": "방정식 정리",
+          "description": "도출된 식을 최종 방정식으로 정리한다.",
+          "start": 171.53,
+          "end": 208.46,
+          "segment_ids": [
+            "segment-000015",
+            "segment-000016",
+            "segment-000017"
+          ]
+        }
+      ],
+      "elapsed_seconds": 58.144075026999985,
+      "attempts": [
+        {
+          "stage": "chunk-000001",
+          "attempt": 1,
+          "raw": "{\"chapters\":[{\"start_segment_id\":\"segment-000001\",\"title\":\"관계 도출\",\"description\":\"로켓 썰매의 속력과 질량 간의 미분 관계를 도출한다\"},{\"start_segment_id\":\"segment-000002\",\"title\":\"변수 분리 및 적분 적용\",\"description\":\"속력과 질량의 미분 관계에서 변수 분리를 통해 적분을 수행한다\"},{\"start_segment_id\":\"segment-000004\",\"title\":\"미분 방정식 변형\",\"description\":\"dt를 곱하여 미분 방정식을 변형하고, 질량과 속도의 관계를 재구성한다},{\"\n \t}]}",
+          "finish_reason": "stop",
+          "generated_tokens": 157,
+          "error": null,
+          "elapsed_seconds": 28.067336304999912
+        },
+        {
+          "stage": "chunk-000002",
+          "attempt": 1,
+          "raw": "{\"chapters\":[{\"start_segment_id\":\"segment-000013\",\"title\":\"vr의 적분 표현\",\"description\":\"vr에서 v0을 뺀 값은 m으로 나눈 u1의 적분이 ln을 주고, 2m0로 나누어 최종 식을 도출한다.\"},{\"start_segment_id\":\"segment-000014\",\"title\":\"t에 대한 vr의 최종 식\",\"description\":\"vr에 대한 t에 대한 식은 v0 + u × ln(mR / 2m0)로 표현된다.\"},{\"start_segment_id\":\"segment-000015\",\"title\":\"방정식 정리\",\"description\":\"도출된 식을 최종 방정식으로 정리한다.\"}]}",
+          "finish_reason": "stop",
+          "generated_tokens": 167,
+          "error": null,
+          "elapsed_seconds": 20.82865438500005
+        },
+        {
+          "stage": "merge-chunk-000002",
+          "attempt": 1,
+          "raw": "{\"merge\":true,\"title\":\"미분 방정식과 vr의 적분 표현\",\"description\":\"미분 방정식을 변형하여 질량과 속도의 관계를 재구성하고, vr에서 v0을 뺀 값이 m으로 나눈 u1의 적분인 ln을 통해 최종 식을 도출한다.\"}",
+          "finish_reason": "stop",
+          "generated_tokens": 79,
+          "error": null,
+          "elapsed_seconds": 9.214087380000024
+        }
+      ]
+    },
+    {
+      "input": "evaluation/video-calculus-calculus-fix-api-261101.json",
+      "input_sha256": "acd2b090ad7b1fa56b1e938aee7686b1877bb8ce30de1289d9ac73961a9f809e",
+      "source_segments": 43,
+      "status": "completed",
+      "chapters": [
+        {
+          "chapter_id": "chapter-000001",
+          "title": "라이선스 및 후원 안내",
+          "description": "크리에이티브 커먼스 라이선스 하에 제공되는 자료이며, MIT 오픈코스웨어의 후원이 무료 교육 자원 제공에 기여하고 있음을 설명",
+          "start": 0.0,
+          "end": 25.45,
+          "segment_ids": [
+            "segment-000001",
+            "segment-000002",
+            "segment-000003",
+            "segment-000004"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000002",
+          "title": "도함수의 기하학적 해석",
+          "description": "도함수란 무엇인지에 대한 기하학적 관점에서 설명하며, 이는 오늘의 주요 주제로 다뤄진다",
+          "start": 25.45,
+          "end": 97.82,
+          "segment_ids": [
+            "segment-000005",
+            "segment-000006",
+            "segment-000007",
+            "segment-000008",
+            "segment-000009",
+            "segment-000010",
+            "segment-000011",
+            "segment-000012"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000003",
+          "title": "도함수의 물리적 의미와 미적분의 중요성",
+          "description": "도함수의 물리적 의미를 통해 운동과 변화 과정을 설명하고, 이 도함수의 역할이 과학, 공학, 경제, 정치학 등 다양한 분야에서 미적분이 핵심적인 이유로 작용한다는 점을 연결한다.",
+          "start": 97.82,
+          "end": 153.55,
+          "segment_ids": [
+            "segment-000013",
+            "segment-000014",
+            "segment-000015",
+            "segment-000016",
+            "segment-000017"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000004",
+          "title": "함수의 미분 방법 소개",
+          "description": "미분의 개념을 설명하며, 복잡한 함수인 e의 x승에 x의 아크타너를 곱한 함수의 도함수를 계산하는 과정을 다룬다.",
+          "start": 153.55,
+          "end": 206.53,
+          "segment_ids": [
+            "segment-000018",
+            "segment-000019",
+            "segment-000020",
+            "segment-000021",
+            "segment-000022",
+            "segment-000023"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000005",
+          "title": "모든 함수의 미분 가능성",
+          "description": "어떤 함수든 미분할 수 있으며, 이를 통해 다양한 함수에 대한 도함수를 구할 수 있음을 강조한다.",
+          "start": 206.53,
+          "end": 214.96,
+          "segment_ids": [
+            "segment-000024",
+            "segment-000025"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000006",
+          "title": "기하학적 해석 개요",
+          "description": "강의의 중심이 되는 기하학적 해석에 대해 소개한다.",
+          "start": 214.96,
+          "end": 230.38,
+          "segment_ids": [
+            "segment-000026",
+            "segment-000027"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000007",
+          "title": "도함수의 기하학적 의미",
+          "description": "도함수는 함수의 접선의 기울기를 나타낸다.",
+          "start": 230.38,
+          "end": 251.11,
+          "segment_ids": [
+            "segment-000028",
+            "segment-000029"
+          ]
+        },
+        {
+          "chapter_id": "chapter-000008",
+          "title": "접선과 점 P의 위치 설정",
+          "description": "주어진 함수에서 특정 점에서의 접선을 찾는 문제를 제시하고, 그 점 P가 x0보다 위에 있을 수 있음을 설명한다.",
+          "start": 251.11,
+          "end": 330.86,
+          "segment_ids": [
+            "segment-000030",
+            "segment-000031",
+            "segment-000032",
+            "segment-000033",
+            "segment-000034",
+            "segment-000035",
+            "segment-000036",
+            "segment-000037",
+            "segment-000038",
+            "segment-000039",
+            "segment-000040",
+            "segment-000041",
+            "segment-000042",
+            "segment-000043"
+          ]
+        }
+      ],
+      "elapsed_seconds": 125.23264589100006,
+      "attempts": [
+        {
+          "stage": "chunk-000001",
+          "attempt": 1,
+          "raw": "{\"chapters\":[{\"start_segment_id\":\"segment-000001\",\"title\":\"라이선스 및 후원 안내\",\"description\":\"크리에이티브 커먼스 라이선스 하에 제공되는 자료이며, MIT 오픈코스웨어의 후원이 무료 교육 자원 제공에 기여하고 있음을 설명\"}, {\"start_segment_id\":\"segment-000005\",\"title\":\"도함수의 기하학적 해석\",\"description\":\"도함수란 무엇인지에 대한 기하학적 관점에서 설명하며, 이는 오늘의 주요 주제로 다뤄진다\"}, {\"start_segment_id\":\"segment-000013\",\"title\":\"도함수의 물리적 의미\",\"description\":\"도함수의 물리적 의미를 다루며, 운동이나 변화 과정에서의 적용을 소개\"}]}",
+          "finish_reason": "stop",
+          "generated_tokens": 195,
+          "error": null,
+          "elapsed_seconds": 30.660118054999998
+        },
+        {
+          "stage": "chunk-000002",
+          "attempt": 1,
+          "raw": "{\"chapters\":[{\"start_segment_id\":\"segment-000014\",\"title\":\"미적분의 중요성\",\"description\":\"미적분이 과학, 공학, 경제, 정치학 등 다양한 분야에서 도함수의 역할을 통해 핵심적인 이유를 설명한다.\"},{\"start_segment_id\":\"segment-000018\",\"title\":\"함수의 미분 방법 소개\",\"description\":\"미분의 개념을 설명하며, 복잡한 함수인 e의 x승에 x의 아크타너를 곱한 함수의 도함수를 계산하는 과정을 다룬다.\"},{\"start_segment_id\":\"segment-000024\",\"title\":\"모든 함수의 미분 가능성\",\"description\":\"어떤 함수든 미분할 수 있으며, 이를 통해 다양한 함수에 대한 도함수를 구할 수 있음을 강조한다.\"}]}",
+          "finish_reason": "stop",
+          "generated_tokens": 197,
+          "error": null,
+          "elapsed_seconds": 30.250590847000012
+        },
+        {
+          "stage": "merge-chunk-000002",
+          "attempt": 1,
+          "raw": "{\"merge\":true,\"title\":\"도함수의 물리적 의미와 미적분의 중요성\",\"description\":\"도함수의 물리적 의미를 통해 운동과 변화 과정을 설명하고, 이 도함수의 역할이 과학, 공학, 경제, 정치학 등 다양한 분야에서 미적분이 핵심적인 이유로 작용한다는 점을 연결한다.\"}",
+          "finish_reason": "stop",
+          "generated_tokens": 92,
+          "error": null,
+          "elapsed_seconds": 9.720203545999993
+        },
+        {
+          "stage": "chunk-000003",
+          "attempt": 1,
+          "raw": "{\"chapters\":[{\"start_segment_id\":\"segment-000026\",\"title\":\"기하학적 해석 개요\",\"description\":\"강의의 중심이 되는 기하학적 해석에 대해 소개한다.\"},{\"start_segment_id\":\"segment-000028\",\"title\":\"도함수의 기하학적 의미\",\"description\":\"도함수는 함수의 접선의 기울기를 나타낸다.\"},{\"start_segment_id\":\"segment-000030\",\"title\":\"접선을 찾는 문제 설정\",\"description\":\"주어진 함수에서 특정 점에서의 접선을 찾는 문제를 제시한다.\"}]}",
+          "finish_reason": "stop",
+          "generated_tokens": 142,
+          "error": null,
+          "elapsed_seconds": 28.017340470999898
+        },
+        {
+          "stage": "merge-chunk-000003",
+          "attempt": 1,
+          "raw": "{\"merge\":false,\"title\":\"\",\"description\":\"\"}",
+          "finish_reason": "stop",
+          "generated_tokens": 11,
+          "error": null,
+          "elapsed_seconds": 5.513785544000029
+        },
+        {
+          "stage": "chunk-000004",
+          "attempt": 1,
+          "raw": "{\"chapters\":[{\"start_segment_id\":\"segment-000040\",\"title\":\"점 P의 위치 설정\",\"description\":\"점 P가 x0보다 위에 있을 수 있음을 설명하며, x0이 고정된 x축 위의 위치임을 강조한다.\"}]}",
+          "finish_reason": "stop",
+          "generated_tokens": 62,
+          "error": null,
+          "elapsed_seconds": 13.297824464999849
+        },
+        {
+          "stage": "merge-chunk-000004",
+          "attempt": 1,
+          "raw": "{\"merge\":true,\"title\":\"접선과 점 P의 위치 설정\",\"description\":\"주어진 함수에서 특정 점에서의 접선을 찾는 문제를 제시하고, 그 점 P가 x0보다 위에 있을 수 있음을 설명한다.\"}",
+          "finish_reason": "stop",
+          "generated_tokens": 59,
+          "error": null,
+          "elapsed_seconds": 7.691207294999913
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Saved subtitle replay; excludes upload, STT and video decoding.",
+    "Model filename checked; live weight SHA256 not independently verified.",
+    "Semantic accuracy and chapter boundaries require manual review.",
+    "Single observations are not repeatable performance averages."
+  ],
+  "implementation_sha256": {
+    "app/services/chapters.py": "7fc294ae3a0704bc06b2aaf20b66fdd622e7df82881eda11f674bb69c0dba67d",
+    "app/services/study_inputs.py": "456f1aee534b9291475d16d8f0f820082d07a42b2829a416ebd944fcf0e7cc62",
+    "app/services/translation_http.py": "3163a220f6fc624960858b65f98c3a9fc1df52b78bb2e784805044e17bc8c7b2",
+    "scripts/evaluate_chapters.py": "83acd005772a4ff74392a89fce230d3a0d607d8d10033aa33827e8f3c1cdc90d"
+  }
+}
