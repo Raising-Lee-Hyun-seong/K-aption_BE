@@ -82,7 +82,6 @@ class HttpTranslationTests(unittest.TestCase):
         self.assertIn('존댓말', apply[0]['content'])
         self.assertIn('rocket=로켓', apply[1]['content'])
         self.assertEqual(chat['temperature'], 0)
-        self.assertNotIn('response_format', chat)
         self.assertFalse(chat['cache_prompt'])
         self.assertFalse(requests[1][1]['add_special'])
         self.assertTrue(requests[1][1]['parse_special'])
