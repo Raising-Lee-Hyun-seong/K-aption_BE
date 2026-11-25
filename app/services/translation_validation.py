@@ -67,6 +67,14 @@ LEAK_MARKERS = (
     "이전 영문 맥락", "Previous English context:",
 )
 FOREIGN_PROSE = re.compile(r'[\u0400-\u052f]{2,}|[\u3040-\u30ff]{2,}|[\u3400-\u9fff]{2,}')
+# 번역문에 허용하는 문자: 공백·라틴(확장 포함)·그리스·키릴 한 글자(수식 기호, 두 글자 이상은 FOREIGN_PROSE가 처리)·한글·일반 기호(수식·화살표·첨자·프라임). 그 밖의 문자는
+# 원문에 없으면 한 글자라도 혼입으로 본다(아랍 문자·한자 한 글자 등).
+DISALLOWED_OUTPUT = re.compile(r'[^\s\u0020-\u024f\u0370-\u03ff\u0400-\u04ff\u1100-\u11ff\u3130-\u318f\uac00-\ud7a3'
+                               r'\u2000-\u2bff\u3000-\u303f\uff01-\uff5e]')
+# 한글 바로 뒤에 영어 소문자 3자 이상이 붙은 혼합 단어('재pressor가', '용ful한').
+MIXED_SCRIPT_WORD = re.compile(r'[가-힣][a-z]{3,}')
+# 종결어미가 겹친 출력('강화하는 것입니다 합니다').
+DUPLICATED_ENDING = re.compile(r'(?:니다|까요|세요)[.!?]?\s*(?:합니다|입니다)')
 UNIT_ALIASES = {
     'kilogram': (r'kg|kilograms?', '킬로그램'),
     'gram': (r'g|grams?', '그램'),
@@ -136,6 +144,13 @@ def _number_word_problem(source: str, translation: str, source_numbers: set, out
             if (word == 'one' and not match[1]
                     and re.search(r'\b(?:this|that|which)\s+$', prefix, re.IGNORECASE)
                     and re.match(r'\s+(?:is|was|will|would|equals|becomes)\b', suffix, re.IGNORECASE)):
+                continue
+            # 대명사 one: 'the forward one is used', 'this one describes' 처럼 한정사(+형용사 하나) 뒤에서
+            # 동사·문장부호가 이어지면 수량이 아니다(2026-11-23 벤치마크 오탐 2건).
+            if (word == 'one' and not match[1]
+                    and re.search(r'\b(?:this|that|the|which|each|another|any)\s+(?:[a-z]+\s+)?$', prefix, re.IGNORECASE)
+                    and re.match(r'\s*(?:[,.?!;]|$)|\s+(?:is|was|are|will|would|can|could|has|had|equals|becomes|[a-z]+s)\b',
+                                 suffix, re.IGNORECASE)):
                 continue
             value = Decimal(alternatives[0]) * (-1 if match[1] else 1)
             source_numbers.add(value)
@@ -355,11 +370,20 @@ def preservation_problem(source: str, translation: str) -> Optional[str]:
 
     :param source: 숫자·수식·단위 보존의 기준이 되는 영어 원문.
     :param translation: 정리하거나 검증할 한국어 번역 후보 문자열.
-    :return: 보존 실패 또는 unexpected_script 사유 코드. 문제를 발견하지 못하면 None.
+    :return: 보존 실패, unexpected_script·mixed_script_word·duplicated_ending 사유 코드. 문제를 발견하지 못하면 None.
+
+    허용 목록 밖의 문자(아랍 문자, 한자 한 글자 등)는 원문에 없으면 한 글자라도 거부한다.
     """
     prose = re.sub(r'(?<=[가-힣])\([\u3400-\u9fff]+\)', '', translation)
     if any(match.group() not in source for match in FOREIGN_PROSE.finditer(prose)):
         return 'unexpected_script'
+    if any(char not in source for char in DISALLOWED_OUTPUT.findall(prose)):
+        return 'unexpected_script'
+    if any(not re.search(r'(?<![A-Za-z])' + match.group()[1:] + r'(?![A-Za-z])', source)
+           for match in MIXED_SCRIPT_WORD.finditer(translation)):
+        return 'mixed_script_word'
+    if DUPLICATED_ENDING.search(translation):
+        return 'duplicated_ending'
     source_symbols = protected_symbols(source)
     output_symbols = protected_symbols(translation)
     for symbol in source_symbols:

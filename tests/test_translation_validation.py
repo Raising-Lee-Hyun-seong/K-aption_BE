@@ -461,3 +461,54 @@ class StreamingTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ScriptRuleTests(unittest.TestCase):
+    """2026-11-23 벤치마크에서 검증을 통과한 형식 오류를 새 규칙이 거부하는지 검증한다."""
+
+    def test_rejects_single_foreign_characters_missing_from_source(self):
+        """아랍 문자·한자 한 글자처럼 원문에 없는 문자가 섞이면 거부한다.
+
+        :return: None.
+        """
+        self.assertEqual(preservation_problem('E. coli is able to metabolize lactose.',
+                                              '대장균은 라كت로스를 분해할 수 있습니다.'), 'unexpected_script')
+        self.assertEqual(preservation_problem('You heat the reaction up.', '반응을 加열하는 것입니다.'),
+                         'unexpected_script')
+
+    def test_allows_math_symbols_greek_and_parenthesized_hanja(self):
+        """수식 기호·그리스 문자·프라임·한글 뒤 괄호 한자 병기는 허용한다.
+
+        :return: None.
+        """
+        self.assertIsNone(preservation_problem('theta prime equals omega', 'θ′ = ω입니다.'))
+        self.assertIsNone(preservation_problem('The force is large.', '힘(力)이 큽니다.'))
+
+    def test_rejects_hangul_glued_to_english_fragment(self):
+        """원문에 단어로 없는 영어 조각이 한글에 붙은 혼합 단어를 거부한다.
+
+        :return: None.
+        """
+        self.assertEqual(preservation_problem('When the repressor is bound, polymerase cannot bind.',
+                                              '재pressor가 결합할 때 중합효소는 결합할 수 없습니다.'), 'mixed_script_word')
+        self.assertIsNone(preservation_problem('We use a for loop.', '우리는 for루프를 사용합니다.'))
+
+    def test_rejects_duplicated_polite_ending(self):
+        """'~것입니다 합니다'처럼 종결어미가 겹친 출력을 거부한다.
+
+        :return: None.
+        """
+        self.assertEqual(preservation_problem('One use is to amplify DNA.',
+                                              '하나의 용도는 DNA를 증폭하는 것입니다 합니다.'), 'duplicated_ending')
+        self.assertIsNone(preservation_problem('It is important.', '중요합니다. 입력은 끝났습니다.'))
+
+    def test_pronoun_one_after_determiner_is_not_a_quantity(self):
+        """'the forward one is used'·'this one describes'의 one은 대명사로 보고, 수량 one은 계속 검사한다.
+
+        :return: None.
+        """
+        self.assertIsNone(preservation_problem('And so the forward one is used to eject gas.',
+                                               '그래서 앞쪽 장치는 가스를 방출하는 데 사용됩니다.'))
+        self.assertIsNone(preservation_problem('This describes the gas and this one describes the rocket.',
+                                               '이것은 기체를, 이것은 로켓을 설명합니다.'))
+        self.assertEqual(preservation_problem('Take one step.', '걸음을 내딛습니다.'), 'missing_number')
