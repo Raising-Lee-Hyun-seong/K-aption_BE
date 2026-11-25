@@ -58,17 +58,33 @@ class ServerTokenizer:
             raise TranslationTransportError('Translator tokenization unavailable') from exc
 
 
+class ApproxTokenizer(ServerTokenizer):
+    """외부 API처럼 토큰화 엔드포인트가 없을 때 글자 수로 입력 토큰을 넉넉하게 추정한다."""
+
+    def encode(self, prompt: str) -> list:
+        """메시지 글자 수의 1/3을 토큰 수로 본다(영어 약 4자, 한국어 약 1~2자 = 1토큰보다 보수적).
+
+        :param prompt: 직렬화된 시스템·사용자 메시지.
+        :return: 추정 토큰 수만큼의 자리 표시 ID 목록. 길이 검사에만 쓴다.
+        """
+        text = ''.join(message['content'] for message in json.loads(prompt))
+        return [0] * math.ceil(len(text) / 3)
+
+
 class HttpTranslationService(QwenPromptMixin, TranslationService):
     """Qwen 프롬프트와 검증을 유지하며 원격 CPU 서버에서만 생성한다."""
 
     def __init__(self, base_url: str, template_path: Path, timeout: float = 120,
-                 cache_prompt: bool = False):
+                 cache_prompt: bool = False, api_key: str = '', model: str = 'qwen3-4b-instruct-2507',
+                 reasoning: str = ''):
         """제한된 HTTP 연결 풀과 공통 텍스트 설정을 초기화한다.
 
         :param base_url: 신뢰하는 llama.cpp 서버의 http 또는 https 기본 주소.
         :param template_path: 공통 텍스트 설정 파일 경로.
         :param timeout: HTTP 연결·읽기·쓰기 제한 초. 양의 유한값.
         :param cache_prompt: 같은 슬롯의 공통 입력 KV를 재사용할지 여부. 기본 False.
+        :param api_key: 외부 OpenAI 호환 API 키. 있으면 인증 헤더를 붙이고 llama.cpp 전용 설정을 뺀다.
+        :param model: 채팅 요청의 model 값. 외부 API에서는 그 서비스의 모델 이름.
         :return: None. Qwen 가중치나 토크나이저를 로컬에 로드하지 않는다.
         :raises ValueError: 주소·타임아웃 설정이 유효하지 않은 경우.
         :raises OSError: 공통 텍스트 설정을 읽지 못한 경우.
@@ -77,16 +93,20 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
             raise ValueError('Prompt cache setting must be boolean')
         url = urlsplit(base_url)
         if (url.scheme not in ('http', 'https') or not url.hostname or url.username or url.password
-                or url.path not in ('', '/') or url.query or url.fragment
+                or (url.path not in ('', '/') and not api_key) or url.query or url.fragment
                 or not math.isfinite(timeout) or timeout <= 0):
             raise ValueError('Translator URL must be an HTTP origin and timeout must be positive')
         self.cache_prompt = cache_prompt
+        self.external = bool(api_key)
+        self.model = model
+        self.reasoning = reasoning
         super().__init__(template_path)
         self._configure_qwen()
-        self.client = httpx.Client(base_url=base_url.rstrip('/'), trust_env=False,
+        headers = {'Authorization': f'Bearer {api_key}'} if api_key else None
+        self.client = httpx.Client(base_url=base_url.rstrip('/'), trust_env=False, headers=headers,
                                    timeout=httpx.Timeout(timeout, connect=min(timeout, 10)),
                                    limits=httpx.Limits(max_connections=2, max_keepalive_connections=1))
-        self.tokenizer = ServerTokenizer(self.client)
+        self.tokenizer = ApproxTokenizer(self.client) if self.external else ServerTokenizer(self.client)
 
     def loaded(self) -> bool:
         """서버의 현재 모델 준비 상태를 제한된 HTTP 요청으로 확인한다.
@@ -94,6 +114,8 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
         :return: 서버 health가 200일 때만 True.
         """
         try:
+            if self.external:
+                return self.client.get('/v1/models', timeout=5).status_code == 200
             return self.client.get('/health', timeout=3).status_code == 200
         except httpx.HTTPError:
             return False
@@ -116,10 +138,18 @@ class HttpTranslationService(QwenPromptMixin, TranslationService):
 
         생성기 종료 시 HTTP 응답을 닫아 반복 감지나 취소 이후 서버 생성을 중단한다.
         """
-        payload = {'model': 'qwen3-4b-instruct-2507', 'messages': json.loads(prompt),
-                   'temperature': 0, 'top_k': 1, 'top_p': 1, 'repeat_penalty': 1.0,
-                   'seed': 0, 'max_tokens': max_tokens, 'stream': True,
-                   'stream_options': {'include_usage': True}, 'cache_prompt': self.cache_prompt}
+        if self.external:
+            # 외부 API에는 표준 OpenAI 필드만 보낸다(top_k·repeat_penalty·cache_prompt는 llama.cpp 전용).
+            payload = {'model': self.model, 'messages': json.loads(prompt), 'max_tokens': max_tokens,
+                       'stream': True, 'stream_options': {'include_usage': True}}
+            if self.reasoning:
+                # 추론 모델(GPT-5 등)은 추론 토큰도 max_tokens에 포함되므로 OpenRouter 형식으로 추론량을 줄인다.
+                payload['reasoning'] = {'effort': self.reasoning, 'exclude': True}
+        else:
+            payload = {'model': self.model, 'messages': json.loads(prompt),
+                       'temperature': 0, 'top_k': 1, 'top_p': 1, 'repeat_penalty': 1.0,
+                       'seed': 0, 'max_tokens': max_tokens, 'stream': True,
+                       'stream_options': {'include_usage': True}, 'cache_prompt': self.cache_prompt}
         count, ended, last_finish = 0, False, None
         try:
             with self.client.stream('POST', '/v1/chat/completions', json=payload) as response:

@@ -78,7 +78,10 @@ def create_translation_service():
     return HttpTranslationService(
         os.getenv('KAPTION_TRANSLATOR_URL', 'http://localhost:8080'), TEMPLATE_PATH,
         timeout=float(os.getenv('KAPTION_TRANSLATOR_TIMEOUT', '120')),
-        cache_prompt=cache_setting == 'true')
+        cache_prompt=cache_setting == 'true',
+        api_key=os.getenv('KAPTION_TRANSLATOR_API_KEY', ''),
+        model=os.getenv('KAPTION_TRANSLATOR_MODEL', 'qwen3-4b-instruct-2507'),
+        reasoning=os.getenv('KAPTION_TRANSLATOR_REASONING', ''))
 
 
 @asynccontextmanager

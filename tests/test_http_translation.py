@@ -321,3 +321,85 @@ class HttpLifespanTests(unittest.IsolatedAsyncioTestCase):
         result = health(request)
         self.assertFalse(result.translation_model_loaded)
         self.assertEqual(result.status, 'starting')
+
+
+class ExternalApiTests(unittest.TestCase):
+    """외부 OpenAI 호환 API 모드에서 인증 헤더·표준 필드·글자 수 토큰 추정을 검증한다."""
+
+    def test_external_mode_sends_auth_and_standard_fields_only(self):
+        """키가 있으면 Bearer 헤더와 지정 모델을 보내고 llama.cpp 전용 필드와 토큰화 호출을 뺀다.
+
+        :return: None.
+        """
+        seen = []
+
+        def handle(request):
+            """요청을 기록하고 SSE 한 번으로 답한다.
+
+            :param request: httpx가 생성한 HTTP 요청.
+            :return: HTTP 응답 대역.
+            """
+            seen.append((request.url.path, request.headers.get('authorization'),
+                         json.loads(request.content) if request.content else None))
+            events = [{'choices': [{'delta': {'content': '로켓의 질량은 일정합니다.'}, 'finish_reason': None}]},
+                      {'choices': [{'delta': {}, 'finish_reason': 'stop'}]},
+                      {'choices': [], 'usage': {'completion_tokens': 9}}]
+            body = ''.join('data: ' + json.dumps(e, ensure_ascii=False) + '\n\n' for e in events)
+            return httpx.Response(200, text=body + 'data: [DONE]\n\n')
+
+        service = HttpTranslationService('https://api.example.com', ROOT / 'templates/korean.json',
+                                         api_key='sk-test', model='gpt-5-mini')
+        headers = service.client.headers
+        service.client.close()
+        service.client = httpx.Client(base_url='https://api.example.com', headers=headers,
+                                      transport=httpx.MockTransport(handle))
+        service.tokenizer.client = service.client
+        self.addCleanup(service.close)
+        result = service.translate('This rocket mass is constant.', '', 128)
+        self.assertEqual(result['translation'], '로켓의 질량은 일정합니다.')
+        self.assertEqual([path for path, _, _ in seen], ['/v1/chat/completions'])
+        path, auth, payload = seen[0]
+        self.assertEqual(auth, 'Bearer sk-test')
+        self.assertEqual(payload['model'], 'gpt-5-mini')
+        for key in ('top_k', 'repeat_penalty', 'cache_prompt'):
+            self.assertNotIn(key, payload)
+        self.assertGreater(result['prompt_tokens'], 0)
+
+    def test_external_mode_allows_path_and_sends_reasoning(self):
+        """외부 API는 /api 같은 경로가 붙은 주소를 허용하고 추론량 설정을 OpenRouter 형식으로 보낸다.
+
+        :return: None.
+        """
+        seen = []
+
+        def handle(request):
+            """요청 경로와 본문을 기록하고 SSE 한 번으로 답한다.
+
+            :param request: httpx가 생성한 HTTP 요청.
+            :return: HTTP 응답 대역.
+            """
+            seen.append((request.url.path, json.loads(request.content)))
+            events = [{'choices': [{'delta': {'content': '속력은 일정합니다.'}, 'finish_reason': 'stop'}]}]
+            body = ''.join('data: ' + json.dumps(e, ensure_ascii=False) + '\n\n' for e in events)
+            return httpx.Response(200, text=body + 'data: [DONE]\n\n')
+
+        service = HttpTranslationService('https://openrouter.ai/api', ROOT / 'templates/korean.json',
+                                         api_key='sk-test', model='openai/gpt-5-mini', reasoning='minimal')
+        headers = service.client.headers
+        service.client.close()
+        service.client = httpx.Client(base_url='https://openrouter.ai/api', headers=headers,
+                                      transport=httpx.MockTransport(handle))
+        service.tokenizer.client = service.client
+        self.addCleanup(service.close)
+        service.translate('The speed is constant.', '', 128)
+        path, payload = seen[0]
+        self.assertEqual(path, '/api/v1/chat/completions')
+        self.assertEqual(payload['reasoning'], {'effort': 'minimal', 'exclude': True})
+
+    def test_local_mode_still_rejects_url_path(self):
+        """키가 없는 로컬 llama.cpp 모드는 경로가 붙은 주소를 계속 거부한다.
+
+        :return: None.
+        """
+        with self.assertRaises(ValueError):
+            HttpTranslationService('http://translator:8080/api', ROOT / 'templates/korean.json')
