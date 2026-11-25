@@ -1,0 +1,4 @@
+# name|video|reference vtt  (MIT OCW, CC BY-NC-SA)
+phys_rocket_diffeq|https://archive.org/download/MIT8.01F16/MIT8_01F16_W06PS01-1_360p.mp4|https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/8f9dd3651b7750fca14f6ffbc524b441_dvWKCH0ocu8.vtt
+phys_orbital|https://archive.org/download/MIT8.01F16/MIT8_01F16_W03PS01_1_360p.mp4|https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/d7e31577070357978a35e4ce6298fd55_gEX7MjWwocE.vtt
+de_damped_applet|https://archive.org/download/MIT18.03SCF11/MIT18_03SCf11_app6.mp4|https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/7a2245ad015850289a7732472363989c_Gb5o6VNboV0.vtt

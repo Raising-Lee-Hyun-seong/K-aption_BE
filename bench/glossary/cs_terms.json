@@ -1,0 +1,82 @@
+[
+ {
+  "en": "rocket",
+  "ko": "로켓"
+ },
+ {
+  "en": "magnitude",
+  "ko": "크기"
+ },
+ {
+  "en": "constant",
+  "ko": "상수"
+ },
+ {
+  "en": "sled",
+  "ko": "썰매"
+ },
+ {
+  "en": "integrated",
+  "ko": "적분"
+ },
+ {
+  "en": "integrating",
+  "ko": "적분"
+ },
+ {
+  "en": "primes",
+  "ko": "프라임"
+ },
+ {
+  "en": "prime",
+  "ko": "프라임"
+ },
+ {
+  "en": "break",
+  "ko": "break"
+ },
+ {
+  "en": "for loop",
+  "ko": "for 루프"
+ },
+ {
+  "en": "nested loop",
+  "ko": "중첩 루프"
+ },
+ {
+  "en": "inner loop",
+  "ko": "내부 루프"
+ },
+ {
+  "en": "outer loop",
+  "ko": "외부 루프"
+ },
+ {
+  "en": "character",
+  "ko": "문자"
+ },
+ {
+  "en": "characters",
+  "ko": "문자"
+ },
+ {
+  "en": "string",
+  "ko": "문자열"
+ },
+ {
+  "en": "strings",
+  "ko": "문자열"
+ },
+ {
+  "en": "space",
+  "ko": "공백"
+ },
+ {
+  "en": "common letter",
+  "ko": "공통 문자"
+ },
+ {
+  "en": "print",
+  "ko": "출력"
+ }
+]

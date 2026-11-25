@@ -1,0 +1,35 @@
+# GPU 실험: 같은 Qwen3-4B GGUF를 llama.cpp CUDA 서버로 실행한다 (모든 레이어 GPU).
+services:
+  translator:
+    build: !reset null
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    command:
+      - --model
+      - /models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf
+      - --alias
+      - qwen3-4b-instruct-2507
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8080'
+      - --n-gpu-layers
+      - '99'
+      - --ctx-size
+      - '2048'
+      - --parallel
+      - '1'
+      - --batch-size
+      - '256'
+      - --ubatch-size
+      - '128'
+      - --cache-ram
+      - '0'
+      - --no-context-shift
+      - --jinja
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

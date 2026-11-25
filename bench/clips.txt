@@ -1,0 +1,7 @@
+# name|video|reference vtt  (MIT OCW, CC BY-NC-SA)
+phys_rocket|https://archive.org/download/MIT8.01F16/MIT8_01F16_W06PS01-2_360p.mp4|https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/99c06ede3b5d5192b4cb4119435b6b9f_7Kq8BINVDiw.vtt
+bio_lac_operon|https://archive.org/download/MIT7.01SCF11/MIT7_01SCF11_Un2Ses5_Rec_300k.mp4|https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/e22130cce0875e249fa7cfd67ce27010_2TL8rY9Rc_A.vtt
+cs_for_loops_strings|https://archive.org/download/MIT6.0001F16/MIT6_0001F16_Lecture_03_exercise_02_300k.mp4|https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/5fe042bb51ea5aff93826736b62a00cd_4WtaFLayz_w.vtt
+chem_humor_talk|https://archive.org/download/MIT5.111F14/MIT5_111F14_Humor_300k.mp4|https://ocw.mit.edu/courses/5-111sc-principles-of-chemical-science-fall-2014/f049459ac6bd593286f6caca1ef92602_739SB34oEyo.vtt
+linalg_course_intro|https://archive.org/download/MIT18.06SCF11/MIT18_06SC_intro_300k.mp4|https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/190783ec11085ed498d9abdd30b2b2c0_YeyrH-Oc2p4.vtt
+bio_pcr|https://archive.org/download/MIT7.01SCF11/MIT7_01SCF11_Un4Ses5_Rec_300k.mp4|https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/cc38cb6d969a504a9f77cff4bcb84649_OK7_ReXhVaQ.vtt

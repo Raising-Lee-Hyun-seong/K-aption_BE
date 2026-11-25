@@ -1,0 +1,8 @@
+# 용어집 실험: KAPTION_GLOSSARY_FILE(bench/glossary 안의 파일)을 프롬프트용 용어집으로 덮어씌운다.
+# bench·scripts 폴더도 읽기 전용으로 넣어 용어집 자동 생성 스크립트를 컨테이너 안에서 실행할 수 있게 한다.
+services:
+  backend:
+    volumes:
+      - ./bench/glossary/${KAPTION_GLOSSARY_FILE:-bio_terms.json}:/app/data/qwen_translation_terms.json:ro
+      - ./bench:/bench:ro
+      - ./scripts:/scripts:ro

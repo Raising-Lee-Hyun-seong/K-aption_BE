@@ -214,3 +214,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+bench/out*/
+__pycache__/

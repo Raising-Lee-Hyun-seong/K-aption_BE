@@ -1,0 +1,9 @@
+# 외부 API 번역 실험: backend가 로컬 Qwen 대신 OpenAI 호환 API로 번역한다(STT는 그대로 로컬).
+services:
+  backend:
+    environment:
+      KAPTION_TRANSLATOR_URL: ${KAPTION_API_URL:-https://api.openai.com}
+      KAPTION_TRANSLATOR_API_KEY: ${KAPTION_API_KEY}
+      KAPTION_TRANSLATOR_MODEL: ${KAPTION_API_MODEL:-gpt-5-mini}
+      # GPT-5 같은 추론 모델의 추론 토큰을 줄인다(OpenRouter 형식). 빈 값이면 보내지 않는다.
+      KAPTION_TRANSLATOR_REASONING: ${KAPTION_API_REASONING-minimal}

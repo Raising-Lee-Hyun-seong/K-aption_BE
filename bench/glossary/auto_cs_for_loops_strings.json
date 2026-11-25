@@ -1,0 +1,106 @@
+[
+ {
+  "en": "rocket",
+  "ko": "로켓"
+ },
+ {
+  "en": "magnitude",
+  "ko": "크기"
+ },
+ {
+  "en": "constant",
+  "ko": "상수"
+ },
+ {
+  "en": "sled",
+  "ko": "썰매"
+ },
+ {
+  "en": "integrated",
+  "ko": "적분"
+ },
+ {
+  "en": "integrating",
+  "ko": "적분"
+ },
+ {
+  "en": "primes",
+  "ko": "프라임"
+ },
+ {
+  "en": "prime",
+  "ko": "프라임"
+ },
+ {
+  "en": "length",
+  "ko": "길이"
+ },
+ {
+  "en": "for",
+  "ko": "for"
+ },
+ {
+  "en": "break",
+  "ko": "break"
+ },
+ {
+  "en": "print",
+  "ko": "print"
+ },
+ {
+  "en": "common letter",
+  "ko": "공통 문자"
+ },
+ {
+  "en": "inner loop",
+  "ko": "내부 루프"
+ },
+ {
+  "en": "outer loop",
+  "ko": "외부 루프"
+ },
+ {
+  "en": "S1",
+  "ko": "S1"
+ },
+ {
+  "en": "S2",
+  "ko": "S2"
+ },
+ {
+  "en": "match",
+  "ko": "매칭"
+ },
+ {
+  "en": "compare",
+  "ko": "비교"
+ },
+ {
+  "en": "letter",
+  "ko": "문자"
+ },
+ {
+  "en": "program",
+  "ko": "프로그램"
+ },
+ {
+  "en": "loop",
+  "ko": "루프"
+ },
+ {
+  "en": "character",
+  "ko": "문자"
+ },
+ {
+  "en": "remaining letters",
+  "ko": "남은 문자들"
+ },
+ {
+  "en": "step",
+  "ko": "단계"
+ },
+ {
+  "en": "trace",
+  "ko": "추적"
+ }
+]
